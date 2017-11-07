@@ -7,8 +7,9 @@ import nebula.common.util.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
- * Use for tile entity for collect production from tree log
- * (Rubber, Lacquer, etc).
+ * Use for tile entity for collect production from tree log (Rubber, Lacquer,
+ * etc).
+ * 
  * @author ueyudiud
  */
 public interface ILogProductionCollector

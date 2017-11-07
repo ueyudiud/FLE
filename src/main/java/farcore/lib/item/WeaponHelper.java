@@ -28,6 +28,7 @@ import net.minecraft.util.math.MathHelper;
 
 /**
  * The weapon has too many optional actions, split to a class type.
+ * 
  * @author ueyudiud
  */
 public class WeaponHelper
@@ -37,12 +38,12 @@ public class WeaponHelper
 		ItemTool.ToolProp prop = tool.toolPropMap.getOrDefault(tool.getBaseDamage(stack), ItemTool.EMPTY_PROP);
 		EnumPhysicalDamageType type;
 		AttackEvent event = AttackEvent.post(player, entity, stack, type = prop.stat.getPhysicalDamageType());
-		if(event.isCanceled())
-			return;
+		if (event.isCanceled()) return;
 		stack = event.newWeapon;
 		Mat material = ItemTool.getMaterial(stack, "head");
 		IItemMatProp materialProperty = material.itemProp;
-		if(entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// && !entity.isInvisibleToPlayer(player))
+		if (entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// &&
+																			// !entity.isInvisibleToPlayer(player))
 		{
 			float baseMultiple = 1F;
 			if (type.getSkill() != null)
@@ -52,7 +53,7 @@ public class WeaponHelper
 			}
 			switch (type)
 			{
-			case SMASH :
+			case SMASH:
 				if (player.isPotionActive(MobEffects.STRENGTH))
 				{
 					baseMultiple += (player.getActivePotionEffect(MobEffects.STRENGTH).getAmplifier() + 1) * 0.25F;
@@ -62,15 +63,15 @@ public class WeaponHelper
 					baseMultiple -= (player.getActivePotionEffect(MobEffects.WEAKNESS).getAmplifier() + 1) * 0.25F;
 				}
 				break;
-			case CUT :
+			case CUT:
 				break;
-			case PUNCTURE :
+			case PUNCTURE:
 				baseMultiple = 0.8F + nebula.common.util.L.range(0F, 0.4F, (float) (player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ) / 20F);
 				break;
 			default:
 				break;
 			}
-			if(materialProperty != null)
+			if (materialProperty != null)
 			{
 				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity, "head");
 			}
@@ -101,15 +102,15 @@ public class WeaponHelper
 			
 			player.resetCooldown();
 			
-			if(attack > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), attack))
+			if (attack > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), attack))
 			{
 				float knockback = prop.stat.getKnockback(stack, material, entity) + EnchantmentHelper.getKnockbackModifier(player);
-				if(player.isSprinting())
+				if (player.isSprinting())
 				{
 					player.world.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
 					knockback += 1F;
 				}
-				if(knockback > 0)
+				if (knockback > 0)
 				{
 					entity.addVelocity(-Math.sin(player.rotationYaw * Math.PI / 180D) * knockback * .5, 0.05F, Math.cos(player.rotationYaw * Math.PI / 180D) * knockback * .5);
 				}
@@ -118,32 +119,32 @@ public class WeaponHelper
 				player.setSprinting(false);
 				
 				float[] box = prop.stat.getAttackExpandBoxing(stack, material);
-				if(box != null)
+				if (box != null)
 				{
 					causeAOEAttack(prop.stat, player, entity, box);
-					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
 					player.spawnSweepParticles();
 				}
 				
 				if (entity instanceof EntityPlayerMP && entity.velocityChanged)
 				{
-					((EntityPlayerMP)entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+					((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
 					entity.velocityChanged = false;
 					entity.motionX = d1;
 					entity.motionY = d2;
 					entity.motionZ = d3;
 				}
-				else if(!flagCritical)
+				else if (!flagCritical)
 				{
-					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
 				}
 				else
 				{
-					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
 					player.onCriticalHit(entity);
 				}
 				
-				if(attack >= 18.0F)
+				if (attack >= 18.0F)
 				{
 					player.addStat(AchievementList.OVERKILL);
 				}
@@ -172,10 +173,7 @@ public class WeaponHelper
 	
 	public static boolean matchCritical(EntityPlayer player)
 	{
-		return player.fallDistance > 0.0F &&
-				!player.onGround && !player.isOnLadder() &&
-				!player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) &&
-				player.getRidingEntity() == null;
+		return player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && player.getRidingEntity() == null;
 	}
 	
 	public static void causeAOEAttack(IToolStat stat, EntityLivingBase attacker, Entity target, float[] boundBox)

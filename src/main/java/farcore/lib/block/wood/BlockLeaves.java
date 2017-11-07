@@ -75,6 +75,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	{
 		this("leaves." + tree.material.name, tree, tree.material.localName + " Leaves");
 	}
+	
 	protected BlockLeaves(String name, Tree tree, String localName)
 	{
 		super(name, Material.LEAVES);
@@ -99,7 +100,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		//		tree.registerRender();
+		// tree.registerRender();
 	}
 	
 	@Override
@@ -119,8 +120,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
-		return Client.shouldRenderBetterLeaves() ?
-				BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
+		return Client.shouldRenderBetterLeaves() ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
 	}
 	
 	@Override
@@ -138,7 +138,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		if(!worldIn.isRemote)
+		if (!worldIn.isRemote)
 		{
 			worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 		}
@@ -147,7 +147,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		if(world instanceof World && !((World) world).isRemote)
+		if (world instanceof World && !((World) world).isRemote)
 		{
 			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 		}
@@ -209,8 +209,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		try
 		{
@@ -223,8 +222,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, ArrayListAddWithCheck.requireNonnull());
 	}
@@ -250,8 +248,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return this.tree.onToolClickLeaves(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ);
 	}

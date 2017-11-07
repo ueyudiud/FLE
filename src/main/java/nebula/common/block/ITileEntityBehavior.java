@@ -28,43 +28,59 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public interface ITileEntityBehavior<T>
 {
-	default void breakBlock(T tile, IBlockState state) {}
-
-	default void causeUpdate(T tile, IBlockState state, boolean isTileUpdate) {}
-
-	default void onUpdateTick(T tile, IBlockState state, Random random, boolean isTickRandomly) {}
-
+	default void breakBlock(T tile, IBlockState state)
+	{
+	}
+	
+	default void causeUpdate(T tile, IBlockState state, boolean isTileUpdate)
+	{
+	}
+	
+	default void onUpdateTick(T tile, IBlockState state, Random random, boolean isTickRandomly)
+	{
+	}
+	
 	@SideOnly(Side.CLIENT)
-	default void randomDisplayTick(T tile, IBlockState stateIn, Random rand) {}
+	default void randomDisplayTick(T tile, IBlockState stateIn, Random rand)
+	{
+	}
 	
 	default EnumActionResult onBlockActivated(T tile, EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return EnumActionResult.PASS;
 	}
-
+	
 	default boolean onBlockClicked(T tile, EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return false;
 	}
-
-	default void onEntityCollidedWithBlock(T tile, IBlockState state, Entity entity) {}
-
-	default void onEntityWalk(T tile, Entity entity) {}
-
-	default void onEntityFallenUpon(T tile, Entity entityIn, float fallDistance) {}
 	
-	default void onEntityLanded(T tile, Entity entity) {}
-
-	default void onPlantGrow(T tile, IBlockState state, BlockPos source) {}
+	default void onEntityCollidedWithBlock(T tile, IBlockState state, Entity entity)
+	{
+	}
 	
-	default ActionResult<Float> onToolClick(T tile, EntityPlayer player, EnumToolType tool, ItemStack stack,
-			Direction side, float hitX, float hitY, float hitZ)
+	default void onEntityWalk(T tile, Entity entity)
+	{
+	}
+	
+	default void onEntityFallenUpon(T tile, Entity entityIn, float fallDistance)
+	{
+	}
+	
+	default void onEntityLanded(T tile, Entity entity)
+	{
+	}
+	
+	default void onPlantGrow(T tile, IBlockState state, BlockPos source)
+	{
+	}
+	
+	default ActionResult<Float> onToolClick(T tile, EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
 	
-	default ActionResult<Float> onToolUse(T tile, EntityPlayer player, EnumToolType tool, ItemStack stack,
-			Direction side, float hitX, float hitY, float hitZ, long tick)
+	default ActionResult<Float> onToolUse(T tile, EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ, long tick)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}

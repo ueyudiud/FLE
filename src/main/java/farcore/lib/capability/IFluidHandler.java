@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 /**
  * A fluid handler helper.
+ * 
  * @author ueyudiud
  */
 public interface IFluidHandler
@@ -40,9 +41,13 @@ public interface IFluidHandler
 	
 	FluidStack drain(Direction direction, int maxAmount, boolean process);
 	
-	@Nullable SidedFluidIOProperty getProperty(Direction direction);
+	@Nullable
+	SidedFluidIOProperty getProperty(Direction direction);
 	
-	default boolean shouldProviedeFluidIOFrom(Direction direction) { return true; }
+	default boolean shouldProviedeFluidIOFrom(Direction direction)
+	{
+		return true;
+	}
 	
 	interface SidedFluidIOProperty
 	{
@@ -50,9 +55,15 @@ public interface IFluidHandler
 		
 		List<FluidStack> getStacks();
 		
-		default boolean canFill() { return true; }
+		default boolean canFill()
+		{
+			return true;
+		}
 		
-		default boolean canDrain() { return true; }
+		default boolean canDrain()
+		{
+			return true;
+		}
 		
 		boolean canFill(FluidStack stack);
 		
@@ -107,13 +118,14 @@ public interface IFluidHandler
 	
 	class SidedFluidIOTankNPropertyWrapper implements SidedFluidIOProperty
 	{
-		FluidTankN tank;
-		Direction direction;
+		FluidTankN	tank;
+		Direction	direction;
 		
 		public SidedFluidIOTankNPropertyWrapper(FluidTankN tank)
 		{
 			this(tank, Direction.Q);
 		}
+		
 		public SidedFluidIOTankNPropertyWrapper(FluidTankN tank, Direction direction)
 		{
 			this.tank = tank;
@@ -159,8 +171,8 @@ public interface IFluidHandler
 	
 	class SidedFluidIOPropertyWrapper implements IFluidTankProperties
 	{
-		SidedFluidIOProperty property;
-		FluidStack stack = null;
+		SidedFluidIOProperty	property;
+		FluidStack				stack	= null;
 		
 		public SidedFluidIOPropertyWrapper(SidedFluidIOProperty property)
 		{
@@ -170,7 +182,7 @@ public interface IFluidHandler
 		public SidedFluidIOPropertyWrapper(SidedFluidIOProperty property, int id)
 		{
 			this.property = property;
-			if(id >= 0)
+			if (id >= 0)
 			{
 				this.stack = property.getStacks().get(id);
 			}
@@ -221,9 +233,9 @@ public interface IFluidHandler
 	
 	class FluidHandlerWrapper implements net.minecraftforge.fluids.capability.IFluidHandler
 	{
-		Direction direction;
-		IFluidHandler handler;
-		IFluidTankProperties[] properties;
+		Direction				direction;
+		IFluidHandler			handler;
+		IFluidTankProperties[]	properties;
 		
 		public FluidHandlerWrapper(TileEntity tile, EnumFacing direction)
 		{
@@ -239,12 +251,10 @@ public interface IFluidHandler
 		@Override
 		public IFluidTankProperties[] getTankProperties()
 		{
-			if(properties != null) return properties;
+			if (properties != null) return properties;
 			SidedFluidIOProperty property = handler.getProperty(direction);
 			List<FluidStack> list = property.getStacks();
-			return properties = (list.isEmpty() ? new IFluidTankProperties[]{ new SidedFluidIOPropertyWrapper(property) } :
-				A.transform(L.cast(list, FluidStack.class), IFluidTankProperties.class,
-						stack -> new SidedFluidIOPropertyWrapper(property, stack)));
+			return properties = (list.isEmpty() ? new IFluidTankProperties[] { new SidedFluidIOPropertyWrapper(property) } : A.transform(L.cast(list, FluidStack.class), IFluidTankProperties.class, stack -> new SidedFluidIOPropertyWrapper(property, stack)));
 		}
 		
 		@Override

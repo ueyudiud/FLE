@@ -50,15 +50,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockPlantVine extends BlockBase
 {
-	public static final AxisAlignedBB
-	WEST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0625D, 1.0D, 1.0D),
-	EAST_AABB = new AxisAlignedBB(0.9375D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
-	NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.0625D),
-	SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.9375D, 1.0D, 1.0D, 1.0D),
-	AABBS[] = {SOUTH_AABB, WEST_AABB, EAST_AABB, NORTH_AABB};
+	public static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0625D, 1.0D, 1.0D), EAST_AABB = new AxisAlignedBB(0.9375D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.0625D),
+			SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.9375D, 1.0D, 1.0D, 1.0D), AABBS[] = { SOUTH_AABB, WEST_AABB, EAST_AABB, NORTH_AABB };
 	
-	private static final Applicable<ItemStack> DROP = ()->
-	EnumItem.crop_related.available() ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("vine") : null;
+	private static final Applicable<ItemStack> DROP = () -> EnumItem.crop_related.available() ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("vine") : null;
 	
 	public static void addVineBlock(World world, BlockPos pos, EnumFacing facing)
 	{
@@ -74,9 +69,9 @@ public class BlockPlantVine extends BlockBase
 		}
 	}
 	
-	private Mat material;
-	private @Nullable Block baseBlock;
-	private byte growDir = -1;//-1 or 1
+	private Mat				material;
+	private @Nullable Block	baseBlock;
+	private byte			growDir	= -1;		// -1 or 1
 	
 	public BlockPlantVine(Mat material)
 	{
@@ -111,11 +106,7 @@ public class BlockPlantVine extends BlockBase
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state
-				.withProperty(Misc.PROPS_SIDE_HORIZONTALS[0], false)
-				.withProperty(Misc.PROPS_SIDE_HORIZONTALS[1], false)
-				.withProperty(Misc.PROPS_SIDE_HORIZONTALS[2], false)
-				.withProperty(Misc.PROPS_SIDE_HORIZONTALS[3], false);
+		return state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[0], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[1], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[2], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[3], false);
 	}
 	
 	@Override
@@ -137,23 +128,24 @@ public class BlockPlantVine extends BlockBase
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		int meta = getMetaFromState(state);
-		//Check is meta is power of 2. If it is, it means this vine only has one direction grown.
+		// Check is meta is power of 2. If it is, it means this vine only has
+		// one direction grown.
 		if (meta != 0 && (meta & meta - 1) == 0)
-			//Use (x%5)-1 to split 1, 2, 4, 8 to 0, 1, 3, 2 and use this as index in array.
+			// Use (x%5)-1 to split 1, 2, 4, 8 to 0, 1, 3, 2 and use this as
+			// index in array.
 			return AABBS[(meta % 5) - 1];
 		return FULL_BLOCK_AABB;
 	}
 	
 	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return facing.getHorizontalIndex() < 0 ? getDefaultState() :
-			getDefaultState().withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getOpposite().getHorizontalIndex()], true);
+		return facing.getHorizontalIndex() < 0 ? getDefaultState() : getDefaultState().withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getOpposite().getHorizontalIndex()], true);
 	}
 	
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -178,10 +170,7 @@ public class BlockPlantVine extends BlockBase
 	
 	private boolean canAttachOn(World world, BlockPos pos, @Nullable IBlockState state, EnumFacing facing)
 	{
-		return Worlds.isSideSolid(world, pos.offset(facing), facing.getOpposite(), false) ||
-				(this.growDir < 0 && this.baseBlock != null ?
-						(Worlds.isBlock(world, pos.up().offset(facing), this.baseBlock, -1, false)) :
-							(Worlds.isBlock(world, pos.down(), this.baseBlock, -1, false)));
+		return Worlds.isSideSolid(world, pos.offset(facing), facing.getOpposite(), false) || (this.growDir < 0 && this.baseBlock != null ? (Worlds.isBlock(world, pos.up().offset(facing), this.baseBlock, -1, false)) : (Worlds.isBlock(world, pos.down(), this.baseBlock, -1, false)));
 	}
 	
 	private boolean recheckGrownSides(World worldIn, BlockPos pos, IBlockState state)
@@ -209,8 +198,7 @@ public class BlockPlantVine extends BlockBase
 		}
 		else
 		{
-			if (old != state)
-				worldIn.setBlockState(pos, state, 2);
+			if (old != state) worldIn.setBlockState(pos, state, 2);
 			return true;
 		}
 	}
@@ -229,8 +217,7 @@ public class BlockPlantVine extends BlockBase
 	{
 		int i = 0;
 		for (IProperty<Boolean> property : Misc.PROPS_SIDE_HORIZONTALS)
-			if (state.getValue(property))
-				++i;
+			if (state.getValue(property)) ++i;
 		return i;
 	}
 	
@@ -255,8 +242,7 @@ public class BlockPlantVine extends BlockBase
 								{
 									j -= ((BlockPlantVine) state2.getBlock()).getVineCount(state2);
 									
-									if (j <= 5)
-										break label;
+									if (j <= 5) break label;
 								}
 							}
 						}
@@ -293,8 +279,7 @@ public class BlockPlantVine extends BlockBase
 		IBlockState state = getDefaultState();
 		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
-			if ((meta & direction.flag1) != 0)
-				state = state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
+			if ((meta & direction.flag1) != 0) state = state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
 		}
 		return state;
 	}
@@ -305,8 +290,7 @@ public class BlockPlantVine extends BlockBase
 		int meta = 0;
 		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
-			if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal]))
-				meta |= direction.flag1;
+			if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal])) meta |= direction.flag1;
 		}
 		return meta;
 	}
@@ -319,8 +303,7 @@ public class BlockPlantVine extends BlockBase
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(DROP.apply());
@@ -328,8 +311,8 @@ public class BlockPlantVine extends BlockBase
 	}
 	
 	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given rotation from the passed
+	 * blockstate. If inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot)
@@ -349,8 +332,8 @@ public class BlockPlantVine extends BlockBase
 	}
 	
 	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given mirror of the passed blockstate. If
+	 * inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)

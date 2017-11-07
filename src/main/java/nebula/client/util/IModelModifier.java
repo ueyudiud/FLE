@@ -17,11 +17,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public interface IModelModifier
 {
-	default void recolor(Vector4f color) {};
+	default void recolor(Vector4f color)
+	{
+	};
 	
-	default void transform(Point3f point) {};
+	default void transform(Point3f point)
+	{
+	};
 	
-	default void transform(Vector3f normal) {};
+	default void transform(Vector3f normal)
+	{
+	};
 	
 	default EnumFacing rotateFacing(EnumFacing facing)
 	{

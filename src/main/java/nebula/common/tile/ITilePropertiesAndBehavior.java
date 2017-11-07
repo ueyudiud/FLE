@@ -34,11 +34,10 @@ public interface ITilePropertiesAndBehavior
 		{
 			TileEntity tile = (TileEntity) this;
 			float hardness = state.getBlockHardness(tile.getWorld(), tile.getPos());
-			if (hardness < 0.0F)
-				return 0.0F;
+			if (hardness < 0.0F) return 0.0F;
 			
 			if (!state.getBlock().canHarvestBlock(tile.getWorld(), tile.getPos(), player))
-				return 0.0F;//No usable tool will not provide any effect.
+				return 0.0F;// No usable tool will not provide any effect.
 			else
 				return player.getDigSpeed(state, tile.getPos()) / hardness / 30F;
 		}
@@ -60,22 +59,20 @@ public interface ITilePropertiesAndBehavior
 			return getBoundBox(state);
 		}
 		
-		default void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox,
-				List<AxisAlignedBB> collidingBoxes, Entity entity)
+		default void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity)
 		{
 			AxisAlignedBB axisAlignedBB = getCollisionBoundingBox(state);
 			if (axisAlignedBB != Block.NULL_AABB)
 			{
 				axisAlignedBB = axisAlignedBB.offset(pos());
-				if (axisAlignedBB.intersectsWith(entityBox))
-					collidingBoxes.add(axisAlignedBB);
+				if (axisAlignedBB.intersectsWith(entityBox)) collidingBoxes.add(axisAlignedBB);
 			}
 		}
 		
 		@SideOnly(Side.CLIENT)
 		default AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 		{
-			return getBoundBox(state);//.offset(pos());
+			return getBoundBox(state);// .offset(pos());
 		}
 	}
 	

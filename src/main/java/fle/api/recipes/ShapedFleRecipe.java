@@ -24,8 +24,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
- * The shaped recipe type.
- * A more usable recipe template for crafting table.<p>
+ * The shaped recipe type. A more usable recipe template for crafting table.
+ * <p>
+ * 
  * @author ueyudiud
  * @see net.minecraftforge.oredict.ShapedOreRecipe
  */
@@ -51,31 +52,35 @@ public class ShapedFleRecipe implements IRecipe
 		}
 		else if (object instanceof AbstractStack)
 		{
-			if (object instanceof OreStack)
-				object = new OreStackExt((OreStack) object);//Extended wrapper.
+			if (object instanceof OreStack) object = new OreStackExt((OreStack) object);// Extended
+																						// wrapper.
 			return new SingleInputMatch((AbstractStack) object);
 		}
 		else if (object instanceof SingleInputMatch)
 		{
 			return (SingleInputMatch) object;
 		}
-		else throw new RuntimeException("Unknown element: " + object);
+		else
+			throw new RuntimeException("Unknown element: " + object);
 	}
 	
-	protected SingleInputMatch[][] inputs;
-	protected int width;
-	protected int height;
-	protected AbstractStack output;
-	protected boolean forcePlayerContain;
-	protected boolean enableMirror;
+	protected SingleInputMatch[][]	inputs;
+	protected int					width;
+	protected int					height;
+	protected AbstractStack			output;
+	protected boolean				forcePlayerContain;
+	protected boolean				enableMirror;
 	
-	public ShapedFleRecipe(ItemStack output, Object...inputs) { this(new BaseStack(output), inputs); }
+	public ShapedFleRecipe(ItemStack output, Object...inputs)
+	{
+		this(new BaseStack(output), inputs);
+	}
+	
 	public ShapedFleRecipe(AbstractStack output, Object...inputs)
 	{
 		try
 		{
-			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null))
-				throw new RuntimeException();
+			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null)) throw new RuntimeException();
 			this.output = output;
 			int i = 0;
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
@@ -84,8 +89,7 @@ public class ShapedFleRecipe implements IRecipe
 			char[][] map;
 			String[] table = helper.readArrayOrCompact(String.class);
 			
-			if (table.length == 0)
-				throw new RuntimeException();
+			if (table.length == 0) throw new RuntimeException();
 			
 			this.height = table.length;
 			this.width = table[0].length();
@@ -93,12 +97,11 @@ public class ShapedFleRecipe implements IRecipe
 			for (int j = 0; j < table.length; ++j)
 			{
 				map[j] = table[j].toCharArray();
-				if (map[j].length != this.width)
-					throw new RuntimeException();
+				if (map[j].length != this.width) throw new RuntimeException();
 			}
 			
 			Map<Character, SingleInputMatch> matchs = new HashMap<>();
-			helper.<Character, Object>readToEnd((chr, obj)-> matchs.put(chr, castAsInputMatch(obj)));
+			helper.<Character, Object> readToEnd((chr, obj) -> matchs.put(chr, castAsInputMatch(obj)));
 			
 			this.inputs = new SingleInputMatch[this.height][this.width];
 			for (i = 0; i < this.height; ++i)
@@ -116,21 +119,23 @@ public class ShapedFleRecipe implements IRecipe
 	/**
 	 * For extends, argument will rewrite in extended type.
 	 */
-	protected ShapedFleRecipe() { }
+	protected ShapedFleRecipe()
+	{
+	}
 	
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
-		//The player argument get.
+		// The player argument get.
 		EntityPlayer player = ForgeHooks.getCraftingPlayer();
-		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player))
-			return false;
+		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player)) return false;
 		if (inv.getHeight() < this.height || inv.getWidth() < this.width) return false;
 		return getOffset(inv) != null;
 	}
 	
 	/**
 	 * Checking could player crafting this recipe.
+	 * 
 	 * @param world the crafting world.
 	 * @param player the crafting player.
 	 */
@@ -146,10 +151,8 @@ public class ShapedFleRecipe implements IRecipe
 		for (int j = 0; j <= maxYOff; ++j)
 			for (int i = 0; i <= maxXOff; ++i)
 			{
-				if (matchWithCoordOffset(inv, i, j, false))
-					return new int[]{i, j, 0};
-				if (this.enableMirror && matchWithCoordOffset(inv, i, j, true))
-					return new int[]{i, j, 1};
+				if (matchWithCoordOffset(inv, i, j, false)) return new int[] { i, j, 0 };
+				if (this.enableMirror && matchWithCoordOffset(inv, i, j, true)) return new int[] { i, j, 1 };
 			}
 		return null;
 	}
@@ -161,8 +164,7 @@ public class ShapedFleRecipe implements IRecipe
 			{
 				SingleInputMatch match = this.inputs[j][mirror ? this.width - i - 1 : i];
 				ItemStack stack = inv.getStackInRowAndColumn(i + xOff, j + yOff);
-				if (!match.match(stack))
-					return false;
+				if (!match.match(stack)) return false;
 			}
 		return true;
 	}

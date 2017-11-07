@@ -56,34 +56,32 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public class ModelPartCol implements INebulaModelPart
 {
-	static final JsonDeserializer<ModelPartCol> LOADER = (json, typeOfT, context)-> {
+	static final JsonDeserializer<ModelPartCol> LOADER = (json, typeOfT, context) -> {
 		if (json.isJsonObject())
 		{
 			JsonObject object = json.getAsJsonObject();
 			if (object.has("variants"))
 			{
 				Variant def = object.has("default") ? loadVariant(object.get("default"), context) : defaultVariant();
-				Map<String, Map<String, IntegerMap<Variant>>> map =
-						Jsons.getAsMap(object.getAsJsonObject("variants"),
-								j->Jsons.getAsMap(j.getAsJsonObject(), j1-> {
-									IntegerMap<Variant> m1 = new IntegerMap();
-									if (j1.isJsonArray())
-									{
-										for (JsonElement json1 : j1.getAsJsonArray())
-										{
-											Variant variant = loadVariant(json1, context);
-											int weight = json1.isJsonObject() ? Jsons.getOrDefault(json1.getAsJsonObject(), "weight", 1) : 1;
-											m1.put(variant, weight);
-										}
-										return m1;
-									}
-									else
-									{
-										Variant variant = loadVariant(j1, context);
-										m1.put(variant, 1);
-										return m1;
-									}
-								}));
+				Map<String, Map<String, IntegerMap<Variant>>> map = Jsons.getAsMap(object.getAsJsonObject("variants"), j -> Jsons.getAsMap(j.getAsJsonObject(), j1 -> {
+					IntegerMap<Variant> m1 = new IntegerMap();
+					if (j1.isJsonArray())
+					{
+						for (JsonElement json1 : j1.getAsJsonArray())
+						{
+							Variant variant = loadVariant(json1, context);
+							int weight = json1.isJsonObject() ? Jsons.getOrDefault(json1.getAsJsonObject(), "weight", 1) : 1;
+							m1.put(variant, weight);
+						}
+						return m1;
+					}
+					else
+					{
+						Variant variant = loadVariant(j1, context);
+						m1.put(variant, 1);
+						return m1;
+					}
+				}));
 				IntegerMap<Variant> m1 = new IntegerMap();
 				m1.put(def, 1);
 				return new ModelPartCol(compose(map, def), m1, Jsons.getOrDefault(object, "extendData", false));
@@ -100,15 +98,16 @@ public class ModelPartCol implements INebulaModelPart
 			{
 				Variant variant = loadVariant(json1, context);
 				
-				//If no model data exist, used default model.
-				variant.parts = L.or(variant.parts, ()->ImmutableList.of(new ModelPartVerticalCube()));
+				// If no model data exist, used default model.
+				variant.parts = L.or(variant.parts, () -> ImmutableList.of(new ModelPartVerticalCube()));
 				
 				int weight = json1.isJsonObject() ? Jsons.getOrDefault(json1.getAsJsonObject(), "weight", 1) : 1;
 				map.put(variant, weight);
 			}
 			return new ModelPartCol(ImmutableMap.of(), map, false);
 		}
-		else throw new JsonParseException("Can not parse " + json);
+		else
+			throw new JsonParseException("Can not parse " + json);
 	};
 	
 	private static final Selector<List<INebulaBakedModelPart>> NONE = Selector.single(ImmutableList.of());
@@ -123,8 +122,7 @@ public class ModelPartCol implements INebulaModelPart
 		return ImmutableMap.copyOf(states);
 	}
 	
-	private static void put(INode<Entry<String, Map<String, IntegerMap<Variant>>>> node, Map<String, String> base,
-			IntegerMap<Variant> parent, Map<Map<String, String>, IntegerMap<Variant>> states)
+	private static void put(INode<Entry<String, Map<String, IntegerMap<Variant>>>> node, Map<String, String> base, IntegerMap<Variant> parent, Map<Map<String, String>, IntegerMap<Variant>> states)
 	{
 		if (node == null)
 		{
@@ -169,7 +167,7 @@ public class ModelPartCol implements INebulaModelPart
 		if (json.isJsonObject())
 		{
 			JsonObject object = json.getAsJsonObject();
-			if (object.has("type"))//Regard as a direct a sub model.
+			if (object.has("type"))// Regard as a direct a sub model.
 			{
 				variant = defaultVariant();
 				INebulaModelPart part = deserialize(json, context);
@@ -194,7 +192,8 @@ public class ModelPartCol implements INebulaModelPart
 			variant = defaultVariant();
 			variant.parts = Optional.of(loadParts(json.getAsJsonArray(), context));
 		}
-		else throw new JsonParseException("The variant json should be a object or array.");
+		else
+			throw new JsonParseException("The variant json should be a object or array.");
 		return variant;
 	}
 	
@@ -207,7 +206,8 @@ public class ModelPartCol implements INebulaModelPart
 		}
 		else if (object.has("parts"))
 			return loadParts(object.getAsJsonArray("parts"), context);
-		else return null;
+		else
+			return null;
 	}
 	
 	private static List<INebulaModelPart> loadParts(JsonArray array, JsonDeserializationContext context) throws JsonParseException
@@ -232,9 +232,9 @@ public class ModelPartCol implements INebulaModelPart
 		};
 		
 		@Nullable
-		Retextures parent;
+		Retextures			parent;
 		@Nonnull
-		Map<String, String> map;
+		Map<String, String>	map;
 		
 		Retextures(Map<String, String> map, Retextures parent)
 		{
@@ -251,8 +251,7 @@ public class ModelPartCol implements INebulaModelPart
 		String get$(String key, LinkedList<String> list)
 		{
 			if (key.length() == 0 || key.charAt(0) != '#') return key;
-			if (list.contains(key))
-				throw new RuntimeException("Resource location :" + key + ", looped loading.");
+			if (list.contains(key)) throw new RuntimeException("Resource location :" + key + ", looped loading.");
 			key = key.substring(1);
 			list.addLast(key);
 			if (this.map.containsKey(key))
@@ -264,7 +263,8 @@ public class ModelPartCol implements INebulaModelPart
 				String key1 = this.parent.get$(key, list);
 				return key != key1 ? get$(key1, list) : key1;
 			}
-			else return key;
+			else
+				return key;
 		}
 		
 		Map<String, String> flatMap()
@@ -283,8 +283,7 @@ public class ModelPartCol implements INebulaModelPart
 					map.put(entry.getKey(), get(entry.getValue()));
 				}
 			}
-			if (this.parent != null)
-				this.parent.flatMap$(map);
+			if (this.parent != null) this.parent.flatMap$(map);
 		}
 		
 		boolean isEmpty()
@@ -295,22 +294,22 @@ public class ModelPartCol implements INebulaModelPart
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this || (!(obj instanceof Retextures) ? false :
-				this.map.equals(((Retextures) obj).map) && L.equal(this.parent, ((Retextures) obj).parent));
+			return obj == this || (!(obj instanceof Retextures) ? false : this.map.equals(((Retextures) obj).map) && L.equal(this.parent, ((Retextures) obj).parent));
 		}
 	}
 	
 	static class Variant
 	{
-		OptionalInt x;
-		OptionalInt y;
-		Optional<Boolean> enable;
-		Optional<List<INebulaModelPart>> parts;
-		Retextures retextures;
+		OptionalInt							x;
+		OptionalInt							y;
+		Optional<Boolean>					enable;
+		Optional<List<INebulaModelPart>>	parts;
+		Retextures							retextures;
 		
 		Variant()
 		{
 		}
+		
 		Variant(Variant base)
 		{
 			this.x = base.x;
@@ -332,18 +331,13 @@ public class ModelPartCol implements INebulaModelPart
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this || (
-					!(obj instanceof Variant) ? false :
-						((Variant) obj).x.equals(this.x) &&
-						((Variant) obj).y.equals(this.y) &&
-						((Variant) obj).enable.equals(this.enable) &&
-						((Variant) obj).parts.equals(this.parts));
+			return obj == this || (!(obj instanceof Variant) ? false : ((Variant) obj).x.equals(this.x) && ((Variant) obj).y.equals(this.y) && ((Variant) obj).enable.equals(this.enable) && ((Variant) obj).parts.equals(this.parts));
 		}
 	}
 	
-	Map<Map<String, String>, IntegerMap<Variant>> function;
-	IntegerMap<Variant> def;
-	boolean extendData;
+	Map<Map<String, String>, IntegerMap<Variant>>	function;
+	IntegerMap<Variant>								def;
+	boolean											extendData;
 	
 	public ModelPartCol(Map<Map<String, String>, IntegerMap<Variant>> function, Variant def, boolean extendData)
 	{
@@ -363,7 +357,7 @@ public class ModelPartCol implements INebulaModelPart
 	private void retexLocations()
 	{
 		List<Variant> set = new ArrayList<>(this.def.keySet());
-		this.function.values().forEach(v->set.addAll(v.keySet()));
+		this.function.values().forEach(v -> set.addAll(v.keySet()));
 		
 		for (Variant variant : set)
 		{
@@ -386,35 +380,33 @@ public class ModelPartCol implements INebulaModelPart
 	
 	private <E> Collection<E> collect(BiConsumer<INebulaModelPart, Collection<E>> consumer)
 	{
-		Set<E> set = L.collect(this.function.values(),
-				(map, c)->c.addAll(L.collect(map, (e, c1)->e.getKey().parts.orElse(ImmutableList.of()).forEach(p->consumer.accept(p, c1)))));
-		this.def.forEach(e->set.addAll(L.collect(e.getKey().parts.orElse(ImmutableList.of()), consumer)));
+		Set<E> set = L.collect(this.function.values(), (map, c) -> c.addAll(L.collect(map, (e, c1) -> e.getKey().parts.orElse(ImmutableList.of()).forEach(p -> consumer.accept(p, c1)))));
+		this.def.forEach(e -> set.addAll(L.collect(e.getKey().parts.orElse(ImmutableList.of()), consumer)));
 		return set;
 	}
 	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
-		return collect((p, c)->c.addAll(p.getDependencies()));
+		return collect((p, c) -> c.addAll(p.getDependencies()));
 	}
 	
 	@Override
 	public Collection<String> getResources()
 	{
-		return collect((p, c)-> c.addAll(p.getResources()));
+		return collect((p, c) -> c.addAll(p.getResources()));
 	}
 	
 	@Override
 	public Collection<ResourceLocation> getDirectResources()
 	{
-		return collect((p, c)-> c.addAll(p.getDirectResources()));
+		return collect((p, c) -> c.addAll(p.getDirectResources()));
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
-		//Builds id->variant logic.
+		// Builds id->variant logic.
 		List<Variant> list = new ArrayList<>();
 		list.addAll(this.def.keySet());
 		for (IntegerMap<Variant> key : this.function.values())
@@ -431,9 +423,8 @@ public class ModelPartCol implements INebulaModelPart
 		}
 		
 		List<INebulaBakedModelPart>[] cachedParts = new List[list.size()];
-		for (int i = 0; i < list.size(); cachedParts[i] =
-				bakeVariant(list.get(i), format, iconHandlerGetter, bakedTextureGetter, transformation),
-				++i);
+		for (int i = 0; i < list.size(); cachedParts[i] = bakeVariant(list.get(i), format, iconHandlerGetter, bakedTextureGetter, transformation), ++i)
+			;
 		
 		ImmutableMap.Builder<Map<String, String>, Selector<List<INebulaBakedModelPart>>> builder = ImmutableMap.builder();
 		for (Entry<Map<String, String>, IntegerMap<Variant>> entry : this.function.entrySet())
@@ -444,19 +435,19 @@ public class ModelPartCol implements INebulaModelPart
 		return new BakedModelPart(builder.build(), packBakedParts(this.def, list, cachedParts), this.extendData);
 	}
 	
-	private Selector<List<INebulaBakedModelPart>> packBakedParts(IntegerMap<Variant> variants,
-			List<Variant> idxList, List<INebulaBakedModelPart>[] cachedParts)
+	private Selector<List<INebulaBakedModelPart>> packBakedParts(IntegerMap<Variant> variants, List<Variant> idxList, List<INebulaBakedModelPart>[] cachedParts)
 	{
 		switch (variants.size())
 		{
-		case 0 : return NONE;
-		case 1 :
+		case 0:
+			return NONE;
+		case 1:
 			Variant variant = Iterables.getOnlyElement(variants).getKey();
 			List<INebulaBakedModelPart> parts = cachedParts[idxList.indexOf(variant)];
-			if (parts.size() == 1 && parts.get(0) instanceof ModelPartCol.BakedModelPart &&
-					(((ModelPartCol.BakedModelPart) parts.get(0)).map.isEmpty() || !this.extendData))
+			if (parts.size() == 1 && parts.get(0) instanceof ModelPartCol.BakedModelPart && (((ModelPartCol.BakedModelPart) parts.get(0)).map.isEmpty() || !this.extendData))
 			{
-				return ((ModelPartCol.BakedModelPart) parts.get(0)).defaultPart;//Part extends.
+				return ((ModelPartCol.BakedModelPart) parts.get(0)).defaultPart;// Part
+																				// extends.
 			}
 			return parts.size() == 0 ? NONE : Selector.single(parts);
 		default:
@@ -469,15 +460,11 @@ public class ModelPartCol implements INebulaModelPart
 		}
 	}
 	
-	private static List<INebulaBakedModelPart> bakeVariant(Variant variant, VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	private static List<INebulaBakedModelPart> bakeVariant(Variant variant, VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		if (variant.enable.orElse(true) && variant.parts.isPresent())
 		{
-			TRSRTransformation t = ModelRotation
-					.getModelRotation(variant.x.orElse(0), variant.y.orElse(0))
-					.apply(com.google.common.base.Optional.absent())
-					.or(TRSRTransformation.identity());
+			TRSRTransformation t = ModelRotation.getModelRotation(variant.x.orElse(0), variant.y.orElse(0)).apply(com.google.common.base.Optional.absent()).or(TRSRTransformation.identity());
 			if (transformation != TRSRTransformation.identity())
 			{
 				Matrix4f matrix = t.getMatrix();
@@ -492,34 +479,31 @@ public class ModelPartCol implements INebulaModelPart
 		}
 		else
 		{
-			return ImmutableList.of();//No part elements.
+			return ImmutableList.of();// No part elements.
 		}
 	}
 	
 	@Override
 	public INebulaModelPart retexture(Map<String, String> retexture)
 	{
-		return new ModelPartCol(ImmutableMap.copyOf(Maps.<Map<String, String>, IntegerMap<Variant>, IntegerMap<Variant>>transformValues(
-				this.function, map->
-				{
-					IntegerMap<Variant> map1 = new IntegerMap<>(map.size(), 1.0F);
-					map.forEach(e-> {
-						Variant variant = new Variant(e.getKey());
-						variant.retextures = new Retextures(retexture, variant.retextures);
-						map1.put(variant, e.getValue());
-					});
-					return map;
-				})), this.def, this.extendData);
+		return new ModelPartCol(ImmutableMap.copyOf(Maps.<Map<String, String>, IntegerMap<Variant>, IntegerMap<Variant>> transformValues(this.function, map -> {
+			IntegerMap<Variant> map1 = new IntegerMap<>(map.size(), 1.0F);
+			map.forEach(e -> {
+				Variant variant = new Variant(e.getKey());
+				variant.retextures = new Retextures(retexture, variant.retextures);
+				map1.put(variant, e.getValue());
+			});
+			return map;
+		})), this.def, this.extendData);
 	}
 	
 	private static class BakedModelPart implements INebulaBakedModelPart
 	{
-		final Map<Map<String, String>, Selector<List<INebulaBakedModelPart>>> map;
-		final Selector<List<INebulaBakedModelPart>> defaultPart;
-		final boolean extendData;
+		final Map<Map<String, String>, Selector<List<INebulaBakedModelPart>>>	map;
+		final Selector<List<INebulaBakedModelPart>>								defaultPart;
+		final boolean															extendData;
 		
-		BakedModelPart(Map<Map<String, String>, Selector<List<INebulaBakedModelPart>>> parts,
-				Selector<List<INebulaBakedModelPart>> defaultPart, boolean extendData)
+		BakedModelPart(Map<Map<String, String>, Selector<List<INebulaBakedModelPart>>> parts, Selector<List<INebulaBakedModelPart>> defaultPart, boolean extendData)
 		{
 			this.map = parts;
 			this.defaultPart = defaultPart;
@@ -531,8 +515,7 @@ public class ModelPartCol implements INebulaModelPart
 		{
 			Selector<List<INebulaBakedModelPart>> selector = this.map.get(parse(key));
 			int random = (int) (rand ^ rand >> 32);
-			return new ArrayList<>(L.collect(selector == null ? this.defaultPart.next(random) : selector.next(random),
-					(p, c)-> c.addAll(p.getQuads(facing, this.extendData ? key : NebulaModelLoader.NORMAL))));
+			return new ArrayList<>(L.collect(selector == null ? this.defaultPart.next(random) : selector.next(random), (p, c) -> c.addAll(p.getQuads(facing, this.extendData ? key : NebulaModelLoader.NORMAL))));
 		}
 		
 		@Override

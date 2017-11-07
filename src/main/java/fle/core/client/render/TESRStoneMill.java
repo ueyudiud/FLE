@@ -24,12 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRStoneMill extends TESRBase<TEStoneMill>
 {
-	private TextureAtlasSprite top;
-	private TextureAtlasSprite side;
-	private TextureAtlasSprite bottom;
+	private TextureAtlasSprite	top;
+	private TextureAtlasSprite	side;
+	private TextureAtlasSprite	bottom;
 	
 	{
-		NebulaTextureHandler.addIconLoader(loader-> {
+		NebulaTextureHandler.addIconLoader(loader -> {
 			this.top = loader.registerIcon(FLE.MODID, "blocks/machine/stone_mill_top");
 			this.side = loader.registerIcon(FLE.MODID, "blocks/machine/stone_mill_side");
 			this.bottom = loader.registerIcon(FLE.MODID, "blocks/machine/stone_mill_bottom");
@@ -40,15 +40,14 @@ public class TESRStoneMill extends TESRBase<TEStoneMill>
 	public void renderTileEntityAt(TEStoneMill tile, double x, double y, double z, float partialTicks, int destroyStage)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GL11.glTranslatef((float) x, (float) y, (float) z);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		//Render stone mill.
+		// Render stone mill.
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-			if (tile != null)
-				GL11.glRotatef(tile.getRotationAngle(), 0, -1, 0);
+			if (tile != null) GL11.glRotatef(tile.getRotationAngle(), 0, -1, 0);
 			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 			
 			this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);

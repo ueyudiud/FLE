@@ -21,10 +21,10 @@ public class ResearchCategory implements IRegisteredNameable
 {
 	private static final Register<ResearchCategory> RESEARCHS = new Register<>();
 	
-	protected List<ResearchCategory> requiredBefore;
-	protected IntegerMap<ResearchObject> objects;
-	protected int minAvailableWeight = 1;
-	private final String name;
+	protected List<ResearchCategory>		requiredBefore;
+	protected IntegerMap<ResearchObject>	objects;
+	protected int							minAvailableWeight	= 1;
+	private final String					name;
 	
 	public ResearchCategory(String name)
 	{
@@ -35,16 +35,15 @@ public class ResearchCategory implements IRegisteredNameable
 	public boolean isAvailable(EntityPlayer player)
 	{
 		Cache<Integer> cache = new Cache<>(0);
-		this.objects.foreach((ro, w)-> {
-			if (ro.getKnowledge().access(player))
-				cache.set(cache.get() + w);
+		this.objects.foreach((ro, w) -> {
+			if (ro.getKnowledge().access(player)) cache.set(cache.get() + w);
 		});
 		return cache.get() >= this.minAvailableWeight;
 	}
 	
 	public boolean isUsable(EntityPlayer player)
 	{
-		return this.requiredBefore.stream().allMatch(rc->rc.isAvailable(player));
+		return this.requiredBefore.stream().allMatch(rc -> rc.isAvailable(player));
 	}
 	
 	public String getTranslationName()

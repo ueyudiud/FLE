@@ -22,8 +22,7 @@ public class ToolSickle extends Tool
 	}
 	
 	@Override
-	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
-			IBlockState block)
+	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block)
 	{
 		return 1.0F;
 	}

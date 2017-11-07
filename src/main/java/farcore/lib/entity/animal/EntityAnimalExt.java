@@ -25,17 +25,17 @@ import net.minecraft.world.World;
  */
 public abstract class EntityAnimalExt extends EntityAnimal implements IAnimalAccess, IAnimalFamily<EntityAnimalExt>
 {
-	public static final DataParameter<EnumGender> GENDER = Entities.createKey(EntityAnimalExt.class, EnumGender.class);
-	public static final DataParameter<Short> AGE = EntityDataManager.createKey(EntityAnimalExt.class, DataSerializers.SHORT);
+	public static final DataParameter<EnumGender>	GENDER	= Entities.createKey(EntityAnimalExt.class, EnumGender.class);
+	public static final DataParameter<Short>		AGE		= EntityDataManager.createKey(EntityAnimalExt.class, DataSerializers.SHORT);
 	
-	//Fake final value.
-	protected IAnimalFamily<? super EntityAnimalExt> family;
-	protected IAnimalSpecie<? super EntityAnimalExt> specie;
+	// Fake final value.
+	protected IAnimalFamily<? super EntityAnimalExt>	family;
+	protected IAnimalSpecie<? super EntityAnimalExt>	specie;
 	
-	protected EnumGender gender = hasGender() ? L.random(EnumGender.SEXUAL, getRNG()) : EnumGender.UNKNOWN;
-	protected int growBuf;
-	protected int growAge;
-	protected GeneticMaterial gm;
+	protected EnumGender		gender	= hasGender() ? L.random(EnumGender.SEXUAL, getRNG()) : EnumGender.UNKNOWN;
+	protected int				growBuf;
+	protected int				growAge;
+	protected GeneticMaterial	gm;
 	
 	public EntityAnimalExt(World world, IAnimalFamily<?> family)
 	{

@@ -33,15 +33,15 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	/** The biome cache. */
 	protected final DataCacheCoord<BiomeBase> biomeCache;
 	
-	public final FarSurfaceDataGenerator dataGenerator;
-	protected final GenLayer[] layers;
-	//	protected final BiomeCache biomeCache;
+	public final FarSurfaceDataGenerator	dataGenerator;
+	protected final GenLayer[]				layers;
+	// protected final BiomeCache biomeCache;
 	
 	public FarSurfaceBiomeProvider(WorldInfo info)
 	{
-		this.biomeCache = new DataCacheCoord<>((x, z)-> getBiomes(null, x, z, 16, 16, false), 4);
+		this.biomeCache = new DataCacheCoord<>((x, z) -> getBiomes(null, x, z, 16, 16, false), 4);
 		this.dataGenerator = new FarSurfaceDataGenerator(this, info.getSeed());
-		//		this.biomeCache = new BiomeCache(this);
+		// this.biomeCache = new BiomeCache(this);
 		allowedBiomes.add(FarGenBiomes.boreal_forest);
 		allowedBiomes.add(FarGenBiomes.subtropical_broadleaf_forest);
 		allowedBiomes.add(FarGenBiomes.subtropical_coniferous_forest);
@@ -59,7 +59,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		{
 			defaultBiome = FarGenBiomes.grassland;
 		}
-		if (defaultBiome != null && ! (defaultBiome instanceof BiomeBase))
+		if (defaultBiome != null && !(defaultBiome instanceof BiomeBase))
 		{
 			Log.warn("The biome should be extended BiomeBase.", new IllegalStateException());
 			defaultBiome = BiomeBase.DEBUG;
@@ -73,8 +73,8 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	}
 	
 	/**
-	 * Gets biomes to use for the blocks and loads the other data like temperature and humidity onto the
-	 * WorldChunkManager.
+	 * Gets biomes to use for the blocks and loads the other data like
+	 * temperature and humidity onto the WorldChunkManager.
 	 */
 	public int[] loadBlockGeneratorData(@Nullable int[] listToReuse, int x, int z, int width, int length)
 	{
@@ -92,8 +92,8 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	}
 	
 	/**
-	 * Gets biomes to use for the blocks and loads the other data like temperature and humidity onto the
-	 * WorldChunkManager.
+	 * Gets biomes to use for the blocks and loads the other data like
+	 * temperature and humidity onto the WorldChunkManager.
 	 */
 	@Override
 	public BiomeBase[] getBiomes(Biome[] oldBiomeList, int x, int z, int width, int depth)
@@ -172,7 +172,10 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public boolean areBiomesViable(int x, int z, int radius, List<Biome> allowed)
 	{
 		IntCache.resetIntCache();
-		int i = x - radius >> 2; int j = z - radius >> 2; int k = x + radius >> 2; int l = z + radius >> 2;
+		int i = x - radius >> 2;
+		int j = z - radius >> 2;
+		int k = x + radius >> 2;
+		int l = z + radius >> 2;
 		int i1 = k - i + 1;
 		int j1 = l - j + 1;
 		int[] aint = this.layers[1].getInts(i, j, i1, j1);
@@ -181,8 +184,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			for (int k1 = 0; k1 < i1 * j1; ++k1)
 			{
 				Biome biome = BiomeBase.getBiomeFromID(aint[k1] & 0xFF);
-				if (!allowed.contains(biome))
-					return false;
+				if (!allowed.contains(biome)) return false;
 			}
 			return true;
 		}

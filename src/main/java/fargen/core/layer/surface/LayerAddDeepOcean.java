@@ -23,9 +23,9 @@ public class LayerAddDeepOcean extends LayerExpandMix
 		if (core == 0)
 		{
 			int oceanCount = 0;
-			if (up    == 0) oceanCount++;
-			if (down  == 0) oceanCount++;
-			if (left  == 0) oceanCount++;
+			if (up == 0) oceanCount++;
+			if (down == 0) oceanCount++;
+			if (left == 0) oceanCount++;
 			if (right == 0) oceanCount++;
 			return oceanCount > 3 ? LayerSurfaceTerrain._deep_ocean.biomeID : core;
 		}

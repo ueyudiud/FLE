@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 
 /**
  * The global energy net interface.
+ * 
  * @author ueyudiud
  *
  */
@@ -20,6 +21,7 @@ public interface IEnergyNet
 {
 	/**
 	 * The energy formatter, use to exchange energy from two energy net.
+	 * 
 	 * @return
 	 */
 	default Energy getEnergyFormat()
@@ -28,61 +30,68 @@ public interface IEnergyNet
 	}
 	
 	/**
-	 * Add new energy capabilitable object.
-	 * Called when post {@link farcore.event.EnergyEvent.Add}
+	 * Add new energy capabilitable object. Called when post
+	 * {@link farcore.event.EnergyEvent.Add}
+	 * 
 	 * @param tile
 	 */
 	void add(Object tile);
 	
 	/**
-	 * Remove energy capabilitable object.
-	 * Called when post {@link farcore.event.EnergyEvent.Remove}
+	 * Remove energy capabilitable object. Called when post
+	 * {@link farcore.event.EnergyEvent.Remove}
+	 * 
 	 * @param tile
 	 */
 	void remove(Object tile);
 	
 	/**
-	 * Reload energy capabilitable object, it is equal to
-	 * remove and add this object.
-	 * Called when post {@link farcore.event.EnergyEvent.Reload}
+	 * Reload energy capabilitable object, it is equal to remove and add this
+	 * object. Called when post {@link farcore.event.EnergyEvent.Reload}
+	 * 
 	 * @param tile
 	 */
 	void reload(Object tile);
 	
 	/**
-	 * Mark energy capabilitable object for update.
-	 * Called when post {@link farcore.event.EnergyEvent.Mark}
+	 * Mark energy capabilitable object for update. Called when post
+	 * {@link farcore.event.EnergyEvent.Mark}
+	 * 
 	 * @param tile
 	 */
 	void mark(Object tile);
 	
 	/**
 	 * On world unloading.
+	 * 
 	 * @param world
 	 */
 	void unload(World world);
 	
 	/**
 	 * On world loading.
+	 * 
 	 * @param world
 	 */
 	void load(World world);
 	
 	/**
 	 * On world ticking update.
+	 * 
 	 * @param world
 	 */
 	void update(World world);
 	
 	/**
 	 * For general energy net uses.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
 	final class Impl implements IEnergyNet
 	{
-		final LocalEnergyNetProvider provider;
-		final HashMap<Integer, LocalEnergyNet> nets = new HashMap<>();
+		final LocalEnergyNetProvider			provider;
+		final HashMap<Integer, LocalEnergyNet>	nets	= new HashMap<>();
 		
 		public Impl(LocalEnergyNetProvider provider)
 		{
@@ -98,9 +107,9 @@ public interface IEnergyNet
 		{
 			int dim = world.provider.getDimension();
 			LocalEnergyNet net = nets.get(dim);
-			if(net == null)
+			if (net == null)
 			{
-				if(!create) return null;
+				if (!create) return null;
 				nets.put(dim, provider.createEnergyNet(world));
 			}
 			return net;
@@ -110,7 +119,7 @@ public interface IEnergyNet
 		public void add(Object tile)
 		{
 			World world = provider.getWorldFromTile(tile);
-			if(world != null)
+			if (world != null)
 			{
 				getOrCreate(world, true).add(tile);
 			}
@@ -120,10 +129,10 @@ public interface IEnergyNet
 		public void remove(Object tile)
 		{
 			World world = provider.getWorldFromTile(tile);
-			if(world != null)
+			if (world != null)
 			{
 				LocalEnergyNet net = getOrCreate(world, false);
-				if(net != null)
+				if (net != null)
 				{
 					net.remove(tile);
 				}
@@ -134,7 +143,7 @@ public interface IEnergyNet
 		public void reload(Object tile)
 		{
 			World world = provider.getWorldFromTile(tile);
-			if(world != null)
+			if (world != null)
 			{
 				getOrCreate(world, true).reload(tile);
 			}
@@ -144,7 +153,7 @@ public interface IEnergyNet
 		public void mark(Object tile)
 		{
 			World world = provider.getWorldFromTile(tile);
-			if(world != null)
+			if (world != null)
 			{
 				getOrCreate(world, true).mark(tile);
 			}
@@ -154,7 +163,7 @@ public interface IEnergyNet
 		public void unload(World world)
 		{
 			LocalEnergyNet net = nets.remove(world.provider.getDimension());
-			if(net != null)
+			if (net != null)
 			{
 				net.unload();
 			}
@@ -172,7 +181,7 @@ public interface IEnergyNet
 		public void update(World world)
 		{
 			LocalEnergyNet net = getOrCreate(world, false);
-			if(net != null)
+			if (net != null)
 			{
 				net.update();
 			}
@@ -184,12 +193,14 @@ public interface IEnergyNet
 		LocalEnergyNet<?> createEnergyNet(World world);
 		
 		/**
-		 * Get specific world belong for tile, return null when tie is not belong this tile
-		 * or it is invalid.
+		 * Get specific world belong for tile, return null when tie is not
+		 * belong this tile or it is invalid.
+		 * 
 		 * @param tile
 		 * @return
 		 */
-		@Nullable World getWorldFromTile(Object tile);
+		@Nullable
+		World getWorldFromTile(Object tile);
 	}
 	
 	abstract class LocalEnergyNet<E>
@@ -203,18 +214,21 @@ public interface IEnergyNet
 		
 		/**
 		 * On world unloading.
+		 * 
 		 * @param world
 		 */
 		protected abstract void unload();
 		
 		/**
 		 * On world loading.
+		 * 
 		 * @param world
 		 */
 		protected abstract void load();
 		
 		/**
 		 * On world ticking update.
+		 * 
 		 * @param world
 		 */
 		protected abstract void update();

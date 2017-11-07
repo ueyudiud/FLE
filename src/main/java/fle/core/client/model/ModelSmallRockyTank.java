@@ -37,11 +37,10 @@ public class ModelSmallRockyTank extends CompactModel
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 	{
-		if(state instanceof BlockStateTileEntityWapper)
+		if (state instanceof BlockStateTileEntityWapper)
 		{
 			TEBase tank = ((BlockStateTileEntityWapper<? extends TEBase>) state).tile;
-			if (tank instanceof TESmallRockyTank)
-				return genSmallRockyTankQuads(((TESmallRockyTank) tank).getMaterial(), side);
+			if (tank instanceof TESmallRockyTank) return genSmallRockyTankQuads(((TESmallRockyTank) tank).getMaterial(), side);
 		}
 		return ImmutableList.of();
 	}
@@ -51,29 +50,26 @@ public class ModelSmallRockyTank extends CompactModel
 	{
 		switch (stack.getItemDamage())
 		{
-		case 0 :
+		case 0:
 			return genSmallRockyTankQuads(Mat.getMaterialFromStack(stack, "material", M.stone), facing);
 		default:
 			return ImmutableList.of();
 		}
 	}
 	
-	private static final float
-	a = 0.25F, b = 0.75F;
+	private static final float a = 0.25F, b = 0.75F;
 	
 	private List<BakedQuad> genSmallRockyTankQuads(Mat material, EnumFacing side)
 	{
-		TextureAtlasSprite
-		icon1 = getIcon(material, EnumRockType.brick_compacted),
-		icon2 = getIcon(material, EnumRockType.smoothed);
+		TextureAtlasSprite icon1 = getIcon(material, EnumRockType.brick_compacted), icon2 = getIcon(material, EnumRockType.smoothed);
 		ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 		switch (Direction.of(side))
 		{
-		case W :
-		case E :
-		case S :
-		case N :
-		case D :
+		case W:
+		case E:
+		case S:
+		case N:
+		case D:
 			this.qb.setIcon(icon1);
 			this.qb.setBound(0, 0, 0, 1, 1, 1);
 			switch (side)
@@ -81,46 +77,26 @@ public class ModelSmallRockyTank extends CompactModel
 			case WEST:
 				builder.add(this.qb.bakeXNegFace());
 				break;
-			case EAST :
+			case EAST:
 				builder.add(this.qb.bakeXPosFace());
 				break;
-			default ://NORTH
+			default:// NORTH
 				builder.add(this.qb.bakeZNegFace());
 				break;
-			case SOUTH :
+			case SOUTH:
 				builder.add(this.qb.bakeZPosFace());
 				break;
-			case DOWN :
+			case DOWN:
 				builder.add(this.qb.bakeYNegFace());
 				break;
 			}
 			break;
-		case U :
+		case U:
 			this.qb.setIcon(icon2);
-			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F,
-					0, 1, 0,
-					0, 1, a,
-					1, 1, a,
-					1, 1, 0,
-					0, 0, 1, a));
-			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F,
-					0, 1, b,
-					0, 1, 1,
-					1, 1, 1,
-					1, 1, b,
-					0, b, 1, 1));
-			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F,
-					0, 1, a,
-					0, 1, b,
-					a, 1, b,
-					a, 1, a,
-					0, a, a, b));
-			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F,
-					b, 1, a,
-					b, 1, b,
-					1, 1, b,
-					1, 1, a,
-					b, a, 1 , b));
+			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F, 0, 1, 0, 0, 1, a, 1, 1, a, 1, 1, 0, 0, 0, 1, a));
+			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F, 0, 1, b, 0, 1, 1, 1, 1, 1, 1, 1, b, 0, b, 1, 1));
+			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F, 0, 1, a, 0, 1, b, a, 1, b, a, 1, a, 0, a, a, b));
+			builder.add(this.qb.bakeFace(EnumFacing.UP, 0.0F, 1.0F, 0.0F, b, 1, a, b, 1, b, 1, 1, b, 1, 1, a, b, a, 1, b));
 			break;
 		default:
 			this.qb.setIcon(icon2);

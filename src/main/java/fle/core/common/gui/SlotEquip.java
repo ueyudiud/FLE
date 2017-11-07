@@ -25,11 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class SlotEquip extends SlotBase
 {
-	protected static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS =
-		{FEET, LEGS, CHEST, HEAD};
+	protected static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = { FEET, LEGS, CHEST, HEAD };
 	
-	protected final int index;
-	protected final EntityPlayer player;
+	protected final int				index;
+	protected final EntityPlayer	player;
 	
 	public SlotEquip(InventoryPlayer inventoryIn, int index, int xPosition, int yPosition)
 	{
@@ -44,8 +43,8 @@ public class SlotEquip extends SlotBase
 	}
 	
 	/**
-	 * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1
-	 * in the case of armor slots)
+	 * Returns the maximum stack size for a given slot (usually the same as
+	 * getInventoryStackLimit(), but 1 in the case of armor slots)
 	 */
 	@Override
 	public int getSlotStackLimit()

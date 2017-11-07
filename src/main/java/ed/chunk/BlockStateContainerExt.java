@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Extract a state container with large capacity.
+ * 
  * @author ueyudiud
  */
 public class BlockStateContainerExt extends BlockStateContainer
@@ -47,11 +48,11 @@ public class BlockStateContainerExt extends BlockStateContainer
 	{
 		if (this.bits != size)
 		{
-			if(size <= 4)
+			if (size <= 4)
 			{
 				this.palette = new BlockStatePaletteArray(4, this);
 			}
-			else if(size <= 8)
+			else if (size <= 8)
 			{
 				this.palette = new BlockStatePaletteMap(size, this);
 			}
@@ -60,7 +61,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 				this.palette = BlockStatePaletteRegistry.INSTANCE;
 				size = MathHelper.log2DeBruijn(ExtendedBlockStateRegister.idCapacity());
 			}
-			this.palette.idFor(Misc.AIR);//Mark air id to 0
+			this.palette.idFor(Misc.AIR);// Mark air id to 0
 			this.bits = size;
 			this.storage = new BitArray(size, BLOCK_COUNT);
 		}
@@ -123,8 +124,8 @@ public class BlockStateContainerExt extends BlockStateContainer
 	{
 		int id = 0;
 		for (int i = 0; i < 16; ++i)
-			for(int j = 0; j < 16; ++j)
-				for(int k = 0; k < 16; ++k)
+			for (int j = 0; j < 16; ++j)
+				for (int k = 0; k < 16; ++k)
 				{
 					try
 					{

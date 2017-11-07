@@ -1,13 +1,13 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import net.minecraft.item.Item;
 
 /**
  * To get item which is added by non-multi-generated.
+ * 
  * @author ueyudiud
  *
  */

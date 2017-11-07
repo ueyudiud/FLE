@@ -15,15 +15,16 @@ public class OreStack implements AbstractStack
 		return size <= 0 ? null : new OreStack(stack.oreName, size);
 	}
 	
-	private ImmutableList<ItemStack> list;
-	public final String oreName;
-	private List<ItemStack> ore;
-	public final int size;
+	private ImmutableList<ItemStack>	list;
+	public final String					oreName;
+	private List<ItemStack>				ore;
+	public final int					size;
 	
 	public OreStack(String ore)
 	{
 		this(ore, 1);
 	}
+	
 	public OreStack(String ore, int size)
 	{
 		this.oreName = ore;
@@ -40,7 +41,7 @@ public class OreStack implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return this.ore.stream().anyMatch(target->OreDictionary.itemMatches(target, stack, false));
+		return this.ore.stream().anyMatch(target -> OreDictionary.itemMatches(target, stack, false));
 	}
 	
 	@Override
@@ -70,15 +71,14 @@ public class OreStack implements AbstractStack
 	@Override
 	public ItemStack instance()
 	{
-		if(!display().isEmpty())
-			return ItemStack.copyItemStack(this.list.get(0));
+		if (!display().isEmpty()) return ItemStack.copyItemStack(this.list.get(0));
 		return null;
 	}
 	
 	@Override
 	public List<ItemStack> display()
 	{
-		if(this.list == null)
+		if (this.list == null)
 		{
 			this.list = ItemStacks.sizeOf(this.ore, this.size);
 		}

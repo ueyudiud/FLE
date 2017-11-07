@@ -35,8 +35,7 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	@EnumStateName("type")
 	public static enum EnumType implements IStringSerializable
 	{
-		NORMAL,
-		EIGEN;
+		NORMAL, EIGEN;
 		
 		static final EnumType[] VALUES = values();
 		
@@ -67,8 +66,7 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "brick/" + this.material.name, null),
-				this, TYPE);
+		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "brick/" + this.material.name, null), this, TYPE);
 	}
 	
 	@Override

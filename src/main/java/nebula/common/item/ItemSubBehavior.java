@@ -35,25 +35,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * A item collection with different function items contain.<p>
+ * A item collection with different function items contain.
+ * <p>
  * For each sub item, use number id-string id pair to distinguish and searching
- * item.<p>
+ * item.
+ * <p>
+ * 
  * @author ueyudiud
  * @see #addSubItem(int, String, String, IItemCapabilityProvider, IBehavior...)
  */
 public class ItemSubBehavior extends ItemBase
 {
 	/** The number ID to name map. */
-	protected final Map<Integer, String> nameMap = new HashMap<>();
+	protected final Map<Integer, String>		nameMap		= new HashMap<>();
 	/** The name to number ID map. */
-	protected final Map<String, Integer> idMap = new HashMap<>();
+	protected final Map<String, Integer>		idMap		= new HashMap<>();
 	/**
-	 * The map contain behaviors of sub items.
-	 * Use {@link #getBehavior(ItemStack)} to get behaviors.<p>
+	 * The map contain behaviors of sub items. Use
+	 * {@link #getBehavior(ItemStack)} to get behaviors.
+	 * <p>
 	 * Do not get this field for it may remove in the feature, because it is
 	 * number ID mapping.
 	 */
-	private final Map<Integer, List<IBehavior>> behaviors = new HashMap<>();
+	private final Map<Integer, List<IBehavior>>	behaviors	= new HashMap<>();
 	
 	protected ItemSubBehavior(String name)
 	{
@@ -69,16 +73,18 @@ public class ItemSubBehavior extends ItemBase
 	
 	/**
 	 * Add a sub item to item collection.
+	 * 
 	 * @param id the number id of item.
 	 * @param name the string id of item.
-	 * @param localName the localize name for item in English(US). If input is <tt>null</tt>, the initializer will not register local name.
-	 * @param provider the item capability provider. See {@link #initCapabilities(ItemStack, NBTTagCompound)}
+	 * @param localName the localize name for item in English(US). If input is
+	 *            <tt>null</tt>, the initializer will not register local name.
+	 * @param provider the item capability provider. See
+	 *            {@link #initCapabilities(ItemStack, NBTTagCompound)}
 	 * @param behaviors the behaviors list of sub item.
 	 */
 	public void addSubItem(int id, String name, @Nullable String localName, IBehavior...behaviors)
 	{
-		if (this.idMap.containsKey(name) || this.idMap.containsValue(id))
-			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
+		if (this.idMap.containsKey(name) || this.idMap.containsValue(id)) throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
 		this.idMap.put(name, id);
 		this.nameMap.put(id, name);
 		if (behaviors.length > 0)
@@ -93,6 +99,7 @@ public class ItemSubBehavior extends ItemBase
 	
 	/**
 	 * Get sub item by name with 1 stack size.
+	 * 
 	 * @param name the name of sub item
 	 * @see #getSubItem(String, int)
 	 */
@@ -103,9 +110,11 @@ public class ItemSubBehavior extends ItemBase
 	
 	/**
 	 * Get sub item by name.
+	 * 
 	 * @param name the name of sub item.
 	 * @param size the stack size.
-	 * @return the stack created, or <tt>null</tt> if no sub item with this name.
+	 * @return the stack created, or <tt>null</tt> if no sub item with this
+	 *         name.
 	 */
 	public ItemStack getSubItem(String name, int size)
 	{
@@ -119,11 +128,12 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	/**
-	 * Use to checking whether ItemStack has valid data. It is not suggested
-	 * to using argument if <tt>false</tt> is returned.
+	 * Use to checking whether ItemStack has valid data. It is not suggested to
+	 * using argument if <tt>false</tt> is returned.
+	 * 
 	 * @param stack the stack to check.
-	 * @return <tt>true</tt> for item is usable, and it is not suggested
-	 *         to using input stack if <tt>false</tt> is returned.
+	 * @return <tt>true</tt> for item is usable, and it is not suggested to
+	 *         using input stack if <tt>false</tt> is returned.
 	 */
 	protected boolean isItemUsable(ItemStack stack)
 	{
@@ -131,22 +141,20 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
-			EntityLivingBase entityLiving)
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
 	{
-		if(!isItemUsable(stack))
-			return false;
+		if (!isItemUsable(stack)) return false;
 		try
 		{
 			boolean flag = false;
-			for(IBehavior behavior : getBehavior(stack))
-				if(behavior.onBlockDestroyed(stack, worldIn, state, pos, entityLiving))
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior.onBlockDestroyed(stack, worldIn, state, pos, entityLiving))
 				{
 					flag = true;
 				}
 			return flag;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return false;
@@ -156,8 +164,7 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
 	{
-		if (!isItemUsable(item))
-			return true;
+		if (!isItemUsable(item)) return true;
 		try
 		{
 			boolean flag = true;
@@ -178,10 +185,8 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
-		if (!isItemUsable(entityItem.getEntityItem()))
-			return false;
-		if (this instanceof IUpdatableItem &&
-				!entityItem.world.isRemote)
+		if (!isItemUsable(entityItem.getEntityItem())) return false;
+		if (this instanceof IUpdatableItem && !entityItem.world.isRemote)
 		{
 			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
 			if (stack == null)
@@ -192,8 +197,7 @@ public class ItemSubBehavior extends ItemBase
 			{
 				entityItem.setEntityItemStack(stack);
 			}
-			if (stack.getItem() != this)
-				return true;
+			if (stack.getItem() != this) return true;
 		}
 		try
 		{
@@ -216,22 +220,19 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
-		if (!isItemUsable(itemStackIn))
-			return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+		if (!isItemUsable(itemStackIn)) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 		try
 		{
 			ActionResult<ItemStack> result = new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 			for (IBehavior behavior : getBehavior(itemStackIn))
 			{
 				ActionResult<ItemStack> result2;
-				if((result2 = behavior.onItemRightClick(result.getResult(), worldIn, playerIn, hand)) != null &&
-						result2.getType() != EnumActionResult.PASS)
+				if ((result2 = behavior.onItemRightClick(result.getResult(), worldIn, playerIn, hand)) != null && result2.getType() != EnumActionResult.PASS)
 				{
 					EnumActionResult result3;
-					if(result2.getType() == EnumActionResult.SUCCESS || result.getType() == EnumActionResult.SUCCESS)
+					if (result2.getType() == EnumActionResult.SUCCESS || result.getType() == EnumActionResult.SUCCESS)
 					{
 						result3 = EnumActionResult.SUCCESS;
 					}
@@ -244,7 +245,7 @@ public class ItemSubBehavior extends ItemBase
 			}
 			return result;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
@@ -252,11 +253,9 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(!isItemUsable(stack))
-			return EnumActionResult.PASS;
+		if (!isItemUsable(stack)) return EnumActionResult.PASS;
 		try
 		{
 			EnumActionResult result = EnumActionResult.PASS;
@@ -265,7 +264,7 @@ public class ItemSubBehavior extends ItemBase
 				EnumActionResult result2;
 				if ((result2 = behavior.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)) != EnumActionResult.PASS)
 				{
-					if(result == EnumActionResult.SUCCESS)
+					if (result == EnumActionResult.SUCCESS)
 					{
 						continue;
 					}
@@ -274,7 +273,7 @@ public class ItemSubBehavior extends ItemBase
 			}
 			return result;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return EnumActionResult.FAIL;
@@ -282,20 +281,18 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		if(!isItemUsable(stack))
-			return EnumActionResult.PASS;
+		if (!isItemUsable(stack)) return EnumActionResult.PASS;
 		try
 		{
 			EnumActionResult result = EnumActionResult.PASS;
-			for(IBehavior behavior : getBehavior(stack))
+			for (IBehavior behavior : getBehavior(stack))
 			{
 				EnumActionResult result2;
-				if((result2 = behavior.onItemUseFirst(stack, player, world, pos, side, hitX, hitY, hitZ, hand)) != EnumActionResult.PASS)
+				if ((result2 = behavior.onItemUseFirst(stack, player, world, pos, side, hitX, hitY, hitZ, hand)) != EnumActionResult.PASS)
 				{
-					if(result == EnumActionResult.SUCCESS)
+					if (result == EnumActionResult.SUCCESS)
 					{
 						continue;
 					}
@@ -304,7 +301,7 @@ public class ItemSubBehavior extends ItemBase
 			}
 			return result;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return EnumActionResult.FAIL;
@@ -314,21 +311,20 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		if(!isItemUsable(stack))
-			return false;
+		if (!isItemUsable(stack)) return false;
 		try
 		{
 			boolean flag = false;
-			for(IBehavior behavior : getBehavior(stack))
+			for (IBehavior behavior : getBehavior(stack))
 			{
-				if(behavior.onLeftClickEntity(stack, player, entity))
+				if (behavior.onLeftClickEntity(stack, player, entity))
 				{
 					flag = true;
 				}
 			}
 			return flag;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return false;
@@ -338,15 +334,14 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
 	{
-		if(!isItemUsable(stack))
-			return;
-		for(IBehavior behavior : getBehavior(stack))
+		if (!isItemUsable(stack)) return;
+		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
 				behavior.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
@@ -356,8 +351,7 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		if(!isItemUsable(stack))
-			return;
+		if (!isItemUsable(stack)) return;
 		ItemStack stack2 = stack;
 		if (this instanceof IUpdatableItem && !entityIn.world.isRemote)
 		{
@@ -377,8 +371,7 @@ public class ItemSubBehavior extends ItemBase
 					return;
 				}
 			}
-			if (stack.getItem() != this)
-				return;
+			if (stack.getItem() != this) return;
 		}
 		for (IBehavior behavior : getBehavior(stack))
 		{
@@ -401,8 +394,7 @@ public class ItemSubBehavior extends ItemBase
 				{
 					((EntityPlayer) entityIn).inventory.setInventorySlotContents(itemSlot, stack);
 				}
-				if (stack.getItem() != this)
-					return;
+				if (stack.getItem() != this) return;
 			}
 		}
 	}
@@ -410,15 +402,14 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
-		if (!isItemUsable(stack))
-			return;
+		if (!isItemUsable(stack)) return;
 		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
 				behavior.onUsingTick(stack, player, count);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
@@ -426,11 +417,9 @@ public class ItemSubBehavior extends ItemBase
 	}
 	
 	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target,
-			EnumHand hand)
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)
 	{
-		if (!isItemUsable(stack))
-			return false;
+		if (!isItemUsable(stack)) return false;
 		boolean flag = false;
 		for (IBehavior behavior : getBehavior(stack))
 		{
@@ -441,7 +430,7 @@ public class ItemSubBehavior extends ItemBase
 					flag = true;
 				}
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 				return false;
@@ -452,12 +441,12 @@ public class ItemSubBehavior extends ItemBase
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		if (!isItemUsable(stack))
 		{
-			//To show this item may has broken data, it is suggested player do not use this item in game.
+			// To show this item may has broken data, it is suggested player do
+			// not use this item in game.
 			unlocalizedList.add("info.invalid");
 			return;
 		}
@@ -467,7 +456,7 @@ public class ItemSubBehavior extends ItemBase
 			{
 				behavior.addInformation(stack, playerIn, unlocalizedList, advanced);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
@@ -484,7 +473,7 @@ public class ItemSubBehavior extends ItemBase
 			{
 				createSubItem(id, subItems);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
@@ -493,8 +482,9 @@ public class ItemSubBehavior extends ItemBase
 	
 	/**
 	 * For each sub item should display on creative tab, for iterating helper in
-	 * {@link #getSubItems(Item, CreativeTabs, List)} and called this method with each
-	 * sub item id.
+	 * {@link #getSubItems(Item, CreativeTabs, List)} and called this method
+	 * with each sub item id.
+	 * 
 	 * @param meta the adding meta.
 	 * @param subItems the sub items list, added sub item here.
 	 */

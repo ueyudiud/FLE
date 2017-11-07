@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class SimpleIconHandler implements IIconCollection
 {
-	final String key;
-	final ResourceLocation location;
+	final String			key;
+	final ResourceLocation	location;
 	
 	public SimpleIconHandler(String key, ResourceLocation location)
 	{
@@ -44,7 +44,10 @@ public class SimpleIconHandler implements IIconCollection
 	@Override
 	public IIconCollection retexture(Map<String, String> map)
 	{
-		return map.containsKey(this.key) ? new SimpleIconHandler(this.key, new ResourceLocation(map.get(this.key))) : this;//No retexture will allowed.
+		return map.containsKey(this.key) ? new SimpleIconHandler(this.key, new ResourceLocation(map.get(this.key))) : this;// No
+																															// retexture
+																															// will
+																															// allowed.
 	}
 	
 	@Override

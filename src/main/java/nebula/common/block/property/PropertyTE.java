@@ -21,11 +21,11 @@ public class PropertyTE extends PropertyHelper<TETag>
 		IRegister<TETag> register = new Register<>(list.size());
 		ImmutableMap.Builder<Class<? extends TileEntity>, String> builder = ImmutableMap.builder();
 		TETag def = null;
-		for(String tag : list.names())
+		for (String tag : list.names())
 		{
 			int id = list.id(tag);
 			Class<? extends TileEntity> class1 = list.get(tag);
-			if(id == 0)
+			if (id == 0)
 			{
 				register.register(id, tag, def = new TETag(id, tag, class1));
 			}
@@ -40,9 +40,9 @@ public class PropertyTE extends PropertyHelper<TETag>
 	
 	public static class TETag implements Comparable<TETag>
 	{
-		int id;
-		Class<? extends TileEntity> clazz;
-		String name;
+		int							id;
+		Class<? extends TileEntity>	clazz;
+		String						name;
 		
 		public TETag(int id, String name, Class<? extends TileEntity> clazz)
 		{
@@ -62,7 +62,7 @@ public class PropertyTE extends PropertyHelper<TETag>
 			{
 				return this.clazz.newInstance();
 			}
-			catch(IllegalAccessException | InstantiationException exception)
+			catch (IllegalAccessException | InstantiationException exception)
 			{
 				throw new RuntimeException("The class " + this.clazz.getName() + " is missing a valid constructor.", exception);
 			}
@@ -90,9 +90,9 @@ public class PropertyTE extends PropertyHelper<TETag>
 		}
 	}
 	
-	protected Map<Class<? extends TileEntity>, String> map;
-	protected IRegister<TETag> list;
-	protected final TETag def;
+	protected Map<Class<? extends TileEntity>, String>	map;
+	protected IRegister<TETag>							list;
+	protected final TETag								def;
 	
 	public PropertyTE(String name, TETag def, IRegister<TETag> list, Map<Class<? extends TileEntity>, String> map)
 	{

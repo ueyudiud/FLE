@@ -69,7 +69,7 @@ public class CommonProxy implements IGuiHandler
 		if (ID >= 0)
 		{
 			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-			if(tile instanceof IGuiTile)
+			if (tile instanceof IGuiTile)
 			{
 				return ((IGuiTile) tile).openContainer(ID, player);
 			}
@@ -78,7 +78,7 @@ public class CommonProxy implements IGuiHandler
 		{
 			switch (ID)
 			{
-			case -1 :
+			case -1:
 				if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof IItemBehaviorsAndProperties.IIP_Containerable)
 				{
 					return ((IIP_Containerable) player.getHeldItemMainhand().getItem()).openContainer(world, new BlockPos(x, y, z), player, player.getHeldItemMainhand());

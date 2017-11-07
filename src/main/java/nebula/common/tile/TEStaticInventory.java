@@ -27,11 +27,10 @@ import net.minecraftforge.common.util.Constants.NBT;
 /**
  * @author ueyudiud
  */
-public abstract class TEStaticInventory extends TEStatic
-implements IBasicInventory, IInventory, ITB_BreakBlock
+public abstract class TEStaticInventory extends TEStatic implements IBasicInventory, IInventory, ITB_BreakBlock
 {
-	protected final ItemStack[] stacks;
-	protected String customName;
+	protected final ItemStack[]	stacks;
+	protected String			customName;
 	
 	protected TEStaticInventory(int invSize)
 	{
@@ -81,7 +80,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return hasCustomName() ? new TextComponentString(this.customName) :  new TextComponentTranslation(getName());
+		return hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation(getName());
 	}
 	
 	@Override

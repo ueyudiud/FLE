@@ -45,8 +45,7 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui,
-IProjectileItem, IPolishableItem, IIP_Containerable
+public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem, IPolishableItem, IIP_Containerable
 {
 	public ItemToolFar()
 	{
@@ -55,21 +54,21 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 	}
 	
 	@Override
-	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
-			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
-			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior...behaviors)
 	{
-		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
-				filterHandle, behaviors);
-		prop.skillEfficiency = new SkillAbstract(name + ".efficiency", localName + " Efficiency"){}.setExpInfo(30, 10F, 1.5F);
-		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack"){}.setExpInfo(30, 12F, 1.4F);
+		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, behaviors);
+		prop.skillEfficiency = new SkillAbstract(name + ".efficiency", localName + " Efficiency")
+		{
+		}.setExpInfo(30, 10F, 1.5F);
+		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack")
+		{
+		}.setExpInfo(30, 12F, 1.4F);
 		ItemStack stack = new ItemStack(this, 1, id);
 		for (EnumToolType toolType : stat.getAllowedToolTypes())
 		{
-			if (toolType == stat.getToolType())
-				continue;//Exclude main tool type.
-			OreDictExt.registerOreFunction(toolType.ore(), this, s->stat.getToolTypes(s).contains(toolType), ImmutableList.of(stack));
+			if (toolType == stat.getToolType()) continue;// Exclude main tool
+															// type.
+			OreDictExt.registerOreFunction(toolType.ore(), this, s -> stat.getToolTypes(s).contains(toolType), ImmutableList.of(stack));
 		}
 		OreDict.registerValid(stat.getToolType().ore(), stack);
 		return prop;
@@ -125,8 +124,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 	}
 	
 	@Override
-	protected float getPlayerRelatedAttackDamage(ToolProp prop, ItemStack stack, EntityPlayer player, float baseAttack,
-			float attackSpeed, int cooldown, boolean isAttackerFalling)
+	protected float getPlayerRelatedAttackDamage(ToolProp prop, ItemStack stack, EntityPlayer player, float baseAttack, float attackSpeed, int cooldown, boolean isAttackerFalling)
 	{
 		baseAttack = new ToolPropertiesModificater(stack).applyModification(baseAttack, Property.ATTACK_DAMAGE);
 		int lv = prop.skillAttack.level(player);
@@ -146,8 +144,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x,
-			int z, String text)
+	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, String text)
 	{
 		Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
 		Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z);
@@ -161,7 +158,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 		try
 		{
 			for (IBehavior behavior : getBehavior(entity.currentItem))
-				if(behavior instanceof IProjectileItem)
+				if (behavior instanceof IProjectileItem)
 				{
 					((IProjectileItem) behavior).initEntity(entity);
 				}
@@ -197,8 +194,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 			for (IBehavior behavior : getBehavior(entity.currentItem))
 				if (behavior instanceof IProjectileItem)
 				{
-					if (((IProjectileItem) behavior).onHitGround(world, pos, entity, direction))
-						return true;
+					if (((IProjectileItem) behavior).onHitGround(world, pos, entity, direction)) return true;
 				}
 		}
 		catch (Throwable exception)
@@ -216,8 +212,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 			for (IBehavior behavior : getBehavior(entity.currentItem))
 				if (behavior instanceof IProjectileItem)
 				{
-					if (((IProjectileItem) behavior).onHitEntity(world, target, entity))
-						return true;
+					if (((IProjectileItem) behavior).onHitEntity(world, target, entity)) return true;
 				}
 		}
 		catch (Throwable exception)
@@ -319,8 +314,7 @@ IProjectileItem, IPolishableItem, IIP_Containerable
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		ToolPropertiesModificater modificater = new ToolPropertiesModificater(stack);

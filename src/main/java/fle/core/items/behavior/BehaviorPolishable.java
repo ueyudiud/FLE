@@ -19,11 +19,11 @@ import net.minecraft.item.ItemStack;
  */
 public class BehaviorPolishable extends BehaviorBase implements IPolishableBehavior
 {
-	EnumToolType type;
-	int levelOffset;
-	float damageAmount;
-	char target;
-	char[] allowTransferStates;
+	EnumToolType	type;
+	int				levelOffset;
+	float			damageAmount;
+	char			target;
+	char[]			allowTransferStates;
 	
 	public BehaviorPolishable(EnumToolType toolType, int levelOffset, float damage, char target, char...cs)
 	{

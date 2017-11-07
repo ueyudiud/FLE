@@ -16,8 +16,8 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 {
 	protected static final int notifyNeighbour = 0x1000;
 	
-	protected byte lastPower;
-	protected byte power;
+	protected byte	lastPower;
+	protected byte	power;
 	
 	protected int updateDelay;
 	
@@ -42,7 +42,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			buf.writeByte(this.power);
 			break;
 		default:
@@ -55,7 +55,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	{
 		switch (0)
 		{
-		case 0 :
+		case 0:
 			this.power = buf.readByte();
 			break;
 		default:
@@ -103,16 +103,16 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	protected void updateServer()
 	{
 		super.updateServer();
-		if(this.updateDelay > 0)
+		if (this.updateDelay > 0)
 		{
 			--this.updateDelay;
-			if(this.updateDelay == 0)
+			if (this.updateDelay == 0)
 			{
 				notifyNeighbors();
 			}
 		}
 		updateBody();
-		if(this.power != this.lastPower)
+		if (this.power != this.lastPower)
 		{
 			notifyNeighbors();
 			markDirty();
@@ -127,7 +127,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	
 	protected void markForDelayUpdate(int delay)
 	{
-		if(this.updateDelay <= 0)
+		if (this.updateDelay <= 0)
 		{
 			this.updateDelay = delay;
 		}
@@ -151,11 +151,11 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		super.onBlockPlacedBy(state, placer, facing, stack);
-		if(isServer())
+		if (isServer())
 		{
 			updateCircuit();
 			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
-			if(this.updateDelay == 0)
+			if (this.updateDelay == 0)
 			{
 				notifyNeighbors();
 			}
@@ -168,7 +168,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	{
 		updateCircuit();
 		NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
-		if(this.updateDelay == 0 && (this.power != this.lastPower))
+		if (this.updateDelay == 0 && (this.power != this.lastPower))
 		{
 			super.notifyNeighbors();
 		}
@@ -184,7 +184,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	protected void onCheckingSyncState()
 	{
 		super.onCheckingSyncState();
-		if((this.syncState & notifyNeighbour) != 0)
+		if ((this.syncState & notifyNeighbour) != 0)
 		{
 			markDirty();
 			super.notifyNeighbors();

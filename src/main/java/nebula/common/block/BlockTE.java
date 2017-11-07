@@ -33,29 +33,36 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The block with multi tile entity.<p>
- * If you added ED(Extra Data) mod, there will be 20 bits to store
- * tile entity data, or only 4 bit instead.
+ * The block with multi tile entity.
+ * <p>
+ * If you added ED(Extra Data) mod, there will be 20 bits to store tile entity
+ * data, or only 4 bit instead.
+ * 
  * @author ueyudiud
  * @see net.minecraft.tileentity.TileEntity
  */
 public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBlock
 {
-	/** Mark for tile entity auto-register when {@link #postInitalizedBlocks()}. */
+	/**
+	 * Mark for tile entity auto-register when {@link #postInitalizedBlocks()}.
+	 */
 	private boolean registerTE;
 	
 	public BlockTE(String name, Material materialIn)
 	{
 		super(name, materialIn);
 	}
+	
 	public BlockTE(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(name, blockMaterialIn, blockMapColorIn);
 	}
+	
 	public BlockTE(String modid, String name, Material materialIn)
 	{
 		super(modid, name, materialIn);
 	}
+	
 	public BlockTE(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
@@ -63,6 +70,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	
 	/**
 	 * Register all allowed states to register.
+	 * 
 	 * @parm register the state register.
 	 */
 	@Override
@@ -75,10 +83,10 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		if(this.registerTE)
+		if (this.registerTE)
 		{
 			String path = getRegistryName().getResourceDomain() + "." + getRegistryName().getResourcePath();
-			for(TETag tag : this.property_TE.getAllowedValues())
+			for (TETag tag : this.property_TE.getAllowedValues())
 			{
 				tag.registerTileEntity(path);
 			}
@@ -86,21 +94,24 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	/**
-	 * Register model mapper with item and block to model manager.<p>
-	 * Similar to method in <tt>Renders.registerCompactModel</tt>,
-	 * but to prevent wrong data cause game crashed, this block can not
-	 * split block meta by {@link #getMetaFromState(IBlockState)}, so
-	 * the block is needed this internal method to register render mapper.
+	 * Register model mapper with item and block to model manager.
+	 * <p>
+	 * Similar to method in <tt>Renders.registerCompactModel</tt>, but to
+	 * prevent wrong data cause game crashed, this block can not split block
+	 * meta by {@link #getMetaFromState(IBlockState)}, so the block is needed
+	 * this internal method to register render mapper.
+	 * 
 	 * @param mapper
-	 * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, net.minecraft.block.properties.IProperty)
+	 * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt,
+	 *      net.minecraft.block.Block, net.minecraft.block.properties.IProperty)
 	 */
 	@SideOnly(Side.CLIENT)
 	protected void registerRenderMapper(StateMapperExt mapper)
 	{
 		final IBlockState state = getDefaultState();
 		IBlockState state2 = state;
-		do ModelLoader.setCustomModelResourceLocation(this.item, this.property_TE.getMetaFromState(state2),
-				mapper.getLocationFromState(state2));
+		do
+			ModelLoader.setCustomModelResourceLocation(this.item, this.property_TE.getMetaFromState(state2), mapper.getLocationFromState(state2));
 		while ((state2 = state2.cycleProperty(this.property_TE)) != state);
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}
@@ -118,8 +129,10 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	
 	/**
 	 * Add tile entities to register.
+	 * 
 	 * @param register
-	 * @return Return true for all registered tile entity will in to tile entity map.
+	 * @return Return true for all registered tile entity will in to tile entity
+	 *         map.
 	 */
 	protected abstract boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register);
 	
@@ -167,8 +180,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		return this.property_TE.withProperty(getDefaultState(), stackIn.getMetadata());
 	}
@@ -213,11 +225,9 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		if(tile instanceof ITP_Drops)
-			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
+		if (tile instanceof ITP_Drops) return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
 		List<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(this, 1, damageDropped(state)));
 		return list;

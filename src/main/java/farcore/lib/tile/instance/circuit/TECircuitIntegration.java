@@ -34,14 +34,14 @@ public class TECircuitIntegration extends TECircuitFrontBack
 	protected void updateServer()
 	{
 		super.updateServer();
-		if((this.world.getWorldTime() & 0x1) == 0)
+		if ((this.world.getWorldTime() & 0x1) == 0)
 		{
 			int power = getRedstonePower(Facing.BACK);
 			int last = this.power;
 			int i = this.integration + power;
 			i = i * 16 / 17;
 			this.integration = (short) i;
-			if(last != this.integration / 16)
+			if (last != this.integration / 16)
 			{
 				setRedstonePower(this.integration / 16);
 			}
@@ -52,8 +52,6 @@ public class TECircuitIntegration extends TECircuitFrontBack
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? this.power :
-			i == 1 ? getRedstonePower(Facing.BACK) :
-				0;
+		return i == 0 ? this.power : i == 1 ? getRedstonePower(Facing.BACK) : 0;
 	}
 }

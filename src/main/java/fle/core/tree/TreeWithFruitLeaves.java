@@ -38,8 +38,8 @@ public abstract class TreeWithFruitLeaves extends Tree
 	{
 		super(material);
 	}
-	public TreeWithFruitLeaves(Mat material, int harvestLevel, float hardness, float explosionResistance,
-			float ashcontent, float burnHeat)
+	
+	public TreeWithFruitLeaves(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent, float burnHeat)
 	{
 		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
 	}
@@ -74,8 +74,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 	@Override
 	public void updateLeaves(World world, BlockPos pos, Random rand, boolean checkDency)
 	{
-		if (updateAndResult(world, pos, rand, checkDency))
-			return;
+		if (updateAndResult(world, pos, rand, checkDency)) return;
 		IBlockState state = world.getBlockState(pos);
 		ICalendar calendar;
 		if (!checkDency && canGrowFruit((calendar = CalendarHandler.getCalendar(world)), world))
@@ -83,26 +82,26 @@ public abstract class TreeWithFruitLeaves extends Tree
 			int i0, i;
 			switch (i0 = i = state.getValue(FRUIT_STAGE))
 			{
-			case 0 :
+			case 0:
 				if (rand.nextInt(5) == 0)
 				{
-					i ++;
+					i++;
 				}
 				break;
-			case 1 :
-			case 2 :
+			case 1:
+			case 2:
 				if (rand.nextInt(3) == 0)
 				{
-					i ++;
+					i++;
 				}
 				break;
-			case 3 :
+			case 3:
 				if (canMatureFruit(calendar, world) && rand.nextBoolean())
 				{
-					i ++;
+					i++;
 				}
 				break;
-			case 4 :
+			case 4:
 				if (rand.nextInt(9) == 0)
 				{
 					Worlds.spawnDropInWorld(world, pos, createFruit(world, pos, state));
@@ -112,23 +111,22 @@ public abstract class TreeWithFruitLeaves extends Tree
 			default:
 				break;
 			}
-			if (i0 != i)
-				world.setBlockState(pos, state.withProperty(FRUIT_STAGE, i));
+			if (i0 != i) world.setBlockState(pos, state.withProperty(FRUIT_STAGE, i));
 		}
-		else switch (state.getValue(FRUIT_STAGE))
-		{
-		case 4 :
-			Worlds.spawnDropInWorld(world, pos, createFruit(world, pos, state));
-		case 3 :
-		case 2 :
-		case 1 :
-			world.setBlockState(pos, state.withProperty(FRUIT_STAGE, 0));
-		}
+		else
+			switch (state.getValue(FRUIT_STAGE))
+			{
+			case 4:
+				Worlds.spawnDropInWorld(world, pos, createFruit(world, pos, state));
+			case 3:
+			case 2:
+			case 1:
+				world.setBlockState(pos, state.withProperty(FRUIT_STAGE, 0));
+			}
 	}
 	
 	@Override
-	public boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side,
-			float xPos, float yPos, float zPos, TECoreLeaves tile)
+	public boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side, float xPos, float yPos, float zPos, TECoreLeaves tile)
 	{
 		if (state.getValue(FRUIT_STAGE) == 4)
 		{

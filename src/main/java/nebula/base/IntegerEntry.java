@@ -9,14 +9,15 @@ import java.util.function.UnaryOperator;
 
 /**
  * A map entry (With value type is <tt>int</tt>).
+ * 
  * @author ueyudiud
  * @param <K> the type of key.
  * @see java.util.Map.Entry
  */
 public class IntegerEntry<K>
 {
-	K key;
-	int value;
+	K	key;
+	int	value;
 	
 	public IntegerEntry(K key, int value)
 	{
@@ -48,6 +49,7 @@ public class IntegerEntry<K>
 	
 	/**
 	 * Returns the hash code value for this map entry.
+	 * 
 	 * @return the hash code value for this map entry
 	 * @see #equals(Object)
 	 * @see java.util.Map.Entry#hashCode()
@@ -60,17 +62,16 @@ public class IntegerEntry<K>
 	
 	/**
 	 * Compares the specified object with this entry for equality.
+	 * 
 	 * @param obj object to be compared for equality with this map entry
-	 * @return <tt>true</tt> if the specified object is equal to this map
-	 *         entry
+	 * @return <tt>true</tt> if the specified object is equal to this map entry
 	 * @see #hashCode()
 	 * @see java.util.Map.Entry#equals(Object)
 	 */
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj == this || ((obj instanceof IntegerEntry<?>) &&
-				((IntegerEntry<?>) obj).key.equals(this.key) && ((IntegerEntry<?>) obj).value == this.value);
+		return obj == this || ((obj instanceof IntegerEntry<?>) && ((IntegerEntry<?>) obj).key.equals(this.key) && ((IntegerEntry<?>) obj).value == this.value);
 	}
 	
 	@Override

@@ -28,6 +28,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	
 	/**
 	 * Create a ranged collection.
+	 * 
 	 * @param min the minimum value in range (include itself).
 	 * @param max the max value in range (exclude itself).
 	 * @return the range.
@@ -39,6 +40,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	
 	/**
 	 * Create a ranged collection.
+	 * 
 	 * @param min the minimum value in range (include itself).
 	 * @param max the max value in range (include itself).
 	 * @return the range.
@@ -50,8 +52,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	
 	private RangeInt(int min, int max)
 	{
-		if (min >= max)
-			throw new IllegalArgumentException("The min value must less than max value!");
+		if (min >= max) throw new IllegalArgumentException("The min value must less than max value!");
 		this.max = max;
 		this.min = min;
 	}
@@ -60,8 +61,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	public Integer get(int index)
 	{
 		int i = index + this.min;
-		if (i >= this.max || i < 0)
-			throw new ArrayIndexOutOfBoundsException(index);
+		if (i >= this.max || i < 0) throw new ArrayIndexOutOfBoundsException(index);
 		return i;
 	}
 	
@@ -74,7 +74,8 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	@Override
 	public boolean isEmpty()
 	{
-		return false;//The range will always not empty, with initializer checking.
+		return false;// The range will always not empty, with initializer
+						// checking.
 	}
 	
 	@Override
@@ -104,8 +105,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 			public Integer next()
 			{
 				int i = this.current++;
-				if (i >= RangeInt.this.max)
-					throw new IndexOutOfBoundsException();
+				if (i >= RangeInt.this.max) throw new IndexOutOfBoundsException();
 				return i;
 			}
 		};
@@ -113,8 +113,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	
 	private void rangeCheck(int index)
 	{
-		if (index < 0 || index >= size())
-			throw new IndexOutOfBoundsException("Index: " + index + " Range: [" + this.min + ", " + this.max + ")");
+		if (index < 0 || index >= size()) throw new IndexOutOfBoundsException("Index: " + index + " Range: [" + this.min + ", " + this.max + ")");
 	}
 	
 	@Override
@@ -188,15 +187,14 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	@Override
 	public Integer[] toArray()
 	{
-		return A.fill(new Integer[size()], i->i + this.min);
+		return A.fill(new Integer[size()], i -> i + this.min);
 	}
 	
 	@Override
 	public <T> T[] toArray(T[] a)
 	{
 		int size;
-		return A.<T>fill(a.length < (size = size()) ?
-				ObjectArrays.newArray(a, size) : a, i->(T) Integer.valueOf(i + this.min));
+		return A.<T> fill(a.length < (size = size()) ? ObjectArrays.newArray(a, size) : a, i -> (T) Integer.valueOf(i + this.min));
 	}
 	
 	@Override
@@ -214,12 +212,10 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	@Override
 	public boolean containsAll(Collection<?> collection)
 	{
-		if (collection.isEmpty())
-			return true;
+		if (collection.isEmpty()) return true;
 		if (collection instanceof RangeInt)
 		{
-			return ((RangeInt) collection).min >= this.min &&
-					((RangeInt) collection).max >= this.max;
+			return ((RangeInt) collection).min >= this.min && ((RangeInt) collection).max >= this.max;
 		}
 		else
 		{
@@ -263,19 +259,15 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	@Override
 	public boolean equals(Object o)
 	{
-		if (o == this)
-			return true;
-		if (o instanceof RangeInt)
-			return ((RangeInt) o).min == this.min && ((RangeInt) o).max == this.max;
-		if (!(o instanceof List))
-			return false;
+		if (o == this) return true;
+		if (o instanceof RangeInt) return ((RangeInt) o).min == this.min && ((RangeInt) o).max == this.max;
+		if (!(o instanceof List)) return false;
 		
 		Iterator<Integer> iterator1 = iterator();
 		ListIterator<?> iterator2 = ((List<?>) o).listIterator();
 		while (iterator1.hasNext() && iterator2.hasNext())
 		{
-			if (!Objects.equal(iterator1.next(), iterator2.next()))
-				return false;
+			if (!Objects.equal(iterator1.next(), iterator2.next())) return false;
 		}
 		return !(iterator1.hasNext() || iterator2.hasNext());
 	}
@@ -288,8 +280,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 		while (true)
 		{
 			sb.append(itr.next());
-			if (!itr.hasNext())
-				return sb.append(']').toString();
+			if (!itr.hasNext()) return sb.append(']').toString();
 			sb.append(',').append(' ');
 		}
 	}

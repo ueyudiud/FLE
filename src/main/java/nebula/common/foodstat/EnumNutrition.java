@@ -8,16 +8,12 @@ import nebula.common.util.IRegisteredNameable;
 
 /**
  * The nutrition type.
+ * 
  * @author ueyudiud
  */
 public enum EnumNutrition implements IRegisteredNameable
 {
-	GRAIN("Grain"),
-	VEGETABLE("Vegetable"),
-	FRUIT("Fruit"),
-	PROTEIN("Protein"),
-	DAIRY("Dairy"),
-	SALT("Salt");
+	GRAIN("Grain"), VEGETABLE("Vegetable"), FRUIT("Fruit"), PROTEIN("Protein"), DAIRY("Dairy"), SALT("Salt");
 	
 	public static final int length = values().length;
 	

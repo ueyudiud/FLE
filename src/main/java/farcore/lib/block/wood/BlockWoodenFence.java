@@ -71,11 +71,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state
-				.withProperty(PROPS_SIDE_HORIZONTALS[0], false)
-				.withProperty(PROPS_SIDE_HORIZONTALS[1], false)
-				.withProperty(PROPS_SIDE_HORIZONTALS[2], false)
-				.withProperty(PROPS_SIDE_HORIZONTALS[3], false);
+		return state.withProperty(PROPS_SIDE_HORIZONTALS[0], false).withProperty(PROPS_SIDE_HORIZONTALS[1], false).withProperty(PROPS_SIDE_HORIZONTALS[2], false).withProperty(PROPS_SIDE_HORIZONTALS[3], false);
 	}
 	
 	@Override
@@ -85,8 +81,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox,
-			List<AxisAlignedBB> collidingBoxes, Entity entityIn)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn)
 	{
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, PILLAR_AABB);
 		
@@ -117,19 +112,19 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 		return FENCE_BOUNDING_BOXES[getBoundingBoxIdx(state)];
 	}
 	
-	private static final int[] I = {2, 3, 0, 1};
+	private static final int[] I = { 2, 3, 0, 1 };
 	
 	public static int getBoundingBoxIdx(IBlockState state)
 	{
 		int idx = 0;
 		for (int i = 0; i < 4; ++i)
-			if (state.getValue(PROPS_SIDE_HORIZONTALS[I[i]]))
-				idx |= 1 << I[i];
+			if (state.getValue(PROPS_SIDE_HORIZONTALS[I[i]])) idx |= 1 << I[i];
 		return idx;
 	}
 	
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -173,8 +168,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	public boolean canConnectTo(IBlockAccess worldIn, BlockPos pos, EnumFacing facing)
 	{
 		IBlockState state2 = worldIn.getBlockState(pos.offset(facing));
-		return state2.getBlock() instanceof BlockWoodenFence ||
-				state2.isSideSolid(worldIn, pos, facing.getOpposite()) && state2.isOpaqueCube();
+		return state2.getBlock() instanceof BlockWoodenFence || state2.isSideSolid(worldIn, pos, facing.getOpposite()) && state2.isOpaqueCube();
 	}
 	
 	@Override
@@ -184,8 +178,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (side.getHorizontalIndex() != -1)
 		{
@@ -203,8 +196,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 						{
 							if (!worldIn.isRemote)
 							{
-								if (!playerIn.capabilities.isCreativeMode)
-									heldItem.stackSize -= 2;
+								if (!playerIn.capabilities.isCreativeMode) heldItem.stackSize -= 2;
 								worldIn.setBlockState(pos, state.withProperty(property, true));
 								worldIn.setBlockState(pos.offset(side1), state2.withProperty(PROPS_SIDE_HORIZONTALS[side1.getOpposite().getHorizontalIndex()], true));
 							}
@@ -215,8 +207,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 					{
 						if (!worldIn.isRemote)
 						{
-							if (!playerIn.capabilities.isCreativeMode)
-								heldItem.stackSize --;
+							if (!playerIn.capabilities.isCreativeMode) heldItem.stackSize--;
 							worldIn.setBlockState(pos, state.withProperty(property, true));
 						}
 						return true;
@@ -261,8 +252,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 		IBlockState updated = state;
 		for (EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
-			if (state.getValue(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]) &&
-					!canConnectTo(worldIn, pos, facing))
+			if (state.getValue(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]) && !canConnectTo(worldIn, pos, facing))
 			{
 				updated = updated.withProperty(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], false);
 				Worlds.spawnDropInWorld(worldIn, pos.offset(facing), new ItemStack(Items.STICK));
@@ -286,8 +276,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 				i++;
 			}
 		}
-		if (i > 0)
-			Worlds.spawnDropInWorld(worldIn, pos, new ItemStack(Items.STICK, i));
+		if (i > 0) Worlds.spawnDropInWorld(worldIn, pos, new ItemStack(Items.STICK, i));
 	}
 	
 	@Override
@@ -298,22 +287,9 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	
 	static
 	{
-		FENCE_BOUNDING_BOXES = new AxisAlignedBB[] {
-				new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.0D, 0.625D),
-				new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.375D, 0.625D, 1.0D, 0.625D),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.375D, 0.625D, 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.375D, 0.0D, 0.0D  , 0.625D, 1.0D, 0.625D),
-				new AxisAlignedBB(0.375D, 0.0D, 0.0D  , 0.625D, 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.0D  , 0.625D, 1.0D, 0.625D),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.0D  , 0.625D, 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D  , 1.0D, 0.625D),
-				new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D  , 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.375D, 1.0D  , 1.0D, 0.625D),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.375D, 1.0D  , 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.375D, 0.0D, 0.0D  , 1.0D  , 1.0D, 0.625D),
-				new AxisAlignedBB(0.375D, 0.0D, 0.0D  , 1.0D  , 1.0D, 1.0D  ),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.0D  , 1.0D  , 1.0D, 0.625D),
-				new AxisAlignedBB(0.0D  , 0.0D, 0.0D  , 1.0D  , 1.0D, 1.0D  )};
+		FENCE_BOUNDING_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.0D, 0.625D), new AxisAlignedBB(0.375D, 0.0D, 0.375D, 0.625D, 1.0D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.0D, 0.625D), new AxisAlignedBB(0.0D, 0.0D, 0.375D, 0.625D, 1.0D,
+				1.0D), new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 0.625D), new AxisAlignedBB(0.375D, 0.0D, 0.0D, 0.625D, 1.0D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.0D, 0.625D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.625D, 1.0D, 1.0D), new AxisAlignedBB(0.375D, 0.0D, 0.375D,
+						1.0D, 1.0D, 0.625D), new AxisAlignedBB(0.375D, 0.0D, 0.375D, 1.0D, 1.0D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.0D, 0.625D), new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.0D,
+								1.0D), new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.0D, 0.625D), new AxisAlignedBB(0.375D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.625D), new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D) };
 	}
 }

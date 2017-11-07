@@ -18,10 +18,10 @@ import net.minecraft.world.World;
 
 public class BreakTree implements Runnable
 {
-	private BlockLogNatural block;
-	private World world;
-	private BlockPos pos;
-	private int cacheDrop = 0;
+	private BlockLogNatural	block;
+	private World			world;
+	private BlockPos		pos;
+	private int				cacheDrop	= 0;
 	
 	public BreakTree(BlockLogNatural block, World world, BlockPos pos)
 	{
@@ -44,31 +44,30 @@ public class BreakTree implements Runnable
 	
 	public void scanLog(World world, boolean[][][] array, byte x, byte y, byte z)
 	{
-		if(y >= 0 && this.pos.getY() + y < 256)
+		if (y >= 0 && this.pos.getY() + y < 256)
 		{
-			int offsetX = 0,
-					offsetY = 0,
-					offsetZ = 0;
+			int offsetX = 0, offsetY = 0, offsetZ = 0;
 			array[x + V.treeScanRange][y][z + V.treeScanRange] = true;
 			for (offsetX = -1; offsetX <= 1; offsetX++)
 			{
 				for (offsetZ = -1; offsetZ <= 1; offsetZ++)
 				{
 					for (offsetY = 0; offsetY <= 2; offsetY++)
-						if((offsetX != 0 || offsetY != 0 || offsetZ != 0) &&
-								Math.abs(x + offsetX) <= V.treeScanRange &&
-								Math.abs(z + offsetZ) <= V.treeScanRange &&
-								this.pos.getY() + y + offsetY < 256)
-							if(!array[x + offsetX + V.treeScanRange][y + offsetY][z + offsetZ + V.treeScanRange] &&
-									this.block.isLog(world, this.pos.add(x + offsetX, y + offsetY, z + offsetZ)))
+						if ((offsetX != 0 || offsetY != 0 || offsetZ != 0) && Math.abs(x + offsetX) <= V.treeScanRange && Math.abs(z + offsetZ) <= V.treeScanRange && this.pos.getY() + y + offsetY < 256)
+							if (!array[x + offsetX + V.treeScanRange][y + offsetY][z + offsetZ + V.treeScanRange] && this.block.isLog(world, this.pos.add(x + offsetX, y + offsetY, z + offsetZ)))
 							{
-								scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
+							scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
 							}
 				}
 			}
 			++this.cacheDrop;
 			BlockPos pos1 = this.pos.add(x, y, z);
-			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);//Some update causes out of sych.
+			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);// Some
+																		// update
+																		// causes
+																		// out
+																		// of
+																		// sych.
 			beginLeavesDecay(world, pos1.up());
 			beginLeavesDecay(world, pos1.down());
 			beginLeavesDecay(world, pos1.south());

@@ -26,46 +26,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Use for ordered model...<br>
- * Some model need use some data from tile entity or
- * other place, and data is too large for state variant
- * load.<br>
+ * Some model need use some data from tile entity or other place, and data is
+ * too large for state variant load.<br>
  * Here provide some vanilla quad builder.
+ * 
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
 public final class ModelQuadBuilder
 {
-	private VertexFormat format;
-	private CoordTransformer transformer = new CoordTransformer();
-	private float minX = 0.0F;
-	private float minY = 0.0F;
-	private float minZ = 0.0F;
-	private float maxX = 1.0F;
-	private float maxY = 1.0F;
-	private float maxZ = 1.0F;
-	private float red = 1.0F;
-	private float green = 1.0F;
-	private float blue = 1.0F;
-	private float alpha = 1.0F;
-	public int tidx = -1;
-	private TextureAtlasSprite icon;
+	private VertexFormat		format;
+	private CoordTransformer	transformer				= new CoordTransformer();
+	private float				minX					= 0.0F;
+	private float				minY					= 0.0F;
+	private float				minZ					= 0.0F;
+	private float				maxX					= 1.0F;
+	private float				maxY					= 1.0F;
+	private float				maxZ					= 1.0F;
+	private float				red						= 1.0F;
+	private float				green					= 1.0F;
+	private float				blue					= 1.0F;
+	private float				alpha					= 1.0F;
+	public int					tidx					= -1;
+	private TextureAtlasSprite	icon;
 	@SuppressWarnings("unused")
-	private EnumFacing facing;
-	private boolean applyDiffuseLighting = true;
-	public boolean renderXNeg = true;
-	public boolean renderXPos = true;
-	public boolean renderYNeg = true;
-	public boolean renderYPos = true;
-	public boolean renderZNeg = true;
-	public boolean renderZPos = true;
-	public boolean renderOppisite = false;
+	private EnumFacing			facing;
+	private boolean				applyDiffuseLighting	= true;
+	public boolean				renderXNeg				= true;
+	public boolean				renderXPos				= true;
+	public boolean				renderYNeg				= true;
+	public boolean				renderYPos				= true;
+	public boolean				renderZNeg				= true;
+	public boolean				renderZPos				= true;
+	public boolean				renderOppisite			= false;
 	
 	public static ModelQuadBuilder newInstance()
 	{
 		return new ModelQuadBuilder();
 	}
 	
-	private ModelQuadBuilder() { }
+	private ModelQuadBuilder()
+	{
+	}
 	
 	public void setFormat(VertexFormat format)
 	{
@@ -82,10 +84,10 @@ public final class ModelQuadBuilder
 	
 	public void setColor(int rgba)
 	{
-		this.red   = ((rgba >> 24)       ) / 255.0F;
+		this.red = ((rgba >> 24)) / 255.0F;
 		this.green = ((rgba >> 16) & 0xFF) / 255.0F;
-		this.blue  = ((rgba >> 8 ) & 0xFF) / 255.0F;
-		this.alpha = ((rgba      ) & 0xFF) / 255.0F;
+		this.blue = ((rgba >> 8) & 0xFF) / 255.0F;
+		this.alpha = ((rgba) & 0xFF) / 255.0F;
 	}
 	
 	public void setBound(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
@@ -116,12 +118,12 @@ public final class ModelQuadBuilder
 	public void putCubeQuads(Consumer<BakedQuad> executable, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 	{
 		setBound(minX, minY, minZ, maxX, maxY, maxZ);
-		if(this.renderYNeg) executable.accept(bakeYNegFace());
-		if(this.renderYPos) executable.accept(bakeYPosFace());
-		if(this.renderZNeg) executable.accept(bakeZNegFace());
-		if(this.renderZPos) executable.accept(bakeZPosFace());
-		if(this.renderXNeg) executable.accept(bakeXNegFace());
-		if(this.renderXPos) executable.accept(bakeXPosFace());
+		if (this.renderYNeg) executable.accept(bakeYNegFace());
+		if (this.renderYPos) executable.accept(bakeYPosFace());
+		if (this.renderZNeg) executable.accept(bakeZNegFace());
+		if (this.renderZPos) executable.accept(bakeZPosFace());
+		if (this.renderXNeg) executable.accept(bakeXNegFace());
+		if (this.renderXPos) executable.accept(bakeXPosFace());
 	}
 	
 	public void putCubeQuads(ImmutableList.Builder<BakedQuad> executable, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
@@ -141,12 +143,7 @@ public final class ModelQuadBuilder
 		return list;
 	}
 	
-	public BakedQuad bakeFace(@Nullable EnumFacing facing, float normalX, float normalY, float normalZ,
-			float x1, float y1, float z1,
-			float x2, float y2, float z2,
-			float x3, float y3, float z3,
-			float x4, float y4, float z4,
-			float u1, float v1, float u2, float v2)
+	public BakedQuad bakeFace(@Nullable EnumFacing facing, float normalX, float normalY, float normalZ, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4, float u1, float v1, float u2, float v2)
 	{
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
 		builder.setQuadTint(this.tidx);
@@ -157,7 +154,7 @@ public final class ModelQuadBuilder
 		float maxU = this.icon.getInterpolatedU(u2 * 16.0F);
 		float minV = this.icon.getInterpolatedV(v1 * 16.0F);
 		float maxV = this.icon.getInterpolatedV(v2 * 16.0F);
-		if(this.renderOppisite)
+		if (this.renderOppisite)
 		{
 			putVertex(builder, this.format, x1, y1, z1, minU, minV, normalX, normalY, normalZ, this.renderOppisite);
 			putVertex(builder, this.format, x4, y4, z4, maxU, minV, normalX, normalY, normalZ, this.renderOppisite);
@@ -176,62 +173,32 @@ public final class ModelQuadBuilder
 	
 	public BakedQuad bakeYPosFace()
 	{
-		return bakeFace(EnumFacing.UP, Direction.U.x, Direction.U.y, Direction.U.z,
-				this.minX, this.maxY, this.minZ,
-				this.minX, this.maxY, this.maxZ,
-				this.maxX, this.maxY, this.maxZ,
-				this.maxX, this.maxY, this.minZ,
-				this.minX, this.minZ, this.maxX, this.maxZ);
+		return bakeFace(EnumFacing.UP, Direction.U.x, Direction.U.y, Direction.U.z, this.minX, this.maxY, this.minZ, this.minX, this.maxY, this.maxZ, this.maxX, this.maxY, this.maxZ, this.maxX, this.maxY, this.minZ, this.minX, this.minZ, this.maxX, this.maxZ);
 	}
 	
 	public BakedQuad bakeYNegFace()
 	{
-		return bakeFace(EnumFacing.DOWN, Direction.D.x, Direction.D.y, Direction.D.z,
-				this.minX, this.minY, this.maxZ,
-				this.minX, this.minY, this.minZ,
-				this.maxX, this.minY, this.minZ,
-				this.maxX, this.minY, this.maxZ,
-				this.minX, 1F - this.maxZ, this.maxX, 1F - this.minZ);
+		return bakeFace(EnumFacing.DOWN, Direction.D.x, Direction.D.y, Direction.D.z, this.minX, this.minY, this.maxZ, this.minX, this.minY, this.minZ, this.maxX, this.minY, this.minZ, this.maxX, this.minY, this.maxZ, this.minX, 1F - this.maxZ, this.maxX, 1F - this.minZ);
 	}
 	
 	public BakedQuad bakeXPosFace()
 	{
-		return bakeFace(EnumFacing.EAST, Direction.E.x, Direction.E.y, Direction.E.z,
-				this.maxX, this.maxY, this.maxZ,
-				this.maxX, this.minY, this.maxZ,
-				this.maxX, this.minY, this.minZ,
-				this.maxX, this.maxY, this.minZ,
-				1F - this.maxZ, 1F - this.maxY, 1F - this.minZ, 1F - this.minY);
+		return bakeFace(EnumFacing.EAST, Direction.E.x, Direction.E.y, Direction.E.z, this.maxX, this.maxY, this.maxZ, this.maxX, this.minY, this.maxZ, this.maxX, this.minY, this.minZ, this.maxX, this.maxY, this.minZ, 1F - this.maxZ, 1F - this.maxY, 1F - this.minZ, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeXNegFace()
 	{
-		return bakeFace(EnumFacing.WEST, Direction.W.x, Direction.W.y, Direction.W.z,
-				this.minX, this.maxY, this.minZ,
-				this.minX, this.minY, this.minZ,
-				this.minX, this.minY, this.maxZ,
-				this.minX, this.maxY, this.maxZ,
-				this.minZ, 1F - this.maxY, this.maxZ, 1F - this.minY);
+		return bakeFace(EnumFacing.WEST, Direction.W.x, Direction.W.y, Direction.W.z, this.minX, this.maxY, this.minZ, this.minX, this.minY, this.minZ, this.minX, this.minY, this.maxZ, this.minX, this.maxY, this.maxZ, this.minZ, 1F - this.maxY, this.maxZ, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeZPosFace()
 	{
-		return bakeFace(EnumFacing.SOUTH, Direction.S.x, Direction.S.y, Direction.S.z,
-				this.minX, this.maxY, this.maxZ,
-				this.minX, this.minY, this.maxZ,
-				this.maxX, this.minY, this.maxZ,
-				this.maxX, this.maxY, this.maxZ,
-				this.minX, 1F - this.maxY, this.maxX, 1F - this.minY);
+		return bakeFace(EnumFacing.SOUTH, Direction.S.x, Direction.S.y, Direction.S.z, this.minX, this.maxY, this.maxZ, this.minX, this.minY, this.maxZ, this.maxX, this.minY, this.maxZ, this.maxX, this.maxY, this.maxZ, this.minX, 1F - this.maxY, this.maxX, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeZNegFace()
 	{
-		return bakeFace(EnumFacing.NORTH, Direction.N.x, Direction.N.y, Direction.N.z,
-				this.maxX, this.maxY, this.minZ,
-				this.maxX, this.minY, this.minZ,
-				this.minX, this.minY, this.minZ,
-				this.minX, this.maxY, this.minZ,
-				1F - this.maxX, 1F - this.maxY, 1F - this.minX, 1F - this.minY);
+		return bakeFace(EnumFacing.NORTH, Direction.N.x, Direction.N.y, Direction.N.z, this.maxX, this.maxY, this.minZ, this.maxX, this.minY, this.minZ, this.minX, this.minY, this.minZ, this.minX, this.maxY, this.minZ, 1F - this.maxX, 1F - this.maxY, 1F - this.minX, 1F - this.minY);
 	}
 	
 	@SuppressWarnings("unused")
@@ -239,15 +206,16 @@ public final class ModelQuadBuilder
 	{
 		putVertex(builder, format, x, y, z, u, v, face.x, face.y, face.z, oppisite);
 	}
+	
 	private void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, boolean oppisite)
 	{
-		for(int e = 0; e < format.getElementCount(); e++)
+		for (int e = 0; e < format.getElementCount(); e++)
 		{
-			switch(format.getElement(e).getUsage())
+			switch (format.getElement(e).getUsage())
 			{
 			case POSITION:
 			{
-				float[] xyz = {x,y,z};
+				float[] xyz = { x, y, z };
 				this.transformer.transform(xyz);
 				builder.put(e, xyz[0], xyz[1], xyz[2], 1);
 				break;
@@ -257,16 +225,17 @@ public final class ModelQuadBuilder
 				builder.put(e, this.red, this.green, this.blue, this.alpha);
 				break;
 			}
-			case UV: if(format.getElement(e).getIndex() == 0)
-			{
-				builder.put(e, u, v, 0F, 1F);
-				break;
-			}
+			case UV:
+				if (format.getElement(e).getIndex() == 0)
+				{
+					builder.put(e, u, v, 0F, 1F);
+					break;
+				}
 			case NORMAL:
 			{
 				Vector3f vector3f = new Vector3f(normalX, normalY, normalZ);
 				this.transformer.normal(vector3f);
-				if(!oppisite)
+				if (!oppisite)
 				{
 					builder.put(e, vector3f.x, vector3f.y, vector3f.z, 0f);
 				}

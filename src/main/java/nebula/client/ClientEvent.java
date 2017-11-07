@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * For some custom render.<br>
  * Posted in {@link MinecraftForge#EVENT_BUS}
+ * 
  * @author ueyudiud
  */
 public class ClientEvent extends Event
@@ -19,8 +20,8 @@ public class ClientEvent extends Event
 	
 	public static class RenderEvent extends ClientEvent
 	{
-		protected RenderManager manager;
-		private Tessellator tessellator = Tessellator.getInstance();
+		protected RenderManager	manager;
+		private Tessellator		tessellator	= Tessellator.getInstance();
 		
 		public void bindTexture(ResourceLocation location)
 		{

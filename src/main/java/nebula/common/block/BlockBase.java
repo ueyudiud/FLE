@@ -44,6 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The base block type of nebula.
+ * 
  * @author ueyudiud
  */
 public class BlockBase extends Block implements IRegisteredNameable, IRenderRegister
@@ -51,13 +52,13 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	private static List<BlockBase> list = new ArrayList<>();
 	
 	/**
-	 * Called when all others object(fluids, blocks, configurations, materials, etc)
-	 * are already initialized.
+	 * Called when all others object(fluids, blocks, configurations, materials,
+	 * etc) are already initialized.
 	 */
 	public static void post()
 	{
 		Log.info("Nubula reloading blocks...");
-		for(BlockBase block : list)
+		for (BlockBase block : list)
 		{
 			block.postInitalizedBlocks();
 		}
@@ -66,40 +67,41 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	private final ThreadLocal<TileEntity> thread1 = new ThreadLocal<>();
 	
-	public final String blockName;
-	protected final Item item;
-	private boolean toolRequired = true;
+	public final String		blockName;
+	protected final Item	item;
+	private boolean			toolRequired	= true;
 	
-	protected float effectiveSpeedMultiplier = 1 / 30F;
-	protected float uneffectiveSpeedMultiplier = 1F / 100F;
+	protected float	effectiveSpeedMultiplier	= 1 / 30F;
+	protected float	uneffectiveSpeedMultiplier	= 1F / 100F;
 	
 	public BlockBase(String name, Material materialIn)
 	{
 		this(Game.getActiveModID(), name, materialIn);
 	}
+	
 	public BlockBase(String modid, String name, Material materialIn)
 	{
 		super(materialIn);
-		if(list == null)
-			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
+		if (list == null) throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
 		Game.registerBlock(this, modid, name, this.item = createItemBlock());
-		list.add(this);//Added for re-register.
+		list.add(this);// Added for re-register.
 	}
+	
 	public BlockBase(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		this(Game.getActiveModID(), name, blockMaterialIn, blockMapColorIn);
 	}
+	
 	public BlockBase(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(blockMaterialIn, blockMapColorIn);
-		if(list == null)
-			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
+		if (list == null) throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
 		Game.registerBlock(this, modid, name, this.item = createItemBlock());
-		list.add(this);//Added for re-register.
+		list.add(this);// Added for re-register.
 	}
 	
 	@Override
@@ -171,8 +173,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return this instanceof IExtendedDataBlock ?
-				((IExtendedDataBlock) this).getDataFromState(state) & 0xF : super.getMetaFromState(state);
+		return this instanceof IExtendedDataBlock ? ((IExtendedDataBlock) this).getDataFromState(state) & 0xF : super.getMetaFromState(state);
 	}
 	
 	@Override
@@ -257,6 +258,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	/**
 	 * Called when block harvest.
+	 * 
 	 * @param worldIn
 	 * @param pos
 	 * @param state
@@ -272,13 +274,12 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
 		float hardness = state.getBlockHardness(worldIn, pos);
-		return hardness < 0.0F || !canBreakBlock(worldIn, pos, player) ? 0F
-				: player.getDigSpeed(state, pos) / hardness *
-				(!canBreakEffective(state, player, worldIn, pos) ? this.uneffectiveSpeedMultiplier : this.effectiveSpeedMultiplier);
+		return hardness < 0.0F || !canBreakBlock(worldIn, pos, player) ? 0F : player.getDigSpeed(state, pos) / hardness * (!canBreakEffective(state, player, worldIn, pos) ? this.uneffectiveSpeedMultiplier : this.effectiveSpeedMultiplier);
 	}
 	
 	/**
 	 * Match the block can be break by player (Not similar with harvest).
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param player
@@ -297,7 +298,15 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
-		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
+		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) // do not
+																	 // drop
+																	 // items
+																	 // while
+																	 // restoring
+																	 // blockstates,
+																	 // prevents
+																	 // item
+																	 // dupe
 		{
 			List<ItemStack> items = getDrops(worldIn, pos, state, this.thread1.get(), fortune, false);
 			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, this.harvesters.get());
@@ -320,7 +329,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		List<ItemStack> ret = ArrayListAddWithCheck.requireNonnull();
 		
-		if(silkTouch)
+		if (silkTouch)
 		{
 			ret.add(getSilkTouchDrop(state));
 		}
@@ -328,7 +337,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		{
 			Random rand = world instanceof World ? ((World) world).rand : RANDOM;
 			int count = quantityDropped(state, fortune, rand);
-			for(int i = 0; i < count; i++)
+			for (int i = 0; i < count; i++)
 			{
 				Item item = getItemDropped(state, rand, fortune);
 				if (item != null)
@@ -366,8 +375,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	}
 	
 	@Override
-	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		return false;
 	}
@@ -410,12 +418,11 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public CreativeTabs[] getCreativeTabs()
 	{
-		return new CreativeTabs[]{getCreativeTabToDisplayOn()};
+		return new CreativeTabs[] { getCreativeTabToDisplayOn() };
 	}
 	
 	@Override
-	public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, int meta, EntityLivingBase placer)
+	public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return getBlockPlaceState(world, pos, facing, hitX, hitY, hitZ, placer.getHeldItemMainhand(), placer);
 	}
@@ -427,14 +434,12 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	@Override
 	@Deprecated
-	public final void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack)
+	public final void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}
 	
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing,
-			ItemStack stack)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}

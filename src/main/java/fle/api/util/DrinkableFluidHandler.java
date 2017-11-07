@@ -17,9 +17,9 @@ public class DrinkableFluidHandler
 {
 	public static class DrinkableFluidEntry
 	{
-		public final Fluid fluid;
-		public final int amount1;
-		public final int amount2;
+		public final Fluid	fluid;
+		public final int	amount1;
+		public final int	amount2;
 		
 		DrinkableFluidEntry(Fluid fluid, int amount1, int amount2)
 		{
@@ -44,8 +44,7 @@ public class DrinkableFluidHandler
 	
 	public static void registerDrinkableFluid(DrinkableFluidEntry entry)
 	{
-		if (entry.amount1 < 1 || entry.amount2 < 1)
-			throw new IllegalArgumentException();
+		if (entry.amount1 < 1 || entry.amount2 < 1) throw new IllegalArgumentException();
 		MAP.put(entry.fluid, entry);
 	}
 	

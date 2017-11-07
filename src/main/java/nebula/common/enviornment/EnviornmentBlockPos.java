@@ -7,13 +7,14 @@ import net.minecraft.world.World;
 
 public class EnviornmentBlockPos implements IEnvironment
 {
-	World world;
-	BlockPos pos;
+	World		world;
+	BlockPos	pos;
 	
 	public EnviornmentBlockPos(ICoord coord)
 	{
 		this(coord.world(), coord.pos());
 	}
+	
 	public EnviornmentBlockPos(World world, BlockPos pos)
 	{
 		this.world = world;

@@ -15,6 +15,7 @@ public class LayerFuzzyZoom extends LayerZoom
 	{
 		super(seed, layer);
 	}
+	
 	public LayerFuzzyZoom(long seed, int magnify, GenLayer layer)
 	{
 		super(seed, magnify > 1 ? new LayerFuzzyZoom(seed + 1L, magnify - 1, layer) : layer);

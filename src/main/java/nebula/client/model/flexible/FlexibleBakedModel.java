@@ -34,27 +34,24 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderModel, IPerspectiveAwareModel
 {
-	private final boolean gui3d;
-	private final boolean builtIn;
-	private final INebulaBakedModelPart[] parts;
-	private final TextureAtlasSprite particle;
-	private final Function<ItemStack, String>[] itemDataGen;
-	private final Function<IBlockState, String>[] blockDataGen;
-	private final int[] itemLoadingData;
-	private final int[] blockLoadingData;
-	private final ImmutableMap<TransformType, TRSRTransformation> transforms;
-	private final boolean ao;
+	private final boolean											gui3d;
+	private final boolean											builtIn;
+	private final INebulaBakedModelPart[]							parts;
+	private final TextureAtlasSprite								particle;
+	private final Function<ItemStack, String>[]						itemDataGen;
+	private final Function<IBlockState, String>[]					blockDataGen;
+	private final int[]												itemLoadingData;
+	private final int[]												blockLoadingData;
+	private final ImmutableMap<TransformType, TRSRTransformation>	transforms;
+	private final boolean											ao;
 	/**
-	 * The model state marked, if model has crashed during
-	 * loading quad, the model will be marked as problem model.
-	 * To prevent crashing exception filled logs, the model will
-	 * stop to bake quad until model is be reloaded.
+	 * The model state marked, if model has crashed during loading quad, the
+	 * model will be marked as problem model. To prevent crashing exception
+	 * filled logs, the model will stop to bake quad until model is be reloaded.
 	 */
-	private boolean errored = false;
+	private boolean													errored	= false;
 	
-	public FlexibleBakedModel(ImmutableMap<TransformType, TRSRTransformation> transforms, ImmutableList<INebulaBakedModelPart> parts,
-			TextureAtlasSprite particle, boolean gui3d, boolean ao, boolean builtIn,
-			Function<ItemStack, String>[] itemDataGen, Function<IBlockState, String>[] blockDataGen,
+	public FlexibleBakedModel(ImmutableMap<TransformType, TRSRTransformation> transforms, ImmutableList<INebulaBakedModelPart> parts, TextureAtlasSprite particle, boolean gui3d, boolean ao, boolean builtIn, Function<ItemStack, String>[] itemDataGen, Function<IBlockState, String>[] blockDataGen,
 			int[] itemLoadingData, int[] blockLoadingData)
 	{
 		this.transforms = transforms;
@@ -76,7 +73,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 		if (this.itemDataGen == null) return getQuads((IBlockState) null, facing, rand);
 		try
 		{
-			Object[] datas = A.transform(this.itemDataGen, f->f.apply(stack));
+			Object[] datas = A.transform(this.itemDataGen, f -> f.apply(stack));
 			List<BakedQuad> quads = new ArrayList<>();
 			for (int i = 0; i < this.parts.length; ++i)
 			{
@@ -101,11 +98,11 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 			List<BakedQuad> quads = new ArrayList<>();
 			if (this.blockDataGen == null)
 			{
-				A.executeAll(this.parts, part->quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL, rand)));
+				A.executeAll(this.parts, part -> quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL, rand)));
 			}
 			else
 			{
-				Object[] datas = A.transform(this.blockDataGen, f->f.apply(state));
+				Object[] datas = A.transform(this.blockDataGen, f -> f.apply(state));
 				for (int i = 0; i < this.parts.length; ++i)
 				{
 					quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]], rand));

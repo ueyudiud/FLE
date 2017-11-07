@@ -7,10 +7,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Register type, contain a register list with a integer id
- * and a string id (or 'name') for each element.<p>
- * This target collection is implements {@link java.lang.Iterable},
- * for you can use it in for-each loop directly.
+ * Register type, contain a register list with a integer id and a string id (or
+ * 'name') for each element.
+ * <p>
+ * This target collection is implements {@link java.lang.Iterable}, for you can
+ * use it in for-each loop directly.
+ * 
  * @author ueyudiud
  * @param <T> the element type in register.
  * @see java.lang.Iterable
@@ -20,6 +22,7 @@ public interface IRegister<T> extends Iterable<T>
 {
 	/**
 	 * Register a new element.
+	 * 
 	 * @param name the registered name.
 	 * @param arg the registered argument.
 	 * @return the id of registered argument.
@@ -28,6 +31,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Register a new element with selected id.
+	 * 
 	 * @param id the id of registered argument.
 	 * @param name the registered name.
 	 * @param arg the registered argument.
@@ -36,20 +40,25 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Get element id, if element contain two element, get first id.
+	 * 
 	 * @param arg
-	 * @return The id of element, <code>-1</code> means the element is not present in register.
+	 * @return The id of element, <code>-1</code> means the element is not
+	 *         present in register.
 	 */
 	int id(T arg);
 	
 	/**
 	 * Get element id from name.
+	 * 
 	 * @param name
-	 * @return The id of element with select name, <code>-1</code> means the element is not present in register.
+	 * @return The id of element with select name, <code>-1</code> means the
+	 *         element is not present in register.
 	 */
 	int id(String name);
 	
 	/**
 	 * Get name of element.
+	 * 
 	 * @param arg the element.
 	 * @return the name.
 	 */
@@ -57,6 +66,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Get name of element from id.
+	 * 
 	 * @param id
 	 * @return
 	 * @see #name(Object)
@@ -64,10 +74,13 @@ public interface IRegister<T> extends Iterable<T>
 	String name(int id);
 	
 	/**
-	 * Get element with select name, if it is not present, give bake default one.
+	 * Get element with select name, if it is not present, give bake default
+	 * one.
+	 * 
 	 * @param name
 	 * @param def the default element return.
-	 * @return the element with name registered, or <tt>def</tt> when no element with name found.
+	 * @return the element with name registered, or <tt>def</tt> when no element
+	 *         with name found.
 	 * @see #get(String)
 	 */
 	default T get(String name, @Nullable T def)
@@ -78,8 +91,10 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Get element with select name.
+	 * 
 	 * @param name the name of element.
-	 * @return the element with name registered, or <tt>null</tt> if no element with name found.
+	 * @return the element with name registered, or <tt>null</tt> if no element
+	 *         with name found.
 	 */
 	@Nullable
 	T get(String name);
@@ -94,6 +109,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Get all targets in register.
+	 * 
 	 * @return
 	 */
 	Collection<T> targets();
@@ -111,8 +127,8 @@ public interface IRegister<T> extends Iterable<T>
 	}
 	
 	/**
-	 * Return <tt>true</tt> if this register contain
-	 * the argument.
+	 * Return <tt>true</tt> if this register contain the argument.
+	 * 
 	 * @param arg
 	 * @return
 	 */
@@ -123,6 +139,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Remove an element from register by name.
+	 * 
 	 * @param name the name of element.
 	 * @return the removed element value.
 	 */
@@ -131,6 +148,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Remove an element from register.
+	 * 
 	 * @param arg the remove element.
 	 * @return the element registered name.
 	 */
@@ -139,14 +157,15 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Give the element size of register.
+	 * 
 	 * @return the size
 	 */
 	int size();
 	
 	/**
-	 * Return the hashcode of register.
-	 * For all value registered in entry, the hashcode
-	 * is sum of <tt>id ^ name.hashcode() ^ hashCode(value)</tt>
+	 * Return the hashcode of register. For all value registered in entry, the
+	 * hashcode is sum of <tt>id ^ name.hashcode() ^ hashCode(value)</tt>
+	 * 
 	 * @return the hashcode of register.
 	 * @see Object#hashCode()
 	 */
@@ -154,6 +173,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Return the register is same to another register (or just an object).
+	 * 
 	 * @see Object#equals(Object)
 	 */
 	boolean equals(Object obj);

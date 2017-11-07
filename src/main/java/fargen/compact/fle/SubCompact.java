@@ -13,6 +13,7 @@ import net.minecraftforge.common.DimensionManager;
 
 /**
  * The sub compact of FLE.
+ * 
  * @author ueyudiud
  */
 public class SubCompact implements ICompatible
@@ -20,7 +21,7 @@ public class SubCompact implements ICompatible
 	@Override
 	public void call(String phase) throws Exception
 	{
-		if(phase.equals("init"))
+		if (phase.equals("init"))
 		{
 			FLEAPI.voidDimID = 10;
 			FarGen.FAR_VOID = DimensionType.register("FAR_VOID", "far_void", FLEAPI.voidDimID, FarVoidProvider.class, false);

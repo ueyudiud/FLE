@@ -18,19 +18,20 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketLarge implements IPacket
 {
-	protected Side side;
-	protected INetHandler handler;
+	protected Side			side;
+	protected INetHandler	handler;
 	
-	private byte[] bs;
-	private static volatile ByteBuf largePacketCache;
+	private byte[]					bs;
+	private static volatile ByteBuf	largePacketCache;
 	
-	private int id = 0;
-	private boolean flag = false;
+	private int		id		= 0;
+	private boolean	flag	= false;
 	
 	public PacketLarge()
 	{
 		
 	}
+	
 	public PacketLarge(byte[] arrays)
 	{
 		this.bs = arrays;
@@ -57,9 +58,7 @@ public class PacketLarge implements IPacket
 	@Override
 	public EntityPlayer getPlayer()
 	{
-		return (this.handler instanceof NetHandlerPlayServer) ?
-				((NetHandlerPlayServer) this.handler).playerEntity :
-					Players.player();
+		return (this.handler instanceof NetHandlerPlayServer) ? ((NetHandlerPlayServer) this.handler).playerEntity : Players.player();
 	}
 	
 	@Override
@@ -78,7 +77,7 @@ public class PacketLarge implements IPacket
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(b));
 		int type = stream.readInt();
 		this.id = type >> 2;
-		if((type & 0x1) != 0)
+		if ((type & 0x1) != 0)
 		{
 			largePacketCache = Unpooled.buffer();
 		}
@@ -88,7 +87,7 @@ public class PacketLarge implements IPacket
 		{
 			largePacketCache.writeBytes(buffer, 0, len);
 		}
-		if((type & 0x2) != 0)
+		if ((type & 0x2) != 0)
 		{
 			this.flag = true;
 		}
@@ -103,10 +102,9 @@ public class PacketLarge implements IPacket
 			network.processPacket(this.id, Unpooled.wrappedBuffer(largePacketCache), this.side, this.handler);
 			largePacketCache = null;
 		}
-		catch(Throwable exception)
+		catch (Throwable exception)
 		{
-			if(Nebula.debug)
-				throw new RuntimeException(exception);
+			if (Nebula.debug) throw new RuntimeException(exception);
 			Log.warn("Fail to process packet.", exception);
 		}
 		return null;

@@ -14,10 +14,12 @@ import net.minecraft.world.World;
 public class PacketTESync extends PacketBlockCoord
 {
 	private NBTTagCompound nbt;
+	
 	public PacketTESync()
 	{
 		
 	}
+	
 	public PacketTESync(World world, BlockPos pos, NBTTagCompound nbt)
 	{
 		super(world, pos);
@@ -42,10 +44,10 @@ public class PacketTESync extends PacketBlockCoord
 	public IPacket process(Network network)
 	{
 		World world = world();
-		if(world != null)
+		if (world != null)
 		{
 			TileEntity tile = world.getTileEntity(this.pos);
-			if(tile instanceof ISynchronizableTile)
+			if (tile instanceof ISynchronizableTile)
 			{
 				((ISynchronizableTile) tile).readFromDescription(this.nbt);
 			}

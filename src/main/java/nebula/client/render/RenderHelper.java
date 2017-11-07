@@ -14,18 +14,21 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 
 /**
  * The Tesselator wrapper type.
+ * 
  * @author ueyudiud
  */
 public class RenderHelper
 {
 	public static final RenderHelper instance = new RenderHelper();
 	
-	private final Tessellator tessellator = Tessellator.getInstance();
-	private final VertexBuffer buffer = this.tessellator.getBuffer();
-	private TextureAtlasSprite icon;
-	private float iconCoordScale;
+	private final Tessellator	tessellator	= Tessellator.getInstance();
+	private final VertexBuffer	buffer		= this.tessellator.getBuffer();
+	private TextureAtlasSprite	icon;
+	private float				iconCoordScale;
 	
-	private RenderHelper(){}
+	private RenderHelper()
+	{
+	}
 	
 	public void setIconCoordScale(float iconCoordScale)
 	{
@@ -133,11 +136,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			double x3, double y3, double z3,
-			double x4, double y4, double z4)
+	public RenderHelper face(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4)
 	{
 		this.buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		vertex_p(x1, y1, z1);
@@ -148,11 +147,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4)
+	public RenderHelper face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4)
 	{
 		setIcon(icon);
 		vertex_pt(x1, y1, z1, u1, v1);
@@ -163,12 +158,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4,
-			float nx, float ny, float nz)
+	public RenderHelper face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4, float nx, float ny, float nz)
 	{
 		setIcon(icon);
 		vertex_ptn(x1, y1, z1, u1, v1, nx, ny, nz);
@@ -179,11 +169,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4)
+	public RenderHelper face(double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4)
 	{
 		vertex_pt(x1, y1, z1, u1, v1);
 		vertex_pt(x2, y2, z2, u2, v2);
@@ -192,11 +178,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(short[] rgba,
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4)
+	public RenderHelper face(short[] rgba, double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4)
 	{
 		vertex_ptc(x1, y1, z1, u1, v1, rgba[0] / 255F, rgba[1] / 255F, rgba[2] / 255F, rgba[3] / 255F);
 		vertex_ptc(x2, y2, z2, u2, v2, rgba[0] / 255F, rgba[1] / 255F, rgba[2] / 255F, rgba[3] / 255F);
@@ -205,11 +187,7 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(float r, float g, float b, float a,
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4)
+	public RenderHelper face(float r, float g, float b, float a, double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4)
 	{
 		vertex_ptc(x1, y1, z1, u1, v1, r, g, b, a);
 		vertex_ptc(x2, y2, z2, u2, v2, r, g, b, a);
@@ -218,11 +196,8 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1, float rgb1,
-			double x2, double y2, double z2, float u2, float v2, float rgb2,
-			double x3, double y3, double z3, float u3, float v3, float rgb3,
-			double x4, double y4, double z4, float u4, float v4, float rgb4)
+	public RenderHelper face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, float rgb1, double x2, double y2, double z2, float u2, float v2, float rgb2, double x3, double y3, double z3, float u3, float v3, float rgb3, double x4, double y4, double z4, float u4,
+			float v4, float rgb4)
 	{
 		vertex_ptc(x1, y1, z1, u1, v1, rgb1, rgb1, rgb1, 1.0F);
 		vertex_ptc(x2, y2, z2, u2, v2, rgb2, rgb2, rgb2, 1.0F);
@@ -231,11 +206,8 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1, float r1, float g1, float b1, float a1,
-			double x2, double y2, double z2, float u2, float v2, float r2, float g2, float b2, float a2,
-			double x3, double y3, double z3, float u3, float v3, float r3, float g3, float b3, float a3,
-			double x4, double y4, double z4, float u4, float v4, float r4, float g4, float b4, float a4)
+	public RenderHelper face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, float r1, float g1, float b1, float a1, double x2, double y2, double z2, float u2, float v2, float r2, float g2, float b2, float a2, double x3, double y3, double z3, float u3, float v3,
+			float r3, float g3, float b3, float a3, double x4, double y4, double z4, float u4, float v4, float r4, float g4, float b4, float a4)
 	{
 		vertex_ptc(x1, y1, z1, u1, v1, r1, g1, b1, a1);
 		vertex_ptc(x2, y2, z2, u2, v2, r2, g2, b2, a2);
@@ -244,11 +216,8 @@ public class RenderHelper
 		return this;
 	}
 	
-	public RenderHelper face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1, int light1, float r1, float g1, float b1, float a1,
-			double x2, double y2, double z2, float u2, float v2, int light2, float r2, float g2, float b2, float a2,
-			double x3, double y3, double z3, float u3, float v3, int light3, float r3, float g3, float b3, float a3,
-			double x4, double y4, double z4, float u4, float v4, int light4, float r4, float g4, float b4, float a4)
+	public RenderHelper face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, int light1, float r1, float g1, float b1, float a1, double x2, double y2, double z2, float u2, float v2, int light2, float r2, float g2, float b2, float a2, double x3, double y3, double z3,
+			float u3, float v3, int light3, float r3, float g3, float b3, float a3, double x4, double y4, double z4, float u4, float v4, int light4, float r4, float g4, float b4, float a4)
 	{
 		vertex_ptlc(x1, y1, z1, u1, v1, light1, r1, g1, b1, a1);
 		vertex_ptlc(x2, y2, z2, u2, v2, light2, r2, g2, b2, a2);

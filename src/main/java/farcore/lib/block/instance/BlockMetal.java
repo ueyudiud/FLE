@@ -37,8 +37,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 {
-	public static final IProperty<Integer> CUSTOM_DATA = Misc.PROP_CUSTOM_DATA;
-	public static final PropertyMaterial METALS = PropertyMaterial.create("type", SubTags.METAL);
+	public static final IProperty<Integer>	CUSTOM_DATA	= Misc.PROP_CUSTOM_DATA;
+	public static final PropertyMaterial	METALS		= PropertyMaterial.create("type", SubTags.METAL);
 	
 	public BlockMetal()
 	{
@@ -88,9 +88,7 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	@Override
 	public IBlockState getStateFromData(int meta)
 	{
-		return getDefaultState()
-				.withProperty(METALS, METALS.getMaterialFromID(meta & 0xFFFF, null))
-				.withProperty(CUSTOM_DATA, (meta >> 16) & 0xF);
+		return getDefaultState().withProperty(METALS, METALS.getMaterialFromID(meta & 0xFFFF, null)).withProperty(CUSTOM_DATA, (meta >> 16) & 0xF);
 	}
 	
 	@Override

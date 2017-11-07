@@ -27,13 +27,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ContainerWoodworkPortable extends ContainerBlockPosition
 {
-	private InventorySimple inputs = new InventorySimple(3);
-	private InventorySimple outputs = new InventorySimple(4);
+	private InventorySimple	inputs	= new InventorySimple(3);
+	private InventorySimple	outputs	= new InventorySimple(4);
 	
 	private IInventory realInput;
 	
-	private PortableWoodworkRecipe recipe;
-	private boolean changingFlag;
+	private PortableWoodworkRecipe	recipe;
+	private boolean					changingFlag;
 	
 	public ContainerWoodworkPortable(EntityPlayer player, World world, BlockPos pos)
 	{
@@ -64,7 +64,7 @@ public class ContainerWoodworkPortable extends ContainerBlockPosition
 	@SideOnly(Side.CLIENT)
 	public int[] getRenderValue()
 	{
-		return new int[]{this.currentValue[3], this.currentValue[4]};
+		return new int[] { this.currentValue[3], this.currentValue[4] };
 	}
 	
 	@Override
@@ -140,7 +140,7 @@ public class ContainerWoodworkPortable extends ContainerBlockPosition
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			if (this.recipe != null)
 			{
 				int i = value == 0 ? 1 : value == 1 ? -1 : value == 2 ? 5 : value == 3 ? -5 : 0;

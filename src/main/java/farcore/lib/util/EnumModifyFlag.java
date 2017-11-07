@@ -2,8 +2,5 @@ package farcore.lib.util;
 
 public enum EnumModifyFlag
 {
-	remove,
-	mark,
-	reload,
-	add;
+	remove, mark, reload, add;
 }

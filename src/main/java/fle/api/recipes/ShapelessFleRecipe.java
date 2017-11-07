@@ -21,31 +21,39 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
- * The shapeless recipe type.
- * A more usable recipe template for crafting table.<p>
+ * The shapeless recipe type. A more usable recipe template for crafting table.
+ * <p>
+ * 
  * @author ueyudiud
  * @see net.minecraftforge.oredict.ShapelessOreRecipe
  */
 public class ShapelessFleRecipe implements IRecipe
 {
-	protected List<SingleInputMatch> inputs;
-	protected AbstractStack output;
-	protected boolean forcePlayerContain;
+	protected List<SingleInputMatch>	inputs;
+	protected AbstractStack				output;
+	protected boolean					forcePlayerContain;
 	
-	protected ShapelessFleRecipe() {}
-	public ShapelessFleRecipe(ItemStack output, Object...inputs) { this(new BaseStack(output), inputs); }
+	protected ShapelessFleRecipe()
+	{
+	}
+	
+	public ShapelessFleRecipe(ItemStack output, Object...inputs)
+	{
+		this(new BaseStack(output), inputs);
+	}
+	
 	public ShapelessFleRecipe(AbstractStack output, Object...inputs)
 	{
 		try
 		{
-			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null))
-				throw new RuntimeException();
+			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null)) throw new RuntimeException();
 			this.output = output;
 			this.inputs = new ArrayList<>();
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
 			
-			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack-> {
-				for (int j = 0; j < stack.size; this.inputs.add(stack.element), ++j);
+			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack -> {
+				for (int j = 0; j < stack.size; this.inputs.add(stack.element), ++j)
+					;
 			});
 		}
 		catch (Exception exception)
@@ -58,15 +66,14 @@ public class ShapelessFleRecipe implements IRecipe
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
 		EntityPlayer player = ForgeHooks.getCraftingPlayer();
-		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player))
-			return false;
+		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player)) return false;
 		return matchInventory(inv);
 	}
 	
 	protected boolean matchInventory(InventoryCrafting inv)
 	{
 		ArrayList<SingleInputMatch> list = new ArrayList<>(this.inputs);
-		label : for (int i = 0; i < inv.getSizeInventory(); ++i)
+		label: for (int i = 0; i < inv.getSizeInventory(); ++i)
 		{
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack == null) continue;
@@ -95,7 +102,7 @@ public class ShapelessFleRecipe implements IRecipe
 	{
 		ItemStack result = getRecipeOutput();
 		ArrayList<SingleInputMatch> list = new ArrayList<>(this.inputs);
-		label : for (int i = 0; i < inv.getSizeInventory(); ++i)
+		label: for (int i = 0; i < inv.getSizeInventory(); ++i)
 		{
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack == null) continue;
@@ -110,7 +117,7 @@ public class ShapelessFleRecipe implements IRecipe
 					continue label;
 				}
 			}
-			return null;//Is this recipe invalid?
+			return null;// Is this recipe invalid?
 		}
 		return result;
 	}
@@ -132,7 +139,7 @@ public class ShapelessFleRecipe implements IRecipe
 	{
 		ItemStack[] result = new ItemStack[inv.getSizeInventory()];
 		ArrayList<SingleInputMatch> list = new ArrayList<>(this.inputs);
-		label : for (int i = 0; i < inv.getSizeInventory(); ++i)
+		label: for (int i = 0; i < inv.getSizeInventory(); ++i)
 		{
 			ItemStack stack = inv.getStackInSlot(i);
 			if (stack == null) continue;

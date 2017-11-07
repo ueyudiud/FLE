@@ -49,7 +49,8 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 		{
 			return super.add(e);
 		}
-		else return false;
+		else
+			return false;
 	}
 	
 	@Override
@@ -81,8 +82,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	
 	void testElement(E element)
 	{
-		if (!this.checker.test(element))
-			throw new IllegalArgumentException("The element can not match from checker, Checkeer: " + this.checker);
+		if (!this.checker.test(element)) throw new IllegalArgumentException("The element can not match from checker, Checkeer: " + this.checker);
 	}
 	
 	@Override

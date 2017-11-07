@@ -32,13 +32,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEHearth extends TEInventorySingleSlot
-implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
+public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 {
-	private static final byte IsBurining = 3;
-	private int burningPower;
-	private int normalBurningPower;
-	private long fuelValue;
+	private static final byte	IsBurining	= 3;
+	private int					burningPower;
+	private int					normalBurningPower;
+	private long				fuelValue;
 	
 	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 10.0F, 3.6E-3F);
 	
@@ -81,8 +80,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (hand == EnumHand.MAIN_HAND && side.horizontal)
 		{
@@ -104,14 +102,14 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 					return EnumActionResult.SUCCESS;
 				}
 			}
-			else return EnumActionResult.SUCCESS;
+			else
+				return EnumActionResult.SUCCESS;
 		}
 		return super.onBlockActivated(player, hand, stack, side, hitX, hitY, hitZ);
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tool == EnumToolTypes.FIRESTARTER)
 		{

@@ -12,10 +12,10 @@ public class FarSurfaceReplacer implements IWorldGenerateReplacer
 	{
 		switch (phase)
 		{
-		case ORE_GENERATE :
+		case ORE_GENERATE:
 			replaceOre(world, x, z, primer);
 			break;
-		default :
+		default:
 			break;
 		}
 	}

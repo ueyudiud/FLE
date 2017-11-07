@@ -288,8 +288,7 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	}
 	
 	@Override
-	public void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB p_185908_3_,
-			List<AxisAlignedBB> p_185908_4_, Entity entity)
+	public void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB p_185908_3_, List<AxisAlignedBB> p_185908_4_, Entity entity)
 	{
 		this.state.addCollisionBoxToList(worldIn, pos, p_185908_3_, p_185908_4_, entity);
 	}
@@ -328,40 +327,31 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	@Override
 	public Collection<IUnlistedProperty<?>> getUnlistedNames()
 	{
-		return this.state instanceof IExtendedBlockState ?
-				((IExtendedBlockState) this.state).getUnlistedNames() :
-					ImmutableList.of();
+		return this.state instanceof IExtendedBlockState ? ((IExtendedBlockState) this.state).getUnlistedNames() : ImmutableList.of();
 	}
 	
 	@Override
 	public <V> V getValue(IUnlistedProperty<V> property)
 	{
-		return this.state instanceof IExtendedBlockState ?
-				((IExtendedBlockState) this.state).getValue(property) :
-					null;
+		return this.state instanceof IExtendedBlockState ? ((IExtendedBlockState) this.state).getValue(property) : null;
 	}
 	
 	@Override
 	public <V> IExtendedBlockState withProperty(IUnlistedProperty<V> property, V value)
 	{
-		return wrapState(this.state instanceof IExtendedBlockState ?
-				((IExtendedBlockState) this.state).withProperty(property, value) : this.state);
+		return wrapState(this.state instanceof IExtendedBlockState ? ((IExtendedBlockState) this.state).withProperty(property, value) : this.state);
 	}
 	
 	@Override
 	public ImmutableMap<IUnlistedProperty<?>, Optional<?>> getUnlistedProperties()
 	{
-		return this.state instanceof IExtendedBlockState ?
-				((IExtendedBlockState) this.state).getUnlistedProperties() :
-					ImmutableMap.of();
+		return this.state instanceof IExtendedBlockState ? ((IExtendedBlockState) this.state).getUnlistedProperties() : ImmutableMap.of();
 	}
 	
 	@Override
 	public IBlockState getClean()
 	{
-		return this.state instanceof IExtendedBlockState ?
-				wrapState(((IExtendedBlockState) this.state).getClean()) :
-					this.state;
+		return this.state instanceof IExtendedBlockState ? wrapState(((IExtendedBlockState) this.state).getClean()) : this.state;
 	}
 	
 	@Override

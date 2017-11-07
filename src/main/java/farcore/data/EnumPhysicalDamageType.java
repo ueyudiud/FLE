@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import farcore.lib.skill.ISkill;
@@ -9,14 +8,12 @@ import net.minecraftforge.common.util.EnumHelper;
 
 /**
  * For some physical damage.
+ * 
  * @author ueyudiud
  */
 public enum EnumPhysicalDamageType
 {
-	PUNCTURE,
-	SMASH,
-	CUT,
-	HIT;
+	PUNCTURE, SMASH, CUT, HIT;
 	
 	ISkill skill;
 	
@@ -35,7 +32,10 @@ public enum EnumPhysicalDamageType
 		return this.skill;
 	}
 	
-	static { EnumHelper.testEnum(EnumPhysicalDamageType.class, new Class[0]); }
+	static
+	{
+		EnumHelper.testEnum(EnumPhysicalDamageType.class, new Class[0]);
+	}
 	
 	public EnumPhysicalDamageType getType(String key)
 	{

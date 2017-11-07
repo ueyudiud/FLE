@@ -13,32 +13,25 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.world.EnumSkyBlock;
 
-public class TESynchronization extends TEBuffered
-implements ISynchronizableTile
+public class TESynchronization extends TEBuffered implements ISynchronizableTile
 {
 	/**
-	 * This a state assistant.
-	 * Use to contain boolean state.
+	 * This a state assistant. Use to contain boolean state.
 	 */
-	protected long state;
-	private long lastState;
+	protected long	state;
+	private long	lastState;
 	
-	private boolean initialized = false;
-	public NBTSynclizedCompound nbt = new NBTSynclizedCompound();
+	private boolean				initialized	= false;
+	public NBTSynclizedCompound	nbt			= new NBTSynclizedCompound();
 	
 	/**
-	 * The sync state.
-	 * 1 for mark to all.
-	 * 2 for mark to dim.
-	 * 4 for mark to near by.
-	 * 8 for mark block update.
-	 * 16 for mark render update.
-	 * 32 for mark sky light update.
-	 * 64 for mark block light update.
-	 * 128 for mark dirty (mark this tile entity ant chunk is required save).
+	 * The sync state. 1 for mark to all. 2 for mark to dim. 4 for mark to near
+	 * by. 8 for mark block update. 16 for mark render update. 32 for mark sky
+	 * light update. 64 for mark block light update. 128 for mark dirty (mark
+	 * this tile entity ant chunk is required save).
 	 */
-	public long syncState = 0L;
-	private List<EntityPlayer> syncAskedPlayer = new ArrayList<>();
+	public long					syncState		= 0L;
+	private List<EntityPlayer>	syncAskedPlayer	= new ArrayList<>();
 	
 	public TESynchronization()
 	{
@@ -104,11 +97,11 @@ implements ISynchronizableTile
 	@Override
 	public void markLightForUpdate(EnumSkyBlock type)
 	{
-		if(type == EnumSkyBlock.SKY)
+		if (type == EnumSkyBlock.SKY)
 		{
 			this.syncState |= 0x20;
 		}
-		if(type == EnumSkyBlock.BLOCK)
+		if (type == EnumSkyBlock.BLOCK)
 		{
 			this.syncState |= 0x40;
 		}
@@ -124,9 +117,9 @@ implements ISynchronizableTile
 	public final void readFromDescription(NBTTagCompound nbt)
 	{
 		readFromDescription1(nbt);
-		//Needn't always update render and block states.
-		//		markBlockUpdate();
-		//		markBlockRenderUpdate();
+		// Needn't always update render and block states.
+		// markBlockUpdate();
+		// markBlockRenderUpdate();
 		this.initialized = true;
 	}
 	
@@ -140,7 +133,7 @@ implements ISynchronizableTile
 		nbt.setLong("s", this.state);
 	}
 	
-	//TESynchronization use custom packet for sync.
+	// TESynchronization use custom packet for sync.
 	@Override
 	@Deprecated
 	public SPacketUpdateTileEntity getUpdatePacket()
@@ -157,7 +150,7 @@ implements ISynchronizableTile
 	@Override
 	public void onLoad()
 	{
-		if(isServer())
+		if (isServer())
 		{
 			initServer();
 		}
@@ -181,7 +174,7 @@ implements ISynchronizableTile
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag)
 	{
-		if(!this.initialized)
+		if (!this.initialized)
 		{
 			initClient(tag);
 		}
@@ -195,7 +188,7 @@ implements ISynchronizableTile
 	protected final void updateEntity2()
 	{
 		updateGeneral();
-		if(isServer())
+		if (isServer())
 		{
 			updateServer();
 			updateServerStates();
@@ -214,43 +207,52 @@ implements ISynchronizableTile
 	
 	protected void updateServerStates()
 	{
-		if(this.lastState != this.state)
+		if (this.lastState != this.state)
 		{
 			onStateChanged(true);
 			this.lastState = this.state;
 		}
 		this.nbt.reset();
 		writeToDescription(this.nbt);
-		if((this.syncState & 0x1) != 0)
+		if ((this.syncState & 0x1) != 0)
 		{
 			sendToAll(new PacketTESync(this.world, this.pos, this.nbt.getChanged(true)));
 		}
-		else if((this.syncState & 0x2) != 0)
+		else if ((this.syncState & 0x2) != 0)
 		{
 			sendToDim(new PacketTESync(this.world, this.pos, this.nbt.getChanged(true)));
 		}
-		else if((this.syncState & 0x4) != 0)
+		else if ((this.syncState & 0x4) != 0)
 		{
 			sendToNearby(new PacketTESync(this.world, this.pos, this.nbt.getChanged(true)), getSyncRange());
 		}
-		if((this.syncState & 0x8) != 0)
+		if ((this.syncState & 0x8) != 0)
 		{
 			this.world.notifyNeighborsOfStateChange(this.pos, getBlockType());
 		}
-		if((this.syncState & 0x80) != 0)
+		if ((this.syncState & 0x80) != 0)
 		{
 			super.markDirty();
 		}
 		int state = 0;
-		if((this.syncState & 0x10) != 0) { state |= 0x1; }
-		if((this.syncState & 0x20) != 0) { state |= 0x2; }
-		if((this.syncState & 0x40) != 0) { state |= 0x4; }
+		if ((this.syncState & 0x10) != 0)
+		{
+			state |= 0x1;
+		}
+		if ((this.syncState & 0x20) != 0)
+		{
+			state |= 0x2;
+		}
+		if ((this.syncState & 0x40) != 0)
+		{
+			state |= 0x4;
+		}
 		sendToNearby(new PacketTESAsk(this.world, this.pos, state), getSyncRange());
 		onCheckingSyncState();
 		this.syncState = 0;
-		if(!this.syncAskedPlayer.isEmpty())
+		if (!this.syncAskedPlayer.isEmpty())
 		{
-			for(EntityPlayer player : this.syncAskedPlayer)
+			for (EntityPlayer player : this.syncAskedPlayer)
 			{
 				sendToPlayer(new PacketTESync(this.world, this.pos, this.nbt.asCompound()), player);
 			}
@@ -260,25 +262,25 @@ implements ISynchronizableTile
 	
 	protected void updateClientStates()
 	{
-		if(this.lastState != this.state)
+		if (this.lastState != this.state)
 		{
 			onStateChanged(false);
 			this.lastState = this.state;
 		}
-		if((this.syncState & 0x8) != 0)
+		if ((this.syncState & 0x8) != 0)
 		{
 			super.markBlockUpdate();
 		}
-		if((this.syncState & 0x10) != 0)
+		if ((this.syncState & 0x10) != 0)
 		{
 			int range = getRenderUpdateRange();
 			this.world.markBlockRangeForRenderUpdate(this.pos.add(-range, -range, -range), this.pos.add(range, range, range));
 		}
-		if((this.syncState & 0x20) != 0)
+		if ((this.syncState & 0x20) != 0)
 		{
 			super.markLightForUpdate(EnumSkyBlock.SKY);
 		}
-		if((this.syncState & 0x40) != 0)
+		if ((this.syncState & 0x40) != 0)
 		{
 			super.markLightForUpdate(EnumSkyBlock.BLOCK);
 		}
@@ -287,7 +289,6 @@ implements ISynchronizableTile
 		this.syncAskedPlayer.clear();
 	}
 	
-	
 	/**
 	 * Called when checking state.
 	 */
@@ -295,7 +296,6 @@ implements ISynchronizableTile
 	{
 		
 	}
-	
 	
 	protected void onStateChanged(boolean isServerSide)
 	{
@@ -387,7 +387,7 @@ implements ISynchronizableTile
 	
 	protected void set(int i, boolean flag)
 	{
-		if(flag)
+		if (flag)
 		{
 			enable(i);
 		}

@@ -28,7 +28,7 @@ public class ItemToolHead extends ItemMulti
 		super(FLE.MODID, mc);
 		if (Configs.createAllToolCreativeTabs)
 		{
-			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, ()-> new ItemStack(this)));
+			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, () -> new ItemStack(this)));
 		}
 		this.maxStackSize = 1;
 	}
@@ -42,8 +42,7 @@ public class ItemToolHead extends ItemMulti
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		Mat material = getMaterial(stack);

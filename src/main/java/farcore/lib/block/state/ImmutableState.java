@@ -14,9 +14,9 @@ import net.minecraft.util.Rotation;
 
 public class ImmutableState implements IFarBlockState
 {
-	private Block block;
-	private IBlockState state;
-	private Map<IProperty<?>, Comparable<?>> extraValues;
+	private Block								block;
+	private IBlockState							state;
+	private Map<IProperty<?>, Comparable<?>>	extraValues;
 	
 	public ImmutableState(Block block, IBlockState state, Map<IProperty<?>, Comparable<?>> map)
 	{
@@ -45,16 +45,14 @@ public class ImmutableState implements IFarBlockState
 	@Override
 	public <T extends Comparable<T>, V extends T> IBlockState withProperty(IProperty<T> property, V value)
 	{
-		if(this.extraValues.containsKey(property))
-			throw new UnsupportedOperationException();
+		if (this.extraValues.containsKey(property)) throw new UnsupportedOperationException();
 		return new ImmutableState(this.block, this.state.withProperty(property, value), this.extraValues);
 	}
 	
 	@Override
 	public <T extends Comparable<T>> IBlockState cycleProperty(IProperty<T> property)
 	{
-		if(this.extraValues.containsKey(property))
-			throw new UnsupportedOperationException();
+		if (this.extraValues.containsKey(property)) throw new UnsupportedOperationException();
 		return new ImmutableState(this.block, this.state.cycleProperty(property), this.extraValues);
 	}
 	

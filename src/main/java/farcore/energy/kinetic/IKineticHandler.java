@@ -4,8 +4,8 @@ import nebula.common.util.Direction;
 import nebula.common.world.ICoord;
 
 /**
- * The kinetic energy handler.
- * Implements by tile entity.
+ * The kinetic energy handler. Implements by tile entity.
+ * 
  * @author ueyudiud
  *
  */
@@ -13,6 +13,7 @@ public interface IKineticHandler extends ICoord
 {
 	/**
 	 * Can kinetic energy input or output.
+	 * 
 	 * @param direction The asked side.
 	 * @return
 	 */
@@ -20,6 +21,7 @@ public interface IKineticHandler extends ICoord
 	
 	/**
 	 * Is speed fast enough or torque big enough to rotate machine.
+	 * 
 	 * @param direction The energy from.
 	 * @param speed The speed from source.
 	 * @param torque The torque from source.
@@ -29,6 +31,7 @@ public interface IKineticHandler extends ICoord
 	
 	/**
 	 * Emit kinetic energy to target.
+	 * 
 	 * @param access
 	 * @param direction The energy recieve to.
 	 * @param speed
@@ -38,6 +41,7 @@ public interface IKineticHandler extends ICoord
 	
 	/**
 	 * Recieve kinetic energy from target.
+	 * 
 	 * @param access
 	 * @param direction The energy emit from.
 	 * @param speed
@@ -48,6 +52,7 @@ public interface IKineticHandler extends ICoord
 	
 	/**
 	 * Called when energy fail to send to next kinetic handler.
+	 * 
 	 * @param direction
 	 * @param speed
 	 * @param torque
@@ -55,8 +60,9 @@ public interface IKineticHandler extends ICoord
 	void onStuck(Direction direction, KineticPackage pkg);
 	
 	/**
-	 * Called when kinetic access pre update.
-	 * The kinetic energy generator should mark to send energy in this time.
+	 * Called when kinetic access pre update. The kinetic energy generator
+	 * should mark to send energy in this time.
+	 * 
 	 * @param access
 	 */
 	void kineticPreUpdate(IKineticAccess access);

@@ -20,17 +20,16 @@ import net.minecraft.util.EnumParticleTypes;
 /**
  * @author ueyudiud
  */
-public class TEFirewood extends TESynchronization
-implements IThermalHandler
+public class TEFirewood extends TESynchronization implements IThermalHandler
 {
-	private static final byte Smoldering = 3;
-	private static final byte Burning = 4;
-	private static final byte Carbonate = 5;
+	private static final byte	Smoldering	= 3;
+	private static final byte	Burning		= 4;
+	private static final byte	Carbonate	= 5;
 	
-	private Mat material;
-	private long remainEnergy = 10000000L;
-	private int carbonateProgress;
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper();
+	private Mat					material;
+	private long				remainEnergy	= 10000000L;
+	private int					carbonateProgress;
+	private ThermalEnergyHelper	helper			= new ThermalEnergyHelper();
 	
 	private TimeMarker recheckingStructure = new TimeMarker(20, this::recheckStructure);
 	
@@ -108,7 +107,7 @@ implements IThermalHandler
 				}
 				else
 				{
-					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord->coord.isAirBlock(Direction.Q)) > 3)
+					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord -> coord.isAirBlock(Direction.Q)) > 3)
 					{
 						disable(Smoldering);
 						syncToNearby();

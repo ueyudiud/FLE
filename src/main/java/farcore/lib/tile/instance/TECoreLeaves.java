@@ -23,9 +23,10 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 	{
 		this.info = new TreeInfo();
 	}
+	
 	public TECoreLeaves(ITree tree, TreeInfo info)
 	{
-		if(info == null)
+		if (info == null)
 		{
 			info = new TreeInfo();
 			info.gm = tree.createNativeGeneticMaterial();
@@ -50,7 +51,7 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 	public void setTree(TreeInfo info, boolean causeUpdate)
 	{
 		this.info = info;
-		if(causeUpdate)
+		if (causeUpdate)
 		{
 			syncToNearby();
 		}

@@ -26,7 +26,7 @@ public class EntityFLECreeper extends EntityCreeper implements IEntityDamageEffe
 	protected void initEntityAI()
 	{
 		super.initEntityAI();
-		//		this.tasks.addTask(3, new EntityAICreeperSwellByLight(this));
+		// this.tasks.addTask(3, new EntityAICreeperSwellByLight(this));
 	}
 	
 	@Override
@@ -40,10 +40,14 @@ public class EntityFLECreeper extends EntityCreeper implements IEntityDamageEffe
 	{
 		switch (type)
 		{
-		default : return 1.0F;
-		case CUT : return 0.9F;
-		case SMASH : return 0.9F;
-		case PUNCTURE : return 1.2F;
+		default:
+			return 1.0F;
+		case CUT:
+			return 0.9F;
+		case SMASH:
+			return 0.9F;
+		case PUNCTURE:
+			return 1.2F;
 		}
 	}
 	

@@ -19,30 +19,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelModifierByCoordTransformer implements IModelModifier
 {
-	TRSRTransformation m1;
-	CoordTransformer m2;
+	TRSRTransformation	m1;
+	CoordTransformer	m2;
 	
 	public ModelModifierByCoordTransformer(TRSRTransformation m1, CoordTransformer m2)
 	{
-		if (m1 != TRSRTransformation.identity())
-			this.m1 = m1;
+		if (m1 != TRSRTransformation.identity()) this.m1 = m1;
 		this.m2 = m2;
 	}
 	
 	@Override
 	public void transform(Point3f point)
 	{
-		if (this.m2 != null)
-			this.m2.transform(point);
-		if (this.m1 != null)
-			this.m1.getMatrix().transform(point);
+		if (this.m2 != null) this.m2.transform(point);
+		if (this.m1 != null) this.m1.getMatrix().transform(point);
 	}
 	
 	@Override
 	public void transform(Vector3f normal)
 	{
-		if (this.m2 != null)
-			this.m2.transform(normal);
+		if (this.m2 != null) this.m2.transform(normal);
 		if (this.m1 != null)
 		{
 			Vector4f vec = new Vector4f(normal);

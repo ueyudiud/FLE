@@ -53,14 +53,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFire extends BlockBase implements IExtendedDataBlock
 {
-	public static final IProperty<Integer> STATE = Properties.create("state", 0, 15);
-	public static final PropertyBool NORTH = Misc.PROP_NORTH;
-	public static final PropertyBool EAST = Misc.PROP_EAST;
-	public static final PropertyBool SOUTH = Misc.PROP_SOUTH;
-	public static final PropertyBool WEST = Misc.PROP_WEST;
-	public static final PropertyBool UPPER = Misc.PROP_UP;
-	public static final PropertyBool SPREAD_CHECK = Properties.create("spread_check");
-	public static final PropertyBool SMOLDER = Properties.create("smoldering");
+	public static final IProperty<Integer>	STATE			= Properties.create("state", 0, 15);
+	public static final PropertyBool		NORTH			= Misc.PROP_NORTH;
+	public static final PropertyBool		EAST			= Misc.PROP_EAST;
+	public static final PropertyBool		SOUTH			= Misc.PROP_SOUTH;
+	public static final PropertyBool		WEST			= Misc.PROP_WEST;
+	public static final PropertyBool		UPPER			= Misc.PROP_UP;
+	public static final PropertyBool		SPREAD_CHECK	= Properties.create("spread_check");
+	public static final PropertyBool		SMOLDER			= Properties.create("smoldering");
 	
 	public BlockFire()
 	{
@@ -68,7 +68,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		setTickRandomly(true);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Fire");
 		EnumBlock.fire.set(this);
-		EnumBlock.fire.stateApplier = objs-> {
+		EnumBlock.fire.stateApplier = objs -> {
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(objs);
 			int level = L.range(0, 15, helper.readOrSkip(15));
 			boolean spread = helper.readOrSkip(true);
@@ -134,14 +134,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return super.initDefaultState(state).withProperty(STATE, 0)
-				.withProperty(NORTH, false)
-				.withProperty(EAST, false)
-				.withProperty(SOUTH, false)
-				.withProperty(WEST, false)
-				.withProperty(UPPER, false)
-				.withProperty(SMOLDER, false)
-				.withProperty(SPREAD_CHECK, true);
+		return super.initDefaultState(state).withProperty(STATE, 0).withProperty(NORTH, false).withProperty(EAST, false).withProperty(SOUTH, false).withProperty(WEST, false).withProperty(UPPER, false).withProperty(SMOLDER, false).withProperty(SPREAD_CHECK, true);
 	}
 	
 	@Override
@@ -153,12 +146,8 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
-		return canStayFire(worldIn, pos.down(), EnumFacing.UP) ? state : state
-				.withProperty(NORTH, Blocks.FIRE.canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH))
-				.withProperty(EAST,  Blocks.FIRE.canCatchFire(worldIn, pos.east() , EnumFacing.WEST))
-				.withProperty(SOUTH, Blocks.FIRE.canCatchFire(worldIn, pos.south(), EnumFacing.NORTH))
-				.withProperty(WEST,  Blocks.FIRE.canCatchFire(worldIn, pos.west() , EnumFacing.EAST))
-				.withProperty(UPPER, Blocks.FIRE.canCatchFire(worldIn, pos.up()   , EnumFacing.DOWN));
+		return canStayFire(worldIn, pos.down(), EnumFacing.UP) ? state : state.withProperty(NORTH, Blocks.FIRE.canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH)).withProperty(EAST, Blocks.FIRE.canCatchFire(worldIn, pos.east(), EnumFacing.WEST))
+				.withProperty(SOUTH, Blocks.FIRE.canCatchFire(worldIn, pos.south(), EnumFacing.NORTH)).withProperty(WEST, Blocks.FIRE.canCatchFire(worldIn, pos.west(), EnumFacing.EAST)).withProperty(UPPER, Blocks.FIRE.canCatchFire(worldIn, pos.up(), EnumFacing.DOWN));
 	}
 	
 	@Override
@@ -187,8 +176,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return new ArrayList<>();
 	}
@@ -213,33 +201,22 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	public boolean canBlockStayAt(World world, BlockPos pos)
 	{
-		return Worlds.isAirNearby(world, pos, true) &&
-				(canStayFire(world, pos.down(), EnumFacing.UP) ||
-						canStayFire(world, pos.up(), EnumFacing.DOWN) ||
-						canStayFire(world, pos.north(), EnumFacing.SOUTH) ||
-						canStayFire(world, pos.south(), EnumFacing.NORTH) ||
-						canStayFire(world, pos.east(), EnumFacing.WEST) ||
-						canStayFire(world, pos.west(), EnumFacing.EAST));
+		return Worlds.isAirNearby(world, pos, true) && (canStayFire(world, pos.down(), EnumFacing.UP) || canStayFire(world, pos.up(), EnumFacing.DOWN) || canStayFire(world, pos.north(), EnumFacing.SOUTH) || canStayFire(world, pos.south(), EnumFacing.NORTH)
+				|| canStayFire(world, pos.east(), EnumFacing.WEST) || canStayFire(world, pos.west(), EnumFacing.EAST));
 	}
 	
 	private boolean canBlockBurnAt(World world, BlockPos pos)
 	{
 		boolean isCatchRain = Worlds.isCatchingRain(world, pos, true);
-		return canBurnFire(world, pos.down(), EnumFacing.UP, isCatchRain) ||
-				canBurnFire(world, pos.up(), EnumFacing.DOWN, isCatchRain) ||
-				canBurnFire(world, pos.north(), EnumFacing.SOUTH, isCatchRain) ||
-				canBurnFire(world, pos.south(), EnumFacing.NORTH, isCatchRain) ||
-				canBurnFire(world, pos.east(), EnumFacing.WEST, isCatchRain) ||
-				canBurnFire(world, pos.west(), EnumFacing.EAST, isCatchRain);
+		return canBurnFire(world, pos.down(), EnumFacing.UP, isCatchRain) || canBurnFire(world, pos.up(), EnumFacing.DOWN, isCatchRain) || canBurnFire(world, pos.north(), EnumFacing.SOUTH, isCatchRain) || canBurnFire(world, pos.south(), EnumFacing.NORTH, isCatchRain)
+				|| canBurnFire(world, pos.east(), EnumFacing.WEST, isCatchRain) || canBurnFire(world, pos.west(), EnumFacing.EAST, isCatchRain);
 	}
 	
 	private boolean canBurnFire(World world, BlockPos pos, EnumFacing side, boolean isCatchRain)
 	{
 		IBlockState state;
-		return ((state = world.getBlockState(pos)).getBlock() instanceof IThermalCustomBehaviorBlock &&
-				((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos, side, isCatchRain)) ||
-				state.getBlock().isFireSource(world, pos, side) ||
-				state.getBlock().isFlammable(world, pos, side) && !isCatchRain;
+		return ((state = world.getBlockState(pos)).getBlock() instanceof IThermalCustomBehaviorBlock && ((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos, side, isCatchRain)) || state.getBlock().isFireSource(world, pos, side)
+				|| state.getBlock().isFlammable(world, pos, side) && !isCatchRain;
 	}
 	
 	private boolean canStayFire(IBlockAccess world, BlockPos pos, EnumFacing side)
@@ -264,10 +241,10 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		}
 		if (state.getValue(SPREAD_CHECK) && worldIn.getGameRules().getBoolean("doFireTick"))
 		{
-			if(state.getValue(SMOLDER))
+			if (state.getValue(SMOLDER))
 			{
 				int l = state.getValue(STATE) + (3 + random.nextInt(3)) / 2;
-				if(l > 15)
+				if (l > 15)
 				{
 					worldIn.setBlockToAir(pos);
 					return;
@@ -283,10 +260,10 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 						}
 						else
 						{
-							tryCatchFire(info, state, worldIn, pos.east() , 15, random, l, W);
-							tryCatchFire(info, state, worldIn, pos.west() , 15, random, l, E);
-							tryCatchFire(info, state, worldIn, pos.down() , 15, random, l, U);
-							tryCatchFire(info, state, worldIn, pos.up()   , 15, random, l, D);
+							tryCatchFire(info, state, worldIn, pos.east(), 15, random, l, W);
+							tryCatchFire(info, state, worldIn, pos.west(), 15, random, l, E);
+							tryCatchFire(info, state, worldIn, pos.down(), 15, random, l, U);
+							tryCatchFire(info, state, worldIn, pos.up(), 15, random, l, D);
 							tryCatchFire(info, state, worldIn, pos.north(), 15, random, l, S);
 							tryCatchFire(info, state, worldIn, pos.south(), 15, random, l, N);
 						}
@@ -297,8 +274,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 						return;
 					}
 					newState = newState.withProperty(STATE, l);
-					if (newState != state)
-						info.setBlockState(newState, 2);
+					if (newState != state) info.setBlockState(newState, 2);
 					worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 				}
 			}
@@ -318,9 +294,9 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		}
 		if (state.getValue(SPREAD_CHECK) && worldIn.getGameRules().getBoolean("doFireTick"))
 		{
-			if(!canBlockBurnAt(worldIn, pos))
+			if (!canBlockBurnAt(worldIn, pos))
 			{
-				if(rand.nextInt(19 - state.getValue(STATE)) == 0)
+				if (rand.nextInt(19 - state.getValue(STATE)) == 0)
 				{
 					if (rand.nextInt(3) == 0)
 					{
@@ -336,13 +312,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			int l = state.getValue(STATE);
 			int range = l < 8 ? 3 : l < 14 ? 2 : 1;
 			FireLocationInfo info = new FireLocationInfo(range + 2, worldIn, pos);
-			boolean isFireSource =
-					info.isFireSource(0, +1, 0, 0) ||
-					info.isFireSource(0, -1, 0, 1) ||
-					info.isFireSource(0, 0, +1, 2) ||
-					info.isFireSource(0, 0, -1, 3) ||
-					info.isFireSource(+1, 0, 0, 4) ||
-					info.isFireSource(-1, 0, 0, 5);
+			boolean isFireSource = info.isFireSource(0, +1, 0, 0) || info.isFireSource(0, -1, 0, 1) || info.isFireSource(0, 0, +1, 2) || info.isFireSource(0, 0, -1, 3) || info.isFireSource(+1, 0, 0, 4) || info.isFireSource(-1, 0, 0, 5);
 			if (!isFireSource)
 			{
 				if (Worlds.isCatchingRain(worldIn, pos, true))
@@ -395,7 +365,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 								if (info.canBlockStay(i, j, k) && (speed = info.getSpreadSpeed(i, j, k)) > 0)
 								{
 									chance = 100;
-									chance *= Math.cbrt(i*i+j*j+k*k);
+									chance *= Math.cbrt(i * i + j * j + k * k);
 									if (flag1) chance /= 2;
 									trySpreadFire(worldIn, pos, i, j, k, info, rand, l, chance, speed);
 								}
@@ -439,8 +409,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		info.setMainPos(pos = face.offset(pos));
 		IBlockState state;
-		if (info.isCustomed(face.x, face.y, face.z) &&
-				((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos).getBlock()).onBurningTick(info, random, face.getOpposite(), fireState))
+		if (info.isCustomed(face.x, face.y, face.z) && ((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos).getBlock()).onBurningTick(info, random, face.getOpposite(), fireState))
 		{
 			info.resetMainPos();
 			return;
@@ -462,31 +431,33 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		info.resetMainPos();
 	}
 	
-	//	private float countBlockDencyInRange(World world, BlockPos pos, int range)
-	//	{
-	//		int count = 0;
-	//		int air = 0;
-	//		for(int i = -range; i <= range; ++i)
-	//		{
-	//			for(int j = -range; j <= range; ++j)
-	//			{
-	//				for(int k = -range; k <= range; ++k)
-	//				{
-	//					BlockPos pos2;
-	//					if(world.isAirBlock(pos2 = pos.add(i, j, k)) && canBlockStayAt(world, pos2))
-	//					{
-	//						++air;
-	//					}
-	//					else if(world.getBlockState(pos2).getBlock() == this)
-	//					{
-	//						++air;
-	//						++count;
-	//					}
-	//				}
-	//			}
-	//		}
-	//		return (float) count / (float) air;
-	//	}
+	// private float countBlockDencyInRange(World world, BlockPos pos, int
+	// range)
+	// {
+	// int count = 0;
+	// int air = 0;
+	// for(int i = -range; i <= range; ++i)
+	// {
+	// for(int j = -range; j <= range; ++j)
+	// {
+	// for(int k = -range; k <= range; ++k)
+	// {
+	// BlockPos pos2;
+	// if(world.isAirBlock(pos2 = pos.add(i, j, k)) && canBlockStayAt(world,
+	// pos2))
+	// {
+	// ++air;
+	// }
+	// else if(world.getBlockState(pos2).getBlock() == this)
+	// {
+	// ++air;
+	// ++count;
+	// }
+	// }
+	// }
+	// }
+	// return (float) count / (float) air;
+	// }
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)

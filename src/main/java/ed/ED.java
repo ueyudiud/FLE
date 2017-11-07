@@ -30,24 +30,31 @@ import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
- * Extra Data mod, use to let Minecraft world can store
- * 2<sup>20</sup> size of meta instead of 16 only.<p>
+ * Extra Data mod, use to let Minecraft world can store 2<sup>20</sup> size of
+ * meta instead of 16 only.
+ * <p>
  * 
- * <b>Important information:
- * If you used this mod, the world may unable to loaded in another game
- * without this mod loaded. So I suggested creators added this information
- * to players for preventing the world data broken incident happened.</b><p>
+ * <b>Important information: If you used this mod, the world may unable to
+ * loaded in another game without this mod loaded. So I suggested creators added
+ * this information to players for preventing the world data broken incident
+ * happened.</b>
+ * <p>
  * 
- * Block Data information:<p>
- * The block data is number id to find each block state.<p>
+ * Block Data information:
+ * <p>
+ * The block data is number id to find each block state.
+ * <p>
  * 
- * It contains block id and meta id combine to a <code>int</code> id.<p>
+ * It contains block id and meta id combine to a <code>int</code> id.
+ * <p>
  * 
- * The first 12 bits (0 to 4095) is block id, which is determined by Forge.
- * The last 20 bits (0 to 1048575 (2<sup>20</sup>-1)) is meta id, which is
- * expanded by Nebula, but for most block, it only has 4 bits (0 to 15) to
- * store meta, to get more meta slots, you should let block implements
- * {@link IExtendedDataBlock}.<p>
+ * The first 12 bits (0 to 4095) is block id, which is determined by Forge. The
+ * last 20 bits (0 to 1048575 (2<sup>20</sup>-1)) is meta id, which is expanded
+ * by Nebula, but for most block, it only has 4 bits (0 to 15) to store meta, to
+ * get more meta slots, you should let block implements
+ * {@link IExtendedDataBlock}.
+ * <p>
+ * 
  * @author ueyudiud
  */
 @Mod(modid = "ed", name = "Extra Data", version = "0.1", dependencies = "required-after:nebula")
@@ -67,8 +74,7 @@ public class ED
 		ModMetadata metadata = event.getModMetadata();
 		metadata.credits = "ueyudiud";
 		metadata.authorList.add("ueyudiud");
-		metadata.description = "The Extra Data mod provided extra block data from only "
-				+ "16 to 1048576 for saving or synchronization.";
+		metadata.description = "The Extra Data mod provided extra block data from only " + "16 to 1048576 for saving or synchronization.";
 	}
 	
 	@EventHandler
@@ -97,7 +103,7 @@ public class ED
 		boolean flag1 = compound.getBoolean("Marker");
 		
 		NBTTagList list = compound.getTagList("Sections", 10);
-		//		int k = 16;
+		// int k = 16;
 		ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[16];
 		boolean flag = !worldIn.provider.hasNoSky();
 		
@@ -149,7 +155,7 @@ public class ED
 		compound.setBoolean("TerrainPopulated", chunkIn.isTerrainPopulated());
 		compound.setBoolean("LightPopulated", chunkIn.isLightPopulated());
 		compound.setLong("InhabitedTime", chunkIn.getInhabitedTime());
-		compound.setBoolean("Marker", true);//Mark the saver is FarCore.
+		compound.setBoolean("Marker", true);// Mark the saver is FarCore.
 		ExtendedBlockStorage[] aextendedblockstorage = chunkIn.getBlockStorageArray();
 		NBTTagList list = new NBTTagList();
 		boolean flag = !worldIn.provider.hasNoSky();
@@ -159,7 +165,7 @@ public class ED
 			if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
 			{
 				NBTTagCompound compound2 = new NBTTagCompound();
-				compound2.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 0xFF));
+				compound2.setByte("Y", (byte) (extendedblockstorage.getYLocation() >> 4 & 0xFF));
 				int[] data = ((BlockStateContainerExt) extendedblockstorage.getData()).getDatasToNBT();
 				compound2.setIntArray("BlockStates", data);
 				compound2.setByteArray("BlockLight", extendedblockstorage.getBlocklightArray().getData());
@@ -197,9 +203,7 @@ public class ED
 					}
 					catch (Exception e)
 					{
-						FMLLog.log(org.apache.logging.log4j.Level.ERROR, e,
-								"An Entity type %s has thrown an exception trying to write state. It will not persist. Report this to the mod author",
-								entity.getClass().getName());
+						FMLLog.log(org.apache.logging.log4j.Level.ERROR, e, "An Entity type %s has thrown an exception trying to write state. It will not persist. Report this to the mod author", entity.getClass().getName());
 					}
 				}
 			}
@@ -217,9 +221,7 @@ public class ED
 			}
 			catch (Exception e)
 			{
-				net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, e,
-						"A TileEntity type %s has throw an exception trying to write state. It will not persist. Report this to the mod author",
-						tileentity.getClass().getName());
+				net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, e, "A TileEntity type %s has throw an exception trying to write state. It will not persist. Report this to the mod author", tileentity.getClass().getName());
 			}
 		}
 		

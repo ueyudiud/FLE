@@ -14,16 +14,16 @@ import net.minecraft.potion.PotionEffect;
  */
 public class FoodStatBase implements IFoodStat
 {
-	protected boolean isDrink = false;
-	protected boolean isWolfEdible = false;
-	protected boolean isAlwaysEdible = false;
-	protected float[] nutritionAmt = null;
-	protected int eatDuration = 32;
-	protected float foodAmt;
-	protected float saturationAmt;
-	protected float drinkAmt;
-	protected PotionEffect effect;
-
+	protected boolean		isDrink			= false;
+	protected boolean		isWolfEdible	= false;
+	protected boolean		isAlwaysEdible	= false;
+	protected float[]		nutritionAmt	= null;
+	protected int			eatDuration		= 32;
+	protected float			foodAmt;
+	protected float			saturationAmt;
+	protected float			drinkAmt;
+	protected PotionEffect	effect;
+	
 	public FoodStatBase(float foodAmount, float saturationAmount, float drinkAmount)
 	{
 		foodAmt = foodAmount;
@@ -45,14 +45,14 @@ public class FoodStatBase implements IFoodStat
 	
 	public FoodStatBase setNutrition(EnumNutrition nutrition, float amount)
 	{
-		if(nutritionAmt == null)
+		if (nutritionAmt == null)
 		{
-			nutritionAmt = new float[]{0, 0, 0, 0, 0, 0};
+			nutritionAmt = new float[] { 0, 0, 0, 0, 0, 0 };
 		}
 		nutritionAmt[nutrition.ordinal()] = amount;
 		return this;
 	}
-
+	
 	public FoodStatBase setDrink(boolean isDrink)
 	{
 		this.isDrink = isDrink;
@@ -70,7 +70,7 @@ public class FoodStatBase implements IFoodStat
 		isAlwaysEdible = true;
 		return this;
 	}
-
+	
 	@Override
 	public float[] getNutritionAmount(ItemStack stack)
 	{
@@ -122,7 +122,7 @@ public class FoodStatBase implements IFoodStat
 	@Override
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
-		if(effect != null)
+		if (effect != null)
 		{
 			player.addPotionEffect(new PotionEffect(effect));
 		}

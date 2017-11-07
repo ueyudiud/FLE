@@ -46,22 +46,21 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * @author ueyudiud
  */
-public abstract class TEChest extends TEInventoryDynamicSize
-implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB_BlockPlacedBy
+public abstract class TEChest extends TEInventoryDynamicSize implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB_BlockPlacedBy
 {
-	protected final IItemHandler handler = InventoryWrapFactory.wrap(getName(), this);
-	protected final TimeMarker marker = new TimeMarker(200, this::checkRangePlayers);
+	protected final IItemHandler	handler	= InventoryWrapFactory.wrap(getName(), this);
+	protected final TimeMarker		marker	= new TimeMarker(200, this::checkRangePlayers);
 	
-	protected final boolean portable;
-	protected final boolean hasLock;
-	protected long lockID = IIDOpenableTile.EMPTY_UUID;
+	protected final boolean	portable;
+	protected final boolean	hasLock;
+	protected long			lockID	= IIDOpenableTile.EMPTY_UUID;
 	
 	protected int numPlayersUsing;
 	
 	/** The current angle of the lid (between 0 and 2) */
-	public float lidAngle;
+	public float	lidAngle;
 	/** The angle of the lid last tick */
-	public float prevLidAngle;
+	public float	prevLidAngle;
 	
 	public EnumFacing facing = EnumFacing.NORTH;
 	
@@ -108,7 +107,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	{
 		switch (type)
 		{
-		case 1 :
+		case 1:
 			this.numPlayersUsing = buf.readInt();
 			break;
 		default:
@@ -121,7 +120,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	{
 		switch (type)
 		{
-		case 1 :
+		case 1:
 			buf.writeInt(this.numPlayersUsing);
 			break;
 		default:
@@ -149,8 +148,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tileGUICheck(hand))
 		{
@@ -218,8 +216,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 			this.world.playSound(null, this.pos.getX() + .5, this.pos.getY() + .5, this.pos.getZ() + .5, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
 		}
 		
-		if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F ||
-				this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
+		if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
 		{
 			float f2 = this.lidAngle;
 			
@@ -254,8 +251,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 		if (this.numPlayersUsing != 0)
 		{
 			this.numPlayersUsing = 0;
-			for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class,
-					new AxisAlignedBB(this.pos.add(-5, -5, -5), this.pos.add(5, 5, 5))))
+			for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.pos.add(-5, -5, -5), this.pos.add(5, 5, 5))))
 			{
 				if (entityplayer.openContainer instanceof ContainerTileInventory<?>)
 				{
@@ -276,7 +272,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 		super.openInventory(player);
 		if (!player.isSpectator())
 		{
-			this.numPlayersUsing ++;
+			this.numPlayersUsing++;
 			
 			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			this.world.notifyBlockOfStateChange(this.pos, getBlockType());
@@ -290,7 +286,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 		super.closeInventory(player);
 		if (!player.isSpectator() && !isInvalid())
 		{
-			this.numPlayersUsing --;
+			this.numPlayersUsing--;
 			
 			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			this.world.notifyBlockOfStateChange(this.pos, getBlockType());
@@ -307,8 +303,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_ITEM ?
-				Capabilities.CAPABILITY_ITEM.cast(this.handler) : null;
+		return capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(this.handler) : null;
 	}
 	
 	@Override
@@ -321,20 +316,17 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	
 	protected void writeToItemStackNBT(NBTTagCompound compound)
 	{
-		if (this.portable)
-			NBTs.setList(compound, "items", stacks(), NBTLSs.ITEMSTACK_WRITER, true);
+		if (this.portable) NBTs.setList(compound, "items", stacks(), NBTLSs.ITEMSTACK_WRITER, true);
 	}
 	
 	protected void readFromItemStackNBT(NBTTagCompound compound)
 	{
-		if (this.portable)
-			NBTs.insertToList(compound, "items", stacks(), NBTLSs.ITEMSTACK_READER, true);
+		if (this.portable) NBTs.insertToList(compound, "items", stacks(), NBTLSs.ITEMSTACK_READER, true);
 	}
 	
 	@Override
 	public void onBlockBreak(IBlockState state)
 	{
-		if (!this.portable)
-			TileEntities.dropItemStacks(this);
+		if (!this.portable) TileEntities.dropItemStacks(this);
 	}
 }

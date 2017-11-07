@@ -16,11 +16,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ResearchObject implements IRegisteredNameable
 {
-	protected final String name;
-	protected final ResearchCategory category;
+	protected final String				name;
+	protected final ResearchCategory	category;
 	
-	protected List<ResearchTheorem> theoremRequired;
-	protected IKnowledge knowledge;
+	protected List<ResearchTheorem>	theoremRequired;
+	protected IKnowledge			knowledge;
 	
 	public ResearchObject(ResearchCategory category, String name)
 	{

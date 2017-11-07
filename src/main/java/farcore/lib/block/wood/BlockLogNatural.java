@@ -72,7 +72,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	{
 		super("log.natural." + tree.material.name, tree);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), tree.material.localName + " Log");
-		if(tree.tickLogUpdate())
+		if (tree.tickLogUpdate())
 		{
 			setTickRandomly(true);
 		}
@@ -113,41 +113,40 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	{
 		label:
 		{
-		if(!worldIn.isRemote)
-		{
-			if(worldIn.isSideSolid(pos.down(), EnumFacing.UP))
+			if (!worldIn.isRemote)
 			{
-				break label;
-			}
-			for (int h = -1; h <= 1; h++)
-			{
-				for (int g = -1; g <= 1; g++)
+				if (worldIn.isSideSolid(pos.down(), EnumFacing.UP))
 				{
-					for (int f = -1; f <= 1; f++)
-						if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
-						{
-							break label;
-						}
+					break label;
 				}
+				for (int h = -1; h <= 1; h++)
+				{
+					for (int g = -1; g <= 1; g++)
+					{
+						for (int f = -1; f <= 1; f++)
+							if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
+							{
+								break label;
+							}
+					}
+				}
+				worldIn.setBlockToAir(pos);
 			}
-			worldIn.setBlockToAir(pos);
-		}
 		}
 	}
 	
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		if(world instanceof World)
+		if (world instanceof World)
 		{
-			if(((World) world).isRemote) return;
+			if (((World) world).isRemote) return;
 			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 		}
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return this.tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, false);
 	}
@@ -167,7 +166,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
 	{
-		if(!worldIn.isRemote)
+		if (!worldIn.isRemote)
 		{
 			player.addExhaustion(0.1F);
 			breakTree(worldIn, pos);
@@ -181,7 +180,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 		{
 			breakTree(world, pos);
 		}
-		catch(OutOfMemoryError error)
+		catch (OutOfMemoryError error)
 		{
 			Log.warn("The out of memory prevent this tree destory.");
 		}
@@ -206,8 +205,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return this.tree.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, false);
 	}

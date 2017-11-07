@@ -55,8 +55,7 @@ public class BehaviorFirestarter extends BehaviorTool
 		}
 		
 		@Override
-		public void readNBT(Capability<FirestarterCache> capability, FirestarterCache instance, EnumFacing side,
-				NBTBase nbt)
+		public void readNBT(Capability<FirestarterCache> capability, FirestarterCache instance, EnumFacing side, NBTBase nbt)
 		{
 			
 		}
@@ -68,9 +67,7 @@ public class BehaviorFirestarter extends BehaviorTool
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player,
-			World world, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		pos = pos.offset(facing);
 		
@@ -94,7 +91,7 @@ public class BehaviorFirestarter extends BehaviorTool
 		{
 			switch (result.typeOfHit)
 			{
-			case BLOCK :
+			case BLOCK:
 				List<EntityItem> list = world.getEntities(EntityItem.class, entity -> entity.getDistanceSq(result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord) < 0.04);
 				FirestarterCache cache = stack.getCapability(capability, null);
 				for (EntityItem item : list)
@@ -123,7 +120,7 @@ public class BehaviorFirestarter extends BehaviorTool
 					}
 				}
 				break;
-			case ENTITY :
+			case ENTITY:
 			default:
 				player.stopActiveHand();
 				break;

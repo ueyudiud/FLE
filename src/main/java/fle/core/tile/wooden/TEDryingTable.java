@@ -30,11 +30,10 @@ import net.minecraft.util.EnumHand;
 /**
  * @author ueyudiud
  */
-public class TEDryingTable extends TEInventorySingleSlot
-implements ITB_BlockActived, ITP_Drops
+public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockActived, ITP_Drops
 {
-	protected int dryingTick;
-	protected TemplateRecipeCache<ItemStack> cache;
+	protected int								dryingTick;
+	protected TemplateRecipeCache<ItemStack>	cache;
 	
 	public TEDryingTable()
 	{
@@ -104,18 +103,17 @@ implements ITB_BlockActived, ITP_Drops
 			{
 				rain *= 5.0F;
 			}
-			this.dryingTick += Math.ceil(this.cache.<Float>get(1) / rain);
-			if (this.dryingTick >= this.cache.<Integer>get(0))
+			this.dryingTick += Math.ceil(this.cache.<Float> get(1) / rain);
+			if (this.dryingTick >= this.cache.<Integer> get(0))
 			{
-				this.stack = this.cache.<ItemStack>get(2);
+				this.stack = this.cache.<ItemStack> get(2);
 				onInventoryChanged();
 			}
 		}
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (!player.isSneaking())
 		{

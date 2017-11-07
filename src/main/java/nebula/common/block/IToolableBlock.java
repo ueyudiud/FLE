@@ -10,6 +10,5 @@ import net.minecraft.world.World;
 
 public interface IToolableBlock
 {
-	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ);
+	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ);
 }

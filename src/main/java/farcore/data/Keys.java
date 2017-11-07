@@ -8,6 +8,6 @@ package farcore.data;
  */
 public class Keys
 {
-	public static final String ROTATE = "rotate";
-	public static final String PLACE = "place";
+	public static final String	ROTATE	= "rotate";
+	public static final String	PLACE	= "place";
 }

@@ -40,7 +40,7 @@ public class SpecieAuroch implements IAnimalSpecie<EntityCow>
 	@Override
 	public void expressTrait(EntityCow biology, GeneticMaterial gm)
 	{
-		//TODO
+		// TODO
 	}
 	
 	@Override

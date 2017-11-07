@@ -9,22 +9,21 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidBase extends Fluid
 {
-	public float fireAttackDamage;
-	public float thermalConductivity = 2.4E-2F;
-	protected int color = 0xFFFFFFFF;
-	protected boolean isBurning;
+	public float		fireAttackDamage;
+	public float		thermalConductivity	= 2.4E-2F;
+	protected int		color				= 0xFFFFFFFF;
+	protected boolean	isBurning;
 	
 	public FluidBase(String fluidName, String localName)
 	{
-		this(fluidName, localName,
-				new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName),
-				new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName + "_flowing"));
+		this(fluidName, localName, new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName), new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName + "_flowing"));
 	}
+	
 	public FluidBase(String fluidName, String localName, ResourceLocation still, ResourceLocation flowing)
 	{
 		super(fluidName, still, flowing);
 		FluidRegistry.registerFluid(this);
-		if(localName != null)
+		if (localName != null)
 		{
 			LanguageManager.registerLocal(getTranslateName(new FluidStack(this, 1)), localName);
 		}

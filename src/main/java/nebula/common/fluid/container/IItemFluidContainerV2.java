@@ -36,7 +36,8 @@ public interface IItemFluidContainerV2 extends IItemFluidContainer
 	
 	FluidStack getContain(ItemStack stack);
 	
-	@Nullable ItemStack drain(ItemStack stack, boolean doDrain);
+	@Nullable
+	ItemStack drain(ItemStack stack, boolean doDrain);
 	
 	@Override
 	default IFluidHandler createFluidHandlerWrapper(ItemStack stack)
@@ -46,7 +47,7 @@ public interface IItemFluidContainerV2 extends IItemFluidContainer
 			@Override
 			public IFluidTankProperties[] getTankProperties()
 			{
-				return new IFluidTankProperties[]{ new FluidTankProperties(getContain(stack), capacity(stack), !isFull(stack), isFull(stack)) };
+				return new IFluidTankProperties[] { new FluidTankProperties(getContain(stack), capacity(stack), !isFull(stack), isFull(stack)) };
 			}
 			
 			@Override

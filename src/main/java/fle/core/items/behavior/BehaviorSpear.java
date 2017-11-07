@@ -35,11 +35,10 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
-		if(result == null)
+		if (result == null)
 		{
 			playerIn.setActiveHand(hand);
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -52,14 +51,13 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	{
 		float f = (stack.getMaxItemUseDuration() - timeLeft) / 20F;
 		f = f * (f + 3.5F) / 3F;
-		if(f < 0.2F) return;
-		if(f > 1.0F)
+		if (f < 0.2F) return;
+		if (f > 1.0F)
 		{
 			f = 1.0F;
 		}
 		ItemStack stack1;
-		if(entity instanceof EntityPlayer &&
-				((EntityPlayer) entity).capabilities.isCreativeMode)
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode)
 		{
 			stack1 = stack.copy();
 			stack1.stackSize = 1;
@@ -67,15 +65,14 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		else
 		{
 			stack1 = stack.splitStack(1);
-			if(!world.isRemote)
+			if (!world.isRemote)
 			{
 				KS.HURLING.using((EntityPlayer) entity, 1.0F);
 			}
 		}
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
-			float inaccuracy = !(entity instanceof EntityPlayer) ? 1.0F :
-				3F / (1F + KS.SHOOTING.level((EntityPlayer) entity) * 0.4F);
+			float inaccuracy = !(entity instanceof EntityPlayer) ? 1.0F : 3F / (1F + KS.SHOOTING.level((EntityPlayer) entity) * 0.4F);
 			EntityProjectileItem entity1 = new EntityProjectileItem(world, entity, f * 1.0F, stack1, inaccuracy);
 			world.spawnEntity(entity1);
 		}
@@ -89,10 +86,10 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	@Override
 	public void onEntityTick(EntityProjectileItem entity)
 	{
-		if(entity.inGround && !entity.world.isRemote)
+		if (entity.inGround && !entity.world.isRemote)
 		{
 			EntityPlayer player = entity.world.getClosestPlayerToEntity(entity, 0.8F);
-			if(player != null && (player.capabilities.isCreativeMode || player.inventory.addItemStackToInventory(entity.currentItem)))
+			if (player != null && (player.capabilities.isCreativeMode || player.inventory.addItemStackToInventory(entity.currentItem)))
 			{
 				entity.setDead();
 			}
@@ -108,13 +105,13 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
 	{
-		if(target instanceof EntityLivingBase)
+		if (target instanceof EntityLivingBase)
 		{
 			EntityLivingBase entity1 = (EntityLivingBase) target;
 			float damage = (float) Entities.velocity(entity);
 			float speed = damage;
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
-			if(material != null)
+			if (material != null)
 			{
 				damage *= (1F + material.toolDamageToEntity);
 			}
@@ -122,8 +119,8 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			{
 				damage *= ((IEntityDamageEffect) target).getDamageMultiplier(EnumPhysicalDamageType.PUNCTURE);
 			}
-			if(entity.shooter != null)
-				if(entity.shooter instanceof EntityPlayer)
+			if (entity.shooter != null)
+				if (entity.shooter instanceof EntityPlayer)
 				{
 					damage *= 1 + KS.HURLING.level((EntityPlayer) entity.shooter) * 0.05F;
 					entity1.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity.shooter), damage);
@@ -139,7 +136,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			entity1.addVelocity(entity.motionX * .02, entity.motionY * .02, entity.motionZ * .02);
 			float use = entity.world.rand.nextFloat() * speed * 0.2F + 0.8F;
 			((ITool) entity.currentItem.getItem()).onToolUse(null, entity.currentItem, EnumToolTypes.SPEAR, use);
-			if(entity.currentItem.stackSize <= 0)
+			if (entity.currentItem.stackSize <= 0)
 			{
 				entity.setDead();
 			}

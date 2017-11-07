@@ -9,13 +9,12 @@ import java.util.Objects;
 import java.util.function.IntConsumer;
 
 /**
- * The integer array, used when needed add
- * array to collection.<p>
+ * The integer array, used when needed add array to collection.
+ * <p>
  * 
  * @author ueyudiud
  */
-public
-class IntegerArray implements Serializable
+public class IntegerArray implements Serializable
 {
 	private static final long serialVersionUID = 6088198770700632654L;
 	
@@ -44,7 +43,8 @@ class IntegerArray implements Serializable
 	
 	public void forEach(IntConsumer consumer)
 	{
-		for (int i : this.array) consumer.accept(i);
+		for (int i : this.array)
+			consumer.accept(i);
 	}
 	
 	@Override
@@ -56,10 +56,7 @@ class IntegerArray implements Serializable
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj == null ? false :
-			obj == this ? true :
-				!(obj instanceof IntegerArray) ?
-						!(obj instanceof int[] ? false : Arrays.equals(this.array, (int[]) obj)) : Arrays.equals(this.array, ((IntegerArray) obj).array);
+		return obj == null ? false : obj == this ? true : !(obj instanceof IntegerArray) ? !(obj instanceof int[] ? false : Arrays.equals(this.array, (int[]) obj)) : Arrays.equals(this.array, ((IntegerArray) obj).array);
 	}
 	
 	@Override

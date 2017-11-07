@@ -30,34 +30,33 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 {
 	protected static final Vector2f STILL = new Vector2f(0.0F, 0.0F);
 	
-	private static final float UP_LIGHT_MULTIPLER = 1.0F;
-	private static final float DOWN_LIGHT_MULTIPLER = 0.5F;
-	private static final float X_LIGHT_MULTIPLER = 0.6F;
-	private static final float Z_LIGHT_MULTIPLER = 0.8F;
+	private static final float	UP_LIGHT_MULTIPLER		= 1.0F;
+	private static final float	DOWN_LIGHT_MULTIPLER	= 0.5F;
+	private static final float	X_LIGHT_MULTIPLER		= 0.6F;
+	private static final float	Z_LIGHT_MULTIPLER		= 0.8F;
 	
-	//	private static final int[] X = { 0, 0, 1, 1 };
-	//	private static final int[] Z = { 0, 1, 1, 0 };
+	// private static final int[] X = { 0, 0, 1, 1 };
+	// private static final int[] Z = { 0, 1, 1, 0 };
 	
-	protected boolean renderUp = true;
-	protected boolean renderDown = true;
-	protected boolean renderNorth = true;
-	protected boolean renderSouth = true;
-	protected boolean renderEast = true;
-	protected boolean renderWest = true;
-	protected boolean enableColor = true;
-	protected boolean diffuseLight = true;
-	protected boolean flip = false;
-	protected RenderHelper helper = RenderHelper.instance;
-	protected float red = 1.0F;
-	protected float green = 1.0F;
-	protected float blue = 1.0F;
-	protected float alpha = 1.0F;
-	protected RenderEntityItem renderEntityItem;
-	protected EntityItem entityItem;
+	protected boolean			renderUp		= true;
+	protected boolean			renderDown		= true;
+	protected boolean			renderNorth		= true;
+	protected boolean			renderSouth		= true;
+	protected boolean			renderEast		= true;
+	protected boolean			renderWest		= true;
+	protected boolean			enableColor		= true;
+	protected boolean			diffuseLight	= true;
+	protected boolean			flip			= false;
+	protected RenderHelper		helper			= RenderHelper.instance;
+	protected float				red				= 1.0F;
+	protected float				green			= 1.0F;
+	protected float				blue			= 1.0F;
+	protected float				alpha			= 1.0F;
+	protected RenderEntityItem	renderEntityItem;
+	protected EntityItem		entityItem;
 	
 	@Override
-	public abstract void renderTileEntityAt(T tile, double x, double y, double z,
-			float partialTicks, int destroyStage);
+	public abstract void renderTileEntityAt(T tile, double x, double y, double z, float partialTicks, int destroyStage);
 	
 	protected TextureAtlasSprite getTexture(IBlockState state)
 	{
@@ -76,17 +75,14 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	
 	protected void setColor(FluidStack stack)
 	{
-		if(stack == null)
+		if (stack == null)
 		{
 			resetColor();
 		}
 		else
 		{
 			int color = stack.getFluid().getColor(stack);
-			colorf(
-					((color >> 16) & 0xFF) / 255F,
-					((color >>  8) & 0xFF) / 255F,
-					( color        & 0xFF) / 255F, 1.0F);
+			colorf(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, 1.0F);
 		}
 	}
 	
@@ -97,11 +93,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	
 	protected void colori(int rgb)
 	{
-		colorf(
-				(rgb >> 16 & 0xFF) / 255.0F,
-				(rgb >>  8 & 0xFF) / 255.0F,
-				(rgb       & 0xFF) / 255.0F,
-				1.0F);
+		colorf((rgb >> 16 & 0xFF) / 255.0F, (rgb >> 8 & 0xFF) / 255.0F, (rgb & 0xFF) / 255.0F, 1.0F);
 	}
 	
 	protected void colorf(float r, float g, float b, float a)
@@ -122,68 +114,61 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		return Maths.lerp(icon.getMinV(), icon.getMaxV(), x);
 	}
 	
-	protected void renderFluidFace(
-			double xMin, double zMin, double xMax, double zMax,
-			double y1, double y2, double y3, double y4,
-			FluidStack stack, @Nullable Vector2f flow)
+	protected void renderFluidFace(double xMin, double zMin, double xMax, double zMax, double y1, double y2, double y3, double y4, FluidStack stack, @Nullable Vector2f flow)
 	{
-		if(stack != null)
+		if (stack != null)
 		{
 			setColor(stack);
 			TextureAtlasSprite icon;
 			float u1, u2, v1, v2;
-			//			if(L.similar(flow.x, 0F) && L.similar(flow.y, 0F))
+			// if(L.similar(flow.x, 0F) && L.similar(flow.y, 0F))
 			{
 				icon = getStillTexture(stack);
 				u1 = getU(icon, (float) xMin);
 				u2 = getU(icon, (float) xMax);
 				v1 = getV(icon, (float) zMin);
 				v2 = getV(icon, (float) zMax);
-				this.helper
-				.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
-				.face(this.red, this.green, this.blue, this.alpha,
-						xMin, y1, zMin, u1, v1,
-						xMin, y2, zMax, u1, v2,
-						xMax, y3, zMax, u2, v2,
-						xMax, y4, zMin, u2, v1)
-				.draw();
+				this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR).face(this.red, this.green, this.blue, this.alpha, xMin, y1, zMin, u1, v1, xMin, y2, zMax, u1, v2, xMax, y3, zMax, u2, v2, xMax, y4, zMin, u2, v1).draw();
 			}
-			//FIXME
-			//			else
-			//			{
-			//				float c1 = (float) Math.atan2(flow.y, flow.x);
-			//				float a = MathHelper.sin(c1);
-			//				float b = MathHelper.cos(c1);
-			//				int dir = (int) (a / 90);
-			//				float xCen = (float) ((xMin + xMax) / 2F);
-			//				float zCen = (float) ((zMin + zMax) / 2F);
-			//				float xScale = (float) (xMax - xMin) * b;
-			//				float zScale = (float) (zMax - zMin) * b;
-			//				float u3, v3, u4, v4;
-			//				icon = getTexture(stack.getFluid().getFlowing(stack));
-			//				u1 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir    ) & 0x3] * 2 - 1) + a * (Z[(dir    ) & 0x3] * 2 - 1)) * xScale * 8);
-			//				v1 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 1) & 0x3] * 2 - 1) + a * (Z[(dir + 1) & 0x3] * 2 - 1)) * zScale * 8);
-			//				u2 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 1) & 0x3] * 2 - 1) + a * (Z[(dir + 1) & 0x3] * 2 - 1)) * xScale * 8);
-			//				v2 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 2) & 0x3] * 2 - 1) + a * (Z[(dir + 2) & 0x3] * 2 - 1)) * zScale * 8);
-			//				u3 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 2) & 0x3] * 2 - 1) + a * (Z[(dir + 2) & 0x3] * 2 - 1)) * xScale * 8);
-			//				v3 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 3) & 0x3] * 2 - 1) + a * (Z[(dir + 3) & 0x3] * 2 - 1)) * zScale * 8);
-			//				u4 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 3) & 0x3] * 2 - 1) + a * (Z[(dir + 3) & 0x3] * 2 - 1)) * xScale * 8);
-			//				v4 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir    ) & 0x3] * 2 - 1) + a * (Z[(dir    ) & 0x3] * 2 - 1)) * zScale * 8);
-			//				this.helper.face(this.red, this.green, this.blue, this.alpha,
-			//						xMin, y1, zMin, u1, v1,
-			//						xMin, y2, zMax, u2, v2,
-			//						xMax, y3, zMax, u3, v3,
-			//						xMax, y4, zMin, u4, v4).draw();
-			//			}
+			// FIXME
+			// else
+			// {
+			// float c1 = (float) Math.atan2(flow.y, flow.x);
+			// float a = MathHelper.sin(c1);
+			// float b = MathHelper.cos(c1);
+			// int dir = (int) (a / 90);
+			// float xCen = (float) ((xMin + xMax) / 2F);
+			// float zCen = (float) ((zMin + zMax) / 2F);
+			// float xScale = (float) (xMax - xMin) * b;
+			// float zScale = (float) (zMax - zMin) * b;
+			// float u3, v3, u4, v4;
+			// icon = getTexture(stack.getFluid().getFlowing(stack));
+			// u1 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir ) & 0x3] * 2
+			// - 1) + a * (Z[(dir ) & 0x3] * 2 - 1)) * xScale * 8);
+			// v1 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 1) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 1) & 0x3] * 2 - 1)) * zScale * 8);
+			// u2 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 1) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 1) & 0x3] * 2 - 1)) * xScale * 8);
+			// v2 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 2) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 2) & 0x3] * 2 - 1)) * zScale * 8);
+			// u3 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 2) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 2) & 0x3] * 2 - 1)) * xScale * 8);
+			// v3 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir + 3) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 3) & 0x3] * 2 - 1)) * zScale * 8);
+			// u4 = icon.getInterpolatedU(16 * xCen + (b * (X[(dir + 3) & 0x3] *
+			// 2 - 1) + a * (Z[(dir + 3) & 0x3] * 2 - 1)) * xScale * 8);
+			// v4 = icon.getInterpolatedV(16 * zCen + (b * (X[(dir ) & 0x3] * 2
+			// - 1) + a * (Z[(dir ) & 0x3] * 2 - 1)) * zScale * 8);
+			// this.helper.face(this.red, this.green, this.blue, this.alpha,
+			// xMin, y1, zMin, u1, v1,
+			// xMin, y2, zMax, u2, v2,
+			// xMax, y3, zMax, u3, v3,
+			// xMax, y4, zMin, u4, v4).draw();
+			// }
 		}
 	}
 	
-	protected void renderCubeWithLight(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			BrightnessUtil util,
-			ICoordableBrightnessProvider provider, int i, int j, int k,
-			TextureAtlasSprite icon)
+	protected void renderCubeWithLight(double x1, double y1, double z1, double x2, double y2, double z2, BrightnessUtil util, ICoordableBrightnessProvider provider, int i, int j, int k, TextureAtlasSprite icon)
 	{
 		float u1, u2;
 		float v1, v2;
@@ -196,15 +181,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, (float) z1);
 			v2 = getV(icon, (float) z2);
 			util.caculateBrightness(provider, i, j, k, Direction.U);
-			faceWithLight(
-					x2, y2, z2,
-					x2, y2, z1,
-					x1, y2, z1,
-					x1, y2, z2,
-					u2, v2,
-					u2, v1,
-					u1, v1,
-					u1, v2, this.diffuseLight ? UP_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x2, y2, z2, x2, y2, z1, x1, y2, z1, x1, y2, z2, u2, v2, u2, v1, u1, v1, u1, v2, this.diffuseLight ? UP_LIGHT_MULTIPLER : 1.0F, util);
 		}
 		if (this.renderDown)
 		{
@@ -213,15 +190,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, 1F - (float) z1);
 			v2 = getV(icon, 1F - (float) z2);
 			util.caculateBrightness(provider, i, j, k, Direction.D);
-			faceWithLight(
-					x2, y1, z1,
-					x2, y1, z2,
-					x1, y1, z2,
-					x1, y1, z1,
-					u2, v1,
-					u2, v2,
-					u1, v2,
-					u1, v1, this.diffuseLight ? DOWN_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x2, y1, z1, x2, y1, z2, x1, y1, z2, x1, y1, z1, u2, v1, u2, v2, u1, v2, u1, v1, this.diffuseLight ? DOWN_LIGHT_MULTIPLER : 1.0F, util);
 		}
 		if (this.renderSouth)
 		{
@@ -230,15 +199,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, 1F - (float) y1);
 			v2 = getV(icon, 1F - (float) y2);
 			util.caculateBrightness(provider, i, j, k, Direction.S);
-			faceWithLight(
-					x1, y2, z2,
-					x1, y1, z2,
-					x2, y1, z2,
-					x2, y2, z2,
-					u1, v2,
-					u1, v1,
-					u2, v1,
-					u2, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x1, y2, z2, x1, y1, z2, x2, y1, z2, x2, y2, z2, u1, v2, u1, v1, u2, v1, u2, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
 		}
 		if (this.renderNorth)
 		{
@@ -247,15 +208,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, 1F - (float) y1);
 			v2 = getV(icon, 1F - (float) y2);
 			util.caculateBrightness(provider, i, j, k, Direction.N);
-			faceWithLight(
-					x2, y2, z1,
-					x2, y1, z1,
-					x1, y1, z1,
-					x1, y2, z1,
-					u2, v2,
-					u2, v1,
-					u1, v1,
-					u1, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x2, y2, z1, x2, y1, z1, x1, y1, z1, x1, y2, z1, u2, v2, u2, v1, u1, v1, u1, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
 		}
 		if (this.renderEast)
 		{
@@ -264,15 +217,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, 1F - (float) y1);
 			v2 = getV(icon, 1F - (float) y2);
 			util.caculateBrightness(provider, i, j, k, Direction.E);
-			faceWithLight(
-					x2, y2, z2,
-					x2, y1, z2,
-					x2, y1, z1,
-					x2, y2, z1,
-					u2, v2,
-					u2, v1,
-					u1, v1,
-					u1, v2, this.diffuseLight ? X_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x2, y2, z2, x2, y1, z2, x2, y1, z1, x2, y2, z1, u2, v2, u2, v1, u1, v1, u1, v2, this.diffuseLight ? X_LIGHT_MULTIPLER : 1.0F, util);
 		}
 		if (this.renderWest)
 		{
@@ -281,15 +226,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			v1 = getV(icon, 1F - (float) y1);
 			v2 = getV(icon, 1F - (float) y2);
 			util.caculateBrightness(provider, i, j, k, Direction.W);
-			faceWithLight(
-					x1, y2, z1,
-					x1, y1, z1,
-					x1, y1, z2,
-					x1, y2, z2,
-					u1, v2,
-					u1, v1,
-					u2, v1,
-					u2, v2, this.diffuseLight ? X_LIGHT_MULTIPLER : 1.0F, util);
+			faceWithLight(x1, y2, z1, x1, y1, z1, x1, y1, z2, x1, y2, z2, u1, v2, u1, v1, u2, v1, u2, v2, this.diffuseLight ? X_LIGHT_MULTIPLER : 1.0F, util);
 		}
 	}
 	
@@ -303,122 +240,63 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		this.renderDown = this.renderUp = this.renderEast = this.renderWest = this.renderNorth = this.renderSouth = true;
 	}
 	
-	protected void renderYPos(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderYPos(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x2, y2, z2, (float) x2, (float) z2,
-				x2, y2, z1, (float) x2, (float) z1,
-				x1, y2, z1, (float) x1, (float) z1,
-				x1, y2, z2, (float) x1, (float) z2,
-				0, 1, 0);
+		face(icon, x2, y2, z2, (float) x2, (float) z2, x2, y2, z1, (float) x2, (float) z1, x1, y2, z1, (float) x1, (float) z1, x1, y2, z2, (float) x1, (float) z2, 0, 1, 0);
 	}
 	
-	protected void renderYNeg(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderYNeg(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x2, y1, z1, (float) x2, 1F - (float) z1,
-				x2, y1, z2, (float) x2, 1F - (float) z2,
-				x1, y1, z2, (float) x1, 1F - (float) z2,
-				x1, y1, z1, (float) x1, 1F - (float) z1,
-				0, -1, 0);
+		face(icon, x2, y1, z1, (float) x2, 1F - (float) z1, x2, y1, z2, (float) x2, 1F - (float) z2, x1, y1, z2, (float) x1, 1F - (float) z2, x1, y1, z1, (float) x1, 1F - (float) z1, 0, -1, 0);
 	}
 	
-	protected void renderZPos(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderZPos(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x1, y2, z2, (float) x1, 1F - (float) y2,
-				x1, y1, z2, (float) x1, 1F - (float) y1,
-				x2, y1, z2, (float) x2, 1F - (float) y1,
-				x2, y2, z2, (float) x2, 1F - (float) y2,
-				0, 0, 1);
+		face(icon, x1, y2, z2, (float) x1, 1F - (float) y2, x1, y1, z2, (float) x1, 1F - (float) y1, x2, y1, z2, (float) x2, 1F - (float) y1, x2, y2, z2, (float) x2, 1F - (float) y2, 0, 0, 1);
 	}
 	
-	protected void renderZNeg(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderZNeg(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x2, y2, z1, 1F - (float) x2, 1F - (float) y2,
-				x2, y1, z1, 1F - (float) x2, 1F - (float) y1,
-				x1, y1, z1, 1F - (float) x1, 1F - (float) y1,
-				x1, y2, z1, 1F - (float) x1, 1F - (float) y2,
-				0, 0, -1);
+		face(icon, x2, y2, z1, 1F - (float) x2, 1F - (float) y2, x2, y1, z1, 1F - (float) x2, 1F - (float) y1, x1, y1, z1, 1F - (float) x1, 1F - (float) y1, x1, y2, z1, 1F - (float) x1, 1F - (float) y2, 0, 0, -1);
 	}
 	
-	protected void renderXPos(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderXPos(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x2, y2, z2, 1F - (float) z2, 1F - (float) y2,
-				x2, y1, z2, 1F - (float) z2, 1F - (float) y1,
-				x2, y1, z1, 1F - (float) z1, 1F - (float) y1,
-				x2, y2, z1, 1F - (float) z1, 1F - (float) y2,
-				1, 0, 0);
+		face(icon, x2, y2, z2, 1F - (float) z2, 1F - (float) y2, x2, y1, z2, 1F - (float) z2, 1F - (float) y1, x2, y1, z1, 1F - (float) z1, 1F - (float) y1, x2, y2, z1, 1F - (float) z1, 1F - (float) y2, 1, 0, 0);
 	}
 	
-	protected void renderXNeg(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderXNeg(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
-		face(icon,
-				x1, y2, z1, (float) z1, 1F - (float) y2,
-				x1, y1, z1, (float) z1, 1F - (float) y1,
-				x1, y1, z2, (float) z2, 1F - (float) y1,
-				x1, y2, z2, (float) z2, 1F - (float) y2,
-				-1, 0, 0);
+		face(icon, x1, y2, z1, (float) z1, 1F - (float) y2, x1, y1, z1, (float) z1, 1F - (float) y1, x1, y1, z2, (float) z2, 1F - (float) y1, x1, y2, z2, (float) z2, 1F - (float) y2, -1, 0, 0);
 	}
 	
-	protected void renderCube(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite[] icons)
+	protected void renderCube(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite[] icons)
 	{
 		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-		if(this.renderDown)	renderYNeg(x1, y1, z1, x2, y2, z2, icons[0]);
-		if(this.renderUp)	renderYPos(x1, y1, z1, x2, y2, z2, icons[1]);
-		if(this.renderNorth)renderZNeg(x1, y1, z1, x2, y2, z2, icons[2]);
-		if(this.renderSouth)renderZPos(x1, y1, z1, x2, y2, z2, icons[3]);
-		if(this.renderWest)	renderXNeg(x1, y1, z1, x2, y2, z2, icons[4]);
-		if(this.renderEast)	renderXPos(x1, y1, z1, x2, y2, z2, icons[5]);
+		if (this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icons[0]);
+		if (this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icons[1]);
+		if (this.renderNorth) renderZNeg(x1, y1, z1, x2, y2, z2, icons[2]);
+		if (this.renderSouth) renderZPos(x1, y1, z1, x2, y2, z2, icons[3]);
+		if (this.renderWest) renderXNeg(x1, y1, z1, x2, y2, z2, icons[4]);
+		if (this.renderEast) renderXPos(x1, y1, z1, x2, y2, z2, icons[5]);
 		this.helper.draw();
 	}
 	
-	protected void renderCube(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			TextureAtlasSprite icon)
+	protected void renderCube(double x1, double y1, double z1, double x2, double y2, double z2, TextureAtlasSprite icon)
 	{
 		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-		if(this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icon);
-		if(this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icon);
-		if(this.renderSouth) renderZPos(x1, y1, z1, x2, y2, z2, icon);
-		if(this.renderNorth) renderZNeg(x1, y1, z1, x2, y2, z2, icon);
-		if(this.renderEast) renderXPos(x1, y1, z1, x2, y2, z2, icon);
-		if(this.renderWest) renderXNeg(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderSouth) renderZPos(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderNorth) renderZNeg(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderEast) renderXPos(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderWest) renderXNeg(x1, y1, z1, x2, y2, z2, icon);
 		this.helper.draw();
 	}
 	
-	private void face(TextureAtlasSprite icon,
-			double x1, double y1, double z1, float u1, float v1,
-			double x2, double y2, double z2, float u2, float v2,
-			double x3, double y3, double z3, float u3, float v3,
-			double x4, double y4, double z4, float u4, float v4,
-			float nx, float ny, float nz)
+	private void face(TextureAtlasSprite icon, double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4, float nx, float ny, float nz)
 	{
 		if (!this.flip)
 		{
@@ -430,16 +308,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		}
 	}
 	
-	protected void faceWithLight(
-			double x1, double y1, double z1,
-			double x2, double y2, double z2,
-			double x3, double y3, double z3,
-			double x4, double y4, double z4,
-			float u1, float v1,
-			float u2, float v2,
-			float u3, float v3,
-			float u4, float v4,
-			float l, BrightnessUtil util)
+	protected void faceWithLight(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4, float u1, float v1, float u2, float v2, float u3, float v3, float u4, float v4, float l, BrightnessUtil util)
 	{
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 		this.helper.vertex_ptlc(x1, y1, z1, u1, v1, util.brightness[0], this.red * util.color[0] * l, this.green * util.color[0] * l, this.blue * util.color[0] * l, this.alpha);
@@ -451,15 +320,9 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 	}
 	
-	protected void face6Dir(
-			double x, double y, double z,
-			double uOfX, double uOfY, double uOfZ,
-			double vOfX, double vOfY, double vOfZ,
-			double u1, double v1, double u2, double v2)
+	protected void face6Dir(double x, double y, double z, double uOfX, double uOfY, double uOfZ, double vOfX, double vOfY, double vOfZ, double u1, double v1, double u2, double v2)
 	{
-		this.helper.begin(GL11.GL_QUADS, this.enableColor ?
-				DefaultVertexFormats.POSITION_TEX_COLOR :
-					DefaultVertexFormats.POSITION_TEX);
+		this.helper.begin(GL11.GL_QUADS, this.enableColor ? DefaultVertexFormats.POSITION_TEX_COLOR : DefaultVertexFormats.POSITION_TEX);
 		double d0 = u1;
 		double d1 = v1;
 		double d2 = u2;
@@ -478,27 +341,13 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		double d16 = y + vOfY;
 		if (this.enableColor)
 		{
-			this.helper
-			.vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha)
-			.vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha);
+			this.helper.vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha).vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha).vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
+					.vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha).vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha).vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
+					.vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha).vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha);
 		}
 		else
 		{
-			this.helper
-			.vertex_pt(d5, d13, d9, d2, d1)
-			.vertex_pt(d6, d14, d10, d2, d3)
-			.vertex_pt(d7, d15, d11, d0, d3)
-			.vertex_pt(d8, d16, d12, d0, d1)
-			.vertex_pt(d8, d16, d12, d0, d1)
-			.vertex_pt(d7, d15, d11, d0, d3)
-			.vertex_pt(d6, d14, d10, d2, d3)
-			.vertex_pt(d5, d13, d9, d2, d1);
+			this.helper.vertex_pt(d5, d13, d9, d2, d1).vertex_pt(d6, d14, d10, d2, d3).vertex_pt(d7, d15, d11, d0, d3).vertex_pt(d8, d16, d12, d0, d1).vertex_pt(d8, d16, d12, d0, d1).vertex_pt(d7, d15, d11, d0, d3).vertex_pt(d6, d14, d10, d2, d3).vertex_pt(d5, d13, d9, d2, d1);
 		}
 		this.helper.draw();
 	}

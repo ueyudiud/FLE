@@ -38,15 +38,15 @@ import net.minecraftforge.common.IPlantable;
  */
 public class Crop implements ICrop, IPlantable
 {
-	protected FamilyTemplate<Crop, ICropAccess> family;
-	protected Mat material;
-	protected long[] nativeCropValue = new long[2];
-	protected int[] nativeCropData = new int[5];
-	protected int maxStage;
-	protected int floweringStage = -1;
-	protected int floweringRange = 0;
-	protected byte spreadType = 0;
-	protected int growRequire = 1000;
+	protected FamilyTemplate<Crop, ICropAccess>	family;
+	protected Mat								material;
+	protected long[]							nativeCropValue	= new long[2];
+	protected int[]								nativeCropData	= new int[5];
+	protected int								maxStage;
+	protected int								floweringStage	= -1;
+	protected int								floweringRange	= 0;
+	protected byte								spreadType		= 0;
+	protected int								growRequire		= 1000;
 	
 	@Override
 	public String getRegisteredName()
@@ -72,8 +72,8 @@ public class Crop implements ICrop, IPlantable
 	{
 		if ((gm.coders.length & 0x1) != 0) return null;
 		Random random = biology.rng();
-		int chance = MathHelper.ceil(gm.generation * gm.generation * Math.exp(- (float) gm.generation / 10.0F));
-		long[] coders = A.createLongArray(gm.coders.length >> 1, idx-> {
+		int chance = MathHelper.ceil(gm.generation * gm.generation * Math.exp(-(float) gm.generation / 10.0F));
+		long[] coders = A.createLongArray(gm.coders.length >> 1, idx -> {
 			long a = gm.coders[idx << 1];
 			long b = gm.coders[idx << 1 | 1];
 			long result = 0;
@@ -91,8 +91,8 @@ public class Crop implements ICrop, IPlantable
 			}
 			return result;
 		});
-		int off = MathHelper.ceil(gm.generation * gm.generation * Math.exp(- (float) gm.generation / 5.0F));
-		int[] datas = A.createIntArray(gm.nativeValues.length, i-> {
+		int off = MathHelper.ceil(gm.generation * gm.generation * Math.exp(-(float) gm.generation / 5.0F));
+		int[] datas = A.createIntArray(gm.nativeValues.length, i -> {
 			int val = gm.nativeValues[i];
 			val += L.nextInt(off, random) - L.nextInt(off, random);
 			return L.range(0, 256, val);
@@ -109,11 +109,11 @@ public class Crop implements ICrop, IPlantable
 	public void expressTrait(ICropAccess biology, GeneticMaterial gm)
 	{
 		CropInfo info = biology.info();
-		info.grain		+= gm.nativeValues[0];
-		info.growth		+= gm.nativeValues[1];
-		info.resistance	+= gm.nativeValues[2];
-		info.vitality	+= gm.nativeValues[3];
-		info.saving		+= gm.nativeValues[4];
+		info.grain += gm.nativeValues[0];
+		info.growth += gm.nativeValues[1];
+		info.resistance += gm.nativeValues[2];
+		info.vitality += gm.nativeValues[3];
+		info.saving += gm.nativeValues[4];
 	}
 	
 	@Override
@@ -143,44 +143,44 @@ public class Crop implements ICrop, IPlantable
 		int stage = access.stage();
 		int base = 6 + info.growth / 2 + access.rng().nextInt(9 + info.growth);
 		int waste = 4 + 3 / (info.saving + 1);
-		for(Direction facing : Direction.DIRECTIONS_2D)
+		for (Direction facing : Direction.DIRECTIONS_2D)
 		{
-			if(access.getTE(facing) instanceof ICropAccess)
+			if (access.getTE(facing) instanceof ICropAccess)
 			{
 				++dence;
 			}
 		}
-		if(dence - info.resistance > 1)
+		if (dence - info.resistance > 1)
 		{
 			base -= dence - info.resistance - 1;
 		}
-		if(stage != 0)
+		if (stage != 0)
 		{
 			float britness = access.world().getLightFor(EnumSkyBlock.SKY, access.pos().up()) * property.getSunshine(access);
-			if(britness < 4F)
+			if (britness < 4F)
 			{
 				base -= (int) (4 - britness);
 			}
-			else if(britness > 12F)
+			else if (britness > 12F)
 			{
 				base += (int) ((britness - 12F) * 0.4F);
-				waste ++;
+				waste++;
 			}
 		}
 		float rainfall = property.getHumidity(access);
-		if(rainfall < 0.5F)
+		if (rainfall < 0.5F)
 		{
 			int a = (int) (10 * (0.5F - rainfall) / (1 + info.saving));
 			if (a > 0)
 			{
 				base -= a;
 			}
-			waste ++;
+			waste++;
 		}
 		if (rainfall > 1.2F)
 		{
-			base ++;
-			waste --;
+			base++;
+			waste--;
 		}
 		if (access.stage() == this.maxStage - 1)
 		{
@@ -199,30 +199,30 @@ public class Crop implements ICrop, IPlantable
 	protected void onUpdate02Flowering(ICropAccess access)
 	{
 		int stage = access.stage();
-		if(stage == this.floweringStage)
+		if (stage == this.floweringStage)
 		{
 			int count;
 			switch (this.spreadType)
 			{
-			case 2 :
-				if(access.info().gamete == null && access.rng().nextInt(5) == 0)
+			case 2:
+				if (access.info().gamete == null && access.rng().nextInt(5) == 0)
 				{
 					access.pollinate(createGameteGeneticMaterial(access, access.info().geneticMaterial));
 				}
-			case 1 :
-				if((count = access.info().map.get("flowered")) < 5)
+			case 1:
+				if ((count = access.info().map.get("flowered")) < 5)
 				{
 					GeneticMaterial material = createGameteGeneticMaterial(access, access.info().geneticMaterial);
 					int l = 8 + (1 + access.info().vitality) / 2;
-					for(int i = 0; i < l; i++)
+					for (int i = 0; i < l; i++)
 					{
 						int x = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
 						int y = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
 						int z = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
-						if((x | y | z) != 0)
+						if ((x | y | z) != 0)
 						{
 							TileEntity tile = access.getTE(x, y, z);
-							if(tile instanceof ICropAccess)
+							if (tile instanceof ICropAccess)
 							{
 								((ICropAccess) tile).pollinate(material);
 							}
@@ -231,8 +231,8 @@ public class Crop implements ICrop, IPlantable
 					access.info().map.put("flowered", ++count);
 				}
 				break;
-			case 3 :
-				if(access.info().gamete == null)
+			case 3:
+				if (access.info().gamete == null)
 				{
 					access.pollinate(createGameteGeneticMaterial(access, access.info().geneticMaterial));
 				}
@@ -252,10 +252,7 @@ public class Crop implements ICrop, IPlantable
 	@Override
 	public void addInformation(ICropAccess access, List<String> list)
 	{
-		list.add("Growing Progress : " + (access.stage() == this.floweringStage ? LIGHT_PURPLE : GREEN) +
-				(access.stage() < this.maxStage ?
-						(int) (access.stageBuffer() + (access.stage() - 1) * this.growRequire) + "/" + (this.maxStage - 1) * this.growRequire :
-						"Mature"));
+		list.add("Growing Progress : " + (access.stage() == this.floweringStage ? LIGHT_PURPLE : GREEN) + (access.stage() < this.maxStage ? (int) (access.stageBuffer() + (access.stage() - 1) * this.growRequire) + "/" + (this.maxStage - 1) * this.growRequire : "Mature"));
 		CropInfo info = access.info();
 		list.add(GOLD + "G" + GREEN + " " + info.grain);
 		list.add(GOLD + "G" + GREEN + " " + info.growth);

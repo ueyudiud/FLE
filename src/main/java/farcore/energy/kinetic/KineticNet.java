@@ -23,12 +23,12 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	
 	private volatile boolean isUpdating = false;
 	
-	private final Map<BlockPos, IKineticHandler> map = new HashMap<>();
-	private final Map<IntegerArray, KineticPackage> cachedSend = new HashMap<>();
-	private final List<IntegerArray> cachedSended = new ArrayList<>();
-	private IKineticHandler cachedTile;
-	private BlockPos cachedPos = BlockPos.ORIGIN;
-	private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap<>();
+	private final Map<BlockPos, IKineticHandler>		map					= new HashMap<>();
+	private final Map<IntegerArray, KineticPackage>		cachedSend			= new HashMap<>();
+	private final List<IntegerArray>					cachedSended		= new ArrayList<>();
+	private IKineticHandler								cachedTile;
+	private BlockPos									cachedPos			= BlockPos.ORIGIN;
+	private final Map<IKineticHandler, EnumModifyFlag>	cachedChangedTile	= new HashMap<>();
 	
 	public KineticNet(World world)
 	{
@@ -38,8 +38,8 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	@Override
 	protected void add(IKineticHandler tile)
 	{
-		if(this.world == null) return;
-		if(this.isUpdating)
+		if (this.world == null) return;
+		if (this.isUpdating)
 		{
 			this.cachedChangedTile.put(tile, EnumModifyFlag.add);
 		}
@@ -52,8 +52,8 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	@Override
 	public void remove(IKineticHandler tile)
 	{
-		if(this.world == null) return;
-		if(this.isUpdating)
+		if (this.world == null) return;
+		if (this.isUpdating)
 		{
 			this.cachedChangedTile.put(tile, EnumModifyFlag.remove);
 		}
@@ -72,7 +72,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	@Override
 	public void reload(IKineticHandler tile)
 	{
-		if(this.world == null) return;
+		if (this.world == null) return;
 		remove(tile);
 		add(tile);
 	}
@@ -80,24 +80,26 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	@Override
 	protected void update()
 	{
-		if(this.world == null) return;
-		//Switch update flag to true, to prevent remove element in map when iterating.
+		if (this.world == null) return;
+		// Switch update flag to true, to prevent remove element in map when
+		// iterating.
 		this.isUpdating = true;
 		boolean updated = true;
 		try
 		{
-			//Check if last tick is already updated, or just update lasting tile.
-			if(this.cachedSend.isEmpty())
+			// Check if last tick is already updated, or just update lasting
+			// tile.
+			if (this.cachedSend.isEmpty())
 			{
-				//Pre-update all tile(Suggested update emitter in this method).
-				for(IKineticHandler tile : this.map.values())
+				// Pre-update all tile(Suggested update emitter in this method).
+				for (IKineticHandler tile : this.map.values())
 				{
 					this.cachedTile = tile;
 					tile.kineticPreUpdate(this);
 				}
 			}
 			this.cachedTile = null;
-			//Send kinetic energy to other tile.
+			// Send kinetic energy to other tile.
 			Map<IntegerArray, KineticPackage> sends = new HashMap<>();
 			Direction direction;
 			do
@@ -105,7 +107,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 				sends.clear();
 				sends.putAll(this.cachedSend);
 				this.cachedSend.clear();
-				for(Entry<IntegerArray, KineticPackage> entry : sends.entrySet())
+				for (Entry<IntegerArray, KineticPackage> entry : sends.entrySet())
 				{
 					int[] info = entry.getKey().array;
 					this.cachedPos = new BlockPos(info[0], info[1], info[2]);
@@ -113,15 +115,15 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 					direction = Direction.DIRECTIONS_3D[info[3]];
 					this.cachedPos = direction.offset(this.cachedPos);
 					KineticPackage pkg = entry.getValue();
-					if(this.map.containsKey(this.cachedPos))
+					if (this.map.containsKey(this.cachedPos))
 					{
 						IKineticHandler tile = this.map.get(this.cachedPos);
-						if(!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
+						if (!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
 						{
 							this.cachedTile = source;
 							source.emitKineticEnergy(this, null, direction, pkg);
 						}
-						else if(!tile.isRotatable(direction.getOpposite(), pkg))
+						else if (!tile.isRotatable(direction.getOpposite(), pkg))
 						{
 							this.cachedTile = source;
 							source.onStuck(direction, pkg);
@@ -133,7 +135,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 							this.cachedTile = tile;
 							double send = tile.receiveKineticEnergy(this, source, direction.getOpposite(), pkg);
 							this.cachedTile = source;
-							if(!L.similar(speed, send))
+							if (!L.similar(speed, send))
 							{
 								pkg.setSpeed(pkg.speed - send);
 								source.onStuck(direction, pkg);
@@ -151,13 +153,13 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 				}
 				this.cachedTile = null;
 			}
-			//Some tile maybe is a kinetic conductor, looped check.
+			// Some tile maybe is a kinetic conductor, looped check.
 			while (!this.cachedSend.isEmpty());
 		}
-		catch(StackOverflowError error)
+		catch (StackOverflowError error)
 		{
 			updated = false;
-			if(Nebula.debug)
+			if (Nebula.debug)
 			{
 				Log.warn("Stack overflow when update kinetic net.", error);
 			}
@@ -165,28 +167,28 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 		catch (OutOfMemoryError error)
 		{
 			updated = false;
-			if(Nebula.debug)
+			if (Nebula.debug)
 			{
 				Log.warn("Out of memory when update kinetic net.", error);
 			}
 		}
 		this.cachedPos = BlockPos.ORIGIN;
 		this.cachedTile = null;
-		if(updated)
+		if (updated)
 		{
 			this.isUpdating = false;
 			this.cachedSended.clear();
-			for(Entry<IKineticHandler, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
+			for (Entry<IKineticHandler, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
 			{
 				switch (entry.getValue())
 				{
-				case add :
+				case add:
 					this.map.put(entry.getKey().pos(), entry.getKey());
 					break;
-				case remove :
+				case remove:
 					this.map.remove(entry.getKey().pos());
 					break;
-				case reload :
+				case reload:
 					this.map.remove(entry.getKey().pos());
 					this.map.put(entry.getKey().pos(), entry.getKey());
 					break;
@@ -201,14 +203,10 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	@Override
 	public void sendEnergyTo(Direction direction, KineticPackage pkg)
 	{
-		if(this.world == null || this.cachedTile == null || !this.isUpdating || !pkg.isUsable()) return;
+		if (this.world == null || this.cachedTile == null || !this.isUpdating || !pkg.isUsable()) return;
 		BlockPos pos = this.cachedTile.pos();
-		IntegerArray array = new IntegerArray(new int[]{
-				pos.getX(),
-				pos.getY(),
-				pos.getZ(),
-				direction.ordinal()});
-		if(this.cachedSended.contains(array)) return;
+		IntegerArray array = new IntegerArray(new int[] { pos.getX(), pos.getY(), pos.getZ(), direction.ordinal() });
+		if (this.cachedSended.contains(array)) return;
 		this.cachedSend.put(array, pkg);
 	}
 	

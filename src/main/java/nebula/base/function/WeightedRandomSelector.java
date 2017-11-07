@@ -13,16 +13,17 @@ import nebula.common.util.Maths;
 
 public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Selector<T>
 {
-	int allWeight;
-	INode<IntegerEntry<T>> first;
-	INode<IntegerEntry<T>> last;
+	int						allWeight;
+	INode<IntegerEntry<T>>	first;
+	INode<IntegerEntry<T>>	last;
 	
 	public WeightedRandomSelector()
 	{
 	}
+	
 	public WeightedRandomSelector(Stack<T>...stacks)
 	{
-		for(Stack<T> stack : stacks)
+		for (Stack<T> stack : stacks)
 		{
 			add(stack.element, (int) stack.size);
 		}
@@ -35,10 +36,8 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	
 	public void add(T value, int weight)
 	{
-		if (weight < 0)
-			throw new IllegalArgumentException("Weight can not be negetive value. got: " + weight);
-		if (weight == 0)
-			return;
+		if (weight < 0) throw new IllegalArgumentException("Weight can not be negetive value. got: " + weight);
+		if (weight == 0) return;
 		if (this.first == null)
 		{
 			this.first = this.last = Node.first(new IntegerEntry(value, weight));
@@ -72,16 +71,29 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		if (this.first == null || this.allWeight == 0) return null;
 		int i = random.nextInt(this.allWeight);
 		INode<IntegerEntry<T>> node;
-		for (
-				node = this.first;
-				(i -= node.value().getValue()) >= 0 &&
-						node.hasNext();//The weight is still more than random number, or it has no node any more.
-				node = node.next());
+		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();// The
+																						// weight
+																						// is
+																						// still
+																						// more
+																						// than
+																						// random
+																						// number,
+																						// or
+																						// it
+																						// has
+																						// no
+																						// node
+																						// any
+																						// more.
+				node = node.next())
+			;
 		return node.value().getKey();
 	}
 	
 	/**
 	 * The use specific seed for generate.
+	 * 
 	 * @param random the random seed.
 	 * @return
 	 */
@@ -90,11 +102,23 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		if (this.first == null || this.allWeight == 0) return null;
 		int i = Maths.mod(random, this.allWeight);
 		INode<IntegerEntry<T>> node;
-		for (
-				node = this.first;
-				(i -= node.value().getValue()) >= 0 &&
-						node.hasNext();//The weight is still more than random number, or it has no node any more.
-				node = node.next());
+		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();// The
+																						// weight
+																						// is
+																						// still
+																						// more
+																						// than
+																						// random
+																						// number,
+																						// or
+																						// it
+																						// has
+																						// no
+																						// node
+																						// any
+																						// more.
+				node = node.next())
+			;
 		return node.value().getKey();
 	}
 	

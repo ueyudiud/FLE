@@ -22,12 +22,12 @@ import net.minecraft.util.ResourceLocation;
  */
 public class TemplateIconHandler implements IIconCollection
 {
-	final Map<String, ResourceLocation> textures;
-	Map<String, String> retextures;
+	final Map<String, ResourceLocation>	textures;
+	Map<String, String>					retextures;
 	
 	public static TemplateIconHandler fromJson(String json)
 	{
-		return new TemplateIconHandler(Maps.transformValues(new Gson().<Map<String, String>>fromJson(json, Map.class), s->new ResourceLocation(s)));
+		return new TemplateIconHandler(Maps.transformValues(new Gson().<Map<String, String>> fromJson(json, Map.class), s -> new ResourceLocation(s)));
 	}
 	
 	public TemplateIconHandler(Map<String, ResourceLocation> textures)
@@ -40,8 +40,7 @@ public class TemplateIconHandler implements IIconCollection
 	{
 		this.retextures = new HashMap<>(handler.retextures);
 		this.retextures.putAll(retexture);
-		this.textures = ImmutableMap.<String, ResourceLocation>copyOf(
-				Maps.transformEntries(handler.textures, this::get));
+		this.textures = ImmutableMap.<String, ResourceLocation> copyOf(Maps.transformEntries(handler.textures, this::get));
 	}
 	
 	private ResourceLocation get(String key, ResourceLocation location)
@@ -54,16 +53,19 @@ public class TemplateIconHandler implements IIconCollection
 		if (key.charAt(0) == '#')
 		{
 			String sub = key.substring(1);
-			if (list.contains(sub))
-				throw new IllegalStateException("Looped texture key loading.");
+			if (list.contains(sub)) throw new IllegalStateException("Looped texture key loading.");
 			list.add(sub);
 			if (this.retextures.containsKey(sub))
 			{
 				return get(this.retextures.get(sub), list);
 			}
-			else return TextureMap.LOCATION_MISSING_TEXTURE;//Get missing texture as default.
+			else
+				return TextureMap.LOCATION_MISSING_TEXTURE;// Get missing
+															// texture as
+															// default.
 		}
-		else return new ResourceLocation(key);
+		else
+			return new ResourceLocation(key);
 	}
 	
 	@Override

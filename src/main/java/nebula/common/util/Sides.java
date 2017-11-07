@@ -10,7 +10,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  */
 public final class Sides
 {
-	private Sides() {}
+	private Sides()
+	{
+	}
 	
 	public static boolean isClient()
 	{

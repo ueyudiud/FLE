@@ -14,10 +14,12 @@ public class PacketTEAsk extends PacketBlockCoord
 	{
 		
 	}
+	
 	public PacketTEAsk(World world, BlockPos pos)
 	{
 		super(world, pos);
 	}
+	
 	public PacketTEAsk(ICoord coord)
 	{
 		this(coord.world(), coord.pos());
@@ -27,10 +29,10 @@ public class PacketTEAsk extends PacketBlockCoord
 	public IPacket process(Network network)
 	{
 		World world = world();
-		if(world != null)
+		if (world != null)
 		{
 			TileEntity tile = world.getTileEntity(this.pos);
-			if(tile instanceof ISynchronizableTile)
+			if (tile instanceof ISynchronizableTile)
 			{
 				((ISynchronizableTile) tile).syncToPlayer(getPlayer());
 			}

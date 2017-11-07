@@ -25,15 +25,14 @@ public interface ITileEntityProperties<T>
 	float getPlayerRelativeBlockHardness(T tile, IBlockState state, EntityPlayer player);
 	
 	float getBlockHardness(T tile, IBlockState state);
-
+	
 	float getExplosionResistance(T tile, Entity exploder, Explosion explosion);
-
+	
 	AxisAlignedBB getBoundBox(T tile, IBlockState state);
 	
 	AxisAlignedBB getCollisionBoundingBox(T tile, IBlockState state);
-
-	void addCollisionBoxToList(T tile, IBlockState state, AxisAlignedBB entityBox,
-			List<AxisAlignedBB> collidingBoxes, Entity entity);
+	
+	void addCollisionBoxToList(T tile, IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity);
 	
 	@SideOnly(Side.CLIENT)
 	AxisAlignedBB getSelectedBoundingBox(IBlockState state);

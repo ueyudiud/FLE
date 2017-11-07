@@ -62,8 +62,7 @@ public class BlockChest extends BlockTE
 		super.postInitalizedBlocks();
 		for (TEChest1.ChestType type : TEChest1.ChestType.values())
 		{
-			LanguageManager.registerLocal(getTranslateNameForItemStack(0) + "." + type.name,
-					"Small " + Strings.upcaseFirst(type.name) + " Chest");
+			LanguageManager.registerLocal(getTranslateNameForItemStack(0) + "." + type.name, "Small " + Strings.upcaseFirst(type.name) + " Chest");
 		}
 		LanguageManager.registerLocal("info.chest.content.title", "Content: ");
 		LanguageManager.registerLocal("info.chest.content.extra", WHITE + "...");
@@ -75,7 +74,7 @@ public class BlockChest extends BlockTE
 	{
 		switch (stack.getItemDamage())
 		{
-		case 0 :
+		case 0:
 		{
 			TEChest1.ChestType type = TEChest1.getChestType(stack);
 			return super.getTranslateNameForItemStack(stack.getItemDamage()) + "." + type.name;
@@ -91,15 +90,12 @@ public class BlockChest extends BlockTE
 	{
 		registerBuiltInModelBlock(this);
 		registerTESR(TESRChest1.class);
-		ModelLoader.registerItemVariants(this.item,
-				A.transform(TEChest1.ChestType.values(), ResourceLocation.class,
-						t->new ResourceLocation(FLE.MODID, "chest/small_" + t.name)));
-		ModelLoader.setCustomMeshDefinition(this.item, stack-> {
+		ModelLoader.registerItemVariants(this.item, A.transform(TEChest1.ChestType.values(), ResourceLocation.class, t -> new ResourceLocation(FLE.MODID, "chest/small_" + t.name)));
+		ModelLoader.setCustomMeshDefinition(this.item, stack -> {
 			switch (stack.getItemDamage())
 			{
-			case 0 :
-				return new ModelResourceLocation(FLE.MODID + ":chest/small_" +
-						TEChest1.getChestType(stack).name, "inventory");
+			case 0:
+				return new ModelResourceLocation(FLE.MODID + ":chest/small_" + TEChest1.getChestType(stack).name, "inventory");
 			default:
 				return Client.MODEL_MISSING;
 			}
@@ -111,7 +107,7 @@ public class BlockChest extends BlockTE
 	{
 		switch (this.property_TE.getMetaFromState(state))
 		{
-		case 0 :
+		case 0:
 			return Materials.WOOD;
 		default:
 			return super.getMaterial(state);
@@ -174,8 +170,7 @@ public class BlockChest extends BlockTE
 	}
 	
 	@Override
-	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
-			boolean advanced)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
 		NBTTagCompound compound = ItemStacks.getSubOrSetupNBT(stack, "chest", false);
@@ -202,9 +197,8 @@ public class BlockChest extends BlockTE
 	{
 		switch (this.property_TE.getMetaFromState(state))
 		{
-		case 0 :
-			Client.addBlockHitEffect(world, world.rand, state, target.sideHit, target.getBlockPos(),
-					manager, ((TEChest1) world.getTileEntity(target.getBlockPos())).getChestType().icon);
+		case 0:
+			Client.addBlockHitEffect(world, world.rand, state, target.sideHit, target.getBlockPos(), manager, ((TEChest1) world.getTileEntity(target.getBlockPos())).getChestType().icon);
 			break;
 		default:
 			break;
@@ -219,7 +213,7 @@ public class BlockChest extends BlockTE
 		IBlockState state = world.getBlockState(pos);
 		switch (this.property_TE.getMetaFromState(state))
 		{
-		case 0 :
+		case 0:
 			Client.addBlockDestroyEffects(world, pos, state, manager, ((TEChest1) world.getTileEntity(pos)).getChestType().icon);
 			break;
 		default:

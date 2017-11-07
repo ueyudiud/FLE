@@ -3,6 +3,7 @@
  */
 package fle.core.items;
 
+import fle.core.items.ItemSimpleFluidContainer.FluidContainerProperty;
 import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.FluidStacks;
@@ -15,14 +16,13 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 /**
  * @author ueyudiud
  */
-public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderItem
-implements INBTCompoundReaderAndWritter<CapabilityProviderSimpleFluidContainer>, IFluidHandler
+public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderItem implements INBTCompoundReaderAndWritter<CapabilityProviderSimpleFluidContainer>, IFluidHandler
 {
-	private final ItemSimpleFluidContainer.FluidContainerProperty property;
-	private FluidStack stack;
-	private int damage;
+	private final FluidContainerProperty	property;
+	private FluidStack						stack;
+	private int								damage;
 	
-	public CapabilityProviderSimpleFluidContainer(ItemSimpleFluidContainer.FluidContainerProperty property)
+	public CapabilityProviderSimpleFluidContainer(FluidContainerProperty property)
 	{
 		this.property = property;
 	}
@@ -87,7 +87,8 @@ implements INBTCompoundReaderAndWritter<CapabilityProviderSimpleFluidContainer>,
 			}
 			return amount;
 		}
-		else if (!this.stack.isFluidEqual(resource)) return 0;
+		else if (!this.stack.isFluidEqual(resource))
+			return 0;
 		else if (this.stack.amount == this.property.capacity) return 0;
 		int result = Math.min(this.property.capacity - this.stack.amount, resource.amount);
 		if (doFill)
@@ -106,8 +107,7 @@ implements INBTCompoundReaderAndWritter<CapabilityProviderSimpleFluidContainer>,
 	public FluidStack drain(FluidStack resource, boolean doDrain)
 	{
 		if (resource == null) return null;
-		if(this.stack != null && this.stack.isFluidEqual(resource))
-			return drain(resource.amount, doDrain);
+		if (this.stack != null && this.stack.isFluidEqual(resource)) return drain(resource.amount, doDrain);
 		return null;
 	}
 	

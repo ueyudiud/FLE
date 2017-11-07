@@ -29,9 +29,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExtended
 {
-	private static final net.minecraft.world.biome.BiomeDecorator EMPTY = new net.minecraft.world.biome.BiomeDecorator();
-	public static final float minRainHumidity = 0.3F;
-	public static final float minSnowTemperature = 0.5F;
+	private static final net.minecraft.world.biome.BiomeDecorator	EMPTY				= new net.minecraft.world.biome.BiomeDecorator();
+	public static final float										minRainHumidity		= 0.3F;
+	public static final float										minSnowTemperature	= 0.5F;
 	
 	public static final BiomeBase DEBUG = new BiomeBase(-1, false, BiomePropertiesExtended.newProperties("debug"));
 	
@@ -51,28 +51,30 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	{
 		return REGISTER.get(name);
 	}
+	
 	public static BiomeBase getBiomeFromID(int id)
 	{
 		BiomeBase ret = REGISTER.get(id, DEBUG);
 		return ret;
 	}
 	
-	public final ClimaticZone zone;
-	public int biomeID;
-	protected boolean canRain;
-	protected boolean canSnow;
-	public BiomeDecorator decorator;
-	protected BiomeLayerGenerator layerGenerator;
-	public BiomeBase baseBiome;
-	public final int treePerChunkBase;
-	public final int treePerChunkDiv;
-	public final int cropPerChunkBase;
-	public final int cropPerChunkRand;
+	public final ClimaticZone		zone;
+	public int						biomeID;
+	protected boolean				canRain;
+	protected boolean				canSnow;
+	public BiomeDecorator			decorator;
+	protected BiomeLayerGenerator	layerGenerator;
+	public BiomeBase				baseBiome;
+	public final int				treePerChunkBase;
+	public final int				treePerChunkDiv;
+	public final int				cropPerChunkBase;
+	public final int				cropPerChunkRand;
 	
 	public BiomeBase(int id, BiomePropertiesExtended properties)
 	{
 		this(id, true, properties);
 	}
+	
 	public BiomeBase(int id, boolean register, BiomePropertiesExtended properties)
 	{
 		super(properties);
@@ -86,13 +88,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		this.treePerChunkDiv = properties.treeDivition;
 		this.cropPerChunkBase = properties.cropPerChunkBase;
 		this.cropPerChunkRand = properties.cropPerChunkRand;
-		if(register)
+		if (register)
 		{
 			setRegistryName(FarGen.ID, getBiomeName());
 			REGISTER.register(id, getBiomeName(), this);
 			GameRegistry.register(this);
 		}
-		if(isMutation())
+		if (isMutation())
 		{
 			this.baseBiome = (BiomeBase) REGISTRY.getObjectById(MUTATION_TO_BASE_ID_MAP.get(this));
 		}
@@ -139,7 +141,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	@Override
 	public boolean canRainingAt(World world, BlockPos pos)
 	{
-		if(!this.canRain) return false;
+		if (!this.canRain) return false;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
 		return prop.getHumidity(world, pos) >= minRainHumidity;
 	}
@@ -188,16 +190,16 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 			return new BiomePropertiesExtended(name);
 		}
 		
-		//		private float temperature = 2.0F;
-		private int treePerChunk = -999;
-		private int treeDivition = 1;
-		private int cropPerChunkBase = 0;
-		private int cropPerChunkRand = 0;
-		private ClimaticZone zone = ClimaticZone.temperate_plain;
-		private BiomeLayerGenerator layerGenerator = new BLGSurfaceStandard();
-		private BiomeDecorator decorator = new SimpleBiomeDecorator();
-		private boolean canRain = true;
-		private boolean canSnow = false;
+		// private float temperature = 2.0F;
+		private int					treePerChunk		= -999;
+		private int					treeDivition		= 1;
+		private int					cropPerChunkBase	= 0;
+		private int					cropPerChunkRand	= 0;
+		private ClimaticZone		zone				= ClimaticZone.temperate_plain;
+		private BiomeLayerGenerator	layerGenerator		= new BLGSurfaceStandard();
+		private BiomeDecorator		decorator			= new SimpleBiomeDecorator();
+		private boolean				canRain				= true;
+		private boolean				canSnow				= false;
 		
 		protected BiomePropertiesExtended(String nameIn)
 		{
@@ -219,12 +221,12 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		public BiomePropertiesExtended setClimaticZone(ClimaticZone zone)
 		{
 			this.zone = zone;
-			if(nebula.common.util.L.max(zone.rain) < minRainHumidity)
+			if (nebula.common.util.L.max(zone.rain) < minRainHumidity)
 			{
 				setRainDisabled();
 				this.canRain = false;
 			}
-			if(nebula.common.util.L.min(zone.temperature) < minSnowTemperature)
+			if (nebula.common.util.L.min(zone.temperature) < minSnowTemperature)
 			{
 				setSnowEnabled();
 				this.canSnow = true;
@@ -235,7 +237,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		@Override
 		public BiomePropertiesExtended setTemperature(float temperatureIn)
 		{
-			//			this.temperature = temperatureIn;
+			// this.temperature = temperatureIn;
 			return this;
 		}
 		

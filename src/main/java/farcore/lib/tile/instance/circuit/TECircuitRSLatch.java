@@ -9,11 +9,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitRSLatch extends TECircuitCompacted
 {
-	private static final int Actived = 24;
-	private static final Facing[] OUT = {Facing.LEFT, Facing.RIGHT};
+	private static final int		Actived	= 24;
+	private static final Facing[]	OUT		= { Facing.LEFT, Facing.RIGHT };
 	
-	private boolean lastFront;
-	private boolean lastBack;
+	private boolean	lastFront;
+	private boolean	lastBack;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -36,9 +36,9 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	{
 		int front = getRedstonePower(Facing.FRONT);
 		int back = getRedstonePower(Facing.BACK);
-		if(this.power > 7)
+		if (this.power > 7)
 		{
-			if(front > 0 && !this.lastFront)
+			if (front > 0 && !this.lastFront)
 			{
 				setRedstonePower(0);
 				disable(Actived);
@@ -46,7 +46,7 @@ public class TECircuitRSLatch extends TECircuitCompacted
 		}
 		else
 		{
-			if(back > 0 && !this.lastBack)
+			if (back > 0 && !this.lastBack)
 			{
 				setRedstonePower(15);
 				enable(Actived);
@@ -66,15 +66,13 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 :
-			side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 : side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
 	}
 	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 :
-			side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 : side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
 	}
 	
 	@Override
@@ -93,10 +91,6 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? getRedstonePower(Facing.BACK) :
-			i == 1 ? getRedstonePower(Facing.FRONT) :
-				i == 2 ? this.power :
-					i == 3 ? this.power ^ 15 :
-						0;
+		return i == 0 ? getRedstonePower(Facing.BACK) : i == 1 ? getRedstonePower(Facing.FRONT) : i == 2 ? this.power : i == 3 ? this.power ^ 15 : 0;
 	}
 }

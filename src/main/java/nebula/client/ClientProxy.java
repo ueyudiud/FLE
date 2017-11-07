@@ -67,41 +67,44 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy implements IResourceManagerReloadListener
 {
-	public static final IBlockColor BIOME_COLOR = (state, worldIn, pos, tintIndex) ->
-	{
-		boolean flag = worldIn == null || pos == null;
-		//		Biome biome = flag ? null : worldIn.getBiome(pos);
-		switch (tintIndex)
-		{
-		case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
-			BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
-		case 1 : return flag ? ColorizerFoliage.getFoliageColorBasic() :
-			BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
-		case 2 : return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
-		default: return -1;
-		}
-	};
-	public static final IItemColor ITEM_BIOME_COLOR = (stack, index) -> BIOME_COLOR.colorMultiplier(null, null, null, index);
+	public static final IBlockColor	BIOME_COLOR			= (state, worldIn, pos, tintIndex) -> {
+															boolean flag = worldIn == null || pos == null;
+															// Biome biome =
+															// flag ? null :
+															// worldIn.getBiome(pos);
+															switch (tintIndex)
+															{
+															case 0:
+																return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
+															case 1:
+																return flag ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
+															case 2:
+																return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
+															default:
+																return -1;
+															}
+														};
+	public static final IItemColor	ITEM_BIOME_COLOR	= (stack, index) -> BIOME_COLOR.colorMultiplier(null, null, null, index);
 	
-	private static Map<String, List<IRenderRegister>> registers = new HashMap<>();
-	public static Map<IBlockColor, List<Block>> blockColorMap = new HashMap<>();
-	public static Map<IItemColor, List<Item>> itemColorMap = new HashMap<>();
-	public static List<Block> buildInRender = new ArrayList<>();
+	private static Map<String, List<IRenderRegister>>	registers		= new HashMap<>();
+	public static Map<IBlockColor, List<Block>>			blockColorMap	= new HashMap<>();
+	public static Map<IItemColor, List<Item>>			itemColorMap	= new HashMap<>();
+	public static List<Block>							buildInRender	= new ArrayList<>();
 	
 	@Override
 	public void loadClient()
 	{
-		//Take this proxy into resource manager reload listener.
+		// Take this proxy into resource manager reload listener.
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		
-		//Register color map loader.
+		// Register color map loader.
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
-		//The base model loader.
+		// The base model loader.
 		ModelLoaderRegistry.registerLoader(NebulaModelLoader.INSTANCE);
-		//The custom block model loaders.
+		// The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
 		ModelLoaderRegistry.registerLoader(OrderModelLoader.INSTANCE);
-		//Register entity rendering handlers.
+		// Register entity rendering handlers.
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
 		
@@ -140,7 +143,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		{
 			Log.warn("Register too late, place register before initalization.");
 		}
-		else if(register != null)
+		else if (register != null)
 		{
 			L.put(registers, Game.getActiveModID(), register);
 		}
@@ -149,7 +152,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	@Override
 	public void registerRender(Object object)
 	{
-		if(object instanceof IRenderRegister)
+		if (object instanceof IRenderRegister)
 		{
 			addRenderRegisterListener((IRenderRegister) object);
 		}
@@ -168,7 +171,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	}
 	
 	@Override
-	public void registerBiomeColorMultiplier(Block... block)
+	public void registerBiomeColorMultiplier(Block...block)
 	{
 		registerColorMultiplier(BIOME_COLOR, block);
 		registerColorMultiplier(ITEM_BIOME_COLOR, block);
@@ -219,20 +222,18 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
-		//Checking is reached in preinitalization state.
+		// Checking is reached in preinitalization state.
 		if (Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION))
 		{
 			BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
 			ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-			for(Entry<IBlockColor, List<Block>> entry : blockColorMap.entrySet())
+			for (Entry<IBlockColor, List<Block>> entry : blockColorMap.entrySet())
 			{
-				blockColors.registerBlockColorHandler(
-						entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Block.class));
+				blockColors.registerBlockColorHandler(entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Block.class));
 			}
-			for(Entry<IItemColor, List<Item>> entry : itemColorMap.entrySet())
+			for (Entry<IItemColor, List<Item>> entry : itemColorMap.entrySet())
 			{
-				itemColors.registerItemColorHandler(
-						entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Item.class));
+				itemColors.registerItemColorHandler(entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Item.class));
 			}
 		}
 		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
@@ -248,7 +249,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public static void registerRenderObject()
 	{
 		List<IRenderRegister> reg = registers.remove(Game.getActiveModID());
-		if(reg != null)
+		if (reg != null)
 		{
 			reg.forEach(IRenderRegister::registerRender);
 		}
@@ -260,14 +261,13 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		if (ID >= 0)
 		{
 			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-			if(tile instanceof IGuiTile)
-				return ((IGuiTile) tile).openGui(ID, player);
+			if (tile instanceof IGuiTile) return ((IGuiTile) tile).openGui(ID, player);
 		}
 		else
 		{
 			switch (ID)
 			{
-			case -1 :
+			case -1:
 				if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof IItemBehaviorsAndProperties.IIP_Containerable)
 				{
 					return ((IIP_Containerable) player.getHeldItemMainhand().getItem()).openGui(world, new BlockPos(x, y, z), player, player.getHeldItemMainhand());

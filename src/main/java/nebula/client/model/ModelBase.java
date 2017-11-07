@@ -50,13 +50,13 @@ public interface ModelBase extends IModel
 		do
 		{
 			key1 = map.get(key1);
-			if(currents.contains(key1))
+			if (currents.contains(key1))
 			{
 				Log.warn("The %s.%s texture path is circulated.", toString(), key);
 				return def;
 			}
 			currents.add(key1);
-			if(key1 == null) return def;
+			if (key1 == null) return def;
 		}
 		while (key1.charAt(0) == '#');
 		return new ResourceLocation(key1);
@@ -69,13 +69,14 @@ public interface ModelBase extends IModel
 	
 	class RetextureWrapperModel implements IRetexturableModel
 	{
-		private IModel parent;
-		private ImmutableMap<String, String> textures;
+		private IModel							parent;
+		private ImmutableMap<String, String>	textures;
 		
 		private RetextureWrapperModel(IModel model)
 		{
 			this(model, ImmutableMap.of());
 		}
+		
 		private RetextureWrapperModel(IModel model, ImmutableMap<String, String> textures)
 		{
 			parent = model;
@@ -95,8 +96,7 @@ public interface ModelBase extends IModel
 		}
 		
 		@Override
-		public IBakedModel bake(IModelState state, VertexFormat format,
-				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+		public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{
 			return parent.bake(state, format, bakedTextureGetter);
 		}
@@ -112,11 +112,10 @@ public interface ModelBase extends IModel
 		{
 			Map<String, String> map = new HashMap<>(this.textures);
 			map.putAll(textures);
-			if(!(parent instanceof IRetexturableModel))
-				return new RetextureWrapperModel(parent, ImmutableMap.copyOf(map));
+			if (!(parent instanceof IRetexturableModel)) return new RetextureWrapperModel(parent, ImmutableMap.copyOf(map));
 			ImmutableMap<String, String> map1 = ImmutableMap.copyOf(map);
 			IModel model = ((IRetexturableModel) parent).retexture(map1);
-			if(model instanceof RetextureWrapperModel)
+			if (model instanceof RetextureWrapperModel)
 			{
 				model = ((RetextureWrapperModel) model).parent;
 			}

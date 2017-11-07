@@ -25,7 +25,7 @@ public class TreeCeiba extends Tree
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null)
+		if (info != null)
 		{
 			this.generator1.setHeight(36 + info.height * 2, 4 + info.height);
 		}

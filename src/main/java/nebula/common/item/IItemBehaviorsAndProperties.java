@@ -27,6 +27,7 @@ public interface IItemBehaviorsAndProperties
 	
 	/**
 	 * After a thinking, I think we need't this interface to get real dig speed.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */

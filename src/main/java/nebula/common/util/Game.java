@@ -22,19 +22,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public final class Game
 {
-	private Game() {}
+	private Game()
+	{
+	}
 	
 	/**
-	 * Get active modid, or get <tt>minecraft</tt> as modid if no
-	 * active mod container found.
+	 * Get active modid, or get <tt>minecraft</tt> as modid if no active mod
+	 * container found.
+	 * 
 	 * @return the id of active mod.
 	 */
 	public static String getActiveModID()
 	{
 		try
 		{
-			if (Loader.instance().activeModContainer() == null)
-				return "minecraft";
+			if (Loader.instance().activeModContainer() == null) return "minecraft";
 			return Loader.instance().activeModContainer().getModId();
 		}
 		catch (Exception exception)
@@ -45,6 +47,7 @@ public final class Game
 	
 	/**
 	 * Query if we know of a mod named modname.
+	 * 
 	 * @param name the modid.
 	 * @return return <code>true</code> if mod are loaded.
 	 */
@@ -54,8 +57,9 @@ public final class Game
 	}
 	
 	/**
-	 * Get Minecraft runtime file, the default file position is
-	 * ./.minecraft/ in client side, and ./ in server side.
+	 * Get Minecraft runtime file, the default file position is ./.minecraft/ in
+	 * client side, and ./ in server side.
+	 * 
 	 * @return the file.
 	 */
 	public static File getMCFile()
@@ -65,6 +69,7 @@ public final class Game
 	
 	/**
 	 * Register block with name.
+	 * 
 	 * @param block the block.
 	 * @param name the block name.
 	 */
@@ -74,9 +79,10 @@ public final class Game
 	}
 	
 	/**
-	 * Register block with modid.
-	 * (The Forge given big warning if the modid and active mod id can not matched,
-	 * I don't think this warning should be given.)
+	 * Register block with modid. (The Forge given big warning if the modid and
+	 * active mod id can not matched, I don't think this warning should be
+	 * given.)
+	 * 
 	 * @param block
 	 * @param modid
 	 * @param name
@@ -88,6 +94,7 @@ public final class Game
 	
 	/**
 	 * Register block with modid and ItemBlock type.
+	 * 
 	 * @param block the block.
 	 * @param modid the registry modid.
 	 * @param name the registry name.
@@ -113,6 +120,7 @@ public final class Game
 	
 	/**
 	 * Register normal block model.
+	 * 
 	 * @param block
 	 * @param meta
 	 * @param modid
@@ -126,6 +134,7 @@ public final class Game
 	
 	/**
 	 * Register normal block model.
+	 * 
 	 * @param item The item block.
 	 * @param meta
 	 * @param modid
@@ -138,9 +147,10 @@ public final class Game
 	}
 	
 	/**
-	 * Because this method is often use in item initialization, to
-	 * check the side is client or server is too inconvenient, so
-	 * this method used handler gateway.
+	 * Because this method is often use in item initialization, to check the
+	 * side is client or server is too inconvenient, so this method used handler
+	 * gateway.
+	 * 
 	 * @param item
 	 * @param meta
 	 * @param modid
@@ -162,8 +172,9 @@ public final class Game
 	}
 	
 	/**
-	 * The client and server both can use this method to
-	 * register object implements {@link nebula.client.util.IRenderRegister}.
+	 * The client and server both can use this method to register object
+	 * implements {@link nebula.client.util.IRenderRegister}.
+	 * 
 	 * @param arg the object may implements IRenderRegister.
 	 */
 	public static void registerClientRegister(Object arg)

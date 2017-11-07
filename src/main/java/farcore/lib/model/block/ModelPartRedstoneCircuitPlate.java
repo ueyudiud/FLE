@@ -41,20 +41,20 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 {
-	public static final JsonDeserializer<ModelPartRedstoneCircuitPlate> DESERIALIZER = (json, typeOfT, context)->
-	new ModelPartRedstoneCircuitPlate();
+	public static final JsonDeserializer<ModelPartRedstoneCircuitPlate> DESERIALIZER = (json, typeOfT, context) -> new ModelPartRedstoneCircuitPlate();
 	
-	private ResourceLocation layer;
-	private String texture;//Default for all rocks.
+	private ResourceLocation	layer;
+	private String				texture;// Default for all rocks.
 	
 	private float plateHeight = .125F;
 	
 	public ModelPartRedstoneCircuitPlate()
 	{
-		//Clean cache.
+		// Clean cache.
 		textures = null;
 		bakedQuads.clear();
 	}
+	
 	ModelPartRedstoneCircuitPlate(ResourceLocation layer)
 	{
 		this.layer = layer;
@@ -62,7 +62,9 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 	
 	/**
 	 * For game was always crashing when I debugging.<br>
-	 * It might takes too much memory to build quad, so I tried cached those quads.
+	 * It might takes too much memory to build quad, so I tried cached those
+	 * quads.
+	 * 
 	 * @author ueyudiud
 	 */
 	private static final Map<ResourceLocation, List<BakedQuad>[]> bakedQuads = new HashMap<>();
@@ -85,17 +87,16 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 	{
 		if (textures == null)
 		{
-			textures = Maps.toMap(Mat.filt(SubTags.ROCK), material->MaterialTextureLoader.getIcon(material, MC.stone));
+			textures = Maps.toMap(Mat.filt(SubTags.ROCK), material -> MaterialTextureLoader.getIcon(material, MC.stone));
 		}
 		return textures;
 	}
 	
 	@Override
-	public BakedModelPartRedstoneCircuitPlate bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public BakedModelPartRedstoneCircuitPlate bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		TextureAtlasSprite iconDef = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-		List<BakedQuad>[] quads = bakedQuads.computeIfAbsent(this.layer, l-> {
+		List<BakedQuad>[] quads = bakedQuads.computeIfAbsent(this.layer, l -> {
 			TextureAtlasSprite layer = bakedTextureGetter.apply(l);
 			@SuppressWarnings("unchecked")
 			List<BakedQuad>[] result = new List[4];
@@ -128,15 +129,15 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 		int v = texture.getIconHeight();
 		byte[] height = new byte[u * v];
 		ImmutableList.Builder<BakedQuad> builder2 = ImmutableList.builder();
-		BakedQuadBuilder builder = new BakedQuadBuilder(format,
-				new ModelModifierByCoordTransformer(transformation, null), builder2::add);
+		BakedQuadBuilder builder = new BakedQuadBuilder(format, new ModelModifierByCoordTransformer(transformation, null), builder2::add);
 		
-		builder.switchTextureScale();//Switch to 1 pixel scale.
+		builder.switchTextureScale();// Switch to 1 pixel scale.
 		
-		int[] pixels = layer.getFrameTextureData(0)[0];//Only provide first frame for height.
+		int[] pixels = layer.getFrameTextureData(0)[0];// Only provide first
+														// frame for height.
 		for (int v1 = 0; v1 < v; v1++)
 		{
-			for(int u1 = 0; u1 < u; u1++)
+			for (int u1 = 0; u1 < u; u1++)
 			{
 				int idx = (u1 + v1 * u);
 				height[idx] = (byte) (pixels[idx] >> 24);
@@ -163,7 +164,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * this.plateHeight / 256F;
 						builder.startQuad(u1 == 0 ? EnumFacing.WEST : null, -1, texture);
-						builder.normal(-1, 0, 0);//WEST
+						builder.normal(-1, 0, 0);// WEST
 						builder.pos(minX, minY, minZ, minZ, minY);
 						builder.pos(minX, minY, maxZ, maxZ, minY);
 						builder.pos(minX, maxY, maxZ, maxZ, maxY);
@@ -173,8 +174,8 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 					if (u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * this.plateHeight / 256F;
-						builder.startQuad(u1 == u-1 ? EnumFacing.EAST : null, -1, texture);
-						builder.normal(1, 0, 0);//EAST
+						builder.startQuad(u1 == u - 1 ? EnumFacing.EAST : null, -1, texture);
+						builder.normal(1, 0, 0);// EAST
 						builder.pos(maxX, minY, maxZ, minZ, minY);
 						builder.pos(maxX, minY, minZ, maxZ, minY);
 						builder.pos(maxX, maxY, minZ, maxZ, maxY);
@@ -185,7 +186,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * this.plateHeight / 256F;
 						builder.startQuad(v1 == 0 ? EnumFacing.NORTH : null, -1, texture);
-						builder.normal(0, 0, -1);//NORTH
+						builder.normal(0, 0, -1);// NORTH
 						builder.pos(minX, minY, minZ, minX, minY);
 						builder.pos(minX, maxY, minZ, minX, maxY);
 						builder.pos(maxX, maxY, minZ, maxX, maxY);
@@ -196,7 +197,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * this.plateHeight / 256F;
 						builder.startQuad(v1 == v - 1 ? EnumFacing.SOUTH : null, -1, texture);
-						builder.normal(0, 0, 1);//SOUTH
+						builder.normal(0, 0, 1);// SOUTH
 						builder.pos(maxX, minY, maxZ, minX, minY);
 						builder.pos(maxX, maxY, maxZ, minX, maxY);
 						builder.pos(minX, maxY, maxZ, maxX, maxY);
@@ -204,7 +205,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 						builder.endQuad();
 					}
 					builder.startQuad(null, -1, texture);
-					builder.normal(0, 1, 0);//UP
+					builder.normal(0, 1, 0);// UP
 					builder.pos(minX, maxY, maxZ, minX, maxZ);
 					builder.pos(maxX, maxY, maxZ, maxX, maxZ);
 					builder.pos(maxX, maxY, minZ, maxX, minZ);
@@ -213,7 +214,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 				}
 			}
 			builder.startQuad(null, -1, texture);
-			builder.normal(0, -1, 0);//DOWN
+			builder.normal(0, -1, 0);// DOWN
 			builder.pos(0, 0, 0, 0, 1);
 			builder.pos(1, 0, 0, 1, 1);
 			builder.pos(1, 0, 1, 1, 0);
@@ -244,7 +245,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 			String[] split = key.split(",");
 			TextureAtlasSprite icon = textures.get(Mat.material(split[1]));
 			List<BakedQuad> list = this.quads[EnumFacing.valueOf(split[0]).getHorizontalIndex()];
-			return icon == null ? list : Lists.transform(list, quad->new BakedQuadRetextured(quad, icon));
+			return icon == null ? list : Lists.transform(list, quad -> new BakedQuadRetextured(quad, icon));
 		}
 	}
 	

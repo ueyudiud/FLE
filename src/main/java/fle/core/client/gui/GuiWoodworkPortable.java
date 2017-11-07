@@ -39,9 +39,9 @@ public class GuiWoodworkPortable extends GuiContainerBase
 	public void initGui()
 	{
 		super.initGui();
-		addButton(new GuiIconButton(0, this.guiLeft + 71 , this.guiTop + 36, ButtonSize.Tiny, LOCATION, 176, 0, this.itemRender));
+		addButton(new GuiIconButton(0, this.guiLeft + 71, this.guiTop + 36, ButtonSize.Tiny, LOCATION, 176, 0, this.itemRender));
 		addButton(new GuiIconButton(1, this.guiLeft + 105, this.guiTop + 36, ButtonSize.Tiny, LOCATION, 176, 5, this.itemRender));
-		addButton(new GuiIconButton(2, this.guiLeft + 71 , this.guiTop + 45, ButtonSize.Tiny, LOCATION, 181, 0, this.itemRender));
+		addButton(new GuiIconButton(2, this.guiLeft + 71, this.guiTop + 45, ButtonSize.Tiny, LOCATION, 181, 0, this.itemRender));
 		addButton(new GuiIconButton(3, this.guiLeft + 105, this.guiTop + 45, ButtonSize.Tiny, LOCATION, 181, 5, this.itemRender));
 	}
 	

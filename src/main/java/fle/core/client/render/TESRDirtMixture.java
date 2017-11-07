@@ -26,7 +26,7 @@ public class TESRDirtMixture extends TESRBase<TEDirtMixture>
 	private TextureAtlasSprite dirt;
 	
 	{
-		NebulaTextureHandler.addIconLoader(loader-> {
+		NebulaTextureHandler.addIconLoader(loader -> {
 			this.dirt = loader.registerIcon(FLE.MODID, "blocks/iconset/dirtmixture_dirt");
 		});
 	}

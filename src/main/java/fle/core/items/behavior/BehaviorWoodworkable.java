@@ -30,8 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BehaviorWoodworkable extends BehaviorBase implements IIP_Containerable
 {
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if (hand == EnumHand.MAIN_HAND && facing == EnumFacing.UP)
 		{

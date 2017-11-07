@@ -17,13 +17,14 @@ public class Log
 	
 	/**
 	 * Catching an <tt>Throwable</tt>.
+	 * 
 	 * @param throwable the catching throwable object.
 	 * @throws RuntimeException if in debugging mode.
 	 * @see nebula.Nebula#debug
 	 */
 	public static void catching(Throwable throwable)
 	{
-		if(Nebula.debug)
+		if (Nebula.debug)
 		{
 			throw new RuntimeException(throwable);
 		}
@@ -32,26 +33,32 @@ public class Log
 			logger().catching(throwable);
 		}
 	}
+	
 	public static void error(String message, Object...formats)
 	{
 		logger().error(message, formats);
 	}
+	
 	public static void warn(String message, Object...formats)
 	{
 		logger().warn(message, formats);
 	}
+	
 	public static void info(String message, Object...formats)
 	{
 		logger().info(message, formats);
 	}
+	
 	public static void debug(String message, Object...formats)
 	{
 		logger().debug(message, formats);
 	}
+	
 	public static void trace(String message, Object...formats)
 	{
 		logger().trace(message, formats);
 	}
+	
 	public static void reset()
 	{
 		synchronized (cache)
@@ -59,6 +66,7 @@ public class Log
 			cache.clear();
 		}
 	}
+	
 	public static void cache(Object object)
 	{
 		synchronized (cache)
@@ -66,23 +74,25 @@ public class Log
 			cache.add(object);
 		}
 	}
+	
 	public static void logCachedInformations(Function<Object, String> function, String...informations)
 	{
 		logCachedInformations(Level.INFO, function, informations);
 	}
+	
 	public static void logCachedInformations(Level level, Function<Object, String> function, String...informations)
 	{
 		synchronized (cache)
 		{
-			if(!cache.isEmpty())
+			if (!cache.isEmpty())
 			{
-				for(String value : informations)
+				for (String value : informations)
 				{
 					info(value);
 				}
-				for(Object object : cache)
+				for (Object object : cache)
 				{
-					if(object instanceof Throwable)
+					if (object instanceof Throwable)
 					{
 						logger().catching((Throwable) object);
 					}
@@ -95,17 +105,18 @@ public class Log
 		}
 		reset();
 	}
+	
 	public static void logCachedExceptions(String...informations)
 	{
-		for(String value : informations)
+		for (String value : informations)
 		{
 			error("# " + value);
 		}
 		synchronized (cache)
 		{
-			for(Object object : cache)
+			for (Object object : cache)
 			{
-				if(object instanceof Throwable)
+				if (object instanceof Throwable)
 				{
 					logger().catching((Throwable) object);
 				}
@@ -117,19 +128,20 @@ public class Log
 		}
 		reset();
 	}
+	
 	public static void logCachedInformations(PrintStream stream, Level level, Function<Object, String> function, String...informations)
 	{
 		synchronized (cache)
 		{
-			if(!cache.isEmpty())
+			if (!cache.isEmpty())
 			{
-				for(String value : informations)
+				for (String value : informations)
 				{
 					stream.println(value);
 				}
-				for(Object object : cache)
+				for (Object object : cache)
 				{
-					if(object instanceof Throwable)
+					if (object instanceof Throwable)
 					{
 						((Throwable) object).printStackTrace(stream);
 					}
@@ -142,9 +154,10 @@ public class Log
 		}
 		reset();
 	}
+	
 	public static void logCachedExceptions(PrintStream stream, String...informations)
 	{
-		for(String value : informations)
+		for (String value : informations)
 		{
 			stream.println("# " + value);
 		}

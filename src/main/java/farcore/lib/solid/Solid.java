@@ -8,9 +8,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Solid extends SolidAbstract
 {
-	protected ResourceLocation location;
+	protected ResourceLocation		location;
 	@SideOnly(Side.CLIENT)
-	protected TextureAtlasSprite icon;
+	protected TextureAtlasSprite	icon;
 	
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -68,8 +68,7 @@ public abstract class BlockLog extends BlockBase implements IExtendedDataBlock
 	}
 	
 	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		EnumAxis axis = EnumAxis.fromFacingAxis(facing.getAxis());
 		return getDefaultState().withProperty(net.minecraft.block.BlockLog.LOG_AXIS, axis);

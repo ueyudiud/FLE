@@ -119,10 +119,12 @@ public class GuiResearchGraph extends GuiContainerBase
 							return;
 						}
 					}
-					else this.instance.clickingNode = -1;
+					else
+						this.instance.clickingNode = -1;
 				}
 			}
 		}
-		else this.instance.clickingNode = -1;
+		else
+			this.instance.clickingNode = -1;
 	}
 }

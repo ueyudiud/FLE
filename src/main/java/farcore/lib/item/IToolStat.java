@@ -37,6 +37,7 @@ public interface IToolStat
 	
 	/**
 	 * Get causes damage per digging block.
+	 * 
 	 * @param stack
 	 * @param user
 	 * @param world
@@ -48,6 +49,7 @@ public interface IToolStat
 	
 	/**
 	 * Get causes damage per attack entity.
+	 * 
 	 * @param stack
 	 * @param user
 	 * @param target
@@ -57,6 +59,7 @@ public interface IToolStat
 	
 	/**
 	 * For some special entity attack affect.
+	 * 
 	 * @param stack
 	 * @param entity
 	 * @return
@@ -81,6 +84,7 @@ public interface IToolStat
 	
 	/**
 	 * Get damage source.
+	 * 
 	 * @param user
 	 * @param target
 	 * @return
@@ -89,19 +93,21 @@ public interface IToolStat
 	
 	/**
 	 * Get this tool can block as sword.
+	 * 
 	 * @return
 	 */
 	boolean canBlock();
 	
 	/**
 	 * Is tool shootable.
+	 * 
 	 * @return
 	 */
 	boolean isShootable();
 	
 	/**
-	 * Return a float array with length of two if this weapon has
-	 * AOE.
+	 * Return a float array with length of two if this weapon has AOE.
+	 * 
 	 * @param stack
 	 * @param material
 	 * @return
@@ -114,6 +120,7 @@ public interface IToolStat
 	
 	/**
 	 * Is tool is a weapon.
+	 * 
 	 * @return
 	 */
 	boolean isWeapon();

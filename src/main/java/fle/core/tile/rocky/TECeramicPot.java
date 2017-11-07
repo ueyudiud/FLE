@@ -40,8 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>>
-implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
+public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
 	
@@ -108,7 +107,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	protected int getPower()
 	{
-		if (this.cache.<Integer>get(0) <= ThermalNet.getTemperature(this))
+		if (this.cache.<Integer> get(0) <= ThermalNet.getTemperature(this))
 		{
 			return 1;
 		}
@@ -120,16 +119,19 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	{
 		switch (name)
 		{
-		case TAG_CERAMICPOT_BASE_INPUT1 : return (T) this.stacks[0];
-		case TAG_CERAMICPOT_BASE_INPUT2 : return (T) this.tank.getFluid();
-		case TAG_CERAMICPOT_BASE_INPUT3 : return (T) this.stacks[5];
-		default : return null;
+		case TAG_CERAMICPOT_BASE_INPUT1:
+			return (T) this.stacks[0];
+		case TAG_CERAMICPOT_BASE_INPUT2:
+			return (T) this.tank.getFluid();
+		case TAG_CERAMICPOT_BASE_INPUT3:
+			return (T) this.stacks[5];
+		default:
+			return null;
 		}
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tileGUICheck(hand))
 		{
@@ -162,16 +164,15 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 		decrStackSize(0, this.cache.get1(0));
 		this.tank.drain(this.cache.get1(1), true);
 		this.recipeMaxTick = this.cache.get(1);
-		this.stacks[5] = this.cache.<SingleInputMatch>get1(2).getRemain(this.stacks[5]);
+		this.stacks[5] = this.cache.<SingleInputMatch> get1(2).getRemain(this.stacks[5]);
 	}
 	
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (insertStack(1, this.cache.get(2), false) &&
-				insertStack(5, this.cache.get(3), true))
+		if (insertStack(1, this.cache.get(2), false) && insertStack(5, this.cache.get(3), true))
 		{
-			return insertStack(1, this.cache.get(2), true);//always true.
+			return insertStack(1, this.cache.get(2), true);// always true.
 		}
 		return false;
 	}

@@ -48,10 +48,10 @@ public class BlockOre extends BlockSingleTE
 {
 	public static class OreStateWrapper extends BlockStateWrapper
 	{
-		public final Mat ore;
-		public final EnumOreAmount amount;
-		public final Mat rock;
-		public final EnumRockType type;
+		public final Mat			ore;
+		public final EnumOreAmount	amount;
+		public final Mat			rock;
+		public final EnumRockType	type;
 		
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
@@ -61,6 +61,7 @@ public class BlockOre extends BlockSingleTE
 			this.rock = ore.rock;
 			this.type = ore.rockType;
 		}
+		
 		public OreStateWrapper(IBlockState state, Mat ore, EnumOreAmount amount, Mat rock, EnumRockType rockType)
 		{
 			super(state);
@@ -99,15 +100,15 @@ public class BlockOre extends BlockSingleTE
 	{
 		super.registerRender();
 		ResourceLocation location = getRegistryName();
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).ore.name : null);
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).rock.name : null);
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).type.getName() : null);
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).amount.name() : null);
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), stack->ItemOre.getOre(stack).name);
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), stack->ItemOre.getRockMaterial(ItemStacks.getOrSetupNBT(stack, false)).name);
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), stack->ItemOre.getRockType(ItemStacks.getOrSetupNBT(stack, false)).getName());
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), stack->ItemOre.getAmount(ItemStacks.getOrSetupNBT(stack, false)).name());
-		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/ore"), ()-> {
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), state -> state instanceof OreStateWrapper ? ((OreStateWrapper) state).ore.name : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), state -> state instanceof OreStateWrapper ? ((OreStateWrapper) state).rock.name : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), state -> state instanceof OreStateWrapper ? ((OreStateWrapper) state).type.getName() : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), state -> state instanceof OreStateWrapper ? ((OreStateWrapper) state).amount.name() : null);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), stack -> ItemOre.getOre(stack).name);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), stack -> ItemOre.getRockMaterial(ItemStacks.getOrSetupNBT(stack, false)).name);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), stack -> ItemOre.getRockType(ItemStacks.getOrSetupNBT(stack, false)).getName());
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), stack -> ItemOre.getAmount(ItemStacks.getOrSetupNBT(stack, false)).name());
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/ore"), () -> {
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 			for (Mat material : Mat.filt(SubTags.ORE))
 			{
@@ -118,7 +119,7 @@ public class BlockOre extends BlockSingleTE
 			}
 			return builder.build();
 		});
-		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/rock"), ()-> {
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/rock"), () -> {
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 			for (Mat material : Mat.filt(SubTags.ROCK))
 			{
@@ -130,7 +131,7 @@ public class BlockOre extends BlockSingleTE
 			return builder.build();
 		});
 		ModelResourceLocation location2 = new ModelResourceLocation(location, "inventory");
-		ModelLoader.setCustomMeshDefinition(this.item, stack-> location2);
+		ModelLoader.setCustomMeshDefinition(this.item, stack -> location2);
 		NebulaModelLoader.registerModel(location, new ResourceLocation(FarCore.ID, "models/block1/ore.json"), NebulaModelDeserializer.BLOCK);
 	}
 	
@@ -157,15 +158,14 @@ public class BlockOre extends BlockSingleTE
 	private void registerLocalized()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
-		for(Mat ore : Mat.filt(SubTags.ORE))
+		for (Mat ore : Mat.filt(SubTags.ORE))
 		{
-			for(EnumOreAmount amount : EnumOreAmount.values())
+			for (EnumOreAmount amount : EnumOreAmount.values())
 			{
 				NBTTagCompound nbt = ItemOre.setRock(ItemOre.setAmount(new NBTTagCompound(), amount), M.stone, EnumRockType.resource);
 				ItemStack stack = new ItemStack(this, 1, ore.id);
 				stack.setTagCompound(nbt);
-				LanguageManager.registerLocal(getTranslateNameForItemStack(stack),
-						String.format("%s %s Ore", nebula.common.util.Strings.upcaseFirst(amount.name()), ore.localName));
+				LanguageManager.registerLocal(getTranslateNameForItemStack(stack), String.format("%s %s Ore", nebula.common.util.Strings.upcaseFirst(amount.name()), ore.localName));
 			}
 		}
 	}
@@ -179,11 +179,10 @@ public class BlockOre extends BlockSingleTE
 	@Override
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
-		if(stack.hasTagCompound())
+		if (stack.hasTagCompound())
 		{
 			NBTTagCompound nbt = stack.getTagCompound();
-			return String.format("%s@%s.%s",
-					getUnlocalizedName(), Mat.material(stack.getItemDamage()), ItemOre.getAmount(nbt).name());
+			return String.format("%s@%s.%s", getUnlocalizedName(), Mat.material(stack.getItemDamage()), ItemOre.getAmount(nbt).name());
 		}
 		else
 			return getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE);
@@ -199,8 +198,7 @@ public class BlockOre extends BlockSingleTE
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TEOre)
-			return new OreStateWrapper(state, (TEOre) tile);
+		if (tile instanceof TEOre) return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}
 	
@@ -208,12 +206,16 @@ public class BlockOre extends BlockSingleTE
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		//		for(EnumOreAmount amount : EnumOreAmount.values())
+		// for(EnumOreAmount amount : EnumOreAmount.values())
 		{
-			EnumOreAmount amount = EnumOreAmount.normal;//Only provide normal amount ore in creative tab or it is too many ore to display.
-			for(Mat ore : Mat.filt(SubTags.ORE))
+			EnumOreAmount amount = EnumOreAmount.normal;// Only provide normal
+														// amount ore in
+														// creative tab or it is
+														// too many ore to
+														// display.
+			for (Mat ore : Mat.filt(SubTags.ORE))
 			{
-				//				for(Mat rock : Mat.filt(SubTag.ROCK))
+				// for(Mat rock : Mat.filt(SubTag.ROCK))
 				{
 					list.add(((ItemOre) item).createItemStack(1, ore, amount, M.stone, EnumRockType.resource));
 				}
@@ -235,8 +237,7 @@ public class BlockOre extends BlockSingleTE
 	}
 	
 	@Override
-	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
-			boolean advanced)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
 		tooltip.addNotNull("info.material.chemical.formula." + Mat.material(stack.getItemDamage()).name);

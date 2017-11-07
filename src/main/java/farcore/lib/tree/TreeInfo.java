@@ -10,11 +10,11 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class TreeInfo
 {
-	public GeneticMaterial gm;
-	public int height;
-	public int growth;
-	public int resistance;
-	public int vitality;
+	public GeneticMaterial	gm;
+	public int				height;
+	public int				growth;
+	public int				resistance;
+	public int				vitality;
 	
 	public IntegerMap<String> map = new IntegerMap();
 	
@@ -26,7 +26,7 @@ public class TreeInfo
 		this.resistance = nbt.getInteger("res");
 		this.vitality = nbt.getInteger("vit");
 		NBTTagList list = nbt.getTagList("prop", NBT.TAG_COMPOUND);
-		for(int i = 0; i < list.tagCount(); ++i)
+		for (int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound compound = list.getCompoundTagAt(i);
 			this.map.put(compound.getString("tag"), compound.getInteger("value"));
@@ -41,7 +41,7 @@ public class TreeInfo
 		nbt.setInteger("res", this.resistance);
 		nbt.setInteger("vit", this.vitality);
 		NBTTagList list = new NBTTagList();
-		for(IntegerEntry<String> prop : this.map)
+		for (IntegerEntry<String> prop : this.map)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
 			compound.setString("tag", prop.getKey());

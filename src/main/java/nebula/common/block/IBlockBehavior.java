@@ -65,8 +65,7 @@ public interface IBlockBehavior<B>
 		return getBoundingBox(block, state, world, pos);
 	}
 	
-	default List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune,
-			boolean silkTouch)
+	default List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return Arrays.asList(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
 	}
@@ -220,8 +219,7 @@ public interface IBlockBehavior<B>
 		return true;
 	}
 	
-	default boolean onBlockActivated(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	default boolean onBlockActivated(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return false;
 	}
@@ -241,8 +239,7 @@ public interface IBlockBehavior<B>
 		
 	}
 	
-	default boolean onBlockHarvest(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			boolean silkHarvest)
+	default boolean onBlockHarvest(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean silkHarvest)
 	{
 		return false;
 	}
@@ -252,8 +249,7 @@ public interface IBlockBehavior<B>
 		
 	}
 	
-	default void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer, EnumFacing facing,
-			ItemStack stack)
+	default void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		
 	}
@@ -333,8 +329,7 @@ public interface IBlockBehavior<B>
 		return false;
 	}
 	
-	default boolean canSustainPlant(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	default boolean canSustainPlant(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		return false;
 	}
@@ -365,8 +360,7 @@ public interface IBlockBehavior<B>
 		return 0F;
 	}
 	
-	default boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height,
-			NBTTagCompound tileNBT)
+	default boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height, NBTTagCompound tileNBT)
 	{
 		return false;
 	}
@@ -376,8 +370,7 @@ public interface IBlockBehavior<B>
 		
 	}
 	
-	default ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
+	default ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}

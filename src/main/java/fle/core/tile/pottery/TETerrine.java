@@ -33,8 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TETerrine extends TEInventoryTankSingleAbstract
-implements ITP_BlockHardness, ITP_HarvestCheck, ITP_ExplosionResistance, ITB_BlockActived, IGuiTile
+public class TETerrine extends TEInventoryTankSingleAbstract implements ITP_BlockHardness, ITP_HarvestCheck, ITP_ExplosionResistance, ITB_BlockActived, IGuiTile
 {
 	private FluidTankN tank = new FluidTankN(1500).enableTemperature();
 	
@@ -68,8 +67,7 @@ implements ITP_BlockHardness, ITP_HarvestCheck, ITP_ExplosionResistance, ITB_Blo
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (hand == EnumHand.MAIN_HAND && InventoryHelper.drainOrFillTank(this.tank, player, hand, side, stack, (byte) (FD_FILL_ONLYFULL | FD_DRAIN)))
 		{

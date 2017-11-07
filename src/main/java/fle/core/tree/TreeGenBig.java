@@ -15,25 +15,30 @@ import net.minecraft.world.World;
 
 public class TreeGenBig extends TreeGenAbstract
 {
-	static final byte[] otherCoordPairs = {2, 0, 0, 1, 2, 1};
-	int[] basePos = new int[] {0, 0, 0};
-	float generateCoreLeavesChance;
-	Random rand;
-	World world;
-	TreeInfo info;
-	int heightLimit;
-	int height;
-	double heightAttenuation = 0.618D;
-	double branchDensity = 1.0D;
-	double branchSlope = 0.381D;
-	double scaleWidth = 1.0D;
-	double leafDensity = 1.0D;
-	/** Sets the limit of the random value used to initialize the height limit. */
-	int heightLimitLimit = 12;
-	/** Sets the distance limit for how far away the generator will populate leaves from the base leaf node. */
-	int leafDistanceLimit = 4;
+	static final byte[]	otherCoordPairs		= { 2, 0, 0, 1, 2, 1 };
+	int[]				basePos				= new int[] { 0, 0, 0 };
+	float				generateCoreLeavesChance;
+	Random				rand;
+	World				world;
+	TreeInfo			info;
+	int					heightLimit;
+	int					height;
+	double				heightAttenuation	= 0.618D;
+	double				branchDensity		= 1.0D;
+	double				branchSlope			= 0.381D;
+	double				scaleWidth			= 1.0D;
+	double				leafDensity			= 1.0D;
+	/**
+	 * Sets the limit of the random value used to initialize the height limit.
+	 */
+	int					heightLimitLimit	= 12;
+	/**
+	 * Sets the distance limit for how far away the generator will populate
+	 * leaves from the base leaf node.
+	 */
+	int					leafDistanceLimit	= 4;
 	/** Contains a list of a points at which to generate groups of leaves. */
-	int[][] leafNodes;
+	int[][]				leafNodes;
 	
 	public TreeGenBig(ITree tree, float generateCoreLeavesChance)
 	{
@@ -41,18 +46,19 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Generates a list of leaf nodes for the tree, to be populated by generateLeaves.
+	 * Generates a list of leaf nodes for the tree, to be populated by
+	 * generateLeaves.
 	 */
 	void generateLeafNodeList()
 	{
-		this.height = (int)(this.heightLimit * this.heightAttenuation);
+		this.height = (int) (this.heightLimit * this.heightAttenuation);
 		
 		if (this.height >= this.heightLimit)
 		{
 			this.height = this.heightLimit - 1;
 		}
 		
-		int i = (int)(1.382D + Math.pow(this.leafDensity * this.heightLimit / 13.0D, 2.0D));
+		int i = (int) (1.382D + Math.pow(this.leafDensity * this.heightLimit / 13.0D, 2.0D));
 		
 		if (i < 1)
 		{
@@ -88,8 +94,8 @@ public class TreeGenBig extends TreeGenAbstract
 					double d2 = this.rand.nextFloat() * 2.0D * Math.PI;
 					int k1 = MathHelper.floor(d1 * Math.sin(d2) + this.basePos[0] + d0);
 					int l1 = MathHelper.floor(d1 * Math.cos(d2) + this.basePos[2] + d0);
-					int[] aint1 = new int[] {k1, j, l1};
-					int[] aint2 = new int[] {k1, j + this.leafDistanceLimit, l1};
+					int[] aint1 = new int[] { k1, j, l1 };
+					int[] aint2 = new int[] { k1, j + this.leafDistanceLimit, l1 };
 					
 					if (checkBlockLine(aint1, aint2) == -1)
 					{
@@ -104,7 +110,7 @@ public class TreeGenBig extends TreeGenAbstract
 						}
 						else
 						{
-							aint3[1] = (int)(aint1[1] - d4);
+							aint3[1] = (int) (aint1[1] - d4);
 						}
 						
 						if (checkBlockLine(aint3, aint1) == -1)
@@ -129,11 +135,11 @@ public class TreeGenBig extends TreeGenAbstract
 	
 	void genLeaves(int x, int y, int z, float scale, byte side)
 	{
-		int l = (int)(scale + 0.618D);
+		int l = (int) (scale + 0.618D);
 		byte b1 = otherCoordPairs[side];
 		byte b2 = otherCoordPairs[side + 3];
-		int[] aint = new int[] {x, y, z};
-		int[] aint1 = new int[] {0, 0, 0};
+		int[] aint = new int[] { x, y, z };
+		int[] aint1 = new int[] { 0, 0, 0 };
 		int i1 = -l;
 		int j1 = -l;
 		
@@ -187,7 +193,7 @@ public class TreeGenBig extends TreeGenAbstract
 			else
 			{
 				float v;
-				f2 = (float)Math.sqrt((v = Math.abs(f)) * v - (v = Math.abs(f1)) * v);
+				f2 = (float) Math.sqrt((v = Math.abs(f)) * v - (v = Math.abs(f1)) * v);
 			}
 			
 			f2 *= 0.5F;
@@ -197,12 +203,12 @@ public class TreeGenBig extends TreeGenAbstract
 	
 	float leafSize(int height)
 	{
-		return height >= 0 && height < this.leafDistanceLimit ?
-				(height != 0 && height != this.leafDistanceLimit - 1 ? 3.0F : 2.0F) : -1.0F;
+		return height >= 0 && height < this.leafDistanceLimit ? (height != 0 && height != this.leafDistanceLimit - 1 ? 3.0F : 2.0F) : -1.0F;
 	}
 	
 	/**
-	 * Generates the leaves surrounding an individual entry in the leafNodes list.
+	 * Generates the leaves surrounding an individual entry in the leafNodes
+	 * list.
 	 */
 	void generateLeafNode(int x, int y, int z)
 	{
@@ -211,13 +217,13 @@ public class TreeGenBig extends TreeGenAbstract
 		for (int i1 = y + this.leafDistanceLimit; l < i1; ++l)
 		{
 			float f = leafSize(l - y);
-			genLeaves(x, l, z, f, (byte)1);
+			genLeaves(x, l, z, f, (byte) 1);
 		}
 	}
 	
 	void genLog(int[] node1, int[] node2)
 	{
-		int[] aint2 = new int[] {0, 0, 0};
+		int[] aint2 = new int[] { 0, 0, 0 };
 		byte b0 = 0;
 		byte b1;
 		
@@ -246,9 +252,9 @@ public class TreeGenBig extends TreeGenAbstract
 				b4 = -1;
 			}
 			
-			double d0 = (double)aint2[b2] / (double)aint2[b1];
-			double d1 = (double)aint2[b3] / (double)aint2[b1];
-			int[] aint3 = new int[] {0, 0, 0};
+			double d0 = (double) aint2[b2] / (double) aint2[b1];
+			double d1 = (double) aint2[b3] / (double) aint2[b1];
+			int[] aint3 = new int[] { 0, 0, 0 };
 			int i = 0;
 			
 			for (int j = aint2[b1] + b4; i != j; i += b4)
@@ -261,15 +267,14 @@ public class TreeGenBig extends TreeGenAbstract
 				int l = Math.abs(aint3[2] - node1[2]);
 				int i1 = Math.max(k, l);
 				
-				if (i1 > 0)
-					if (k == i1)
-					{
-						b5 = 0;
-					}
-					else if (l == i1)
-					{
-						b5 = 2;
-					}
+				if (i1 > 0) if (k == i1)
+				{
+					b5 = 0;
+				}
+				else if (l == i1)
+				{
+					b5 = 2;
+				}
 				
 				generateLog(this.world, aint3[0], aint3[1], aint3[2], b5);
 			}
@@ -277,7 +282,8 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Generates the leaf portion of the tree as specified by the leafNodes list.
+	 * Generates the leaf portion of the tree as specified by the leafNodes
+	 * list.
 	 */
 	void generateLeaves()
 	{
@@ -293,7 +299,8 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Indicates whether or not a leaf node requires additional wood to be added to preserve integrity.
+	 * Indicates whether or not a leaf node requires additional wood to be added
+	 * to preserve integrity.
 	 */
 	boolean leafNodeNeedsBase(int p_76493_1_)
 	{
@@ -301,8 +308,8 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Places the trunk for the big tree that is being generated. Able to generate double-sized trunks by changing a
-	 * field that is always 1 to 2.
+	 * Places the trunk for the big tree that is being generated. Able to
+	 * generate double-sized trunks by changing a field that is always 1 to 2.
 	 */
 	void generateTrunk()
 	{
@@ -310,26 +317,27 @@ public class TreeGenBig extends TreeGenAbstract
 		int j = this.basePos[1];
 		int k = this.basePos[1] + this.height;
 		int l = this.basePos[2];
-		int[] aint = new int[] {i, j, l};
-		int[] aint1 = new int[] {i, k, l};
+		int[] aint = new int[] { i, j, l };
+		int[] aint1 = new int[] { i, k, l };
 		genLog(aint, aint1);
 		
-		//        if (this.trunkSize == 2)
-		//        {
-		//            ++aint[0];
-		//            ++aint1[0];
-		//            this.genLog(aint, aint1);
-		//            ++aint[2];
-		//            ++aint1[2];
-		//            this.genLog(aint, aint1);
-		//            aint[0] += -1;
-		//            aint1[0] += -1;
-		//            this.genLog(aint, aint1);
-		//        }
+		// if (this.trunkSize == 2)
+		// {
+		// ++aint[0];
+		// ++aint1[0];
+		// this.genLog(aint, aint1);
+		// ++aint[2];
+		// ++aint1[2];
+		// this.genLog(aint, aint1);
+		// aint[0] += -1;
+		// aint1[0] += -1;
+		// this.genLog(aint, aint1);
+		// }
 	}
 	
 	/**
-	 * Generates additional wood blocks to fill out the bases of different leaf nodes that would otherwise degrade.
+	 * Generates additional wood blocks to fill out the bases of different leaf
+	 * nodes that would otherwise degrade.
 	 */
 	void generateLeafNodeBases()
 	{
@@ -351,12 +359,13 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Checks a line of blocks in the world from the first coordinate to triplet to the second, returning the distance
-	 * (in blocks) before a non-air, non-leaf block is encountered and/or the end is encountered.
+	 * Checks a line of blocks in the world from the first coordinate to triplet
+	 * to the second, returning the distance (in blocks) before a non-air,
+	 * non-leaf block is encountered and/or the end is encountered.
 	 */
 	int checkBlockLine(int[] node1, int[] node2)
 	{
-		int[] aint2 = new int[] {0, 0, 0};
+		int[] aint2 = new int[] { 0, 0, 0 };
 		byte b0 = 0;
 		byte b1;
 		
@@ -387,9 +396,9 @@ public class TreeGenBig extends TreeGenAbstract
 				b4 = -1;
 			}
 			
-			double d0 = (double)aint2[b2] / (double)aint2[b1];
-			double d1 = (double)aint2[b3] / (double)aint2[b1];
-			int[] aint3 = new int[] {0, 0, 0};
+			double d0 = (double) aint2[b2] / (double) aint2[b1];
+			double d1 = (double) aint2[b3] / (double) aint2[b1];
+			int[] aint3 = new int[] { 0, 0, 0 };
 			int i = 0;
 			int j;
 			
@@ -410,13 +419,13 @@ public class TreeGenBig extends TreeGenAbstract
 	}
 	
 	/**
-	 * Returns a boolean indicating whether or not the current location for the tree, spanning basePos to to the height
-	 * limit, is valid.
+	 * Returns a boolean indicating whether or not the current location for the
+	 * tree, spanning basePos to to the height limit, is valid.
 	 */
 	boolean validTreeLocation()
 	{
-		int[] aint = new int[] {this.basePos[0], this.basePos[1], this.basePos[2]};
-		int[] aint1 = new int[] {this.basePos[0], this.basePos[1] + this.heightLimit - 1, this.basePos[2]};
+		int[] aint = new int[] { this.basePos[0], this.basePos[1], this.basePos[2] };
+		int[] aint1 = new int[] { this.basePos[0], this.basePos[1] + this.heightLimit - 1, this.basePos[2] };
 		BlockPos pos;
 		IBlockState state = this.world.getBlockState(pos = new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2]));
 		
@@ -444,7 +453,7 @@ public class TreeGenBig extends TreeGenAbstract
 	 */
 	public void setScale(double height, double width, double density)
 	{
-		this.heightLimitLimit = (int)(height * 12.0D);
+		this.heightLimitLimit = (int) (height * 12.0D);
 		
 		if (height > 0.5D)
 		{

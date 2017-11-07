@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 /**
  * The base noise type.
+ * 
  * @author ueyudiud
  */
 public abstract class NoiseBase

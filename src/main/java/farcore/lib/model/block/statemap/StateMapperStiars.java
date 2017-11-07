@@ -21,8 +21,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class StateMapperStiars extends StateMapperExt
 {
-	private static final IProperty<String> SHAPE = StateMapperExt.createFakeProperty("shape", "normal", "inner", "outer");
-	private static final IProperty<String> STATE = StateMapperExt.createFakeProperty("state", "bottom_north", "bottom_south", "bottom_east", "bottom_west", "top_north", "top_south", "top_east", "top_west");
+	private static final IProperty<String>	SHAPE	= StateMapperExt.createFakeProperty("shape", "normal", "inner", "outer");
+	private static final IProperty<String>	STATE	= StateMapperExt.createFakeProperty("state", "bottom_north", "bottom_south", "bottom_east", "bottom_west", "top_north", "top_south", "top_east", "top_west");
 	
 	public StateMapperStiars(String modid, String path, IProperty main, IProperty...ignores)
 	{
@@ -43,16 +43,16 @@ public class StateMapperStiars extends StateMapperExt
 		}
 		switch (shape)
 		{
-		case INNER_LEFT :
-		case INNER_RIGHT :
+		case INNER_LEFT:
+		case INNER_RIGHT:
 			shapeName = "inner";
 			break;
-		case OUTER_LEFT :
-		case OUTER_RIGHT :
+		case OUTER_LEFT:
+		case OUTER_RIGHT:
 			shapeName = "outer";
 			break;
-		case STRAIGHT :
-		default :
+		case STRAIGHT:
+		default:
 			shapeName = "normal";
 			break;
 		}

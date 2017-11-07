@@ -15,9 +15,9 @@ import net.minecraft.world.World;
 
 public class TreeGenTaiga extends TreeGenAbstract
 {
-	protected int minHeight = 6;
-	protected int randHeight = 4;
-	protected float generateCoreLeavesChance;
+	protected int	minHeight	= 6;
+	protected int	randHeight	= 4;
+	protected float	generateCoreLeavesChance;
 	
 	public TreeGenTaiga(Tree tree, float generateCoreLeavesChance)
 	{
@@ -41,10 +41,8 @@ public class TreeGenTaiga extends TreeGenAbstract
 		
 		if (y >= 1 && y + l + 1 <= 256)
 		{
-			if (!checkLogGrow(world, x, y, z, 0, i1, 0, false))
-				return false;
-			if (!checkLogGrow(world, x, y + i1 + 1, z, k1, j1 - 1, k1, true))
-				return false;
+			if (!checkLogGrow(world, x, y, z, 0, i1, 0, false)) return false;
+			if (!checkLogGrow(world, x, y + i1 + 1, z, k1, j1 - 1, k1, true)) return false;
 			int i2;
 			int l3;
 			BlockPos pos;
@@ -72,8 +70,7 @@ public class TreeGenTaiga extends TreeGenAbstract
 						{
 							int k3 = j3 - z;
 							
-							if (Math.abs(i3) != l3 || Math.abs(k3) != l3 || l3 <= 0)
-								generateTreeLeaves(world, x, y, z, 0, this.generateCoreLeavesChance, random, info);
+							if (Math.abs(i3) != l3 || Math.abs(k3) != l3 || l3 <= 0) generateTreeLeaves(world, x, y, z, 0, this.generateCoreLeavesChance, random, info);
 						}
 					}
 					
@@ -83,22 +80,23 @@ public class TreeGenTaiga extends TreeGenAbstract
 						b0 = 1;
 						++i2;
 						
-						if (i2 > k1)
-							i2 = k1;
-					} else
+						if (i2 > k1) i2 = k1;
+					}
+					else
 						++l3;
 				}
 				
 				i4 = random.nextInt(3);
 				
 				for (k2 = 0; k2 < l - i4; ++k2)
-					if (isLogReplaceable(world, x, y + k2, z))
-						generateLog(world, x, y, z, 0);
+					if (isLogReplaceable(world, x, y + k2, z)) generateLog(world, x, y, z, 0);
 				
 				return true;
-			} else
+			}
+			else
 				return false;
-		} else
+		}
+		else
 			return false;
 	}
 }

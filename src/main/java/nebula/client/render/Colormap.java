@@ -23,17 +23,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Colormap
 {
-	private static final int[] MISSING_MAPPING = {0xFFFFFF};
+	private static final int[] MISSING_MAPPING = { 0xFFFFFF };
 	
 	public static Colormap getColormap(String location)
 	{
 		return ColormapFactory.COLORMAPS.computeIfAbsent(new ResourceLocation(location), Colormap::new);
 	}
 	
-	private String location;
-	private int width;
-	private int height;
-	private int[] colors;
+	private String	location;
+	private int		width;
+	private int		height;
+	private int[]	colors;
 	
 	private Colormap(ResourceLocation location)
 	{
@@ -57,7 +57,7 @@ public class Colormap
 	
 	public int getColor(float u, float v)
 	{
-		if(u < 0F || u > 1F || v < 0F || v > 1F) return 0xFFFFFF;
+		if (u < 0F || u > 1F || v < 0F || v > 1F) return 0xFFFFFF;
 		return this.colors[(int) (this.width * u) + (int) (this.height * v) * this.width];
 	}
 	

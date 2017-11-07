@@ -43,7 +43,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public static Network network(String name)
 	{
-		if(!register.contain(name))
+		if (!register.contain(name))
 		{
 			Network network = new Network(name);
 			register.register(name, network);
@@ -68,29 +68,29 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		++this.id;
 	}
 	
-	private final EnumMap<Side, FMLEmbeddedChannel> channel;
-	private final String channelName;
-	private Register<Class<? extends IPacket>> packetTypes = new Register<>(256);
-	private int id = 0;
+	private final EnumMap<Side, FMLEmbeddedChannel>	channel;
+	private final String							channelName;
+	private Register<Class<? extends IPacket>>		packetTypes	= new Register<>(256);
+	private int										id			= 0;
 	
 	protected Network(String name)
 	{
 		this.channelName = name;
-		this.channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[]{this, new HandlerClient(this), new HandlerServer(this)});
-		registerPacket(PacketLarge.class, Side.CLIENT);//This is a important packet, used in the method in basic network.
+		this.channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[] { this, new HandlerClient(this), new HandlerServer(this) });
+		registerPacket(PacketLarge.class, Side.CLIENT);// This is a important
+														// packet, used in the
+														// method in basic
+														// network.
 	}
 	
 	@Override
-	protected void encode(ChannelHandlerContext ctx, IPacket msg,
-			List<Object> out) throws Exception
+	protected void encode(ChannelHandlerContext ctx, IPacket msg, List<Object> out) throws Exception
 	{
-		out.add(new FMLProxyPacket(new PacketBuffer(
-				msg.encode(Unpooled.buffer().writeByte(this.packetTypes.id(msg.getClass())))), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
+		out.add(new FMLProxyPacket(new PacketBuffer(msg.encode(Unpooled.buffer().writeByte(this.packetTypes.id(msg.getClass())))), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
 	}
 	
 	@Override
-	protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg,
-			List<Object> out) throws Exception
+	protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception
 	{
 		ByteBuf buf = msg.payload();
 		int id = buf.readByte();
@@ -101,7 +101,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		else
 		{
 			IPacket packet = processPacket(id, buf, msg.getTarget(), msg.handler());
-			if(packet != null)
+			if (packet != null)
 			{
 				out.add(packet);
 			}
@@ -119,11 +119,10 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		}
 		
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet)
-				throws Exception
+		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet) throws Exception
 		{
 			IPacket obj = packet.process(this.network);
-			if(obj != null)
+			if (obj != null)
 			{
 				Channel tChannel = ctx.channel();
 				IPacket pkt = obj;
@@ -150,14 +149,13 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		}
 		
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet)
-				throws Exception
+		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet) throws Exception
 		{
 			IPacket retPacket = packet.process(this.network);
-			if(retPacket != null)
+			if (retPacket != null)
 			{
 				Channel tChannel = ctx.channel();
-				if(packet.getPlayer() != null)
+				if (packet.getPlayer() != null)
 				{
 					tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 					tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(packet.getPlayer());
@@ -184,6 +182,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	/**
 	 * To check is packet needed to send.
+	 * 
 	 * @param packet
 	 * @return
 	 */
@@ -191,9 +190,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	{
 		if (!this.packetTypes.contain(packet.getClass()))
 		{
-			Log.error("The packet {} does not exist in packet list! The packet "
-					+ "sending will be canceled, please report this bug to mod creator.",
-					packet.getClass().getCanonicalName());
+			Log.error("The packet {} does not exist in packet list! The packet " + "sending will be canceled, please report this bug to mod creator.", packet.getClass().getCanonicalName());
 			return false;
 		}
 		return packet != null && packet.needToSend();
@@ -201,10 +198,10 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendTo(IPacket packet)
 	{
-		if(!needToSend(packet)) return;
-		if(Sides.isSimulating())
+		if (!needToSend(packet)) return;
+		if (Sides.isSimulating())
 		{
-			if(Players.player() instanceof EntityPlayerMP)
+			if (Players.player() instanceof EntityPlayerMP)
 			{
 				sendToPlayer(packet, Players.player());
 			}
@@ -217,7 +214,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToAll(IPacket packet)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
 		tChannel.writeAndFlush(packet);
@@ -225,9 +222,8 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToPlayer(IPacket packet, EntityPlayer player)
 	{
-		if(!(player instanceof EntityPlayerMP))
-			return;
-		if(!needToSend(packet)) return;
+		if (!(player instanceof EntityPlayerMP)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
@@ -236,7 +232,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToDim(IPacket packet, int dim)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dim);
@@ -245,16 +241,15 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToServer(IPacket packet)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.CLIENT);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
 		tChannel.writeAndFlush(packet);
 	}
 	
-	public void sendToNearBy(IPacket packet, int dim, int x, int y,
-			int z, float range)
+	public void sendToNearBy(IPacket packet, int dim, int x, int y, int z, float range)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(dim, x + 0.5D, y + 0.5D, z + 0.5D, range));
@@ -263,28 +258,26 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToNearBy(IPacket packet, ICoord coord, float range)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		BlockPos pos = coord.pos();
-		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(coord.world().provider.getDimension(),
-				pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, range));
+		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(coord.world().provider.getDimension(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, range));
 		tChannel.writeAndFlush(packet);
 	}
 	
 	public void sendToNearBy(IPacket packet, Entity entity, float range)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(entity.world.provider.getDimension(),
-				entity.posX, entity.posY, entity.posZ, range));
+		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(entity.world.provider.getDimension(), entity.posX, entity.posY, entity.posZ, range));
 		tChannel.writeAndFlush(packet);
 	}
 	
 	public void sendToNearBy(IPacket packet, TargetPoint point)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
@@ -303,7 +296,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendLargeToAll(IPacket packet)
 	{
-		sendLarge(packet, this:: sendLargeToAll);
+		sendLarge(packet, this::sendLargeToAll);
 	}
 	
 	public void sendLarge(IPacket packet, Consumer<PacketLarge> pachetExecutor)
@@ -338,7 +331,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 				pachetExecutor.accept(new PacketLarge(osRaw.toByteArray()));
 			}
 		}
-		catch(Throwable e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}

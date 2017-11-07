@@ -16,15 +16,18 @@ import net.minecraft.world.World;
 public interface IDebugableBlock
 {
 	/**
-	 * Added debugging information when player using {@link farcore.lib.item.instance.ItemDebugger} to
-	 * get debugging information. Providing information to chat message and send to player.
+	 * Added debugging information when player using
+	 * {@link farcore.lib.item.instance.ItemDebugger} to get debugging
+	 * information. Providing information to chat message and send to player.
+	 * 
 	 * @param player the player using debugger.
 	 * @param world the world.
 	 * @param pos the position.
 	 * @param side the side player clicked.
 	 * @param list the debugging chat list.
-	 * @throws RuntimeException if some exception are caught when providing data, these exception will
-	 *                          be caught by ItemDebugger and logged.
+	 * @throws RuntimeException if some exception are caught when providing
+	 *             data, these exception will be caught by ItemDebugger and
+	 *             logged.
 	 */
 	void addInformation(EntityPlayer player, World world, BlockPos pos, Direction side, List<String> list);
 }

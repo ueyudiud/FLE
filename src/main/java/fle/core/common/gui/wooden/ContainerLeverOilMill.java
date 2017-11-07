@@ -25,16 +25,14 @@ public class ContainerLeverOilMill extends ContainerTileInventory<TELeverOilMill
 		addSlotToContainer(new SlotBase(tile, 0, 61, 21));
 		addSlotToContainer(new SlotOutput(tile, 1, 98, 21));
 		addSlotToContainer(new FluidSlotN(tile.tank, 60, 56, 20, 8).setRenderHorizontal());
-		TL
-		input = new TL(id)
+		TL input = new TL(id)
 		{
 			@Override
 			public boolean isItemValid(ItemStack stack)
 			{
 				return RecipeMaps.LEVER_OIL_MILL.findRecipe(stack) != null;
 			}
-		}.addToList(),
-		output = new TL(id + 1).addToList();
+		}.addToList(), output = new TL(id + 1).addToList();
 		this.locationHand.appendTransferLocate(input).appendTransferLocate(this.locationBag);
 		this.locationBag.appendTransferLocate(input).appendTransferLocate(this.locationHand);
 		input.appendTransferLocate(this.locationPlayer);
@@ -46,7 +44,7 @@ public class ContainerLeverOilMill extends ContainerTileInventory<TELeverOilMill
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			this.tile.onRotateMill(this.opener);
 			break;
 		default:

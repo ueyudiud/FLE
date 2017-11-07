@@ -11,19 +11,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The container class include a tile entity implemented
- * <code>Inventory</code>.<p>
+ * The container class include a tile entity implemented <code>Inventory</code>.
+ * <p>
+ * 
  * @author ueyudiud
  *
  * @param <T> the tile entity type.
  */
 public abstract class ContainerTileInventory<T extends TileEntity & IInventory> extends ContainerBase
 {
-	public T tile;
-	protected final int[] lastTileFieldValues;
+	public T				tile;
+	protected final int[]	lastTileFieldValues;
 	
 	/**
 	 * Include opener slots and auto generated fields cache.
+	 * 
 	 * @param tile
 	 * @param player
 	 */
@@ -51,13 +53,13 @@ public abstract class ContainerTileInventory<T extends TileEntity & IInventory> 
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < this.lastTileFieldValues.length; ++i)
+		for (int i = 0; i < this.lastTileFieldValues.length; ++i)
 		{
 			int value1 = this.tile.getField(i);
 			int value2 = this.lastTileFieldValues[i];
-			if(value1 != value2)
+			if (value1 != value2)
 			{
-				for(IContainerListener listener : this.listeners)
+				for (IContainerListener listener : this.listeners)
 				{
 					listener.sendProgressBarUpdate(this, i, value1);
 				}

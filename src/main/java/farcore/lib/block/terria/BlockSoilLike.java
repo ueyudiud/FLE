@@ -62,8 +62,8 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		setTickRandomly(true);
 		setCreativeTab(CT.TERRIA);
 	}
-	protected BlockSoilLike(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat,
-			P property)
+	
+	protected BlockSoilLike(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat, P property)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn, mat, property);
 		setTickRandomly(true);
@@ -79,7 +79,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		LanguageManager.registerLocal(getTranslateNameForItemStack(2), this.material.localName + " Grass");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(3), this.material.localName + " Tundra");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(4), this.material.localName + " Mycelium");
-		//The meta higher than 5 can not be harvested, so no name display.
+		// The meta higher than 5 can not be harvested, so no name display.
 		MC.soil.registerOre(this.material, this);
 	}
 	
@@ -107,12 +107,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state.withProperty(COVER_TYPE, EnumCoverType.NONE)
-				.withProperty(PROP_UP, true)
-				.withProperty(PROP_NORTH, false)
-				.withProperty(PROP_SOUTH, false)
-				.withProperty(PROP_EAST, false)
-				.withProperty(PROP_WEST, false);
+		return state.withProperty(COVER_TYPE, EnumCoverType.NONE).withProperty(PROP_UP, true).withProperty(PROP_NORTH, false).withProperty(PROP_SOUTH, false).withProperty(PROP_EAST, false).withProperty(PROP_WEST, false);
 	}
 	
 	@Override
@@ -131,12 +126,9 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		IBlockState state2 = worldIn.getBlockState(pos.up());
-		if(!state2.getBlock().isNormalCube(state2, worldIn, pos.up()) || state2.getMaterial() == Material.SNOW)
+		if (!state2.getBlock().isNormalCube(state2, worldIn, pos.up()) || state2.getMaterial() == Material.SNOW)
 		{
-			state = state.withProperty(PROP_UP, true)
-					.withProperty(PROP_NORTH, matchConnectable(state, worldIn, pos, EnumFacing.NORTH))
-					.withProperty(PROP_SOUTH, matchConnectable(state, worldIn, pos, EnumFacing.SOUTH))
-					.withProperty(PROP_EAST, matchConnectable(state, worldIn, pos, EnumFacing.EAST))
+			state = state.withProperty(PROP_UP, true).withProperty(PROP_NORTH, matchConnectable(state, worldIn, pos, EnumFacing.NORTH)).withProperty(PROP_SOUTH, matchConnectable(state, worldIn, pos, EnumFacing.SOUTH)).withProperty(PROP_EAST, matchConnectable(state, worldIn, pos, EnumFacing.EAST))
 					.withProperty(PROP_WEST, matchConnectable(state, worldIn, pos, EnumFacing.WEST));
 		}
 		return state;
@@ -147,8 +139,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		BlockPos pos1;
 		IBlockState state1;
 		if (Worlds.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
-		return (state1 = world.getBlockState(pos1.down())).getBlock() instanceof BlockSoilLike<?> ?
-				state.getValue(COVER_TYPE).noCover == state1.getValue(COVER_TYPE).noCover : false;
+		return (state1 = world.getBlockState(pos1.down())).getBlock() instanceof BlockSoilLike<?> ? state.getValue(COVER_TYPE).noCover == state1.getValue(COVER_TYPE).noCover : false;
 	}
 	
 	@Override
@@ -210,21 +201,22 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		if (type.noCover != EnumCoverType.NONE && type.noCover != EnumCoverType.FROZEN)
 		{
-			if(!canBlockGrass(worldIn, pos))
+			if (!canBlockGrass(worldIn, pos))
 			{
 				state = state.withProperty(COVER_TYPE, type = type.noCover == EnumCoverType.TUNDRA_FROZEN ? EnumCoverType.FROZEN : EnumCoverType.NONE);
 			}
 		}
 		if (type.isFrozen)
 		{
-			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F + 25 && rand.nextInt(4) == 0)
+			if (ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F + 25 && rand.nextInt(4) == 0)
 			{
 				state = state.withProperty(COVER_TYPE, type.noFrozen);
 			}
 		}
 		if (oldState != state && update)
 		{
-			worldIn.setBlockState(pos, state, 2);//Already updated, will not cause block update.
+			worldIn.setBlockState(pos, state, 2);// Already updated, will not
+													// cause block update.
 		}
 		return state;
 	}
@@ -232,7 +224,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 	protected void spreadCoverPlant(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		EnumCoverType type = state.getValue(COVER_TYPE).noCover;
-		if(type == EnumCoverType.NONE || type == EnumCoverType.FROZEN) return;
+		if (type == EnumCoverType.NONE || type == EnumCoverType.FROZEN) return;
 		MutableBlockPos pos2 = new MutableBlockPos();
 		int brightness = world.getLightFromNeighbors(pos.up());
 		int active;
@@ -241,73 +233,144 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		float humidity = WorldPropHandler.getWorldProperty(world).getHumidity(world, pos);
 		switch (type)
 		{
-		case GRASS :
-			if(temperature > V.WATER_FREEZE_POINT_F + 50) return;
-			else if(temperature > V.WATER_FREEZE_POINT_F + 38) { active = 3; }
-			else if (temperature > V.WATER_FREEZE_POINT_F + 30) { active = 4; }
-			else if (temperature > V.WATER_FREEZE_POINT_F + 17) { active = 3; }
-			else if(temperature > V.WATER_FREEZE_POINT_F - 3) { active = 2; }
-			else if(temperature > V.WATER_FREEZE_POINT_F - 18) { active = 1; }
-			else return;
-			if(humidity < 0.1F) return;
-			else if(humidity < 0.2F) { --active; }
-			else if(humidity > 0.8F) { ++active; }
-			if(brightness > 12 && rand.nextInt(4) == 0) { ++active; }
+		case GRASS:
+			if (temperature > V.WATER_FREEZE_POINT_F + 50)
+				return;
+			else if (temperature > V.WATER_FREEZE_POINT_F + 38)
+			{
+				active = 3;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 30)
+			{
+				active = 4;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 17)
+			{
+				active = 3;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F - 3)
+			{
+				active = 2;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F - 18)
+			{
+				active = 1;
+			}
+			else
+				return;
+			if (humidity < 0.1F)
+				return;
+			else if (humidity < 0.2F)
+			{
+				--active;
+			}
+			else if (humidity > 0.8F)
+			{
+				++active;
+			}
+			if (brightness > 12 && rand.nextInt(4) == 0)
+			{
+				++active;
+			}
 			break;
-		case MYCELIUM :
-			if(temperature > V.WATER_FREEZE_POINT_F + 47) return;
-			else if(temperature > V.WATER_FREEZE_POINT_F + 34) { active = 3; }
-			else if (temperature > V.WATER_FREEZE_POINT_F + 27) { active = 4; }
-			else if (temperature > V.WATER_FREEZE_POINT_F + 19) { active = 3; }
-			else if(temperature > V.WATER_FREEZE_POINT_F + 4) { active = 2; }
-			else if(temperature > V.WATER_FREEZE_POINT_F - 7) { active = 1; }
-			else return;
-			if(humidity < 0.3F) return;
-			else if(humidity > 0.5F) { ++active; }
-			else if(humidity > 0.8F) { active += 2; }
+		case MYCELIUM:
+			if (temperature > V.WATER_FREEZE_POINT_F + 47)
+				return;
+			else if (temperature > V.WATER_FREEZE_POINT_F + 34)
+			{
+				active = 3;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 27)
+			{
+				active = 4;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 19)
+			{
+				active = 3;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 4)
+			{
+				active = 2;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F - 7)
+			{
+				active = 1;
+			}
+			else
+				return;
+			if (humidity < 0.3F)
+				return;
+			else if (humidity > 0.5F)
+			{
+				++active;
+			}
+			else if (humidity > 0.8F)
+			{
+				active += 2;
+			}
 			break;
-		case TUNDRA :
-		case TUNDRA_FROZEN :
-			if(temperature > V.WATER_FREEZE_POINT_F + 38) return;
-			else if(temperature > V.WATER_FREEZE_POINT_F + 17) { active = 3; }
-			else if(temperature > V.WATER_FREEZE_POINT_F + 4) { active = 2; }
-			else if(temperature > V.WATER_FREEZE_POINT_F - 7) { active = 1; }
-			else return;
-			if(humidity < 0.025F) return;
-			else if(humidity > 0.28F) { active ++; }
+		case TUNDRA:
+		case TUNDRA_FROZEN:
+			if (temperature > V.WATER_FREEZE_POINT_F + 38)
+				return;
+			else if (temperature > V.WATER_FREEZE_POINT_F + 17)
+			{
+				active = 3;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F + 4)
+			{
+				active = 2;
+			}
+			else if (temperature > V.WATER_FREEZE_POINT_F - 7)
+			{
+				active = 1;
+			}
+			else
+				return;
+			if (humidity < 0.025F)
+				return;
+			else if (humidity > 0.28F)
+			{
+				active++;
+			}
 			break;
-		default : return;
+		default:
+			return;
 		}
-		for(int i = 0; i < active; ++i)
+		for (int i = 0; i < active; ++i)
 		{
 			pos2.setPos(pos.getX() + rand.nextInt(5) - 3, pos.getY() + rand.nextInt(3) - 1, pos.getZ() + rand.nextInt(5) - 3);
-			if(pos2.getY() < 0 || pos2.getY() >= 256 || !world.isBlockLoaded(pos2) || pos2.equals(pos))
+			if (pos2.getY() < 0 || pos2.getY() >= 256 || !world.isBlockLoaded(pos2) || pos2.equals(pos))
 			{
 				continue;
 			}
 			IBlockState state1 = world.getBlockState(pos2);
-			if(state1.getBlock() instanceof BlockSoil && canBlockGrass(world, pos2))
+			if (state1.getBlock() instanceof BlockSoil && canBlockGrass(world, pos2))
 			{
 				EnumCoverType type1 = state1.getValue(COVER_TYPE);
-				if(type1.noCover != EnumCoverType.NONE)
+				if (type1.noCover != EnumCoverType.NONE)
 				{
 					continue;
 				}
-				if(type1.isSnow) { type = type.snowCover; }
+				if (type1.isSnow)
+				{
+					type = type.snowCover;
+				}
 				world.setBlockState(pos2, state1.withProperty(COVER_TYPE, type), 3);
 			}
 		}
 	}
 	
 	@Override
-	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		switch (plantable.getPlantType(world, pos.offset(direction)))
 		{
-		case Plains : return !type.isFrozen;
-		default : return super.canSustainPlant(state, world, pos, direction, plantable);
+		case Plains:
+			return !type.isFrozen;
+		default:
+			return super.canSustainPlant(state, world, pos, direction, plantable);
 		}
 	}
 	
@@ -319,9 +382,9 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 			EnumCoverType type;
 			switch (type = state.getValue(COVER_TYPE).noCover)
 			{
-			case GRASS :
-			case TUNDRA :
-			case MYCELIUM :
+			case GRASS:
+			case TUNDRA:
+			case MYCELIUM:
 				type = EnumCoverType.NONE;
 				break;
 			default:
@@ -335,9 +398,6 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 	{
 		BlockPos up = pos.up();
 		IBlockState state = world.getBlockState(up);
-		return state.getBlock().isAir(state, world, up) ||
-				(!state.getBlock().isNormalCube(state, world, up) &&
-						!(state.getBlock() instanceof BlockFluidBase) &&
-						!(state.getBlock() instanceof BlockLiquid));
+		return state.getBlock().isAir(state, world, up) || (!state.getBlock().isNormalCube(state, world, up) && !(state.getBlock() instanceof BlockFluidBase) && !(state.getBlock() instanceof BlockLiquid));
 	}
 }

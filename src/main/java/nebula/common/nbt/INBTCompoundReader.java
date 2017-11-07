@@ -16,6 +16,7 @@ public interface INBTCompoundReader<T> extends INBTReader<T, NBTTagCompound>
 {
 	/**
 	 * Read target from nbt with sub tag.
+	 * 
 	 * @param nbt
 	 * @param key
 	 * @return

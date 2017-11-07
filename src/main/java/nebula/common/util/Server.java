@@ -17,19 +17,21 @@ import net.minecraft.world.WorldServer;
  */
 public final class Server
 {
-	private Server() {}
+	private Server()
+	{
+	}
 	
 	/**
 	 * I don't know why this method should use in server.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param state
 	 * @param entity
 	 * @param numberOfParticles
 	 */
-	public static void addBlockLandingEffects(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase entity, int numberOfParticles)
+	public static void addBlockLandingEffects(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, int numberOfParticles)
 	{
-		((WorldServer) world).spawnParticle(EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0.0, 0.0, 0.0, 0.15, new int[] {Block.getStateId(state)});
+		((WorldServer) world).spawnParticle(EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0.0, 0.0, 0.0, 0.15, new int[] { Block.getStateId(state) });
 	}
 }

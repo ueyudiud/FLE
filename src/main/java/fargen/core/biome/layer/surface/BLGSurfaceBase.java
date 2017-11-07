@@ -25,15 +25,9 @@ import net.minecraft.world.chunk.ChunkPrimer;
 
 public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 {
-	protected static final IBlockState
-	BEDROCK = Blocks.BEDROCK.getDefaultState(),
-	LAVA = Blocks.LAVA.getDefaultState(),
-	ICE = EnumBlock.ice.block.getDefaultState(),
-	ROCK = Blocks.STONE.getDefaultState(),
-	WATER = Blocks.WATER.getDefaultState();
+	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState(), LAVA = Blocks.LAVA.getDefaultState(), ICE = EnumBlock.ice.block.getDefaultState(), ROCK = Blocks.STONE.getDefaultState(), WATER = Blocks.WATER.getDefaultState();
 	
-	protected static final
-	short worldHeight = 255, rockLayer1 = 120, rockLayer2 = 60, seaLevel = 144, arrayYHeight = 128;
+	protected static final short worldHeight = 255, rockLayer1 = 120, rockLayer2 = 60, seaLevel = 144, arrayYHeight = 128;
 	
 	private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 	
@@ -57,7 +51,7 @@ public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 		int y = worldHeight;
 		int c = -1, f = 0;
 		
-		for (; y >= arrayYHeight; y --)
+		for (; y >= arrayYHeight; y--)
 		{
 			IBlockState state = primer.getBlockState(x, y, z);
 			if (state == AIR)
@@ -73,7 +67,7 @@ public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 				{
 					if (f == 0)
 					{
-						if (temperature < 0.0F)//Ice point
+						if (temperature < 0.0F)// Ice point
 						{
 							primer.setBlockState(x, y, z, EnumBlock.ice.block.getDefaultState());
 						}
@@ -81,7 +75,7 @@ public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 					}
 					else
 					{
-						f ++;
+						f++;
 					}
 				}
 			}
@@ -120,21 +114,23 @@ public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 				--c;
 				primer.setBlockState(x, y, z, state);
 			}
-			else setRockType(height, primer, x, y, z, rock);
+			else
+				setRockType(height, primer, x, y, z, rock);
 		}
 	}
 	
 	protected void generateBottomTerrain(World world, Random rand, ChunkPrimer primer, int x, int z, int x1, int z1, BiomeBase biome, int height, IBlockState[] rock)
 	{
 		int y = arrayYHeight;
-		for (; y >= 0; y --)
+		for (; y >= 0; y--)
 		{
 			if (y == 0)
 			{
 				primer.setBlockState(x, y, z, Blocks.BEDROCK.getDefaultState());
 				break;
 			}
-			else setRockType(height, primer, x, y, z, rock);
+			else
+				setRockType(height, primer, x, y, z, rock);
 		}
 	}
 	

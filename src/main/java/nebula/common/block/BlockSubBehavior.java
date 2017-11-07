@@ -41,9 +41,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-@Optional.InterfaceList({@Optional.Interface(iface = "farcore.lib.block.IThermalCustomBehaviorBlock", modid = "farcore")})
-public abstract class BlockSubBehavior extends BlockBase
-implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCustomBehaviorBlock
+@Optional.InterfaceList({ @Optional.Interface(iface = "farcore.lib.block.IThermalCustomBehaviorBlock", modid = "farcore") })
+public abstract class BlockSubBehavior extends BlockBase implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCustomBehaviorBlock
 {
 	public BlockSubBehavior(String name, Material materialIn)
 	{
@@ -124,8 +123,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		try
 		{
@@ -311,8 +309,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos,
-			EntityPlayer player)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
 		return super.getPickBlock(state, target, world, pos, player);
 	}
@@ -526,8 +523,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		try
 		{
@@ -588,8 +584,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
-			boolean silkHarvest)
+	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
 		try
 		{
@@ -616,8 +611,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			EnumFacing facing, ItemStack stack)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		try
 		{
@@ -670,7 +664,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 		}
 	}
 	
-	//So how can I get block state???
+	// So how can I get block state???
 	@Override
 	public void onLanded(World worldIn, Entity entityIn)
 	{
@@ -818,8 +812,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		try
 		{
@@ -986,8 +979,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		try
 		{
@@ -1004,7 +996,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
-		if (!world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null))
+		if (!world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity) null, (ItemStack) null))
 		{
 			return false;
 		}

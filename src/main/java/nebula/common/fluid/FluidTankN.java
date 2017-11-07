@@ -24,18 +24,19 @@ import net.minecraftforge.fluids.IFluidTank;
 
 /**
  * Nebula fluid tank, include temperature option.
+ * 
  * @author ueyudiud
  */
 public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundReaderAndWritter<FluidTankN>
 {
-	protected boolean floatCapacity = false;
-	protected boolean enableTemperature = false;
-	protected Predicate<Direction> input;
-	protected BiPredicate<Direction, FluidStack> output;
+	protected boolean								floatCapacity		= false;
+	protected boolean								enableTemperature	= false;
+	protected Predicate<Direction>					input;
+	protected BiPredicate<Direction, FluidStack>	output;
 	
-	protected int capacity;
-	protected FluidStack stack;
-	protected float temperature = -1.0F;
+	protected int			capacity;
+	protected FluidStack	stack;
+	protected float			temperature	= -1.0F;
 	
 	public FluidTankN(int capacity)
 	{
@@ -119,9 +120,7 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	@Override
 	public boolean canInsertFluid(Direction from, FluidStack stack)
 	{
-		return (stack == null || stack.amount > 0) &&
-				!isFull() &&
-				(this.output == null || stack == null || this.output.test(from, stack));
+		return (stack == null || stack.amount > 0) && !isFull() && (this.output == null || stack == null || this.output.test(from, stack));
 	}
 	
 	@Override
@@ -139,11 +138,12 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	}
 	
 	/**
-	 * Take <tt>insert</tt> action, means stack will be filled only source stack can fully
-	 * insert into tank.
+	 * Take <tt>insert</tt> action, means stack will be filled only source stack
+	 * can fully insert into tank.
+	 * 
 	 * @param stack the source stack.
-	 * @param simulate do tank stack not changed in <tt>insert</tt> action, if do this,
-	 * the tank will only give similate result.
+	 * @param simulate do tank stack not changed in <tt>insert</tt> action, if
+	 *            do this, the tank will only give similate result.
 	 * @return return <tt>true</tt> if stack fully insert into tank.
 	 */
 	public boolean insertFluid(@Nullable FluidStack stack, boolean simulate)
@@ -151,8 +151,7 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 		if (stack == null) return true;
 		if (fill(stack, false) == stack.amount)
 		{
-			if (!simulate)
-				fill(stack, true);
+			if (!simulate) fill(stack, true);
 			return true;
 		}
 		return false;
@@ -201,10 +200,10 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	
 	public void update(ICoord coord)
 	{
-		//		if (this.stack != null)
-		//		{
-		//			;
-		//		}
+		// if (this.stack != null)
+		// {
+		// ;
+		// }
 	}
 	
 	@Override
@@ -248,8 +247,7 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	
 	public @Nullable FluidStackExt drain(FluidStack target, boolean doDrain)
 	{
-		if (target instanceof FluidStackExt)
-			target = ((FluidStackExt) target).toSimple();
+		if (target instanceof FluidStackExt) target = ((FluidStackExt) target).toSimple();
 		return hasFluid() && target.isFluidEqual(this.stack) ? drain(target.amount, doDrain) : null;
 	}
 	

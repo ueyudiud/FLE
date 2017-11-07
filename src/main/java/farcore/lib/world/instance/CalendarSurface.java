@@ -6,27 +6,14 @@ import nebula.common.util.Strings;
 
 public class CalendarSurface implements ICalendarWithMonth
 {
-	private static final String[] monthName = {
-			"January",
-			"February",
-			"March",
-			"April",
-			"May",
-			"June",
-			"July",
-			"August",
-			"September",
-			"October",
-			"November",
-			"December"
-	};
-	private static final long dayT = 24000L;
-	private static final long monthT = 192000L;
-	private static final long yearT = 2304000L;
-	private static final long offsetD = dayT - 18000L;
-	private static final long offsetM = monthT - 114000L;
-	private static final long offsetY = 3 * monthT - 114000L;
-
+	private static final String[]	monthName	= { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+	private static final long		dayT		= 24000L;
+	private static final long		monthT		= 192000L;
+	private static final long		yearT		= 2304000L;
+	private static final long		offsetD		= dayT - 18000L;
+	private static final long		offsetM		= monthT - 114000L;
+	private static final long		offsetY		= 3 * monthT - 114000L;
+	
 	@Override
 	public long year(long tick)
 	{

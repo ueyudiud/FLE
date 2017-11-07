@@ -66,7 +66,7 @@ public class BlockWoodenMiscMachine extends BlockTE
 		
 		registerTESR(TESRDryingTable.class);
 		registerTESR(TESRLeverOilMill.class, this.item, 1);
-		registerTESR(TESRStoneMill.class, this.item , 2);
+		registerTESR(TESRStoneMill.class, this.item, 2);
 		
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
 		registerRenderMapper(mapper);

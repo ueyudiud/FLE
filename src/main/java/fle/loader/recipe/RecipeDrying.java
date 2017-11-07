@@ -40,7 +40,8 @@ public class RecipeDrying
 	
 	private static void addFluidContainerDryingRecipe(FluidStack input, int durationMul, float rainfall, FluidStack output)
 	{
-		input = input.copy(); output = output.copy();
+		input = input.copy();
+		output = output.copy();
 		int gcd = Maths.gcd(input.amount, output.amount, durationMul);
 		input.amount /= gcd;
 		output.amount /= gcd;
@@ -49,7 +50,7 @@ public class RecipeDrying
 		final FluidStack a = input;
 		final FluidStack b = output;
 		final int c = durationMul;
-		RecipeMaps.DRYING.addRecipe(new TemplateRecipe<ItemStack>(stack-> {
+		RecipeMaps.DRYING.addRecipe(new TemplateRecipe<ItemStack>(stack -> {
 			if (stack.getItem() instanceof IItemFluidContainer)
 			{
 				IItemFluidContainer rawContainer = ((IItemFluidContainer) stack.getItem());
@@ -57,22 +58,19 @@ public class RecipeDrying
 				if (rawContainer.isV1())
 				{
 					IItemFluidContainerV1 container = rawContainer.castV1();
-					return (result = container.drain(stack,
-							FluidStacks.sizeOf(a, Integer.MAX_VALUE), false)) != null && result.amount >= a.amount;
+					return (result = container.drain(stack, FluidStacks.sizeOf(a, Integer.MAX_VALUE), false)) != null && result.amount >= a.amount;
 				}
-				else//if (rawContainer.isV2())
+				else// if (rawContainer.isV2())
 				{
 					IItemFluidContainerV2 container = rawContainer.castV2();
 					return (result = container.getContain(stack)) != null && result.amount >= a.amount;
 				}
 			}
 			return false;
-		}, stack-> {
+		}, stack -> {
 			IItemFluidContainer container = ((IItemFluidContainer) stack.getItem());
-			return container.isV1() ?
-					container.castV1().drain(stack, FluidStacks.sizeOf(a, Integer.MAX_VALUE), false).amount / a.amount * c :
-						container.castV2().getContain(stack).amount / a.amount * c;
-		}, Misc.anyTo(rainfall), stack-> {
+			return container.isV1() ? container.castV1().drain(stack, FluidStacks.sizeOf(a, Integer.MAX_VALUE), false).amount / a.amount * c : container.castV2().getContain(stack).amount / a.amount * c;
+		}, Misc.anyTo(rainfall), stack -> {
 			ItemStack stack1 = stack.copy();
 			IItemFluidContainer container = ((IItemFluidContainer) stack.getItem());
 			if (container.isV1())

@@ -33,8 +33,7 @@ public class LayerSurfaceBiomeEdge extends LayerExpandMix
 		}
 		if (isDesert(core))
 		{
-			return isDesert(up) && isDesert(down) && isDesert(left) && isDesert(right) ?
-					core : core | EDGE_MARK;
+			return isDesert(up) && isDesert(down) && isDesert(left) && isDesert(right) ? core : core | EDGE_MARK;
 		}
 		return core;
 	}

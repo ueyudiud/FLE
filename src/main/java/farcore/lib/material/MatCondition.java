@@ -22,28 +22,28 @@ public class MatCondition implements Judgable<ISubTagContainer>
 {
 	public static final Register<MatCondition> register = new Register();
 	
-	public final String name;
-	public final String orePrefix;
-	public final String localName;
-	public final String withOreLocalName;
+	public final String	name;
+	public final String	orePrefix;
+	public final String	localName;
+	public final String	withOreLocalName;
 	
 	public int stackLimit = 64;
 	
-	public long size = 1296L;
-	public long latticeSize = 1296L;
-	public float specificArea = 1.0F;
+	public long		size			= 1296L;
+	public long		latticeSize		= 1296L;
+	public float	specificArea	= 1.0F;
 	
-	public boolean isFluid = false;
-	public float fluidViscosityMultiply = 1.0F;
+	public boolean	isFluid					= false;
+	public float	fluidViscosityMultiply	= 1.0F;
 	
-	public float maxTemp = 1E16F;
-	public float minTemp = 0F;
+	public float	maxTemp	= 1E16F;
+	public float	minTemp	= 0F;
 	
 	public ItemMulti instance;
 	
-	public Judgable<ISubTagContainer> filter = Judgable.FALSE;
-	public final Set<Mat> blacklist = new HashSet<>();
-	public final Set<Mat> whitelist = new HashSet<>();
+	public Judgable<ISubTagContainer>	filter		= Judgable.FALSE;
+	public final Set<Mat>				blacklist	= new HashSet<>();
+	public final Set<Mat>				whitelist	= new HashSet<>();
 	
 	public final Map<Mat, String> unnormalNames = new HashMap<>();
 	
@@ -51,6 +51,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	{
 		this(prefix, prefix, localName, withOreLocalName);
 	}
+	
 	public MatCondition(String name, String prefix, String localName, String withOreLocalName)
 	{
 		this.name = name;
@@ -82,7 +83,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public MatCondition addToBlackList(Mat...mats)
 	{
-		if(mats.length == 1)
+		if (mats.length == 1)
 		{
 			this.blacklist.add(mats[0]);
 		}
@@ -95,7 +96,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public MatCondition addToWhiteList(Mat...mats)
 	{
-		if(mats.length == 1)
+		if (mats.length == 1)
 		{
 			this.whitelist.add(mats[0]);
 		}
@@ -116,10 +117,12 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	{
 		return setSize(size, size, 1F);
 	}
+	
 	public MatCondition setSize(long size, long latticSize)
 	{
 		return setSize(size, latticSize, (float) ((double) size / (double) latticSize));
 	}
+	
 	public MatCondition setSize(long size, long latticSize, float specificArea)
 	{
 		this.size = size;
@@ -140,6 +143,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	{
 		return setFluid(1.0F);
 	}
+	
 	public MatCondition setFluid(float viscosityMultiply)
 	{
 		this.isFluid = true;
@@ -159,8 +163,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public boolean isBelongTo(Mat material)
 	{
-		return (this.filter.isTrue(material) && !this.blacklist.contains(material)) ||
-				this.whitelist.contains(material);
+		return (this.filter.isTrue(material) && !this.blacklist.contains(material)) || this.whitelist.contains(material);
 	}
 	
 	String getWithOreTranslateName()
@@ -230,7 +233,6 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	@Override
 	public boolean isTrue(ISubTagContainer target)
 	{
-		return this.filter.isTrue(target) &&
-				(!(target instanceof Mat) || isBelongTo((Mat) target));
+		return this.filter.isTrue(target) && (!(target instanceof Mat) || isBelongTo((Mat) target));
 	}
 }

@@ -37,11 +37,11 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	{
 		switch (direction)
 		{
-		case D :
-		case A :
-		case B :
+		case D:
+		case A:
+		case B:
 			return false;
-		case Q :
+		case Q:
 			return getTank().canInsertFluid(direction, stack);
 		default:
 			return isLinked(direction) && getTank().canInsertFluid(direction, stack);
@@ -53,11 +53,11 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	{
 		switch (direction)
 		{
-		case D :
-		case A :
-		case B :
+		case D:
+		case A:
+		case B:
 			return false;
-		case Q :
+		case Q:
 			return getTank().canInsertFluid(direction, stack);
 		default:
 			return isLinked(direction) && getTank().canInsertFluid(direction, stack);
@@ -75,11 +75,11 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	{
 		switch (direction)
 		{
-		case D :
-		case A :
-		case B :
+		case D:
+		case A:
+		case B:
 			return 0;
-		case Q :
+		case Q:
 			return getTank().fill(resource, process);
 		default:
 			return !isLinked(direction) ? 0 : getTank().fill(resource, process);
@@ -91,11 +91,11 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	{
 		switch (direction)
 		{
-		case D :
-		case A :
-		case B :
+		case D:
+		case A:
+		case B:
 			return null;
-		case Q :
+		case Q:
 			return getTank().drain(required, process);
 		default:
 			return !isLinked(direction) ? null : getTank().drain(required, process);
@@ -107,11 +107,11 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	{
 		switch (direction)
 		{
-		case D :
-		case A :
-		case B :
+		case D:
+		case A:
+		case B:
 			return null;
-		case Q :
+		case Q:
 			return getTank().drain(maxAmount, process);
 		default:
 			return !isLinked(direction) ? null : getTank().drain(maxAmount, process);

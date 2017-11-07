@@ -8,6 +8,7 @@ import nebula.common.world.IObjectInWorld;
 
 /**
  * Object in world with temperature property.
+ * 
  * @author ueyudiud
  *
  */

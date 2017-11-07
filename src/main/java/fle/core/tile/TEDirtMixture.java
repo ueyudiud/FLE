@@ -42,13 +42,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEDirtMixture extends TESynchronization
-implements ITP_Drops, ITB_BlockActived, ITP_BlockHardness, ITP_ExplosionResistance,
-IUpdatableTile
+public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_BlockActived, ITP_BlockHardness, ITP_ExplosionResistance, IUpdatableTile
 {
-	private long duration;
-	private long mixture;
-	private StackContainer<Mat> stacks = new StackContainer<>(5184);
+	private long				duration;
+	private long				mixture;
+	private StackContainer<Mat>	stacks	= new StackContainer<>(5184);
 	
 	public StackContainer<Mat> getStacks()
 	{
@@ -103,10 +101,9 @@ IUpdatableTile
 						result.add(ItemMulti.createStack(s.element, MC.pile, (int) (s.size / MC.pile.size)));
 					}
 				}
-				else if (s.element.contain(SubTags.CROP) || s.element.contain(SubTags.PLANT) ||
-						s.element.contain(SubTags.VINES))
+				else if (s.element.contain(SubTags.CROP) || s.element.contain(SubTags.PLANT) || s.element.contain(SubTags.VINES))
 				{
-					//TODO Drop mixed plant ball.
+					// TODO Drop mixed plant ball.
 				}
 			}
 		}
@@ -114,8 +111,7 @@ IUpdatableTile
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		int lv = ItemStacks.getToolLevel(stack, EnumToolTypes.SHOVEL);
 		return EnumActionResult.PASS;
@@ -124,8 +120,8 @@ IUpdatableTile
 	@Override
 	public void onBlockBreak(IBlockState state)
 	{
-		//		Stack<Mat> stack = stacks.drain(M.water);
-		//TODO
+		// Stack<Mat> stack = stacks.drain(M.water);
+		// TODO
 	}
 	
 	@Override
@@ -151,12 +147,7 @@ IUpdatableTile
 	
 	private boolean checkStay()
 	{
-		if (
-				Worlds.isAir(this.world, this.pos.east()) ||
-				Worlds.isAir(this.world, this.pos.west()) ||
-				Worlds.isAir(this.world, this.pos.north()) ||
-				Worlds.isAir(this.world, this.pos.south()) ||
-				!Worlds.isSideSolid(this.world, this.pos, EnumFacing.UP, false))
+		if (Worlds.isAir(this.world, this.pos.east()) || Worlds.isAir(this.world, this.pos.west()) || Worlds.isAir(this.world, this.pos.north()) || Worlds.isAir(this.world, this.pos.south()) || !Worlds.isSideSolid(this.world, this.pos, EnumFacing.UP, false))
 		{
 			removeBlock();
 			return false;
@@ -216,11 +207,7 @@ IUpdatableTile
 		long total = 0;
 		for (Stack<Mat> stack : this.stacks.getList())
 		{
-			if (
-					stack.element.contain(SubTags.DIRT) ||
-					stack.element.contain(SubTags.PLANT) ||
-					stack.element.contain(SubTags.CROP) ||
-					stack.element.contain(SubTags.VINES))
+			if (stack.element.contain(SubTags.DIRT) || stack.element.contain(SubTags.PLANT) || stack.element.contain(SubTags.CROP) || stack.element.contain(SubTags.VINES))
 			{
 				total += stack.size;
 			}

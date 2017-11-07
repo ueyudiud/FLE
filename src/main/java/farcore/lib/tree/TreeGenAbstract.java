@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 
 public abstract class TreeGenAbstract implements ITreeGenerator
 {
-	protected float generateCoreLeavesChance;
-	protected ITree tree;
+	protected float	generateCoreLeavesChance;
+	protected ITree	tree;
 	
 	public TreeGenAbstract(ITree tree, float generateCoreLeavesChance)
 	{
@@ -30,6 +30,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	
 	/**
 	 * Helper method.
+	 * 
 	 * @param minHeight
 	 * @param randHeight
 	 */
@@ -41,25 +42,21 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState block;
-		return world.isAirBlock(pos) ||
-				(block = world.getBlockState(pos)).getBlock().isLeaves(block, world, pos) ||
-				block.getBlock() == EnumBlock.sapling.block;
+		return world.isAirBlock(pos) || (block = world.getBlockState(pos)).getBlock().isLeaves(block, world, pos) || block.getBlock() == EnumBlock.sapling.block;
 	}
 	
 	protected boolean isLeavesReplaceable(World world, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState block;
-		return world.isAirBlock(pos) ||
-				(block = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(block, world, pos);
+		return world.isAirBlock(pos) || (block = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(block, world, pos);
 	}
 	
 	protected boolean isAirOrVine(World world, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState state;
-		return (state = world.getBlockState(pos)).getBlock().isAir(state, world, pos) ||
-				state.getBlock() == EnumBlock.vine.block;
+		return (state = world.getBlockState(pos)).getBlock().isAir(state, world, pos) || state.getBlock() == EnumBlock.vine.block;
 	}
 	
 	protected void generateVine(World world, int x, int y, int z, EnumFacing facing)
@@ -70,8 +67,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	protected boolean checkLeavesGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-		if (!FarCore.worldGenerationFlag && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
-			return false;
+		if (!FarCore.worldGenerationFlag && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h))) return false;
 		for (int i = x - l; i <= x + l; ++i)
 		{
 			for (int j = y; j <= y + w; ++j)
@@ -96,19 +92,18 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	protected boolean checkLogGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-		if (!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
-			return false;
-		for(int i = x - l; i <= x + l; ++i)
+		if (!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h))) return false;
+		for (int i = x - l; i <= x + l; ++i)
 		{
-			for(int j = y; j <= y + w; ++j)
+			for (int j = y; j <= y + w; ++j)
 			{
-				for(int k = z - h; k <= z + h; ++k)
+				for (int k = z - h; k <= z + h; ++k)
 				{
-					if(!matchLocal && i == x && j == y && k == z)
+					if (!matchLocal && i == x && j == y && k == z)
 					{
 						continue;
 					}
-					if(isLogReplaceable(world, i, j, k))
+					if (isLogReplaceable(world, i, j, k))
 					{
 						continue;
 					}
@@ -133,23 +128,23 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	{
 		switch (core)
 		{
-		case 1 :
+		case 1:
 			int sq = size * size;
-			for(int i = -size; i <= size; ++i)
+			for (int i = -size; i <= size; ++i)
 			{
-				for(int j = -size; j <= size; ++j)
-					if(i * i + j * j <= sq)
+				for (int j = -size; j <= size; ++j)
+					if (i * i + j * j <= sq)
 					{
 						generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
 					}
 			}
 			break;
-		case 2 :
+		case 2:
 			sq = (int) ((size + .5F) * (size + .5F));
-			for(int i = -size; i <= size + 1; ++i)
+			for (int i = -size; i <= size + 1; ++i)
 			{
-				for(int j = -size; j <= size + 1; ++j)
-					if((i - .5F) * (i - .5F) + (j - .5F) * (j - .5F) <= sq)
+				for (int j = -size; j <= size + 1; ++j)
+					if ((i - .5F) * (i - .5F) + (j - .5F) * (j - .5F) <= sq)
 					{
 						generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
 					}
@@ -164,11 +159,11 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState state;
-		if(world.isAirBlock(pos) || (state = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(state, world, pos))
+		if (world.isAirBlock(pos) || (state = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(state, world, pos))
 		{
 			meta &= 0x7;
 			int flag = V.generateState ? 2 : 3;
-			if(rand.nextDouble() <= generateCoreLeavesChance)
+			if (rand.nextDouble() <= generateCoreLeavesChance)
 			{
 				Worlds.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES_CORE), meta, flag);
 				Worlds.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);

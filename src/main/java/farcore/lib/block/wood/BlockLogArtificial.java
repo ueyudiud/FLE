@@ -67,7 +67,7 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	{
 		super("log.artifical." + tree.material.name, tree);
 		setCreativeTab(CT.TREE);
-		if(tree.tickLogUpdate())
+		if (tree.tickLogUpdate())
 		{
 			setTickRandomly(true);
 		}
@@ -115,23 +115,21 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		if(world instanceof World)
+		if (world instanceof World)
 		{
-			if(((World) world).isRemote) return;
+			if (((World) world).isRemote) return;
 			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 		}
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return this.tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, true);
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return this.tree.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, true);
 	}
@@ -147,27 +145,27 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 		{
 		case Y:
 		case NONE:
-			if(axis3 != Axis.Y)
+			if (axis3 != Axis.Y)
 			{
 				axis4 = axis3 == Axis.X ? EnumAxis.Z : EnumAxis.X;
 			}
 			break;
 		case X:
-			if(axis3 != Axis.X)
+			if (axis3 != Axis.X)
 			{
 				axis4 = axis3 == Axis.Y ? EnumAxis.Z : EnumAxis.Y;
 			}
 			break;
 		case Z:
-			if(axis3 != Axis.Z)
+			if (axis3 != Axis.Z)
 			{
 				axis4 = axis3 == Axis.X ? EnumAxis.Y : EnumAxis.X;
 			}
 			break;
 		}
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
-			if(axis2 != axis4)
+			if (axis2 != axis4)
 			{
 				world.setBlockState(pos, state.withProperty(net.minecraft.block.BlockLog.LOG_AXIS, axis4), 3);
 			}

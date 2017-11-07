@@ -32,6 +32,7 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	{
 		this(material, false);
 	}
+	
 	public PlantStatic(Mat material, boolean withColor)
 	{
 		super(material);
@@ -44,10 +45,9 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	public void registerRender()
 	{
 		ModelResourceLocation location = new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal");
-		ModelLoader.setCustomStateMapper(this.block, block-> ImmutableMap.of(block.getDefaultState(), location));
+		ModelLoader.setCustomStateMapper(this.block, block -> ImmutableMap.of(block.getDefaultState(), location));
 		Client.registerModel(this.block.getItemBlock(), new ModelResourceLocation(location, "inventory"));
-		if (this.withColor)
-			Renders.registerBiomeColorMultiplier(this.block);
+		if (this.withColor) Renders.registerBiomeColorMultiplier(this.block);
 	}
 	
 	@Override

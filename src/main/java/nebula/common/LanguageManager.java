@@ -28,21 +28,22 @@ import net.minecraft.client.resources.I18n;
 import scala.actors.threadpool.Arrays;
 
 /**
- * Language manager use to localized string to
- * display.
+ * Language manager use to localized string to display.
+ * 
  * @author ueyudiud
  */
 public class LanguageManager
 {
 	/** The default locale of manager. */
-	public static final String ENGLISH = "en_US";
+	public static final String					ENGLISH	= "en_US";
 	/** Localization map loaded from language file. */
-	private static final Map<String, String> MAP1 = new HashMap<>();
+	private static final Map<String, String>	MAP1	= new HashMap<>();
 	/** Localization map loaded from byte code. */
-	private static final Map<String, String> MAP2 = new HashMap<>();
+	private static final Map<String, String>	MAP2	= new HashMap<>();
 	
 	/**
 	 * Register tool tips (List of localize string) to localization map.
+	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized strings.
 	 */
@@ -63,6 +64,7 @@ public class LanguageManager
 	
 	/**
 	 * Register localize string with string format.
+	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 * @param formats the formats to string.
@@ -83,8 +85,9 @@ public class LanguageManager
 	}
 	
 	/**
-	 * Register localize string to localized manager,
-	 * for <tt>unlocalized=localized</tt> entry.
+	 * Register localize string to localized manager, for
+	 * <tt>unlocalized=localized</tt> entry.
+	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 */
@@ -94,16 +97,24 @@ public class LanguageManager
 	}
 	
 	/**
-	 * Localized string and format it.<p>
-	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
-	 * string does not exist in translation map.<p>
-	 * The format action will only taken when translating is succeed.<p>
-	 * If exception is caught in formating. The result will be <tt>"Translation Error"</tt>.
+	 * Localized string and format it.
+	 * <p>
+	 * The localize manager will find localized source given by Nebula
+	 * translation map first, or find from I18n if failed finding. The
+	 * <tt>en_US</tt> will be used when unlocalized string does not exist in
+	 * translation map.
+	 * <p>
+	 * The format action will only taken when translating is succeed.
+	 * <p>
+	 * If exception is caught in formating. The result will be
+	 * <tt>"Translation Error"</tt>.
+	 * 
 	 * @param unlocalized the unlocalized string.
-	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
-	 * @return the formated localized string, or unlocalized string direct if nothing found.
+	 * @param objects the format element, use
+	 *            {@link java.lang.String#format(String, Object...)} to format
+	 *            localized string.
+	 * @return the formated localized string, or unlocalized string direct if
+	 *         nothing found.
 	 * @see #translateToLocalWithIgnoreUnmapping(String, Object...)
 	 */
 	public static String translateToLocal(String unlocalized, Object...objects)
@@ -131,44 +142,52 @@ public class LanguageManager
 	
 	/**
 	 * For text component translation.
+	 * 
 	 * @param unlocalized
 	 * @return
 	 */
 	public static String translateToLocalOfText(String unlocalized)
 	{
 		String translate;
-		if(MAP1.containsKey(unlocalized))
+		if (MAP1.containsKey(unlocalized))
 		{
 			translate = MAP1.get(unlocalized);
 		}
-		else if(MAP2.containsKey(unlocalized))
+		else if (MAP2.containsKey(unlocalized))
 		{
 			translate = MAP2.get(unlocalized);
 		}
-		else return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
+		else
+			return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
 		return translate == null ? unlocalized : translate;
 	}
 	
 	/**
-	 * Localized string and format unsafely.<p>
-	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
-	 * string does not exist in translation map.<p>
-	 * The format action will only taken when translating is succeed.<p>
+	 * Localized string and format unsafely.
+	 * <p>
+	 * The localize manager will find localized source given by Nebula
+	 * translation map first, or find from I18n if failed finding. The
+	 * <tt>en_US</tt> will be used when unlocalized string does not exist in
+	 * translation map.
+	 * <p>
+	 * The format action will only taken when translating is succeed.
+	 * <p>
+	 * 
 	 * @param unlocalized the unlocalized string.
-	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
+	 * @param objects the format element, use
+	 *            {@link java.lang.String#format(String, Object...)} to format
+	 *            localized string.
 	 * @return the formated localized string, or <tt>null</tt> if nothing found.
 	 * @see #translateToLocal(String, Object...)
 	 */
 	public static @Nullable String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
 		String translate;
-		if(MAP1.containsKey(unlocalized))
+		if (MAP1.containsKey(unlocalized))
 		{
 			translate = MAP1.get(unlocalized);
 		}
-		else if(MAP2.containsKey(unlocalized))
+		else if (MAP2.containsKey(unlocalized))
 		{
 			translate = MAP2.get(unlocalized);
 		}
@@ -181,13 +200,13 @@ public class LanguageManager
 		{
 			return translate == null ? null : String.format(translate, objects);
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			return null;
 		}
 	}
 	
-	//Internal part start, do not use these method.
+	// Internal part start, do not use these method.
 	private File file;
 	
 	public LanguageManager(File file)
@@ -203,26 +222,25 @@ public class LanguageManager
 	
 	private Map<String, String> read(String locale)
 	{
-		if (!this.file.canRead())
-			return ImmutableMap.of();
+		if (!this.file.canRead()) return ImmutableMap.of();
 		File file = new File(this.file, locale + ".lang");
-		if (!file.exists())
-			return ImmutableMap.of();
+		if (!file.exists()) return ImmutableMap.of();
 		String name = file.getName();
 		Log.info("Loading " + name + " language file.");
 		int keyCount = 0;
 		Map<String, String> map = new HashMap<>();
 		
 		int l = 0;
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
+		try (
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
 		{
 			String line;
-			while((line = reader.readLine()) != null)
+			while ((line = reader.readLine()) != null)
 			{
-				if(line.length() != 0 && line.charAt(0) != '#')
+				if (line.length() != 0 && line.charAt(0) != '#')
 				{
 					int idx = line.indexOf('=');
-					if(idx == -1) throw new RuntimeException();
+					if (idx == -1) throw new RuntimeException();
 					map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
 					++keyCount;
 				}
@@ -230,11 +248,11 @@ public class LanguageManager
 			}
 			Log.info("Wrote " + keyCount + " keys to language manager.");
 		}
-		catch(RuntimeException exception)
+		catch (RuntimeException exception)
 		{
 			Log.warn("Invalid language file " + file.getName() + ". line: " + l, exception);
 		}
-		catch(IOException exception)
+		catch (IOException exception)
 		{
 			Log.warn("Fail to load language file " + file.getName(), exception);
 		}
@@ -264,29 +282,37 @@ public class LanguageManager
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");
-			if (!file.exists())
-				file.createNewFile();
+			if (!file.exists()) file.createNewFile();
 			Map<String, String> map = read(ENGLISH);
-			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+			try (
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
 			{
-				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);//Use sorted map for easier to search translated word.
-				for(Entry<String, String> entry : sortedMap.entrySet())
-					if(!map.containsKey(entry.getKey()))
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);// Use
+																							// sorted
+																							// map
+																							// for
+																							// easier
+																							// to
+																							// search
+																							// translated
+																							// word.
+				for (Entry<String, String> entry : sortedMap.entrySet())
+					if (!map.containsKey(entry.getKey()))
 					{
 						writer.write(entry.getKey() + "=" + entry.getValue() + "\r");
 						++keyCount;
 					}
 			}
-			catch(IOException exception)
+			catch (IOException exception)
 			{
 				Log.warn("Fail to save language file.", exception);
 			}
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.warn("Fail to write language file.", exception);
 		}
 		Log.info("Wrote " + keyCount + " keys to file.");
 	}
-	//Internal part end.
+	// Internal part end.
 }

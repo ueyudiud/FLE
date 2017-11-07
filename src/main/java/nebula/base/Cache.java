@@ -13,14 +13,15 @@ import javax.annotation.Nullable;
 
 /**
  * The cache is to cache a element.
+ * 
  * @author ueyudiud
  */
-public
-class Cache<E> implements Serializable
+public class Cache<E> implements Serializable
 {
 	private static final long serialVersionUID = -3454337834646888382L;
 	
-	private static final Object NULL = new Object() {
+	private static final Object NULL = new Object()
+	{
 		@Override
 		public int hashCode()
 		{
@@ -48,6 +49,7 @@ class Cache<E> implements Serializable
 	
 	/**
 	 * Create a new cache with input argument element.
+	 * 
 	 * @param element the cached element.
 	 */
 	public Cache(@Nullable E element)
@@ -57,6 +59,7 @@ class Cache<E> implements Serializable
 	
 	/**
 	 * Set a new element in cache.
+	 * 
 	 * @param element the new element.
 	 */
 	public void set(@Nullable E element)
@@ -66,6 +69,7 @@ class Cache<E> implements Serializable
 	
 	/**
 	 * Get the cached element.
+	 * 
 	 * @return the cached element.
 	 */
 	@Nullable
@@ -74,7 +78,7 @@ class Cache<E> implements Serializable
 		return this.element == NULL ? null : (E) this.element;
 	}
 	
-	//Optional like.
+	// Optional like.
 	
 	public boolean isAbsent()
 	{
@@ -105,11 +109,12 @@ class Cache<E> implements Serializable
 		}
 	}
 	
-	//Optional like end.
+	// Optional like end.
 	
 	/**
-	 * Get {@link java.util.Optional} value,
-	 * which wrapped element if it is present.
+	 * Get {@link java.util.Optional} value, which wrapped element if it is
+	 * present.
+	 * 
 	 * @return the Optional.
 	 */
 	public Optional<E> optional()

@@ -11,19 +11,24 @@ import net.minecraftforge.fluids.FluidStack;
 
 /**
  * Use to drain or fill fluid from player.
+ * 
  * @author ueyudiud
- * @see nebula.common.inventory.InventoryHelper#drainOrFillTank(IFluidHandlerIO, net.minecraft.entity.player.EntityPlayer, net.minecraft.util.EnumHand, Direction, net.minecraft.item.ItemStack, byte)
+ * @see nebula.common.inventory.InventoryHelper#drainOrFillTank(IFluidHandlerIO,
+ *      net.minecraft.entity.player.EntityPlayer, net.minecraft.util.EnumHand,
+ *      Direction, net.minecraft.item.ItemStack, byte)
  */
 public interface IFluidHandlerIO
 {
 	/**
 	 * Match side can extract item.
+	 * 
 	 * @return
 	 */
 	boolean canExtractFluid(Direction to);
 	
 	/**
 	 * Match side can insert item.
+	 * 
 	 * @param stack For asked stack, null for ask general behavior.
 	 * @return
 	 */

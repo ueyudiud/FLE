@@ -6,8 +6,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * The object current in world (Such as explosion, lather, etc).
- * See nebula world handler.
+ * The object current in world (Such as explosion, lather, etc). See nebula
+ * world handler.
+ * 
  * @author ueyudiud
  * @see nebula.common.NebulaWorldHandler
  */
@@ -25,10 +26,10 @@ public interface IObjectInWorld
 	
 	public static abstract class FlowableObjectInWorld implements IObjectInWorld
 	{
-		protected World world;
-		public double posX;
-		public double posY;
-		public double posZ;
+		protected World	world;
+		public double	posX;
+		public double	posY;
+		public double	posZ;
 		
 		public FlowableObjectInWorld(World world)
 		{
@@ -49,7 +50,7 @@ public interface IObjectInWorld
 		@Override
 		public double[] position()
 		{
-			return new double[]{ posX, posY, posZ };
+			return new double[] { posX, posY, posZ };
 		}
 		
 		@Override
@@ -80,11 +81,11 @@ public interface IObjectInWorld
 	
 	public static abstract class PosistionedObjectInWorld implements IObjectInWorld
 	{
-		protected World world;
-		public int posX;
-		public int posY;
-		public int posZ;
-		private BlockPos pos;
+		protected World		world;
+		public int			posX;
+		public int			posY;
+		public int			posZ;
+		private BlockPos	pos;
 		
 		public PosistionedObjectInWorld(World world)
 		{
@@ -102,7 +103,7 @@ public interface IObjectInWorld
 		
 		protected BlockPos pos()
 		{
-			if(pos == null)
+			if (pos == null)
 			{
 				pos = new BlockPos(posX, posY, posZ);
 			}
@@ -123,7 +124,7 @@ public interface IObjectInWorld
 		@Override
 		public double[] position()
 		{
-			return new double[]{ posX, posY, posZ };
+			return new double[] { posX, posY, posZ };
 		}
 		
 		@Override

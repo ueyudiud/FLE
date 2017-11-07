@@ -23,8 +23,8 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class BehaviorHoe extends BehaviorBase
 {
-	int hoeChance;
-	EnumToolType toolType;
+	int				hoeChance;
+	EnumToolType	toolType;
 	
 	public BehaviorHoe(EnumToolType toolType, int chance)
 	{
@@ -33,20 +33,18 @@ public class BehaviorHoe extends BehaviorBase
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(!player.canPlayerEdit(pos, facing, stack))
+		if (!player.canPlayerEdit(pos, facing, stack))
 			return EnumActionResult.FAIL;
 		else
 		{
 			UseHoeEvent event = new UseHoeEvent(player, stack, world, pos);
-			if(MinecraftForge.EVENT_BUS.post(event))
+			if (MinecraftForge.EVENT_BUS.post(event))
 				return EnumActionResult.FAIL;
-			else if(event.getResult() == Result.ALLOW)
-				return EnumActionResult.SUCCESS;
+			else if (event.getResult() == Result.ALLOW) return EnumActionResult.SUCCESS;
 			
-			if(facing == EnumFacing.UP)
+			if (facing == EnumFacing.UP)
 			{
 				player.setActiveHand(hand);
 				return EnumActionResult.SUCCESS;
@@ -59,16 +57,16 @@ public class BehaviorHoe extends BehaviorBase
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
 		int tick = stack.getMaxItemUseDuration() - timeLeft;
-		if(tick > 20)
+		if (tick > 20)
 		{
 			RayTraceResult result = Worlds.rayTrace(world, entity, false);
-			if(result != null && result.typeOfHit == Type.BLOCK && result.sideHit == EnumFacing.UP)
+			if (result != null && result.typeOfHit == Type.BLOCK && result.sideHit == EnumFacing.UP)
 			{
-				if(tick > 40 || entity.getRNG().nextInt(100) < this.hoeChance)
+				if (tick > 40 || entity.getRNG().nextInt(100) < this.hoeChance)
 				{
-					if(!world.isRemote)
+					if (!world.isRemote)
 					{
-						if(entity instanceof EntityPlayer)
+						if (entity instanceof EntityPlayer)
 						{
 							world.playSound((EntityPlayer) entity, result.getBlockPos(), SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}

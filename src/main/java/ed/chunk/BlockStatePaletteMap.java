@@ -16,9 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockStatePaletteMap implements IBlockStatePalette
 {
-	private final int bitCount;
-	private final IntIdentityHashBiMap<IBlockState> map;
-	private final BlockStateContainerExt resizer;
+	private final int								bitCount;
+	private final IntIdentityHashBiMap<IBlockState>	map;
+	private final BlockStateContainerExt			resizer;
 	
 	public BlockStatePaletteMap(int bitCount, BlockStateContainerExt resizer)
 	{
@@ -31,7 +31,7 @@ public class BlockStatePaletteMap implements IBlockStatePalette
 	public int idFor(IBlockState state)
 	{
 		int id = this.map.getId(state);
-		if(id == -1)
+		if (id == -1)
 		{
 			id = this.map.add(state);
 			

@@ -33,10 +33,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 {
 	public static enum EnumPlankState implements IStringSerializable
 	{
-		DEFAULT("default"),
-		FIRE_RESISTANCE("fire_resistance"),
-		ANTICORROSIVE("anticorrosive"),
-		BROKE("broke");
+		DEFAULT("default"), FIRE_RESISTANCE("fire_resistance"), ANTICORROSIVE("anticorrosive"), BROKE("broke");
 		
 		final String name;
 		
@@ -160,14 +157,12 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		IBlockState state = world.getBlockState(pos);
-		return state.getValue(STATE) == EnumPlankState.FIRE_RESISTANCE ? 0 :
-			super.getFireSpreadSpeed(world, pos, face);
+		return state.getValue(STATE) == EnumPlankState.FIRE_RESISTANCE ? 0 : super.getFireSpreadSpeed(world, pos, face);
 	}
 	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return world.getBlockState(pos).getValue(STATE) == EnumPlankState.FIRE_RESISTANCE ? 0 :
-			super.getFlammability(world, pos, face);
+		return world.getBlockState(pos).getValue(STATE) == EnumPlankState.FIRE_RESISTANCE ? 0 : super.getFlammability(world, pos, face);
 	}
 }

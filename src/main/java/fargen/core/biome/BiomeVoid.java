@@ -12,7 +12,7 @@ public class BiomeVoid extends BiomeBase
 		spawnableCreatureList.clear();
 		spawnableWaterCreatureList.clear();
 	}
-
+	
 	@Override
 	public int getWaterColorMultiplier()
 	{

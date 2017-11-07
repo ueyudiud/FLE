@@ -21,19 +21,22 @@ public class FLE
 {
 	/**
 	 * The mod id.
+	 * 
 	 * @see net.minecraftforge.fml.common.Mod#modid
 	 */
-	public static final String MODID = "fle";
+	public static final String	MODID	= "fle";
 	/**
 	 * The mod name.
+	 * 
 	 * @see net.minecraftforge.fml.common.Mod#name
 	 */
-	public static final String NAME = "Far Land Era";
+	public static final String	NAME	= "Far Land Era";
 	/**
 	 * Main mod version.
+	 * 
 	 * @see net.minecraftforge.fml.common.Mod#version
 	 */
-	public static final String VERSION = "@VERSION@";
+	public static final String	VERSION	= "@VERSION@";
 	
 	@Instance(FLE.MODID)
 	public static FLE mod;

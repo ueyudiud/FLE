@@ -34,8 +34,8 @@ public interface ICoordableBrightnessProvider
 	@SideOnly(Side.CLIENT)
 	class SimpleBrightnessProvider implements ICoordableBrightnessProvider
 	{
-		private final World world;
-		private MutableBlockPos pos = new MutableBlockPos();
+		private final World		world;
+		private MutableBlockPos	pos	= new MutableBlockPos();
 		
 		private SimpleBrightnessProvider(World world)
 		{

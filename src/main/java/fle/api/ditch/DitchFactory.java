@@ -17,8 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface DitchFactory
 {
 	/**
-	 * Return <code>true</code> to let this factory handle
-	 * material type.
+	 * Return <code>true</code> to let this factory handle material type.
+	 * 
 	 * @param material
 	 * @return
 	 */
@@ -30,6 +30,7 @@ public interface DitchFactory
 	
 	/**
 	 * Get multiple speed, use mL/tick for unit.
+	 * 
 	 * @param tile
 	 * @return
 	 */
@@ -37,6 +38,7 @@ public interface DitchFactory
 	
 	/**
 	 * Get max fluid transfer limit, use L for unit.
+	 * 
 	 * @param tile
 	 * @return
 	 */

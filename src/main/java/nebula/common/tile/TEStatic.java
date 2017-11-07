@@ -19,8 +19,7 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	@Override
 	public void onLoad()
 	{
-		if (isServer())
-			initServer();
+		if (isServer()) initServer();
 	}
 	
 	@Override
@@ -54,8 +53,8 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	public final void readFromDescription(NBTTagCompound nbt)
 	{
 		readFromDescription1(nbt);
-		//		markBlockUpdate();
-		//		markBlockRenderUpdate();
+		// markBlockUpdate();
+		// markBlockRenderUpdate();
 	}
 	
 	public void readFromDescription1(NBTTagCompound nbt)
@@ -96,7 +95,7 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		if (isServer())
 		{
 			float range = getSyncRange();
-			if(!this.world.isAreaLoaded(this.pos, (int) range)) return;
+			if (!this.world.isAreaLoaded(this.pos, (int) range)) return;
 			NBTTagCompound nbt = new NBTTagCompound();
 			writeToDescription(nbt);
 			sendToNearby(new PacketTESync(this.world, this.pos, nbt), range);

@@ -40,17 +40,20 @@ public class ModelFluidBlock
 		@Override
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception
 		{
-			if (!(modelLocation instanceof ModelResourceLocation))
-				return ModelFluid.WATER;
+			if (!(modelLocation instanceof ModelResourceLocation)) return ModelFluid.WATER;
 			String key = modelLocation.getResourcePath().substring("fluid.".length());
 			Fluid fluid = FluidRegistry.getFluid(key);
-			if (fluid == null)
-				return ModelFluid.WATER;
+			if (fluid == null) return ModelFluid.WATER;
 			String variant = ((ModelResourceLocation) modelLocation).getVariant();
 			switch (variant)
 			{
-			case "inventory" : return ModelHelper.makeItemModel(fluid.getStill());//Make still icon for item in inventory.
-			default : return new ModelFluid(fluid);
+			case "inventory":
+				return ModelHelper.makeItemModel(fluid.getStill());// Make still
+																	// icon for
+																	// item in
+																	// inventory.
+			default:
+				return new ModelFluid(fluid);
 			}
 		}
 	}
@@ -67,7 +70,7 @@ public class ModelFluidBlock
 			{
 				return getLocationFromFluid(((BlockFluidBase) Block.getBlockFromItem(stack.getItem())).getFluid(), "inventory");
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.warn("Fail to find fluid by item " + stack.getItem().getRegistryName().toString());
 			}
@@ -81,7 +84,7 @@ public class ModelFluidBlock
 			{
 				return ImmutableList.of(getLocationFromFluid(((BlockFluidBase) Block.getBlockFromItem(item)).getFluid(), "inventory"));
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.warn("Fail to find fluid by item " + item.getRegistryName().toString());
 			}
@@ -90,7 +93,7 @@ public class ModelFluidBlock
 		
 		private ModelResourceLocation getLocationFromFluid(Fluid fluid, String variants)
 		{
-			if(fluid == null)
+			if (fluid == null)
 			{
 				fluid = FluidRegistry.WATER;
 			}
@@ -102,7 +105,7 @@ public class ModelFluidBlock
 		{
 			ModelResourceLocation location = getLocationFromFluid(((BlockFluidBase) blockIn).getFluid(), "normal");
 			ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
-			for(IBlockState state : blockIn.getBlockState().getValidStates())
+			for (IBlockState state : blockIn.getBlockState().getValidStates())
 			{
 				builder.put(state, location);
 			}

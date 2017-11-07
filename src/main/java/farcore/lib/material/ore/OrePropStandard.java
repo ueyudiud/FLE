@@ -37,8 +37,7 @@ public class OrePropStandard implements IOreProperty
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
-			Direction side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return EnumActionResult.PASS;
 	}
@@ -56,8 +55,7 @@ public class OrePropStandard implements IOreProperty
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side,
-			float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}

@@ -14,16 +14,17 @@ import net.minecraft.potion.PotionEffect;
  */
 public class PropertyEdible implements IFoodStat
 {
-	public float foodLevel;
-	public float saturationLevel;
-	public float waterLevel;
-	public float[] nutrAmount;
-	public PotionEffect effect;
-	public boolean wolfEdible = false;
-
+	public float		foodLevel;
+	public float		saturationLevel;
+	public float		waterLevel;
+	public float[]		nutrAmount;
+	public PotionEffect	effect;
+	public boolean		wolfEdible	= false;
+	
 	public PropertyEdible()
 	{
 	}
+	
 	public PropertyEdible(float foodLevel, float saturationLevel, float waterLevel, float[] nutrAmount)
 	{
 		this.foodLevel = foodLevel;
@@ -31,7 +32,7 @@ public class PropertyEdible implements IFoodStat
 		this.waterLevel = waterLevel;
 		this.nutrAmount = nutrAmount;
 	}
-
+	
 	public PropertyEdible setEffect(PotionEffect effect)
 	{
 		this.effect = effect;
@@ -96,7 +97,7 @@ public class PropertyEdible implements IFoodStat
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
 		stack.stackSize--;
-		if(effect != null)
+		if (effect != null)
 		{
 			player.addPotionEffect(new PotionEffect(effect));
 		}

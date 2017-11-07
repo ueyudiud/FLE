@@ -9,8 +9,8 @@ package farcore.energy.kinetic;
  */
 public class KineticPackage
 {
-	public double torque;
-	public double speed;
+	public double	torque;
+	public double	speed;
 	
 	public KineticPackage(double t, double s)
 	{

@@ -40,15 +40,13 @@ public class TEKineticDebuger extends TESynchronization implements IKineticHandl
 	}
 	
 	@Override
-	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction,
-			KineticPackage pkg)
+	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction, KineticPackage pkg)
 	{
 		;
 	}
 	
 	@Override
-	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction,
-			KineticPackage pkg)
+	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction, KineticPackage pkg)
 	{
 		return pkg.speed;
 	}

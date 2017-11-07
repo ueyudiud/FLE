@@ -28,7 +28,7 @@ public class ItemFood extends ItemSubEdible
 	}
 	
 	@Override
-	public void addSubItem(int id, String name, String localName, IFoodStat stat, IBehavior... behaviors)
+	public void addSubItem(int id, String name, String localName, IFoodStat stat, IBehavior...behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
 	}

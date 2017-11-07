@@ -24,14 +24,10 @@ public class RecipeDirtMixture
 	{
 		for (Mat material : Mat.filt(SubTags.DIRT))
 		{
-			addDirtMixtureInputRecipe(new OreStack(MC.pile.getOreName(material)),
-					material, MC.pile.size);
-			addDirtMixtureInputRecipe(new OreStack(MC.soil.getOreName(material)),
-					material, MC.soil.size);
-			addDirtMixtureOutputRangedRecipe(ItemMulti.createStack(material, MC.pile), MC.pile.size,
-					material, 0.99F, 1.0F);
+			addDirtMixtureInputRecipe(new OreStack(MC.pile.getOreName(material)), material, MC.pile.size);
+			addDirtMixtureInputRecipe(new OreStack(MC.soil.getOreName(material)), material, MC.soil.size);
+			addDirtMixtureOutputRangedRecipe(ItemMulti.createStack(material, MC.pile), MC.pile.size, material, 0.99F, 1.0F);
 		}
-		addDirtMixtureOutputRangedRecipe(new ItemStack(Items.CLAY_BALL, 2), MC.pile.size,
-				M.latrosol, 0.45F, 0.55F, M.latroaluminosol, 0.45F, 0.55F);
+		addDirtMixtureOutputRangedRecipe(new ItemStack(Items.CLAY_BALL, 2), MC.pile.size, M.latrosol, 0.45F, 0.55F, M.latroaluminosol, 0.45F, 0.55F);
 	}
 }

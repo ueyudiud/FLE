@@ -27,15 +27,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Tool implements IToolStat
 {
-	protected boolean hasHandleColor = false;
-	protected float damagePerBreak = 1.0F;
-	protected float damagePerAttack = 1.0F;
-	protected float damageVsEntity = 1.0F;
-	protected float speedMultiplier = 1.0F;
-	protected float durabilityMultiplier = 1.0F;
-	protected float knockback = 0.0F;
-	protected float[] attackExpandBoxing = null;
-	protected final EnumToolType type;
+	protected boolean				hasHandleColor			= false;
+	protected float					damagePerBreak			= 1.0F;
+	protected float					damagePerAttack			= 1.0F;
+	protected float					damageVsEntity			= 1.0F;
+	protected float					speedMultiplier			= 1.0F;
+	protected float					durabilityMultiplier	= 1.0F;
+	protected float					knockback				= 0.0F;
+	protected float[]				attackExpandBoxing		= null;
+	protected final EnumToolType	type;
 	
 	protected Tool(EnumToolType type)
 	{
@@ -54,8 +54,7 @@ public abstract class Tool implements IToolStat
 	}
 	
 	@Override
-	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
-			IBlockState block)
+	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block)
 	{
 		return this.damagePerBreak;
 	}
@@ -124,9 +123,7 @@ public abstract class Tool implements IToolStat
 	public DamageSource getDamageSource(EntityLivingBase user, Entity target)
 	{
 		String string = getDeathMessage(target, user);
-		return new DamageSourceEntityAttack(this.type.name,
-				new TextComponentString(string.replace("(S)", "" + EnumChatFormatting.GREEN + user.getName() + EnumChatFormatting.RESET).replace("(M)", "" + EnumChatFormatting.RED + target.getName() + EnumChatFormatting.RESET)),
-				user);
+		return new DamageSourceEntityAttack(this.type.name, new TextComponentString(string.replace("(S)", "" + EnumChatFormatting.GREEN + user.getName() + EnumChatFormatting.RESET).replace("(M)", "" + EnumChatFormatting.RED + target.getName() + EnumChatFormatting.RESET)), user);
 	}
 	
 	protected abstract String getDeathMessage(Entity target, EntityLivingBase user);
@@ -161,15 +158,21 @@ public abstract class Tool implements IToolStat
 	{
 		switch (pass)
 		{
-		//0 for base.
-		case 1 : return ItemTool.getMaterial(stack, "head").RGB;
-		case 3 : return ItemTool.getMaterial(stack, "tie").RGB;
-		//4 for base override.
-		case 5 : return ItemTool.getMaterial(stack, "rust").RGB;
-		case 6 : return ItemTool.getMaterial(stack, "inlay").RGB;
-		//7 for extended override.
-		case 2 : if(this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
-		default: return 0xFFFFFFFF;
+		// 0 for base.
+		case 1:
+			return ItemTool.getMaterial(stack, "head").RGB;
+		case 3:
+			return ItemTool.getMaterial(stack, "tie").RGB;
+		// 4 for base override.
+		case 5:
+			return ItemTool.getMaterial(stack, "rust").RGB;
+		case 6:
+			return ItemTool.getMaterial(stack, "inlay").RGB;
+		// 7 for extended override.
+		case 2:
+			if (this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
+		default:
+			return 0xFFFFFFFF;
 		}
 	}
 	

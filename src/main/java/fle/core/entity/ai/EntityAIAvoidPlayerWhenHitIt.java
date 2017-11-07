@@ -22,17 +22,17 @@ import net.minecraft.util.math.Vec3d;
 public class EntityAIAvoidPlayerWhenHitIt<T extends EntityAnimal & IAnimalAccess> extends EntityAIBase
 {
 	/** The entity we are attached to */
-	protected final T entity;
-	private final double farSpeed;
-	private final double nearSpeed;
-	protected EntityPlayer closestLivingEntity;
-	private final float avoidDistance;
-	private final float fastAvoidDistanceSq;
+	protected final T				entity;
+	private final double			farSpeed;
+	private final double			nearSpeed;
+	protected EntityPlayer			closestLivingEntity;
+	private final float				avoidDistance;
+	private final float				fastAvoidDistanceSq;
 	/** The PathEntity of our entity */
-	private Path entityPathEntity;
+	private Path					entityPathEntity;
 	/** The PathNavigate of our entity */
-	private final PathNavigate entityPathNavigate;
-	private final Judgable<Entity> avoidTargetSelector;
+	private final PathNavigate		entityPathNavigate;
+	private final Judgable<Entity>	avoidTargetSelector;
 	
 	public EntityAIAvoidPlayerWhenHitIt(T eneity, double farSpeed, double nearSpeed, float avoidDistance, float fastAvoidDistance)
 	{
@@ -42,7 +42,7 @@ public class EntityAIAvoidPlayerWhenHitIt<T extends EntityAnimal & IAnimalAccess
 		this.avoidDistance = avoidDistance;
 		this.fastAvoidDistanceSq = fastAvoidDistance * fastAvoidDistance;
 		this.entityPathNavigate = eneity.getNavigator();
-		this.avoidTargetSelector = Judgable.<Entity, EntityPlayer>matchAndCast(player->player.isEntityAlive() && this.entity.getEntitySenses().canSee(player) && !player.isCreative() && !player.isSpectator(), EntityPlayer.class);
+		this.avoidTargetSelector = Judgable.<Entity, EntityPlayer> matchAndCast(player -> player.isEntityAlive() && this.entity.getEntitySenses().canSee(player) && !player.isCreative() && !player.isSpectator(), EntityPlayer.class);
 	}
 	
 	/**

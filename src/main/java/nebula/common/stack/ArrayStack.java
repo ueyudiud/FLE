@@ -17,23 +17,26 @@ public class ArrayStack implements AbstractStack
 		return new ArrayStack(size, stack.array);
 	}
 	
-	public int size;
-	public final List<ItemStack> array;
+	public int						size;
+	public final List<ItemStack>	array;
 	
 	public ArrayStack(int size, Collection<ItemStack> collection)
 	{
 		this.array = ImmutableList.copyOf(collection);
 		this.size = size;
 	}
+	
 	public ArrayStack(Collection<ItemStack> collection)
 	{
 		this(1, collection);
 	}
+	
 	public ArrayStack(int size, ItemStack...stacks)
 	{
 		this.array = ImmutableList.copyOf(stacks);
 		this.size = size;
 	}
+	
 	public ArrayStack(ItemStack...stacks)
 	{
 		this(1, stacks);
@@ -42,8 +45,7 @@ public class ArrayStack implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return stack != null &&
-				L.contain(this.array, target -> OreDictionary.itemMatches(target, stack, false));
+		return stack != null && L.contain(this.array, target -> OreDictionary.itemMatches(target, stack, false));
 	}
 	
 	@Override
@@ -61,9 +63,7 @@ public class ArrayStack implements AbstractStack
 	@Override
 	public AbstractStack split(ItemStack stack)
 	{
-		return this.size >= stack.stackSize ?
-				new ArrayStack(this.size - stack.stackSize, this.array) :
-					null;
+		return this.size >= stack.stackSize ? new ArrayStack(this.size - stack.stackSize, this.array) : null;
 	}
 	
 	@Override

@@ -6,7 +6,7 @@ import net.minecraft.block.state.IBlockState;
 
 public class TECircuitTripleInput extends TECircuitCompacted
 {
-	private static final Facing[] OUT = {Facing.FRONT};
+	private static final Facing[] OUT = { Facing.FRONT };
 	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, Direction side)

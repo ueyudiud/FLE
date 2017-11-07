@@ -26,18 +26,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEChest1 extends TEChest
-implements IGuiTile, ITP_BoundingBox
+public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 {
 	public static enum ChestType
 	{
-		RATTAN	(3, 3, "rattan"),
-		WOOD	(5, 3, "wooden"),
-		LEATHER	(5, 3, "leather"),
-		BAMBOO	(5, 3, "bamboo");
+		RATTAN(3, 3, "rattan"), WOOD(5, 3, "wooden"), LEATHER(5, 3, "leather"), BAMBOO(5, 3, "bamboo");
 		
-		final EnumSlotsSize size;
-		public final String name;
+		final EnumSlotsSize	size;
+		public final String	name;
 		
 		@SideOnly(Side.CLIENT)
 		public TextureAtlasSprite icon;
@@ -145,12 +141,13 @@ implements IGuiTile, ITP_BoundingBox
 		return new GuiInvContainer(this, player, this.type.size);
 	}
 	
-	private static final AxisAlignedBB AABB1 = new AxisAlignedBB(1.0F / 16.0F, 0.0F / 16.0F, 2.0F / 16.0F, 15.0F / 16.0F, 10.0F / 16.0F, 14.0F / 16.0F);
-	private static final AxisAlignedBB AABB2 = new AxisAlignedBB(2.0F / 16.0F, 0.0F / 16.0F, 1.0F / 16.0F, 14.0F / 16.0F, 10.0F / 16.0F, 15.0F / 16.0F);
+	private static final AxisAlignedBB	AABB1	= new AxisAlignedBB(1.0F / 16.0F, 0.0F / 16.0F, 2.0F / 16.0F, 15.0F / 16.0F, 10.0F / 16.0F, 14.0F / 16.0F);
+	private static final AxisAlignedBB	AABB2	= new AxisAlignedBB(2.0F / 16.0F, 0.0F / 16.0F, 1.0F / 16.0F, 14.0F / 16.0F, 10.0F / 16.0F, 15.0F / 16.0F);
 	
 	@Override
 	public AxisAlignedBB getBoundBox(IBlockState state)
 	{
-		return this.facing.getAxis() == Axis.Z ? AABB1 : AABB2;//facing.getAxis() == Axis.X
+		return this.facing.getAxis() == Axis.Z ? AABB1 : AABB2;// facing.getAxis()
+																// == Axis.X
 	}
 }

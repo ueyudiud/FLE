@@ -53,21 +53,21 @@ public class FleEntityHandler
 			setAttributes(replace, Configs.zombie);
 			event.setCanceled(true);
 		}
-		else if(clazz == EntitySkeleton.class)
+		else if (clazz == EntitySkeleton.class)
 		{
 			EntityFLESkeleton replace = new EntityFLESkeleton(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
 			setAttributes(replace, Configs.skeleton);
 			event.setCanceled(true);
 		}
-		else if(clazz == EntitySpider.class)
+		else if (clazz == EntitySpider.class)
 		{
 			EntityFLESpider replace = new EntityFLESpider(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
 			setAttributes(replace, Configs.spider);
 			event.setCanceled(true);
 		}
-		else if(clazz == EntityCreeper.class)
+		else if (clazz == EntityCreeper.class)
 		{
 			EntityFLECreeper replace = new EntityFLECreeper(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
@@ -111,7 +111,7 @@ public class FleEntityHandler
 			if (source.getSourceOfDamage() instanceof EntityZombie)
 			{
 				float hardness = dif * event.getEntityLiving().getRNG().nextFloat() + 1.5F;
-				if(dif != 0.0F)
+				if (dif != 0.0F)
 				{
 					entity.addPotionEffect(new PotionEffect(Potions.INFECT_ZV, (int) hardness * 800, (int) (dif - 1F)));
 					entity.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, (int) hardness * 800, 1));
@@ -122,7 +122,7 @@ public class FleEntityHandler
 				entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) ((1F + event.getEntityLiving().getRNG().nextFloat() * dif) * (event.getAmount() + 2) * 500)));
 			}
 		}
-		else if(event.getSource().isProjectile() && event.getAmount() > 2.0F)
+		else if (event.getSource().isProjectile() && event.getAmount() > 2.0F)
 		{
 			entity.addPotionEffect(new PotionEffect(Potions.BLEED, (int) ((event.getAmount() - 2.0F) * (80 + dif * 20F))));
 		}
@@ -132,16 +132,16 @@ public class FleEntityHandler
 	public void onEntityJump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
-		if(entity.isPotionActive(Potions.JUMP_REDUCE))
+		if (entity.isPotionActive(Potions.JUMP_REDUCE))
 		{
-			if(entity.motionY > 0)
+			if (entity.motionY > 0)
 			{
 				entity.motionY *= 1F - 0.125F * (entity.getActivePotionEffect(Potions.JUMP_REDUCE).getAmplifier() + 1);
 			}
 		}
-		if(entity.isPotionActive(Potions.FRACTURE))
+		if (entity.isPotionActive(Potions.FRACTURE))
 		{
-			if(entity.motionY > 0)
+			if (entity.motionY > 0)
 			{
 				entity.motionY *= 1F - 0.125F * (entity.getActivePotionEffect(Potions.FRACTURE).getAmplifier() + 1);
 			}
@@ -153,20 +153,17 @@ public class FleEntityHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityFall(LivingFallEvent event)
 	{
-		if (event.getEntityLiving().world.isRemote)
-			return;
+		if (event.getEntityLiving().world.isRemote) return;
 		EntityLivingBase entity = event.getEntityLiving();
-		if (!(entity instanceof EntityPlayer) && !(entity instanceof EntityAnimal) ||
-				(entity instanceof EntityChicken))
-			return;
-		float a = event.getDistance();//For motion is distance calculation.
+		if (!(entity instanceof EntityPlayer) && !(entity instanceof EntityAnimal) || (entity instanceof EntityChicken)) return;
+		float a = event.getDistance();// For motion is distance calculation.
 		a *= event.getDamageMultiplier();
 		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
 		a -= effect == null ? 2.5F : (effect.getAmplifier() + 3.5F);
 		float damage;
 		if (a > 0)
 		{
-			if(a < 4F)
+			if (a < 4F)
 			{
 				damage = a;
 			}
@@ -187,10 +184,10 @@ public class FleEntityHandler
 					entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
 				}
 				float tick = a + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * a - 4;
-				if(tick > 0)
+				if (tick > 0)
 				{
 					entity.addPotionEffect(new PotionEffect(Potions.JUMP_REDUCE, (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
-					entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+					entity.addPotionEffect(new PotionEffect(Potions.FRACTURE, (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
 				}
 			}
 		}

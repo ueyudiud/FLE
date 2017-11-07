@@ -21,8 +21,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class MatBehaviorRottenable implements IItemMatProp
 {
-	private static final int FRESH = 0;
-	private static final int ROTTEN = 1;
+	private static final int	FRESH	= 0;
+	private static final int	ROTTEN	= 1;
 	
 	@Override
 	public int getOffsetMetaCount()
@@ -43,15 +43,14 @@ public class MatBehaviorRottenable implements IItemMatProp
 	}
 	
 	@Override
-	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition,
-			String saveTag)
+	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition, String saveTag)
 	{
 		switch (metaOffset)
 		{
-		case ROTTEN :
+		case ROTTEN:
 			ItemStacks.getSubOrSetupNBT(stack, saveTag, true).setBoolean("rotten", true);
 			break;
-		case FRESH :
+		case FRESH:
 		default:
 			break;
 		}
@@ -64,19 +63,18 @@ public class MatBehaviorRottenable implements IItemMatProp
 	}
 	
 	@Override
-	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment,
-			String saveTag)
+	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment, String saveTag)
 	{
 		NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(stack, saveTag, false);
-		if(!nbt.getBoolean("rotten"))
+		if (!nbt.getBoolean("rotten"))
 		{
 			int progress = nbt.getInteger("progress");
 			int max = material.getProperty("quality_period");
 			float temperature = ThermalNet.getTemperature(environment) - material.getProperty("rotten_temperature");
-			int speed = (int) (Math.exp(- temperature * temperature) * condition.specificArea);
-			if(speed > 0)
+			int speed = (int) (Math.exp(-temperature * temperature) * condition.specificArea);
+			if (speed > 0)
 			{
-				if(progress + speed >= max)
+				if (progress + speed >= max)
 				{
 					nbt.setBoolean("rotten", true);
 					nbt.removeTag("progress");
@@ -92,11 +90,10 @@ public class MatBehaviorRottenable implements IItemMatProp
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list,
-			String saveTag)
+	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag)
 	{
 		NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(stack, saveTag, false);
-		if(nbt.getBoolean("rotten"))
+		if (nbt.getBoolean("rotten"))
 		{
 			list.add("info.material.behavior.rottenable.rotten");
 		}

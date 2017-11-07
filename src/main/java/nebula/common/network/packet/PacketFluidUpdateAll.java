@@ -19,11 +19,12 @@ public class PacketFluidUpdateAll extends PacketGui
 	{
 		
 	}
+	
 	public PacketFluidUpdateAll(ContainerBase container)
 	{
 		super(container);
 		this.stacks = new FluidStack[container.getFluidSlots().size()];
-		for(int i = 0; i < this.stacks.length; ++i)
+		for (int i = 0; i < this.stacks.length; ++i)
 		{
 			this.stacks[i] = container.getFluidSlots().get(i).getStackInSlot();
 		}
@@ -45,7 +46,7 @@ public class PacketFluidUpdateAll extends PacketGui
 	{
 		super.decode(input);
 		this.stacks = new FluidStack[input.readByte()];
-		for(int i = 0; i < this.stacks.length; ++i)
+		for (int i = 0; i < this.stacks.length; ++i)
 		{
 			this.stacks[i] = input.readFluidStack();
 		}
@@ -55,9 +56,9 @@ public class PacketFluidUpdateAll extends PacketGui
 	public IPacket process(Network network)
 	{
 		ContainerBase container = container();
-		if(container != null)
+		if (container != null)
 		{
-			for(int i = 0; i < this.stacks.length; ++i)
+			for (int i = 0; i < this.stacks.length; ++i)
 			{
 				container.getFluidSlots().get(i).putStack(this.stacks[i]);
 			}

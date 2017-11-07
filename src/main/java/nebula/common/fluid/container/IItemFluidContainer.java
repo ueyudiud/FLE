@@ -51,6 +51,7 @@ public abstract interface IItemFluidContainer
 	
 	/**
 	 * To predict can drain fluid container.
+	 * 
 	 * @param stack
 	 * @return
 	 */
@@ -58,6 +59,7 @@ public abstract interface IItemFluidContainer
 	
 	/**
 	 * To predict is fluid container full.
+	 * 
 	 * @param stack
 	 * @return
 	 */

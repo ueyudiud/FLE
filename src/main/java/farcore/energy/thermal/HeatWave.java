@@ -13,31 +13,34 @@ import net.minecraft.world.World;
 
 /**
  * The heat wave, used when on explosion, etc.
+ * 
  * @author ueyudiud
  *
  */
 public class HeatWave implements ITickable, IThermalObjectInWorld
 {
-	private World world;
-	private float temperature;
+	private World	world;
+	private float	temperature;
 	
-	private double coreX;
-	private double coreY;
-	private double coreZ;
+	private double	coreX;
+	private double	coreY;
+	private double	coreZ;
 	
-	private boolean isDead = false;
-	private double total;
-	private double spread;
-	private int tick;
+	private boolean	isDead	= false;
+	private double	total;
+	private double	spread;
+	private int		tick;
 	
 	public HeatWave(World world)
 	{
 		this.world = world;
 	}
+	
 	public HeatWave(World world, float temp, BlockPos pos, double hardness, double spread)
 	{
 		this(world, temp, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, hardness, spread);
 	}
+	
 	public HeatWave(World world, float temp, double x, double y, double z, double hardness, double spread)
 	{
 		this.world = world;
@@ -53,15 +56,14 @@ public class HeatWave implements ITickable, IThermalObjectInWorld
 	public float getDetTemp(double distanceSq, float tempBase)
 	{
 		float sigma = (float) (this.spread * this.tick + 1F);
-		return (float) ((this.temperature - tempBase) / (sigma * V.sqrt2π)) *
-				(float) Math.exp(- distanceSq / (2 * sigma * sigma));
+		return (float) ((this.temperature - tempBase) / (sigma * V.sqrt2π)) * (float) Math.exp(-distanceSq / (2 * sigma * sigma));
 	}
 	
 	@Override
 	public void update()
 	{
 		++this.tick;
-		if(this.spread * this.tick > 100)
+		if (this.spread * this.tick > 100)
 		{
 			this.isDead = true;
 		}
@@ -82,7 +84,7 @@ public class HeatWave implements ITickable, IThermalObjectInWorld
 	@Override
 	public double[] position()
 	{
-		return new double[]{this.coreX, this.coreY, this.coreZ};
+		return new double[] { this.coreX, this.coreY, this.coreZ };
 	}
 	
 	@Override

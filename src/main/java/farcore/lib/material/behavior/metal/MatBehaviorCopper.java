@@ -34,10 +34,10 @@ public class MatBehaviorCopper implements IItemMatProp
 	{
 		switch (metaOffset)
 		{
-		case 3 :
+		case 3:
 			return "Rusted " + material.localName;
-		case 2 :
-		case 1 :
+		case 2:
+		case 1:
 			return "Rusting " + material.localName;
 		default:
 			return material.localName;
@@ -45,8 +45,7 @@ public class MatBehaviorCopper implements IItemMatProp
 	}
 	
 	@Override
-	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition,
-			String saveTag)
+	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition, String saveTag)
 	{
 		ItemStacks.getSubOrSetupNBT(stack, saveTag, true).setFloat("rustness", (metaOffset & 0x3) / 3.0F);
 	}
@@ -58,18 +57,15 @@ public class MatBehaviorCopper implements IItemMatProp
 	}
 	
 	@Override
-	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment,
-			String saveTag)
+	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment, String saveTag)
 	{
 		return stack;
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list,
-			String saveTag)
+	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag)
 	{
-		list.add("info.material.behavior.metal.copper.rustness",
-				Strings.progress(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getFloat("rustness")));
+		list.add("info.material.behavior.metal.copper.rustness", Strings.progress(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getFloat("rustness")));
 	}
 	
 	@Override

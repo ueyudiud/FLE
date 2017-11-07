@@ -27,41 +27,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * For more usable food stat.
+ * 
  * @author ueyudiud
  */
 public class FoodStatExt extends FoodStats
 {
-	private static final AttributeModifier HUNGER_WEAKNESS_I = new AttributeModifier(UUID.fromString("150FC59A-A22B-4F8C-90A5-B76000AC4BD7"), "foodstat.effect1", -0.2F, 2);
-	private static final AttributeModifier HUNGER_WEAKNESS_II = new AttributeModifier(UUID.fromString("F14348DA-C3B1-4D76-AEC7-E05BF6A672AA"), "foodstat.effect2", -0.3F, 2);
-	private static final AttributeModifier THIRSTY_WEAKNESS_I = new AttributeModifier(UUID.fromString("2A2D2C19-F00F-40F4-869D-F07A713E6533"), "waterstat.effect1", -0.2F, 2);
-	private static final AttributeModifier THIRSTY_WEAKNESS_II = new AttributeModifier(UUID.fromString("F6122B44-3B2B-4BB9-9294-B566E39D6AF9"), "waterstat.effect2", -0.2F, 2);
+	private static final AttributeModifier	HUNGER_WEAKNESS_I	= new AttributeModifier(UUID.fromString("150FC59A-A22B-4F8C-90A5-B76000AC4BD7"), "foodstat.effect1", -0.2F, 2);
+	private static final AttributeModifier	HUNGER_WEAKNESS_II	= new AttributeModifier(UUID.fromString("F14348DA-C3B1-4D76-AEC7-E05BF6A672AA"), "foodstat.effect2", -0.3F, 2);
+	private static final AttributeModifier	THIRSTY_WEAKNESS_I	= new AttributeModifier(UUID.fromString("2A2D2C19-F00F-40F4-869D-F07A713E6533"), "waterstat.effect1", -0.2F, 2);
+	private static final AttributeModifier	THIRSTY_WEAKNESS_II	= new AttributeModifier(UUID.fromString("F6122B44-3B2B-4BB9-9294-B566E39D6AF9"), "waterstat.effect2", -0.2F, 2);
 	
-	public static final int MAX_FOOD_LEVEL = 20;
-	public static final int START_SATURATION_LEVAL = 5;
-	public static final int MAX_NUTRITION_LEVEL = 100;
-	public static final int MAX_WATER_LEVEL = 20;
+	public static final int	MAX_FOOD_LEVEL			= 20;
+	public static final int	START_SATURATION_LEVAL	= 5;
+	public static final int	MAX_NUTRITION_LEVEL		= 100;
+	public static final int	MAX_WATER_LEVEL			= 20;
 	
-	private int prevDim;
-	private long worldTimer = Long.MIN_VALUE;
+	private int		prevDim;
+	private long	worldTimer	= Long.MIN_VALUE;
 	
 	/** The player's food level. */
-	private float foodLevel = MAX_FOOD_LEVEL;
+	private float	foodLevel			= MAX_FOOD_LEVEL;
 	/** The player's food saturation. */
-	private float foodSaturationLevel = START_SATURATION_LEVAL;
+	private float	foodSaturationLevel	= START_SATURATION_LEVAL;
 	/** The player's food exhaustion. */
-	private float foodExhaustionLevel = 0;
+	private float	foodExhaustionLevel	= 0;
 	/** The player's food digestion. */
-	private float foodDigestionLevel = 0;
+	private float	foodDigestionLevel	= 0;
 	/** The player's food timer value. */
-	private int foodTimer;
-	private int digestionTimer;
+	private int		foodTimer;
+	private int		digestionTimer;
 	
-	private float waterLevel = MAX_WATER_LEVEL;
-	private float waterExhaustionLevel = 0;
+	private float	waterLevel				= MAX_WATER_LEVEL;
+	private float	waterExhaustionLevel	= 0;
 	
-	private float[] nutrition = {80, 80, 80, 80, 80, 80};
-	private int prevFoodLevel = 20;
-	private int prevWaterLevel = 20;
+	private float[]	nutrition		= { 80, 80, 80, 80, 80, 80 };
+	private int		prevFoodLevel	= 20;
+	private int		prevWaterLevel	= 20;
 	
 	public void addDirectStats(float amount, float saturation)
 	{
@@ -77,7 +78,9 @@ public class FoodStatExt extends FoodStats
 	/**
 	 * Do not use this method if you are making mod with using this food stat.
 	 * This method is only take the compatibility of other mod foods.
-	 * @param foodItem unused, for method will get Item by {@link net.minecraft.item.ItemStack#getItem()}.
+	 * 
+	 * @param foodItem unused, for method will get Item by
+	 *            {@link net.minecraft.item.ItemStack#getItem()}.
 	 */
 	@Override
 	public void addStats(@Nullable ItemFood foodItem, ItemStack stack)
@@ -99,7 +102,8 @@ public class FoodStatExt extends FoodStats
 		{
 			addFoodStats((IFoodStat) item, stack);
 		}
-		//else? How can I sure is player is eating food if there isn't any known class related with food...
+		// else? How can I sure is player is eating food if there isn't any
+		// known class related with food...
 	}
 	
 	private void addFoodStats(IFoodStat stat, ItemStack stack)
@@ -151,7 +155,7 @@ public class FoodStatExt extends FoodStats
 	{
 		if (this.foodDigestionLevel > 0F && this.foodLevel >= 4)
 		{
-			if(++this.digestionTimer > 200)
+			if (++this.digestionTimer > 200)
 			{
 				float amt = Math.min(this.foodDigestionLevel, 1);
 				this.foodDigestionLevel -= 1.0F;
@@ -167,7 +171,7 @@ public class FoodStatExt extends FoodStats
 			{
 				this.foodSaturationLevel = Math.max(this.foodSaturationLevel - 1.0F, 0.0F);
 			}
-			else//if (enumdifficulty != EnumDifficulty.PEACEFUL)
+			else// if (enumdifficulty != EnumDifficulty.PEACEFUL)
 			{
 				this.foodLevel = Math.max(this.foodLevel - 1.0F, 0F);
 			}
@@ -185,14 +189,14 @@ public class FoodStatExt extends FoodStats
 		{
 			switch ((int) this.foodLevel)
 			{
-			case 20 :
+			case 20:
 				if (this.foodSaturationLevel > 0.0F)
 				{
 					float f = Math.min(this.foodSaturationLevel, 4.0F);
 					player.heal(f / 4.0F);
 					addExhaustion(f);
 				}
-			case 19 :
+			case 19:
 				if (this.foodTimer >= 5)
 				{
 					player.heal(1.0F);
@@ -200,9 +204,9 @@ public class FoodStatExt extends FoodStats
 					this.foodTimer = 0;
 				}
 				break;
-			case 18 :
-			case 17 :
-			case 16 :
+			case 18:
+			case 17:
+			case 16:
 				if (this.foodTimer >= 12)
 				{
 					player.heal(1.0F);
@@ -210,12 +214,12 @@ public class FoodStatExt extends FoodStats
 					this.foodTimer = 0;
 				}
 				break;
-			case 15 :
-			case 14 :
-			case 13 :
-			case 12 :
-			case 11 :
-			case 10 :
+			case 15:
+			case 14:
+			case 13:
+			case 12:
+			case 11:
+			case 10:
 				if (this.foodTimer >= 30)
 				{
 					player.heal(1.0F);
@@ -223,7 +227,8 @@ public class FoodStatExt extends FoodStats
 					this.foodTimer = 0;
 				}
 				break;
-			default : break;
+			default:
+				break;
 			}
 		}
 		else if (this.foodLevel <= 0)
@@ -248,28 +253,28 @@ public class FoodStatExt extends FoodStats
 	{
 		if (this.foodLevel < 4)
 		{
-			if(this.prevFoodLevel >= 4)
+			if (this.prevFoodLevel >= 4)
 			{
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(HUNGER_WEAKNESS_I);
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(HUNGER_WEAKNESS_II);
 			}
 		}
-		else if(this.prevFoodLevel < 4)
+		else if (this.prevFoodLevel < 4)
 		{
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(HUNGER_WEAKNESS_I);
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HUNGER_WEAKNESS_II);
 		}
-		if(NebulaConfig.enableWaterStat)
+		if (NebulaConfig.enableWaterStat)
 		{
-			if(this.waterLevel < 4F)
+			if (this.waterLevel < 4F)
 			{
-				if(this.prevWaterLevel >= 4)
+				if (this.prevWaterLevel >= 4)
 				{
 					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(THIRSTY_WEAKNESS_I);
 					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(THIRSTY_WEAKNESS_II);
 				}
 			}
-			else if(this.prevWaterLevel < 4F)
+			else if (this.prevWaterLevel < 4F)
 			{
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(THIRSTY_WEAKNESS_I);
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(THIRSTY_WEAKNESS_II);
@@ -289,7 +294,7 @@ public class FoodStatExt extends FoodStats
 		compound.setFloat("foodLevel", this.foodLevel);
 		compound.setFloat("foodSaturationLevel", this.foodSaturationLevel);
 		compound.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
-		for(int i = 0; i < 6; ++i)
+		for (int i = 0; i < 6; ++i)
 		{
 			compound.setFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName(), this.nutrition[i]);
 		}
@@ -313,7 +318,7 @@ public class FoodStatExt extends FoodStats
 			this.foodLevel = compound.getFloat("foodLevel");
 			this.foodSaturationLevel = compound.getFloat("foodSaturationLevel");
 			this.foodExhaustionLevel = compound.getFloat("foodExhaustionLevel");
-			for(int i = 0; i < 6; ++i)
+			for (int i = 0; i < 6; ++i)
 			{
 				this.nutrition[i] = compound.getFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName());
 			}

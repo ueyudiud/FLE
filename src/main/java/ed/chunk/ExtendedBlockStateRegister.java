@@ -20,27 +20,28 @@ import net.minecraft.block.state.IBlockState;
 
 /**
  * The block state register.
+ * 
  * @author ueyudiud
  */
 public enum ExtendedBlockStateRegister implements IBlockDataProvider
 {
 	INSTANCE;
 	
-	static final Map<Block, StateDelegate> DELEGATES = new HashMap<>(4096);
+	static final Map<Block, StateDelegate>			DELEGATES		= new HashMap<>(4096);
 	/**
-	 * The tree map can use to search floor id from object.
-	 * the delegates used <code>blockNetworkId + stateMeta</code>
-	 * to allocate each networkid-blockstate mapping. Use <code>
-	 * INT_TO_DELEGATE.floorEntry(id)<code> to get delegate by
-	 * state id.
+	 * The tree map can use to search floor id from object. the delegates used
+	 * <code>blockNetworkId + stateMeta</code> to allocate each
+	 * networkid-blockstate mapping. Use <code>
+	 * INT_TO_DELEGATE.floorEntry(id)<code> to get delegate by state id.
 	 */
-	static final TreeMap<Integer, StateDelegate> INT_TO_DELEGATE = new TreeMap<>();
+	static final TreeMap<Integer, StateDelegate>	INT_TO_DELEGATE	= new TreeMap<>();
 	
 	/**
 	 * Get block data (meta) by block state.
+	 * 
 	 * @param state the block state.
-	 * @return the data of block state. If <tt>state</tt> is
-	 *         <code>null</code>, air block id will return.
+	 * @return the data of block state. If <tt>state</tt> is <code>null</code>,
+	 *         air block id will return.
 	 */
 	public int getStateData(@Nullable IBlockState state)
 	{
@@ -49,9 +50,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		int meta;
 		try
 		{
-			meta = ((block instanceof IExtendedDataBlock) ?
-					((IExtendedDataBlock) block).getDataFromState(state) :
-						block.getMetaFromState(state));
+			meta = ((block instanceof IExtendedDataBlock) ? ((IExtendedDataBlock) block).getDataFromState(state) : block.getMetaFromState(state));
 		}
 		catch (Exception exception)
 		{
@@ -61,9 +60,9 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	}
 	
 	/**
-	 * Get block state from data (meta), if
-	 * the data is invalid <code>null</code> will
-	 * be returned.
+	 * Get block state from data (meta), if the data is invalid
+	 * <code>null</code> will be returned.
+	 * 
 	 * @param data the block data.
 	 * @return the state of data.
 	 */
@@ -73,9 +72,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		if (block == null) return Misc.AIR;
 		try
 		{
-			IBlockState state = ((block instanceof IExtendedDataBlock) ?
-					((IExtendedDataBlock) block).getStateFromData(data & 0xFFFFF) :
-						block.getStateFromMeta(data & 0xF));
+			IBlockState state = ((block instanceof IExtendedDataBlock) ? ((IExtendedDataBlock) block).getStateFromData(data & 0xFFFFF) : block.getStateFromMeta(data & 0xF));
 			return state == null ? Misc.AIR : state;
 		}
 		catch (Exception exception)
@@ -86,6 +83,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	
 	/**
 	 * Get cached block state network id.
+	 * 
 	 * @param state the state.
 	 * @return the cached network id.
 	 */
@@ -97,21 +95,22 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	
 	/**
 	 * Get cached block state by network id.
+	 * 
 	 * @param id the network id.
-	 * @return the block state, if no state found, the air
-	 *         block state will return.
+	 * @return the block state, if no state found, the air block state will
+	 *         return.
 	 */
 	public @Nonnull IBlockState getStateFromNetworkID(int id)
 	{
 		Entry<Integer, StateDelegate> entry = INT_TO_DELEGATE.floorEntry(id);
-		if (entry == null)
-			return Misc.AIR;
+		if (entry == null) return Misc.AIR;
 		StateDelegate delegate = entry.getValue();
 		return delegate.get(id - delegate.id);
 	}
 	
 	/**
 	 * Get cached network id count.
+	 * 
 	 * @return the cached id size.
 	 */
 	public static int idCapacity()
@@ -119,11 +118,12 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		return INSTANCE.capacity;
 	}
 	
-	//Internal method and fields, do not use.
+	// Internal method and fields, do not use.
 	private int capacity;
 	
 	/**
-	 * INTERNAL METHOD, DO NOT USE!<p>
+	 * INTERNAL METHOD, DO NOT USE!
+	 * <p>
 	 * Build state map by setting up block-delegate mapping.
 	 */
 	public void buildStateMap()
@@ -144,9 +144,10 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	}
 	
 	/**
-	 * INTERNAL METHOD, DO NOT USE!<p>
-	 * Allocate blockNetworkID to each block state,
-	 * the id used tessellation method.
+	 * INTERNAL METHOD, DO NOT USE!
+	 * <p>
+	 * Allocate blockNetworkID to each block state, the id used tessellation
+	 * method.
 	 */
 	public void remapping()
 	{
@@ -156,7 +157,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		for (Block block : Block.REGISTRY)
 		{
 			StateDelegate delegate = DELEGATES.get(block);
-			if (delegate == null)//For block id missing.
+			if (delegate == null)// For block id missing.
 				continue;
 			delegate.id = this.capacity;
 			INT_TO_DELEGATE.put(delegate.id, delegate);
@@ -166,5 +167,5 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		}
 		Log.info("Remapping finished.");
 	}
-	//Internal method end.
+	// Internal method end.
 }

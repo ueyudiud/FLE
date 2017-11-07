@@ -52,12 +52,11 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemTool extends ItemSubBehavior
-implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
+public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 {
 	public static Mat getMaterial(ItemStack stack, String part)
 	{
-		if(stack != null && stack.getItem() instanceof ItemTool)
+		if (stack != null && stack.getItem() instanceof ItemTool)
 			return ((ItemTool) stack.getItem()).getMaterialFromItem(stack, part);
 		else
 			return Mat.VOID;
@@ -66,7 +65,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@SideOnly(Side.CLIENT)
 	public static int getColor(ItemStack stack, int pass)
 	{
-		if(stack != null && stack.getItem() instanceof ItemTool)
+		if (stack != null && stack.getItem() instanceof ItemTool)
 			return ((ItemTool) stack.getItem()).getToolProp(stack).stat.getColor(stack, pass);
 		else
 			return -1;
@@ -79,30 +78,32 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	public int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
 	{
-		//		if(prop.hasHandle)
-		//		{
-		//			Mat head = getMaterial(stack, "head");
-		//			Mat handle = getMaterial(stack, "handle");
-		//			return (int) (head.toolMaxUse * handle.handleToughness);
-		//		}
-		//		else
+		// if(prop.hasHandle)
+		// {
+		// Mat head = getMaterial(stack, "head");
+		// Mat handle = getMaterial(stack, "handle");
+		// return (int) (head.toolMaxUse * handle.handleToughness);
+		// }
+		// else
 		return getMaterial(stack, "head").toolMaxUse;
 	}
 	
 	public static int getMaxDurability(ItemStack stack)
 	{
 		ToolProp prop = ((ItemTool) stack.getItem()).toolPropMap.get(((ItemTool) stack.getItem()).getBaseDamage(stack));
-		//		NBTTagCompound tag = stack.getSubCompound("durability", true);
-		//		if(!tag.hasKey("maxDurability"))
-		//		{
-		//			if(Sides.isServer() || !Sides.isSimulating())
-		//			{
-		//				tag.setInteger("maxDurability", (int) (prop.stat.getMaxDurabilityMultiplier() * ((ItemTool) stack.getItem()).getDefaultMaxDurability(prop, stack)));
-		//			}
-		//			else
+		// NBTTagCompound tag = stack.getSubCompound("durability", true);
+		// if(!tag.hasKey("maxDurability"))
+		// {
+		// if(Sides.isServer() || !Sides.isSimulating())
+		// {
+		// tag.setInteger("maxDurability", (int)
+		// (prop.stat.getMaxDurabilityMultiplier() * ((ItemTool)
+		// stack.getItem()).getDefaultMaxDurability(prop, stack)));
+		// }
+		// else
 		return ((ItemTool) stack.getItem()).getDefaultMaxDurability(prop, stack);
-		//		}
-		//		return tag.getInteger("maxDurability");
+		// }
+		// return tag.getInteger("maxDurability");
 	}
 	
 	public static float getDurability(ItemStack stack)
@@ -132,21 +133,21 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	public static class ToolProp
 	{
-		int id;
-		boolean hasTie;
-		boolean hasHandle;
-		MatCondition condition;
-		IToolStat stat;
-		Judgable<? super Mat> filterHead;
-		Judgable<? super Mat> filterTie;
-		Judgable<? super Mat> filterHandle;
-		String customToolInformation;
-		public ISkill skillEfficiency;
-		public ISkill skillAttack;
+		int						id;
+		boolean					hasTie;
+		boolean					hasHandle;
+		MatCondition			condition;
+		IToolStat				stat;
+		Judgable<? super Mat>	filterHead;
+		Judgable<? super Mat>	filterTie;
+		Judgable<? super Mat>	filterHandle;
+		String					customToolInformation;
+		public ISkill			skillEfficiency;
+		public ISkill			skillAttack;
 	}
 	
-	Map<Integer, ToolProp> toolPropMap = new HashMap();
-	protected String textureFileName = "tool/";
+	Map<Integer, ToolProp>	toolPropMap		= new HashMap();
+	protected String		textureFileName	= "tool/";
 	
 	protected boolean modelFlag = true;
 	
@@ -154,15 +155,13 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		super(name);
 	}
+	
 	protected ItemTool(String modid, String name)
 	{
 		super(modid, name);
 	}
 	
-	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
-			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
-			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior...behaviors)
 	{
 		super.addSubItem(id, name, localName, behaviors);
 		if (this.modelFlag)
@@ -215,27 +214,24 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		int level = prop.stat.getToolHarvestLevel(stack, type.name, getMaterial(stack, "head"));
-		return level == -1 ?
-				prop.stat.getToolTypes(stack).contains(type) ?
-						getMaterial(stack, "head").toolHarvestLevel : -1 : level;
+		return level == -1 ? prop.stat.getToolTypes(stack).contains(type) ? getMaterial(stack, "head").toolHarvestLevel : -1 : level;
 	}
 	
 	@Override
 	public void onToolUse(EntityLivingBase user, ItemStack stack, EnumToolType toolType, float amount)
 	{
-		if(!isItemUsable(stack)) return;
-		if(user instanceof EntityPlayer && ((EntityPlayer) user).capabilities.isCreativeMode)
-			return;
+		if (!isItemUsable(stack)) return;
+		if (user instanceof EntityPlayer && ((EntityPlayer) user).capabilities.isCreativeMode) return;
 		int max = getMaxDurability(stack);
 		float now = getToolDamage(stack);
-		if(now + amount >= max)
+		if (now + amount >= max)
 		{
-			stack.stackSize --;
-			if(user != null)
+			stack.stackSize--;
+			if (user != null)
 			{
 				user.renderBrokenItemStack(stack);
 			}
-			if(stack.stackSize != 0)
+			if (stack.stackSize != 0)
 			{
 				setToolDamage(stack, 0F);
 			}
@@ -251,24 +247,24 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		float multiple;
 		switch (prop.stat.getPhysicalDamageType())
 		{
-		case SMASH :
-		default :
+		case SMASH:
+		default:
 			multiple = .9F * nebula.common.util.L.range(0F, 1F, cooldown * attackSpeed / 100F) + .1F;
-			if(isAttackerFalling)
+			if (isAttackerFalling)
 			{
 				baseAttack *= 1.5F;
 			}
 			break;
-		case PUNCTURE :
+		case PUNCTURE:
 			multiple = .75F * nebula.common.util.L.range(0F, 1F, cooldown * cooldown * cooldown * attackSpeed / 100F) + .25F;
-			if(isAttackerFalling)
+			if (isAttackerFalling)
 			{
 				baseAttack *= 1.25F;
 			}
 			break;
-		case CUT :
+		case CUT:
 			multiple = .8F * nebula.common.util.L.range(0F, 1F, cooldown * cooldown * attackSpeed / 100F) + .2F;
-			if(isAttackerFalling)
+			if (isAttackerFalling)
 			{
 				baseAttack *= 1.75F;
 			}
@@ -290,12 +286,11 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	}
 	
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
-			EntityLivingBase entityLiving)
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
 	{
-		if(!isItemUsable(stack)) return false;
+		if (!isItemUsable(stack)) return false;
 		IToolStat stat = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat;
-		if(stat.canHarvestDrop(stack, state))
+		if (stat.canHarvestDrop(stack, state))
 		{
 			onToolUse(entityLiving, stack, stat.getToolType(), stat.getToolDamagePerBreak(stack, entityLiving, worldIn, pos, state));
 		}
@@ -303,33 +298,28 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		EnumActionResult result = super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-		if (result == EnumActionResult.PASS)
-			return ItemStacks.onUseOnBlock(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
+		if (result == EnumActionResult.PASS) return ItemStacks.onUseOnBlock(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
 		return result;
 	}
 	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		if(super.onLeftClickEntity(stack, player, entity))
-			return true;
+		if (super.onLeftClickEntity(stack, player, entity)) return true;
 		WeaponHelper.onToolUsedToAttack(this, stack, player, entity);
 		return true;
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		ActionResult<ItemStack> result;
-		if((result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand)).getType() != EnumActionResult.PASS)
-			return result;
+		if ((result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand)).getType() != EnumActionResult.PASS) return result;
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(itemStackIn), EMPTY_PROP);
-		if(prop.stat.canBlock())
+		if (prop.stat.canBlock())
 		{
 			playerIn.setActiveHand(hand);
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -378,8 +368,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		return prop.stat.canBlock() ? EnumAction.BLOCK :
-			prop.stat.isShootable() ? EnumAction.BOW : EnumAction.NONE;
+		return prop.stat.canBlock() ? EnumAction.BLOCK : prop.stat.isShootable() ? EnumAction.BOW : EnumAction.NONE;
 	}
 	
 	@Override
@@ -423,26 +412,25 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		if(!entityIn.world.isRemote)
+		if (!entityIn.world.isRemote)
 		{
 			try
 			{
 				stack = updateItem(null, stack);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				FarCore.catching(exception);
 			}
-			if(entityIn instanceof EntityPlayer)
+			if (entityIn instanceof EntityPlayer)
 			{
-				if(stack == null)
+				if (stack == null)
 				{
 					((EntityPlayer) entityIn).inventory.removeStackFromSlot(itemSlot);
 					return;
 				}
 			}
-			if(stack.getItem() != this)
-				return;
+			if (stack.getItem() != this) return;
 		}
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
@@ -456,19 +444,18 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			try
 			{
 				ItemStack stack = updateItem(null, entityItem.getEntityItem());
-				if(stack == null)
+				if (stack == null)
 				{
 					entityItem.setDead();
 					return false;
 				}
-				else if(stack != entityItem.getEntityItem())
+				else if (stack != entityItem.getEntityItem())
 				{
 					entityItem.setEntityItemStack(stack);
 				}
-				if(stack.getItem() != this)
-					return true;
+				if (stack.getItem() != this) return true;
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				FarCore.catching(exception);
 			}
@@ -481,14 +468,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		Mat material = getMaterialFromItem(stack, "head");
-		if(material.itemProp != null)
+		if (material.itemProp != null)
 		{
 			stack = material.itemProp.updateItem(stack, material, prop.condition, environment, "");
 		}
-		if(stack != null && prop.hasTie)
+		if (stack != null && prop.hasTie)
 		{
 			material = getMaterialFromItem(stack, "tie");
-			if(material.itemProp != null)
+			if (material.itemProp != null)
 			{
 				try
 				{
@@ -500,16 +487,16 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 				}
 			}
 		}
-		if(stack != null && prop.hasHandle)
+		if (stack != null && prop.hasHandle)
 		{
 			material = getMaterialFromItem(stack, "handle");
-			if(material.itemProp != null)
+			if (material.itemProp != null)
 			{
 				try
 				{
 					stack = material.itemProp.updateItem(stack, material, MC.handle, environment);
 				}
-				catch(Exception exception)
+				catch (Exception exception)
 				{
 					FarCore.catching(exception);
 				}
@@ -529,8 +516,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		Mat material = getMaterialFromItem(stack, "head");
-		if(material != null && material.itemProp != null)
-			return material.itemProp.getMetaOffset(stack, material, prop.condition, "head");
+		if (material != null && material.itemProp != null) return material.itemProp.getMetaOffset(stack, material, prop.condition, "head");
 		return 0;
 	}
 	
@@ -540,7 +526,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		int base = damage & 0x7FFF;
 		super.setDamage(stack, base);
 		Mat material = getMaterial(stack, "head");
-		if(material.itemProp != null)
+		if (material.itemProp != null)
 		{
 			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.toolPropMap.getOrDefault(base, EMPTY_PROP).condition);
 		}
@@ -566,8 +552,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		int max = getMaxDurability(stack);

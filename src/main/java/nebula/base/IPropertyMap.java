@@ -39,7 +39,7 @@ public interface IPropertyMap
 		
 		static <V> IProperty<V> to(V value)
 		{
-			return ()-> value;
+			return () -> value;
 		}
 		
 		class ToNull implements IProperty
@@ -53,8 +53,7 @@ public interface IPropertyMap
 		
 		static <V> IProperty<V> to(Class<? extends V> constructor)
 		{
-			return ()->
-			{
+			return () -> {
 				try
 				{
 					return constructor.newInstance();

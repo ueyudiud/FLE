@@ -78,9 +78,8 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Nebula, is a Minecraft modification provide more useful
- * library for other modification, also changed some game rule
- * for more compact to other mods.
+ * Nebula, is a Minecraft modification provide more useful library for other
+ * modification, also changed some game rule for more compact to other mods.
  * 
  * @author ueyudiud
  */
@@ -90,13 +89,14 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	/** The minimum forge version far core required. */
 	public static final int MIN_FORGE = 2272;
 	
-	public static final String MODID = "nebula";
-	public static final String NAME = "Nebula";
-	public static final String VERSION = "2.1.0";
+	public static final String	MODID	= "nebula";
+	public static final String	NAME	= "Nebula";
+	public static final String	VERSION	= "2.1.0";
 	
 	/**
-	 * The built-in render id, for prevent has location collide when
-	 * naming resource path.<p>
+	 * The built-in render id, for prevent has location collide when naming
+	 * resource path.
+	 * <p>
 	 * Most of Nebula built-in model use this location.
 	 */
 	@Deprecated
@@ -106,11 +106,11 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public static Nebula instance;
 	
 	/**
-	 * The debug mode flag, enable to switch to
-	 * debug mode.<p>
-	 * The debug mode will give more information
-	 * of game, and exception will be always throw
-	 * instead of log to file.<p>
+	 * The debug mode flag, enable to switch to debug mode.
+	 * <p>
+	 * The debug mode will give more information of game, and exception will be
+	 * always throw instead of log to file.
+	 * <p>
 	 */
 	public static boolean debug = false;
 	
@@ -120,11 +120,10 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public static Network network;
 	
 	/**
-	 * The block state data provider.
-	 * Use to get unique id of BlockState, generalized for 4096 id and 16 meta.
-	 * Specially, if you added ED (Extra Data mod), the data provider will be
-	 * Nebula full version one (This function was split from Nebula), which can
-	 * store 20 bits meta.
+	 * The block state data provider. Use to get unique id of BlockState,
+	 * generalized for 4096 id and 16 meta. Specially, if you added ED (Extra
+	 * Data mod), the data provider will be Nebula full version one (This
+	 * function was split from Nebula), which can store 20 bits meta.
 	 */
 	public static IBlockDataProvider blockDataProvider = new IBlockDataProvider.Template();
 	
@@ -138,12 +137,20 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	static
 	{
-		//For bootstrap takes too long time to initialize...
-		new Thread(()-> { try { new Bootstrap().clone(); } catch (Throwable t) {} }, "Bootstrap Initalizer").start();
+		// For bootstrap takes too long time to initialize...
+		new Thread(() -> {
+			try
+			{
+				new Bootstrap().clone();
+			}
+			catch (Throwable t)
+			{
+			}
+		}, "Bootstrap Initalizer").start();
 	}
 	
-	private LanguageManager lang;
-	private Configuration configuration;
+	private LanguageManager	lang;
+	private Configuration	configuration;
 	
 	public static CreativeTabs tabFluids;
 	
@@ -183,12 +190,12 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void check(FMLConstructionEvent event)
 	{
-		Log.info("Injecting Nebula proxy...");//Forge does not let Dummy Mod Container auto inject proxy.
+		Log.info("Injecting Nebula proxy...");// Forge does not let Dummy Mod
+												// Container auto inject proxy.
 		try
 		{
 			SidedProxy proxy = getClass().getField("proxy").getAnnotation(SidedProxy.class);
-			Nebula.proxy = (CommonProxy)
-					Class.forName(Sides.isClient() ? proxy.clientSide() : proxy.serverSide()).newInstance();
+			Nebula.proxy = (CommonProxy) Class.forName(Sides.isClient() ? proxy.clientSide() : proxy.serverSide()).newInstance();
 		}
 		catch (Exception exception)
 		{
@@ -196,18 +203,16 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		}
 		
 		/**
-		 * The Nebula and its child mod use Java8. There are method
-		 * is added in Java8, so it is checked by a type
-		 * exist since Java8.
-		 * This checking will be removed when forge
-		 * using Java8 for compile.
+		 * The Nebula and its child mod use Java8. There are method is added in
+		 * Java8, so it is checked by a type exist since Java8. This checking
+		 * will be removed when forge using Java8 for compile.
 		 */
 		Log.info("Nebula start check java version...");
 		try
 		{
 			((Function<?, ?>) arg -> null).apply(null);
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			throw new RuntimeException("Java version is out of date, please use java 8 to launch.", exception);
 		}
@@ -216,12 +221,8 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		 */
 		Log.info("Nebula checking forge version...");
 		int forge = ForgeVersion.getBuildVersion();
-		if ((forge > 0) && (forge < MIN_FORGE))
-			throw new RuntimeException("The currently installed version of "
-					+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." +
-					ForgeVersion.getRevisionVersion() + "." + forge + ") is out of data.\n" +
-					"Please update the Minecraft Forge.\n" + "\n" +
-					"(Technical information: " + forge + " < " + MIN_FORGE + ")");
+		if ((forge > 0) && (forge < MIN_FORGE)) throw new RuntimeException("The currently installed version of " + "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + ForgeVersion.getRevisionVersion() + "." + forge + ") is out of data.\n"
+				+ "Please update the Minecraft Forge.\n" + "\n" + "(Technical information: " + forge + " < " + MIN_FORGE + ")");
 		Log.info("Checking end.");
 	}
 	

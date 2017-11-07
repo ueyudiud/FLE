@@ -11,8 +11,8 @@ import fargen.core.layer.Layer;
  */
 public class LayerRockStart extends Layer
 {
-	static final short lava_in = 32;
-	static final short weathering = 64;
+	static final short	lava_in		= 32;
+	static final short	weathering	= 64;
 	
 	public LayerRockStart(long seed)
 	{

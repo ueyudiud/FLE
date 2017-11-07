@@ -18,8 +18,8 @@ import net.minecraft.world.gen.layer.GenLayer;
  */
 public class LayerSurfaceSoilRemix extends Layer
 {
-	private GenLayer soils;
-	private GenLayer terrain;
+	private GenLayer	soils;
+	private GenLayer	terrain;
 	
 	public LayerSurfaceSoilRemix(long seed, GenLayer soils, GenLayer terrain)
 	{
@@ -56,9 +56,9 @@ public class LayerSurfaceSoilRemix extends Layer
 		{
 			return Byte.MAX_VALUE;
 		}
-		//		if (isRiver(terrain))
-		//		{
-		//		}
+		// if (isRiver(terrain))
+		// {
+		// }
 		return soilType;
 	}
 	

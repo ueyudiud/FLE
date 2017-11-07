@@ -15,11 +15,11 @@ public class CropInfo
 {
 	public GeneticMaterial geneticMaterial;
 	
-	public int grain;
-	public int growth;
-	public int resistance;
-	public int vitality;
-	public int saving;
+	public int	grain;
+	public int	growth;
+	public int	resistance;
+	public int	vitality;
+	public int	saving;
 	
 	public IntegerMap<String> map = new IntegerMap<>();
 	
@@ -34,7 +34,7 @@ public class CropInfo
 		this.vitality = nbt.getInteger("vit");
 		this.saving = nbt.getInteger("sav");
 		NBTTagList list = nbt.getTagList("prop", NBT.TAG_COMPOUND);
-		for(int i = 0; i < list.tagCount(); ++i)
+		for (int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound compound = list.getCompoundTagAt(i);
 			this.map.put(compound.getString("tag"), compound.getInteger("value"));
@@ -51,7 +51,7 @@ public class CropInfo
 		nbt.setInteger("vit", this.vitality);
 		nbt.setInteger("sav", this.saving);
 		NBTTagList list = new NBTTagList();
-		for(IntegerEntry<String> prop : this.map)
+		for (IntegerEntry<String> prop : this.map)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
 			compound.setString("tag", prop.getKey());

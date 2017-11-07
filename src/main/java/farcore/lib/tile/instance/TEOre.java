@@ -56,30 +56,21 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TEOre extends TEStatic implements IUpdatableTile,
-ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy,
-ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler,
-ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest,
-ITP_Drops, IToolableTile
+public class TEOre extends TEStatic
+		implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy, ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler, ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest, ITP_Drops, IToolableTile
 {
 	private static enum DropType
 	{
-		ore,
-		chipped,
-		gem,
-		gem_chipped,
-		nugget,
-		cluster,
-		protore;
+		ore, chipped, gem, gem_chipped, nugget, cluster, protore;
 	}
 	
 	private static final Mat STONE = M.stone;
 	
-	private Mat ore = Mat.VOID;
-	public EnumOreAmount amount = EnumOreAmount.normal;
-	public Mat rock = STONE;
-	public EnumRockType rockType = EnumRockType.resource;
-	public long heat;
+	private Mat				ore			= Mat.VOID;
+	public EnumOreAmount	amount		= EnumOreAmount.normal;
+	public Mat				rock		= STONE;
+	public EnumRockType		rockType	= EnumRockType.resource;
+	public long				heat;
 	
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, EnumRockType type)
 	{
@@ -89,6 +80,7 @@ ITP_Drops, IToolableTile
 		this.rockType = type;
 		this.initialized = true;
 	}
+	
 	public TEOre()
 	{
 		this.initialized = false;
@@ -103,7 +95,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public void sendToNearby(IPacket packet, float range)
 	{
-		if(Worlds.isAirNearby(this.world, this.pos, true))
+		if (Worlds.isAirNearby(this.world, this.pos, true))
 		{
 			super.sendToNearby(packet, range);
 		}
@@ -174,8 +166,7 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return this.ore.getProperty(MP.property_ore).onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
@@ -183,7 +174,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		if(Worlds.isNotOpaqueNearby(this.world, pos))
+		if (Worlds.isNotOpaqueNearby(this.world, pos))
 		{
 			markBlockRenderUpdate();
 		}
@@ -193,9 +184,9 @@ ITP_Drops, IToolableTile
 	{
 		switch (this.rockType)
 		{
-		case cobble_art :
+		case cobble_art:
 			return 1;
-		case cobble :
+		case cobble:
 			return Math.max(this.ore.getProperty(MP.property_ore).harvestLevel, this.rock.getProperty(MP.property_rock).harvestLevel) / 2;
 		default:
 			return Math.max(this.ore.getProperty(MP.property_ore).harvestLevel, this.rock.getProperty(MP.property_rock).harvestLevel);
@@ -224,7 +215,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
-		if(stack.hasTagCompound())
+		if (stack.hasTagCompound())
 		{
 			NBTTagCompound nbt = stack.getTagCompound();
 			this.amount = ItemOre.getAmount(nbt);
@@ -255,55 +246,38 @@ ITP_Drops, IToolableTile
 	
 	private SubTag getOreType()
 	{
-		return this.ore.contain(SubTags.ORE_GEM) ? SubTags.ORE_GEM :
-			this.ore.contain(SubTags.ORE_NOBLE) ? SubTags.ORE_NOBLE :
-				this.ore.contain(SubTags.ORE_ROCKY) ? SubTags.ORE_ROCKY :
-					this.ore.contain(SubTags.ORE_SALT) ? SubTags.ORE_SALT :
-						this.ore.contain(SubTags.ORE_SIMPLE) ? SubTags.ORE_SIMPLE :
-							null;
+		return this.ore.contain(SubTags.ORE_GEM) ? SubTags.ORE_GEM
+				: this.ore.contain(SubTags.ORE_NOBLE) ? SubTags.ORE_NOBLE : this.ore.contain(SubTags.ORE_ROCKY) ? SubTags.ORE_ROCKY : this.ore.contain(SubTags.ORE_SALT) ? SubTags.ORE_SALT : this.ore.contain(SubTags.ORE_SIMPLE) ? SubTags.ORE_SIMPLE : null;
 	}
 	
 	public List<ItemStack> getDrops(List<EnumToolType> types)
 	{
 		SubTag tag = getOreType();
-		if(tag == null || types.contains(EnumToolType.HAND))
-			return new ArrayList();
+		if (tag == null || types.contains(EnumToolType.HAND)) return new ArrayList();
 		ArrayList<ItemStack> list = new ArrayList();
-		if(types.contains(EnumToolTypes.ROCK_CUTTER))
+		if (types.contains(EnumToolTypes.ROCK_CUTTER))
 		{
 			addDrops(list, DropType.ore);
 		}
-		else if(types.contains(EnumToolTypes.LASER))
+		else if (types.contains(EnumToolTypes.LASER))
 		{
-			addDrops(list, tag == SubTags.ORE_NOBLE ? DropType.protore :
-				tag == SubTags.ORE_SALT ? DropType.cluster :
-					DropType.ore);
+			addDrops(list, tag == SubTags.ORE_NOBLE ? DropType.protore : tag == SubTags.ORE_SALT ? DropType.cluster : DropType.ore);
 		}
-		else if(types.contains(EnumToolTypes.DRILL))
+		else if (types.contains(EnumToolTypes.DRILL))
 		{
-			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster :
-				tag == SubTags.ORE_NOBLE ? DropType.gem :
-					DropType.chipped);
+			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster : tag == SubTags.ORE_NOBLE ? DropType.gem : DropType.chipped);
 		}
-		else if(types.contains(EnumToolTypes.EXPLOSIVE))
+		else if (types.contains(EnumToolTypes.EXPLOSIVE))
 		{
-			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster :
-				tag == SubTags.ORE_NOBLE ? DropType.gem_chipped :
-					DropType.chipped);
+			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster : tag == SubTags.ORE_NOBLE ? DropType.gem_chipped : DropType.chipped);
 		}
-		else if(types.contains(EnumToolType.PICKAXE))
+		else if (types.contains(EnumToolType.PICKAXE))
 		{
-			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster :
-				tag == SubTags.ORE_GEM ? DropType.gem :
-					tag == SubTags.ORE_NOBLE ? DropType.nugget :
-						DropType.ore);
+			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster : tag == SubTags.ORE_GEM ? DropType.gem : tag == SubTags.ORE_NOBLE ? DropType.nugget : DropType.ore);
 		}
-		else if(types.contains(EnumToolTypes.HAMMER_DIGABLE))
+		else if (types.contains(EnumToolTypes.HAMMER_DIGABLE))
 		{
-			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster :
-				tag == SubTags.ORE_GEM ? DropType.gem :
-					tag == SubTags.ORE_NOBLE ? DropType.nugget :
-						DropType.chipped);
+			addDrops(list, tag == SubTags.ORE_SALT ? DropType.cluster : tag == SubTags.ORE_GEM ? DropType.gem : tag == SubTags.ORE_NOBLE ? DropType.nugget : DropType.chipped);
 		}
 		return list;
 	}
@@ -318,11 +292,9 @@ ITP_Drops, IToolableTile
 	{
 		ItemStack stack = player.inventory.getCurrentItem();
 		String tool = EnumToolType.PICKAXE.name;
-		if (stack == null)
-			return player.canHarvestBlock(getBlockState(0, 0, 0));
+		if (stack == null) return player.canHarvestBlock(getBlockState(0, 0, 0));
 		int toolLevel = stack.getItem().getHarvestLevel(stack, tool);
-		if (toolLevel < 0)
-			return player.canHarvestBlock(getBlockState(0, 0, 0));
+		if (toolLevel < 0) return player.canHarvestBlock(getBlockState(0, 0, 0));
 		return toolLevel >= getHarvestLevel();
 	}
 	
@@ -330,7 +302,7 @@ ITP_Drops, IToolableTile
 	public boolean onBurn(float burnHardness, Direction direction)
 	{
 		this.ore.getProperty(MP.property_ore).onBurn(this, burnHardness, direction);
-		if(this.rockType.isBurnable())
+		if (this.rockType.isBurnable())
 		{
 			this.rockType = this.rockType.burned();
 			markBlockUpdate();
@@ -412,15 +384,13 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
-			float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return this.ore.getProperty(MP.property_ore).onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
 	}
 	
 	@Override
-	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
-			int numberOfParticles)
+	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles)
 	{
 		Server.addBlockLandingEffects(this.world, this.pos, this.rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.TYPE, this.rockType), entity, numberOfParticles);
 		return true;

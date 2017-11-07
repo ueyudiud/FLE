@@ -4,8 +4,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Called by block or item, called during pre-initialized.
- * Use <tt>FarCoreSetup.ClientProxy.registerRenderObject()</tt>
+ * Called by block or item, called during pre-initialized. Use
+ * <tt>FarCoreSetup.ClientProxy.registerRenderObject()</tt>
+ * 
  * @author ueyudiud
  * @see farcore.FarCoreSetup.ClientProxy
  */

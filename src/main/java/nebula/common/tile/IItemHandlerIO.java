@@ -15,12 +15,14 @@ public interface IItemHandlerIO
 {
 	/**
 	 * Match side can extract item.
+	 * 
 	 * @return
 	 */
 	boolean canExtractItem(Direction to);
 	
 	/**
 	 * Match side can insert item.
+	 * 
 	 * @param stack For asked stack, null for ask general behavior.
 	 * @return
 	 */
@@ -41,6 +43,7 @@ public interface IItemHandlerIO
 	
 	/**
 	 * Called when player use this IO.
+	 * 
 	 * @param current
 	 * @param player
 	 * @param side

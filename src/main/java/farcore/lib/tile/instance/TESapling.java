@@ -36,12 +36,11 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TESapling extends TEAged
-implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects, ITB_AddDestroyEffects
+public class TESapling extends TEAged implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects, ITB_AddDestroyEffects
 {
-	private float age;
-	public TreeInfo info;
-	public Tree tree = Tree.VOID;
+	private float	age;
+	public TreeInfo	info;
+	public Tree		tree	= Tree.VOID;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -71,7 +70,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if(nbt.hasKey("t"))
+		if (nbt.hasKey("t"))
 		{
 			this.tree = Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_tree);
 			markBlockRenderUpdate();
@@ -82,20 +81,23 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		this.tree = Mat.material(stack.getItemDamage()).getProperty(MP.property_tree);
-		if (this.tree == ITree.VOID) removeBlock(); else syncToNearby();
+		if (this.tree == ITree.VOID)
+			removeBlock();
+		else
+			syncToNearby();
 	}
 	
 	@Override
 	protected void updateServer1()
 	{
-		if(!canBlockStay() || this.tree == Tree.VOID)
+		if (!canBlockStay() || this.tree == Tree.VOID)
 		{
 			removeBlock();
 			return;
 		}
 		this.age += this.tree.onSaplingUpdate(this);
 		markDirty();
-		if(!isInvalid() && this.age >= getMaxAge())
+		if (!isInvalid() && this.age >= getMaxAge())
 		{
 			grow();
 		}
@@ -122,8 +124,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	{
 		IBlockState state = this.world.getBlockState(this.pos);
 		this.world.setBlockState(this.pos, Misc.AIR, 4);
-		if(this.tree.generateTreeAt(this.world, this.pos, this.random, this.info))
-			return true;
+		if (this.tree.generateTreeAt(this.world, this.pos, this.random, this.info)) return true;
 		this.world.setBlockState(this.pos, state, 4);
 		return false;
 	}

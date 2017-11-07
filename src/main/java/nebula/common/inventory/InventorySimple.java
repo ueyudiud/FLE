@@ -14,13 +14,14 @@ import net.minecraft.item.ItemStack;
  */
 public class InventorySimple implements IBasicInventory
 {
-	protected ItemStack[] stacks;
-	protected int limit;
+	protected ItemStack[]	stacks;
+	protected int			limit;
 	
 	public InventorySimple(int size)
 	{
 		this(size, 64);
 	}
+	
 	public InventorySimple(int size, int limit)
 	{
 		this.stacks = new ItemStack[size];
@@ -30,7 +31,7 @@ public class InventorySimple implements IBasicInventory
 	@Override
 	public ItemStack[] toArray()
 	{
-		return A.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
+		return A.transform(this.stacks, ItemStack.class, stack -> ItemStack.copyItemStack(stack));
 	}
 	
 	@Override

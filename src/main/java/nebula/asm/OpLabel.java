@@ -19,10 +19,10 @@ import org.objectweb.asm.tree.MethodInsnNode;
  */
 public abstract class OpLabel
 {
-	int off;
-	int len;
-	OpType type;
-	List<AbstractInsnNode> nodes;
+	int						off;
+	int						len;
+	OpType					type;
+	List<AbstractInsnNode>	nodes;
 	
 	OpLabel(int off, int len, OpType type, List<AbstractInsnNode> nodes)
 	{
@@ -46,7 +46,7 @@ public abstract class OpLabel
 		int size = this.nodes == null ? 0 : this.nodes.size();
 		switch (this.type)
 		{
-		case INSERT :
+		case INSERT:
 			Iterator<AbstractInsnNode> itr = this.nodes.iterator();
 			do
 			{
@@ -55,21 +55,21 @@ public abstract class OpLabel
 				list.insert(current, node);
 				current = node;
 			}
-			while(itr.hasNext());
+			while (itr.hasNext());
 			return size;
-		case INSERT_BEFORE :
+		case INSERT_BEFORE:
 			itr = this.nodes.iterator();
 			node = itr.next();
 			list.insertBefore(current, node);
 			current = node;
-			while(itr.hasNext())
+			while (itr.hasNext())
 			{
 				node = itr.next();
 				list.insert(current, node);
 				current = node;
 			}
 			return size;
-		case REPLACE :
+		case REPLACE:
 			itr = this.nodes.iterator();
 			if ((current instanceof JumpInsnNode) && (this.nodes.get(0) instanceof JumpInsnNode))
 			{
@@ -77,7 +77,8 @@ public abstract class OpLabel
 			}
 			for (int i = 1; i < this.len; ++i)
 			{
-				list.remove(current.getNext());//Remove length - 1 size of nodes.
+				list.remove(current.getNext());// Remove length - 1 size of
+												// nodes.
 			}
 			current1 = current;
 			do
@@ -87,24 +88,24 @@ public abstract class OpLabel
 				list.insert(current1, node);
 				current1 = node;
 			}
-			while(itr.hasNext());
-			list.remove(current);//Remove last node for mark.
+			while (itr.hasNext());
+			list.remove(current);// Remove last node for mark.
 			return size - this.len;
-		case REMOVE :
+		case REMOVE:
 			int i = this.len - 1;
-			while(i > 0)
+			while (i > 0)
 			{
 				list.remove(current.getNext());
 				--i;
 			}
 			list.remove(current);
-			return - this.len;
-		case SWITCH :
+			return -this.len;
+		case SWITCH:
 			current1 = list.get(anchor + this.off + insertions + this.len);
 			list.insert(current, current1);
 			current1 = list.get(anchor + this.off + insertions + this.len);
 			list.insert(current1, current);
-		default :
+		default:
 			return 0;
 		}
 	}
@@ -128,11 +129,11 @@ public abstract class OpLabel
 	
 	static class OpLabelMethodAsTag extends OpLabel
 	{
-		String owner;
-		String name;
-		String desc;
-		int count;
-		int i;
+		String	owner;
+		String	name;
+		String	desc;
+		int		count;
+		int		i;
 		
 		OpLabelMethodAsTag(int count, String owner, String name, String desc, int off, int len, OpType type, List<AbstractInsnNode> nodes)
 		{
@@ -148,9 +149,7 @@ public abstract class OpLabel
 		{
 			if (node instanceof MethodInsnNode)
 			{
-				if (this.name.equals(((MethodInsnNode) node).name) &&
-						this.desc.equals(((MethodInsnNode) node).desc) &&
-						this.owner.equals(((MethodInsnNode) node).owner))
+				if (this.name.equals(((MethodInsnNode) node).name) && this.desc.equals(((MethodInsnNode) node).desc) && this.owner.equals(((MethodInsnNode) node).owner))
 				{
 					return ++this.i == this.count;
 				}

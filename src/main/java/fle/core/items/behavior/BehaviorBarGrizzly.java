@@ -42,7 +42,7 @@ public class BehaviorBarGrizzly extends BehaviorBase implements IIP_Containerabl
 		RayTraceResult result = Worlds.rayTrace(world, player, true);
 		if (result != null && result.typeOfHit == Type.BLOCK)
 		{
-			if (Worlds.checkForMatch(world, result.getBlockPos(), true, 50, coord->coord.getBlockState().getMaterial() == Material.WATER))
+			if (Worlds.checkForMatch(world, result.getBlockPos(), true, 50, coord -> coord.getBlockState().getMaterial() == Material.WATER))
 			{
 				player.openGui(Nebula.MODID, -1, world, result.getBlockPos().getX(), result.getBlockPos().getY(), result.getBlockPos().getZ());
 				return new ActionResult<>(EnumActionResult.SUCCESS, stack);

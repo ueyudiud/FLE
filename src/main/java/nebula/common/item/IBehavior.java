@@ -34,14 +34,11 @@ public interface IBehavior
 	
 	ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand);
 	
-	EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
+	EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
 	
-	EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand);
+	EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand);
 	
-	boolean onRightClickEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
-			EnumHand hand);
+	boolean onRightClickEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand);
 	
 	boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity);
 	
@@ -53,6 +50,5 @@ public interface IBehavior
 	void onUsingTick(ItemStack stack, EntityLivingBase player, int count);
 	
 	@SideOnly(Side.CLIENT)
-	void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list,
-			boolean advanced);
+	void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean advanced);
 }

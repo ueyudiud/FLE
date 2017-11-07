@@ -18,5 +18,6 @@ public interface IAtmosphere
 	
 	float getPressure();
 	
-	@Nullable FluidStack createFluid(int amount);
+	@Nullable
+	FluidStack createFluid(int amount);
 }

@@ -47,13 +47,12 @@ public class Client
 	{
 		int a = ((ARGB1 >> 24) & 0xFF) * ((ARGB2 >> 24) & 0xFF) >> 8;
 		int r = ((ARGB1 >> 16) & 0xFF) * ((ARGB2 >> 16) & 0xFF) >> 8;
-		int g = ((ARGB1 >> 8 ) & 0xFF) * ((ARGB2 >> 8 ) & 0xFF) >> 8;
-		int b = ((ARGB1      ) & 0xFF) * ((ARGB2      ) & 0xFF) >> 8;
+		int g = ((ARGB1 >> 8) & 0xFF) * ((ARGB2 >> 8) & 0xFF) >> 8;
+		int b = ((ARGB1) & 0xFF) * ((ARGB2) & 0xFF) >> 8;
 		return a << 24 | r << 16 | g << 8 | b;
 	}
 	
-	static
-	final float f = 0.1F;
+	static final float f = 0.1F;
 	
 	public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
 	{
@@ -133,8 +132,7 @@ public class Client
 		}
 	}
 	
-	static final
-	int c = 4;
+	static final int c = 4;
 	
 	public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager)
 	{
@@ -192,7 +190,7 @@ public class Client
 	
 	public static void registerModel(Item item, ModelResourceLocation location)
 	{
-		ModelLoader.setCustomMeshDefinition(item, s->location);
+		ModelLoader.setCustomMeshDefinition(item, s -> location);
 		ModelLoader.registerItemVariants(item, location);
 	}
 	
@@ -200,11 +198,12 @@ public class Client
 	
 	/**
 	 * Get default font render provided by nebula.
+	 * 
 	 * @return
 	 */
 	public static FontRenderer getFontRender()
 	{
-		if(render == null)
+		if (render == null)
 		{
 			render = new FontRenderExtend();
 		}
@@ -224,7 +223,7 @@ public class Client
 		public int[] getProgressColor(ItemStack stack, double progress)
 		{
 			int i = (int) ((1 - progress) * 255);
-			return new int[]{i, 255 - i, 0};
+			return new int[] { i, 255 - i, 0 };
 		}
 	};
 	
@@ -232,11 +231,11 @@ public class Client
 	{
 		renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, STANDARD_PROGRESSBAR_STYLE);
 	}
+	
 	public static void renderItemDurabilityBarInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, int off, IProgressBarStyle barStyle)
 	{
 		double health = barStyle.getProgressScale(stack);
-		if (health < 0)
-			return;
+		if (health < 0) return;
 		if (health > 1)
 		{
 			health = 1;
@@ -250,10 +249,10 @@ public class Client
 		GlStateManager.disableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		//                                  off  * 2
-		draw(vertexbuffer, x + 2, z + 15 - (off << 1), 13, 2,        0    ,        0    ,        0    , 255);
+		// off * 2
+		draw(vertexbuffer, x + 2, z + 15 - (off << 1), 13, 2, 0, 0, 0, 255);
 		draw(vertexbuffer, x + 2, z + 15 - (off << 1), 12, 1, color[0] / 4, color[1] / 4, color[2] / 4, 255);
-		draw(vertexbuffer, x + 2, z + 15 - (off << 1),  j, 1, color[0]    , color[1]    , color[2]    , 255);
+		draw(vertexbuffer, x + 2, z + 15 - (off << 1), j, 1, color[0], color[1], color[2], 255);
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableTexture2D();
@@ -264,8 +263,7 @@ public class Client
 	public static void renderItemCooldownInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z)
 	{
 		EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
-		float f = entityplayersp == null ? 0.0F :
-			entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
+		float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
 		
 		if (f > 0.0F)
 		{

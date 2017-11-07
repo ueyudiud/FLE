@@ -43,8 +43,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 {
-	public static final IProperty<Integer> AGE = Properties.create("age", 0, 3);
-	public static final IProperty<Integer> PROGRESS = Properties.create("progress", 0, 7);
+	public static final IProperty<Integer>	AGE			= Properties.create("age", 0, 3);
+	public static final IProperty<Integer>	PROGRESS	= Properties.create("progress", 0, 7);
 	
 	private Block block;
 	
@@ -87,9 +87,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	@Override
 	public IBlockState getState(Block block, int meta)
 	{
-		return block.getDefaultState()
-				.withProperty(AGE, meta & 0x3)
-				.withProperty(PROGRESS, (meta >> 2) & 7);
+		return block.getDefaultState().withProperty(AGE, meta & 0x3).withProperty(PROGRESS, (meta >> 2) & 7);
 	}
 	
 	@Override
@@ -110,8 +108,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 		IBlockState newState = state;
 		float temp = world.getBiome(pos).getFloatTemperature(pos);
 		float humidity = world.getBiome(pos).getRainfall();
-		if (temp <= 0.8F && temp >= -0.3F && humidity >= 0.2F && humidity <= 0.8F &&
-				world.provider.isSurfaceWorld())
+		if (temp <= 0.8F && temp >= -0.3F && humidity >= 0.2F && humidity <= 0.8F && world.provider.isSurfaceWorld())
 		{
 			int age = state.getValue(AGE);
 			int progress = state.getValue(PROGRESS);
@@ -175,8 +172,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 			{
 				pos2.move(EnumFacing.DOWN);
 			}
-			if (canBlockStay(block, block.getDefaultState(), world, pos2) &&
-					Worlds.isAirOrReplacable(world, pos2))
+			if (canBlockStay(block, block.getDefaultState(), world, pos2) && Worlds.isAirOrReplacable(world, pos2))
 			{
 				world.setBlockState(pos2, block.getDefaultState().withProperty(AGE, 0));
 			}
@@ -196,8 +192,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(BlockPlant block, IBlockState state, BlockPos pos, IBlockAccess world,
-			TileEntity tile, int fortune, boolean silkTouch)
+	public List<ItemStack> getDrops(BlockPlant block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList<>();
 		if (state.getValue(AGE) >= 2)

@@ -36,13 +36,13 @@ public class TECustomName extends TEBase
 	}
 	
 	/**
-	 * Get the formatted ChatComponent that will be used for the sender's username in chat
+	 * Get the formatted ChatComponent that will be used for the sender's
+	 * username in chat
 	 */
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return hasCustomName() ? new TextComponentString(this.customName) :
-			new TextComponentTranslation(getName());
+		return hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation(getName());
 	}
 	
 	public String getName()

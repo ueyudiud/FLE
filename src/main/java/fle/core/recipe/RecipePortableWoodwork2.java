@@ -27,12 +27,9 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		{
 			ItemStack stack = inventory.getStack(2);
 			Block block = Block.getBlockFromItem(stack.getItem());
-			if(block instanceof BlockLogArtificial)
+			if (block instanceof BlockLogArtificial)
 			{
-				boolean
-				hasT1 = false,
-				hasT2 = false,
-				hasT3 = false;
+				boolean hasT1 = false, hasT2 = false, hasT3 = false;
 				if (inventory.hasStackInSlot(0))
 				{
 					stack = inventory.getStack(0);
@@ -48,8 +45,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 				if (inventory.hasStackInSlot(1))
 				{
 					stack = inventory.getStack(1);
-					if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack) ||
-							(stack.getItem() instanceof IPolishableItem && ((IPolishableItem) stack.getItem()).getPolishResult(stack, ' ') == 'c'))
+					if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack) || (stack.getItem() instanceof IPolishableItem && ((IPolishableItem) stack.getItem()).getPolishResult(stack, ' ') == 'c'))
 					{
 						hasT2 = true;
 					}
@@ -63,7 +59,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	@Override
 	public int[] getIntScaleRange(IBasicInventory inventory)
 	{
-		return new int[] {1, 1};
+		return new int[] { 1, 1 };
 	}
 	
 	@Override
@@ -71,7 +67,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	{
 		ItemStack stack = inventory.getStack(2);
 		Tree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
-		ItemStack[] result = {ItemMulti.createStack(tree.material, MC.plank, 2), ItemMulti.createStack(tree.material, MC.bark)};
+		ItemStack[] result = { ItemMulti.createStack(tree.material, MC.plank, 2), ItemMulti.createStack(tree.material, MC.bark) };
 		return result;
 	}
 	
@@ -79,11 +75,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	public void onOutput(IBasicInventory inventory, int value)
 	{
 		ItemStack stack;
-		boolean
-		hasT1 = false,
-		hasT2 = false,
-		hasT3 = false,
-		flag = false;
+		boolean hasT1 = false, hasT2 = false, hasT3 = false, flag = false;
 		if (inventory.hasStackInSlot(0))
 		{
 			stack = inventory.getStack(0);

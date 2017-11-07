@@ -8,18 +8,18 @@ import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@IFMLLoadingPlugin.TransformerExclusions({"nebula.asm"})
+@IFMLLoadingPlugin.TransformerExclusions({ "nebula.asm" })
 public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 {
-	public static boolean loadedData;
+	public static boolean	loadedData;
 	/** This is <code>true</code> in obfuscation environment. */
-	public static boolean runtimeDeobf;
-	public static File location;
+	public static boolean	runtimeDeobf;
+	public static File		location;
 	
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[] {"nebula.asm.ClassTransformer"};
+		return new String[] { "nebula.asm.ClassTransformer" };
 	}
 	
 	@Override

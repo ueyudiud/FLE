@@ -28,8 +28,7 @@ public class TreeGenShrub extends TreeGenAbstract
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if (!checkLogGrow(world, x, y, z, 1, 1, 2, false))
-			return false;
+		if (!checkLogGrow(world, x, y, z, 1, 1, 2, false)) return false;
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState state = world.getBlockState(pos);
 		
@@ -37,7 +36,7 @@ public class TreeGenShrub extends TreeGenAbstract
 		{
 			state.getBlock().onPlantGrow(state, world, pos, pos.up());
 			
-			generateLog(world, x, ++ y, z, 0);
+			generateLog(world, x, ++y, z, 0);
 			
 			for (int yOff = 0; yOff <= 2; ++yOff)
 			{

@@ -55,29 +55,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Tree extends PropertyWood implements ITree, IRenderRegister
 {
-	public static final Applicable<ItemStack> LEAVES_APPLIER1 =
-			Applicable.asCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
-	public static final Applicable<ItemStack> LEAVES_APPLIER2 =
-			Applicable.asCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
+	public static final Applicable<ItemStack>	LEAVES_APPLIER1	= Applicable.asCached(() -> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
+	public static final Applicable<ItemStack>	LEAVES_APPLIER2	= Applicable.asCached(() -> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
-	protected FamilyTemplate<Tree, ISaplingAccess> family;
+	protected FamilyTemplate<Tree, ISaplingAccess>	family;
 	/** logNative logArtifical leaves leavesCore */
-	protected Block[] blocks;
-	protected long[] nativeTreeValue = Misc.LONGS_EMPTY;
-	protected int[] nativeTreeDatas = Misc.INTS_EMPTY;
-	protected int leavesCheckRange = 4;
-	protected boolean isBroadLeaf = true;
+	protected Block[]								blocks;
+	protected long[]								nativeTreeValue		= Misc.LONGS_EMPTY;
+	protected int[]									nativeTreeDatas		= Misc.INTS_EMPTY;
+	protected int									leavesCheckRange	= 4;
+	protected boolean								isBroadLeaf			= true;
 	
 	public Tree(Mat material)
 	{
 		this(material.getProperty(MP.property_wood));
 	}
+	
 	private Tree(PropertyWood property)
 	{
 		super(property.material, 1, property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
 	}
-	public Tree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent,
-			float burnHeat)
+	
+	public Tree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent, float burnHeat)
 	{
 		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
 	}
@@ -134,7 +133,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		if ((gm.coders.length & 0x1) != 0) return null;
 		Random random = biology.rng();
-		long[] coders = A.createLongArray(gm.coders.length >> 1, idx-> {
+		long[] coders = A.createLongArray(gm.coders.length >> 1, idx -> {
 			long a = gm.coders[idx << 1];
 			long b = gm.coders[idx << 1 | 1];
 			long result = 0;
@@ -161,17 +160,16 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	public void expressTrait(ISaplingAccess biology, GeneticMaterial gm)
 	{
 		TreeInfo info = biology.info();
-		info.height		+= gm.nativeValues[0];
-		info.growth		+= gm.nativeValues[1];
-		info.resistance	+= gm.nativeValues[2];
-		info.vitality	+= gm.nativeValues[3];
+		info.height += gm.nativeValues[0];
+		info.growth += gm.nativeValues[1];
+		info.resistance += gm.nativeValues[2];
+		info.vitality += gm.nativeValues[3];
 	}
 	
 	@Override
-	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial,
-			BlockLeaves leaves, BlockLeavesCore leavesCore)
+	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore)
 	{
-		this.blocks = new Block[]{logNatural, logArtificial, leaves, leavesCore};
+		this.blocks = new Block[] { logNatural, logArtificial, leaves, leavesCore };
 	}
 	
 	@Override
@@ -194,6 +192,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	
 	/**
 	 * Doing leaves decay, return <code>true</code> if leaves is dead.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param rand
@@ -330,11 +329,11 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		BlockPos pos2;
 		IBlockState state;
-		for(int i = -length; i <= length; ++i)
+		for (int i = -length; i <= length; ++i)
 		{
-			for(int j = -length; j <= length; ++j)
+			for (int j = -length; j <= length; ++j)
 			{
-				for(int k = -length; k <= length; ++k)
+				for (int k = -length; k <= length; ++k)
 				{
 					(state = world.getBlockState(pos2 = pos.add(i, j, k))).getBlock().beginLeavesDecay(state, world, pos2);
 				}
@@ -375,22 +374,19 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	}
 	
 	@Override
-	public boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos,
-			float yPos, float zPos, boolean isArt)
+	public boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos, float zPos, boolean isArt)
 	{
 		return false;
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
+	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
@@ -402,8 +398,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
-			boolean silkTouching, ArrayList list)
+	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList list)
 	{
 		if (L.nextInt(8) == 0)
 		{
@@ -432,7 +427,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		meta &= 0x7;
 		int state = worldGenerationFlag ? 2 : 3;
-		if(world.rand.nextFloat() <= generateCoreLeavesChance)
+		if (world.rand.nextFloat() <= generateCoreLeavesChance)
 		{
 			Worlds.setBlock(world, pos, this.blocks[3], meta, state);
 			Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !worldGenerationFlag);
@@ -448,13 +443,13 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		switch (type)
 		{
-		case LOG :
+		case LOG:
 			return (T) this.blocks[0];
-		case LOG_ART :
+		case LOG_ART:
 			return (T) this.blocks[1];
-		case LEAVES :
+		case LEAVES:
 			return (T) this.blocks[2];
-		case LEAVES_CORE :
+		case LEAVES_CORE:
 			return (T) this.blocks[3];
 		default:
 			return null;

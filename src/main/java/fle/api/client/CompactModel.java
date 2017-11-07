@@ -32,13 +32,14 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public abstract class CompactModel implements ModelBase, BakedModelBase, IPerspectiveAwareModel, ICustomItemRenderModel
 {
-	protected ModelQuadBuilder qb = ModelQuadBuilder.newInstance();
-	private final ImmutableMap<TransformType, TRSRTransformation> transformMap;
+	protected ModelQuadBuilder										qb	= ModelQuadBuilder.newInstance();
+	private final ImmutableMap<TransformType, TRSRTransformation>	transformMap;
 	
 	protected CompactModel()
 	{
 		this(ModelHelper.BLOCK_STANDARD_TRANSFORMS);
 	}
+	
 	protected CompactModel(ImmutableMap<TransformType, TRSRTransformation> map)
 	{
 		this.transformMap = map;
@@ -47,12 +48,11 @@ public abstract class CompactModel implements ModelBase, BakedModelBase, IPerspe
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		return ImmutableList.of();//Use other texture loader.
+		return ImmutableList.of();// Use other texture loader.
 	}
 	
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		this.qb.setFormat(format);
 		return this;

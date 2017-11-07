@@ -20,9 +20,9 @@ public class JsonDeserializerGateway<T> implements JsonDeserializer<T>
 {
 	private String splitKey;
 	
-	private Map<String, JsonDeserializer<? extends T>> deserializers = new HashMap<>();
-	private JsonDeserializer<? extends T> defaultDeserializer;
-	private boolean throwExceptionWhenNoMatched = false;
+	private Map<String, JsonDeserializer<? extends T>>	deserializers				= new HashMap<>();
+	private JsonDeserializer<? extends T>				defaultDeserializer;
+	private boolean										throwExceptionWhenNoMatched	= false;
 	
 	public JsonDeserializerGateway(String splitKey, JsonDeserializer<? extends T> deserializer)
 	{
@@ -38,14 +38,12 @@ public class JsonDeserializerGateway<T> implements JsonDeserializer<T>
 	
 	public void addDeserializer(String key, JsonDeserializer<? extends T> deserializer)
 	{
-		if (this.deserializers.containsKey(key))
-			throw new RuntimeException("The deserializer key '" + key + "' already exists.");
+		if (this.deserializers.containsKey(key)) throw new RuntimeException("The deserializer key '" + key + "' already exists.");
 		this.deserializers.put(key, deserializer);
 	}
 	
 	@Override
-	public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-			throws JsonParseException
+	public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{
 		JsonDeserializer<? extends T> deserializer;
 		JsonObject object = json.getAsJsonObject();
@@ -54,8 +52,7 @@ public class JsonDeserializerGateway<T> implements JsonDeserializer<T>
 			if (this.throwExceptionWhenNoMatched)
 			{
 				deserializer = this.deserializers.get(object.get(this.splitKey).getAsString());
-				if (deserializer == null)
-					throw new JsonParseException("No deserializer found. got: " + object.get(this.splitKey).getAsString());
+				if (deserializer == null) throw new JsonParseException("No deserializer found. got: " + object.get(this.splitKey).getAsString());
 			}
 			else
 			{
@@ -66,7 +63,8 @@ public class JsonDeserializerGateway<T> implements JsonDeserializer<T>
 		{
 			deserializer = this.defaultDeserializer;
 		}
-		else throw new JsonParseException("No deserializer tag found. Please select a deserializer with key '" + this.splitKey + "'");
+		else
+			throw new JsonParseException("No deserializer tag found. Please select a deserializer with key '" + this.splitKey + "'");
 		return deserializer.deserialize(json, typeOfT, context);
 	}
 }

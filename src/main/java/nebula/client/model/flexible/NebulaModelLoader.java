@@ -73,11 +73,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Nebula Model Loader
- * (Before: Nebula Item Model Loader & Nebula Block ModelLoader),
- * provide more flexible model loader for creator,
- * make more convenient model
- * file writing rules for resource pack maker.<p>
+ * Nebula Model Loader (Before: Nebula Item Model Loader & Nebula Block
+ * ModelLoader), provide more flexible model loader for creator, make more
+ * convenient model file writing rules for resource pack maker.
+ * <p>
+ * 
  * @author ueyudiud
  * @version 0.7
  */
@@ -91,72 +91,66 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * The default variant or key for model,
-	 * use to load model with only single meta or model is missing
-	 * a texture set.<br>
+	 * The default variant or key for model, use to load model with only single
+	 * meta or model is missing a texture set.<br>
 	 */
-	public static final String NORMAL = "";
+	public static final String				NORMAL					= "";
 	/**
 	 * The normal meta generator, it will return default variant.
 	 */
-	public static final Function<?, String> NORMAL_METAGENERATOR = Misc.anyTo(NORMAL);
+	public static final Function<?, String>	NORMAL_METAGENERATOR	= Misc.anyTo(NORMAL);
 	/**
 	 * The default color (RGBa) in model quad.<br>
 	 */
-	public static final int NORMAL_COLOR = 0xFFFFFFFF;
+	public static final int					NORMAL_COLOR			= 0xFFFFFFFF;
 	/**
-	 * The normal color get function used to get color multiple, it will return default color.
+	 * The normal color get function used to get color multiple, it will return
+	 * default color.
 	 */
-	public static final ToIntFunction<?> NORMAL_MULTIPLIER = any->NORMAL_COLOR;
+	public static final ToIntFunction<?>	NORMAL_MULTIPLIER		= any -> NORMAL_COLOR;
 	/**
-	 * The missing no icon, it always return when NebulaModelLoader can not find icon handler by resource location.
+	 * The missing no icon, it always return when NebulaModelLoader can not find
+	 * icon handler by resource location.
 	 */
-	public static final IIconCollection ICON_HANDLER_MISSING = new MissingnoIconHandler();
+	public static final IIconCollection		ICON_HANDLER_MISSING	= new MissingnoIconHandler();
 	
-	private static final Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> MODEL_PROVIDERS = new HashMap<>();
-	private static final Map<ResourceLocation, JsonDeserializer<? extends IModel>> MODEL_DESERIALIZERS = new HashMap<>();
-	private static final Map<ResourceLocation, Function<ItemStack, String>> ITEM_META_GENERATOR = new HashMap<>();
-	private static final Map<ResourceLocation, Function<IBlockState, String>> BLOCK_META_GENERATOR = new HashMap<>();
-	private static final Map<ResourceLocation, ToIntFunction<IBlockState>> BUILTIN_BLOCK_COLORMULTIPLIER = new HashMap<>();
-	private static final Map<ResourceLocation, ToIntFunction<ItemStack>> BUILTIN_ITEM_COLORMULTIPLIER = new HashMap<>();
-	private static final Map<ResourceLocation, Supplier<Map<String, ResourceLocation>>> BUILTIN_TEXTURESET = new HashMap<>();
-	private static final Map<ResourceLocation, Item> LOCATION_TO_ITEM_MAP = new HashMap<>();
+	private static final Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>>	MODEL_PROVIDERS					= new HashMap<>();
+	private static final Map<ResourceLocation, JsonDeserializer<? extends IModel>>							MODEL_DESERIALIZERS				= new HashMap<>();
+	private static final Map<ResourceLocation, Function<ItemStack, String>>									ITEM_META_GENERATOR				= new HashMap<>();
+	private static final Map<ResourceLocation, Function<IBlockState, String>>								BLOCK_META_GENERATOR			= new HashMap<>();
+	private static final Map<ResourceLocation, ToIntFunction<IBlockState>>									BUILTIN_BLOCK_COLORMULTIPLIER	= new HashMap<>();
+	private static final Map<ResourceLocation, ToIntFunction<ItemStack>>									BUILTIN_ITEM_COLORMULTIPLIER	= new HashMap<>();
+	private static final Map<ResourceLocation, Supplier<Map<String, ResourceLocation>>>						BUILTIN_TEXTURESET				= new HashMap<>();
+	private static final Map<ResourceLocation, Item>														LOCATION_TO_ITEM_MAP			= new HashMap<>();
 	
-	private static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(SubmetaLoader.BlockSubmetaGetter.class, SubmetaLoader.BLOCK_LOADER)
-			.registerTypeAdapter(SubmetaLoader.ItemSubmetaGetter.class, SubmetaLoader.ITEM_LOADER)
-			.registerTypeAdapter(INebulaModelPart.class, NebulaModelDeserializer.BLOCK_MODEL_PART_DESERIALIZERS)
-			.registerTypeAdapter(ModelPartCollection.class, ModelPartCollection.DESERIALIZER)
-			.registerTypeAdapter(NebulaModelDeserializer.Transform.class, (JsonDeserializer<Transform>) (json, typeOfT, context)-> {
+	private static final Gson GSON = new GsonBuilder().registerTypeAdapter(SubmetaLoader.BlockSubmetaGetter.class, SubmetaLoader.BLOCK_LOADER).registerTypeAdapter(SubmetaLoader.ItemSubmetaGetter.class, SubmetaLoader.ITEM_LOADER)
+			.registerTypeAdapter(INebulaModelPart.class, NebulaModelDeserializer.BLOCK_MODEL_PART_DESERIALIZERS).registerTypeAdapter(ModelPartCollection.class, ModelPartCollection.DESERIALIZER)
+			.registerTypeAdapter(NebulaModelDeserializer.Transform.class, (JsonDeserializer<Transform>) (json, typeOfT, context) -> {
 				Transform transform = new Transform();
-				//TODO
+				// TODO
 				return transform;
-			})
-			.registerTypeAdapter(IModel.class, (JsonDeserializer<IModel>)
-					(json, type, context)-> {
-						String key = Jsons.getOrDefault(json.getAsJsonObject(), "loader", null);
-						JsonDeserializer<? extends IModel> deserializer = INSTANCE.defaultDeserializer;
-						if (key != null)
-						{
-							deserializer = MODEL_DESERIALIZERS.get(new ResourceLocation(key));
-						}
-						if (deserializer == null)
-							if (INSTANCE.defaultDeserializer == null)
-								throw new JsonParseException("No deserializer found.");
-							else
-							{
-								deserializer = INSTANCE.defaultDeserializer;
-								Log.debug("The deserializer \"{}\" not found, use default deserializer instead.", key);
-							}
-						return deserializer.deserialize(json, type, context);
-					})
-			.create();
+			}).registerTypeAdapter(IModel.class, (JsonDeserializer<IModel>) (json, type, context) -> {
+				String key = Jsons.getOrDefault(json.getAsJsonObject(), "loader", null);
+				JsonDeserializer<? extends IModel> deserializer = INSTANCE.defaultDeserializer;
+				if (key != null)
+				{
+					deserializer = MODEL_DESERIALIZERS.get(new ResourceLocation(key));
+				}
+				if (deserializer == null) if (INSTANCE.defaultDeserializer == null)
+					throw new JsonParseException("No deserializer found.");
+				else
+				{
+					deserializer = INSTANCE.defaultDeserializer;
+					Log.debug("The deserializer \"{}\" not found, use default deserializer instead.", key);
+				}
+				return deserializer.deserialize(json, type, context);
+			}).create();
 	
-	private static final Function<Object, String> ERROR_REPORT_FUNCTION = object ->
-	object instanceof ResourceLocation ? String.format("File not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "";
+	private static final Function<Object, String> ERROR_REPORT_FUNCTION = object -> object instanceof ResourceLocation ? String.format("File not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "";
 	
 	/**
 	 * Register model deserializer.
+	 * 
 	 * @param location
 	 * @param deserializer
 	 */
@@ -168,18 +162,20 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	/**
 	 * Mark this model should loaded by NebulaModelLoaer.<br>
 	 * This method should called before <code>FMLInitializationEvent</code>
+	 * 
 	 * @param item The marked item.
 	 * @param location The loading location.
 	 */
 	public static void registerModel(Item item, ResourceLocation location)
 	{
-		//The default model location of item.
+		// The default model location of item.
 		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "inventory");
-		//For stack to location logic, it will only return single model location, the variant will be match in model.
-		ModelLoader.setCustomMeshDefinition(item, stack->location1);
-		//Register allowed build item variant.
+		// For stack to location logic, it will only return single model
+		// location, the variant will be match in model.
+		ModelLoader.setCustomMeshDefinition(item, stack -> location1);
+		// Register allowed build item variant.
 		ModelLoader.registerItemVariants(item, location1);
-		//The real location of model.
+		// The real location of model.
 		location = new ResourceLocation(location.getResourceDomain(), "models/item/" + location.getResourcePath() + ".json");
 		
 		LOCATION_TO_ITEM_MAP.put(location1, item);
@@ -188,48 +184,52 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	public static void registerModel(Block block, IStateMapperExt mapper, IBlockState state, ResourceLocation location)
 	{
-		if (block != null)
-			LOCATION_TO_ITEM_MAP.put(location, Item.getItemFromBlock(block));//Is it needed split block and item map?
+		if (block != null) LOCATION_TO_ITEM_MAP.put(location, Item.getItemFromBlock(block));// Is
+																							// it
+																							// needed
+																							// split
+																							// block
+																							// and
+																							// item
+																							// map?
 		registerModel(mapper.getLocationFromState(state), new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath() + ".json"), NebulaModelDeserializer.BLOCK);
 	}
 	
-	public static void registerModel(
-			ResourceLocation location, ResourceLocation location2)
+	public static void registerModel(ResourceLocation location, ResourceLocation location2)
 	{
 		registerModel(location, location2, null);
 	}
 	
 	/**
 	 * Mark this model should loaded by NebulaModelLoader.
+	 * 
 	 * @param location the model loader predicated
 	 * @param location2 the real loading location.
 	 * @param deserializer the used deserializer to load resource.
 	 */
-	public static void registerModel(
-			ResourceLocation location, ResourceLocation location2,
-			@Nullable JsonDeserializer<? extends IModel> deserializer)
+	public static void registerModel(ResourceLocation location, ResourceLocation location2, @Nullable JsonDeserializer<? extends IModel> deserializer)
 	{
 		MODEL_PROVIDERS.put(location, new Ety<>(location2, deserializer));
 	}
 	
 	/**
 	 * Register item meta generator.
+	 * 
 	 * @param location the registry name of generator.
 	 * @param function the meta generator.
 	 */
-	public static void registerItemMetaGenerator(ResourceLocation location,
-			Function<ItemStack, String> function)
+	public static void registerItemMetaGenerator(ResourceLocation location, Function<ItemStack, String> function)
 	{
 		ITEM_META_GENERATOR.put(location, function);
 	}
 	
 	/**
 	 * Register block meta generator.
+	 * 
 	 * @param location the registry name of generator.
 	 * @param function the meta generator.
 	 */
-	public static void registerBlockMetaGenerator(ResourceLocation location,
-			Function<IBlockState, String> function)
+	public static void registerBlockMetaGenerator(ResourceLocation location, Function<IBlockState, String> function)
 	{
 		BLOCK_META_GENERATOR.put(location, function);
 	}
@@ -251,15 +251,15 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	private PrintStream stream;
 	
-	public IResourceManager manager;
-	public ResourceLocation currentLocation;
-	public Item currentItem;
+	public IResourceManager	manager;
+	public ResourceLocation	currentLocation;
+	public Item				currentItem;
 	
 	private JsonDeserializer<? extends IModel> defaultDeserializer;
 	
-	private Map<ResourceLocation, Map<String, ResourceLocation>> cacheLocations;
-	private Map<ResourceLocation, IModel> models;
-	private Map<ResourceLocation, ModelPartCollection> parts;
+	private Map<ResourceLocation, Map<String, ResourceLocation>>	cacheLocations;
+	private Map<ResourceLocation, IModel>							models;
+	private Map<ResourceLocation, ModelPartCollection>				parts;
 	
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
@@ -291,9 +291,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 					{
 						String[] split = Strings.split(line, ',');
 						if (split.length <= 1 || split.length >= 4) throw new RuntimeException();
-						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(split[0].trim()) : new ResourceLocation(split[0].trim()),
-								new Ety<>(new ResourceLocation(split[1].trim()), split.length == 2 ?
-										NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
+						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(split[0].trim()) : new ResourceLocation(split[0].trim()), new Ety<>(new ResourceLocation(split[1].trim()), split.length == 2 ? NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
 						++l;
 					}
 				}
@@ -325,7 +323,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				byte[] code = IO.copyResource(manager, entry.getValue().getKey());
 				IModel cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(code)), IModel.class);
 				this.models.put(entry.getKey(), cache);
-				if(cache instanceof IRecolorableModel && colors1 != null && colors2 != null)
+				if (cache instanceof IRecolorableModel && colors1 != null && colors2 != null)
 				{
 					((IRecolorableModel) cache).registerColorMultiplier(colors1);
 					((IRecolorableModel) cache).registerColorMultiplier(colors2);
@@ -410,8 +408,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	/**
 	 * @param modelLocation the location of model.
-	 * @return <code>true</code> if the model with modelLocation is exist in NebulaModelLoader
-	 *         and <code>false</code> for otherwise.
+	 * @return <code>true</code> if the model with modelLocation is exist in
+	 *         NebulaModelLoader and <code>false</code> for otherwise.
 	 */
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
@@ -426,6 +424,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	/**
 	 * Get meta applier.
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -436,6 +435,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	/**
 	 * Get meta applier.
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -446,19 +446,22 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	/**
 	 * Get icon/iconset by location.
+	 * 
 	 * @param location
 	 * @return
 	 */
 	public static IIconCollection loadIconHandler(String location)
 	{
-		//TODO
-		if (location.charAt(0) == '[')
-			return new TemplateIconHandler(getTextureSet(new ResourceLocation(location.substring(1))));
-		return new SimpleIconHandler(NORMAL, new ResourceLocation(location));//Default loader instead.
+		// TODO
+		if (location.charAt(0) == '[') return new TemplateIconHandler(getTextureSet(new ResourceLocation(location.substring(1))));
+		return new SimpleIconHandler(NORMAL, new ResourceLocation(location));// Default
+																				// loader
+																				// instead.
 	}
 	
 	/**
 	 * Get color multiplier use for item model.
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -468,11 +471,16 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Get texture set, which is used for {@link IIconCollection}.<p>
-	 * The loader will find resources at {@code "[domain]:models/textureset/[path]"}.
-	 * The file is format as {@code key=value}, and use {@code #} to mark a line of annotation.<p>
-	 * The loader will find in inner resources supplier when not found any mapping in resources,
-	 * and will throw an exception of file not found when no textures set found.
+	 * Get texture set, which is used for {@link IIconCollection}.
+	 * <p>
+	 * The loader will find resources at
+	 * {@code "[domain]:models/textureset/[path]"}. The file is format as
+	 * {@code key=value}, and use {@code #} to mark a line of annotation.
+	 * <p>
+	 * The loader will find in inner resources supplier when not found any
+	 * mapping in resources, and will throw an exception of file not found when
+	 * no textures set found.
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -493,8 +501,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	private Map<String, ResourceLocation> loadTextureSet$(ResourceLocation location)
 	{
-		if (this.loadingTextureSets.contains(location))
-			throw new InternalError();
+		if (this.loadingTextureSets.contains(location)) throw new InternalError();
 		this.loadingTextureSets.addLast(location);
 		Map<String, ResourceLocation> result;
 		try
@@ -526,16 +533,15 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			while ((key = reader.readLine()) != null)
 			{
 				++line;
-				if (key.length() == 0 || key.charAt(0) == '#')//For annotate.
+				if (key.length() == 0 || key.charAt(0) == '#')// For annotate.
 					continue;
 				if (key.charAt(0) == '@')
 				{
 					String[] values = Strings.split(key, ' ');
 					switch (values[0])
 					{
-					case "@include" :
-						if (values.length != 2)
-							throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
+					case "@include":
+						if (values.length != 2) throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
 						try
 						{
 							builder.putAll(getTextureSet(new ResourceLocation(values[1])));
@@ -545,20 +551,18 @@ public enum NebulaModelLoader implements ICustomModelLoader
 							throw new IllegalArgumentException("Looped loading. file: " + location + " line: " + line + " target: " + values[1]);
 						}
 						break;
-					case "@remove" :
-						if (values.length != 2)
-							throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
+					case "@remove":
+						if (values.length != 2) throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
 						builder.remove(values[1]);
 						break;
-					default :
+					default:
 						throw new IllegalArgumentException("Unknown operation, got: " + values[0] + ". file: " + location + " line: " + line);
 					}
 				}
 				else
 				{
 					int idx;
-					if ((idx = key.indexOf('=')) == -1)
-						throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
+					if ((idx = key.indexOf('=')) == -1) throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
 					builder.put(key.substring(0, idx), new ResourceLocation(key.substring(idx + 1)));
 				}
 			}
@@ -573,7 +577,9 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Get model from model loader (For the nebula model loader will remove provided model).
+	 * Get model from model loader (For the nebula model loader will remove
+	 * provided model).
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -592,7 +598,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	public ModelPartCollection loadModelPart(ResourceLocation location)
 	{
 		location = new ResourceLocation(location.getResourceDomain(), "models/parts/" + location.getResourcePath() + ".json");
-		try (IResource resource = this.manager.getResource(location))
+		try (
+				IResource resource = this.manager.getResource(location))
 		{
 			return GSON.fromJson(new InputStreamReader(resource.getInputStream()), ModelPartCollection.class);
 		}
@@ -603,9 +610,10 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Nebula model will be remove when loading model,
-	 * it means this can not be parent model directly,
-	 * or use {@link #getModel(net.minecraft.util.ResourceLocation)} instead.
+	 * Nebula model will be remove when loading model, it means this can not be
+	 * parent model directly, or use
+	 * {@link #getModel(net.minecraft.util.ResourceLocation)} instead.
+	 * 
 	 * @return The loaded model.
 	 */
 	@Override
@@ -616,27 +624,23 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		{
 			model = this.models.get(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
 		}
-		if (this.models.isEmpty())
-			this.models = null;//Clean cache.
-		if (model == null)//If model is null, it means the loader of location shoudn't be this loader.
-			throw new RuntimeException(
-					String.format("The model location \"%s\" is not belong to NebulaModelLoader. There must be some wrong of other model loader.", modelLocation));
+		if (this.models.isEmpty()) this.models = null;// Clean cache.
+		if (model == null)// If model is null, it means the loader of location
+							// shoudn't be this loader.
+			throw new RuntimeException(String.format("The model location \"%s\" is not belong to NebulaModelLoader. There must be some wrong of other model loader.", modelLocation));
 		return model;
 	}
 	
 	static
 	{
-		registerItemMetaGenerator(new ResourceLocation("forge", "contain_fluid"), stack ->
-		{
+		registerItemMetaGenerator(new ResourceLocation("forge", "contain_fluid"), stack -> {
 			FluidStack stack1 = FluidUtil.getFluidContained(stack);
 			return stack1 == null ? "empty" : stack1.getFluid().getName();
 		});
-		registerItemMetaGenerator(new ResourceLocation("nebula", "display_fluid"),
-				stack->ItemFluidDisplay.getFluid(stack).getName());
-		registerItemColorMultiplier(new ResourceLocation("nebula", "display_fluid/color"),
-				stack->ItemFluidDisplay.getFluid(stack).getColor());
+		registerItemMetaGenerator(new ResourceLocation("nebula", "display_fluid"), stack -> ItemFluidDisplay.getFluid(stack).getName());
+		registerItemColorMultiplier(new ResourceLocation("nebula", "display_fluid/color"), stack -> ItemFluidDisplay.getFluid(stack).getColor());
 		
-		registerTextureSet(new ResourceLocation("forge", "fluid"), ()-> {
+		registerTextureSet(new ResourceLocation("forge", "fluid"), () -> {
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 			for (Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet())
 			{

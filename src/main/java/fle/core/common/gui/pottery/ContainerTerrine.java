@@ -24,8 +24,7 @@ public class ContainerTerrine extends ContainerTileInventory<TETerrine>
 		addSlotToContainer(new SlotBase(tile, 1, 89, 46));
 		
 		addSlotToContainer(new FluidSlotN(tile.getTank(), 75, 32, 8, 30));
-		ContainerBase.TL
-		locationTerrine = new TL(id, id + 2);
+		ContainerBase.TL locationTerrine = new TL(id, id + 2);
 		locationTerrine.appendTransferLocate(this.locationPlayer).addToList();
 		this.locationBag.appendTransferLocate(locationTerrine).appendTransferLocate(this.locationHand);
 		this.locationHand.appendTransferLocate(locationTerrine).appendTransferLocate(this.locationBag);

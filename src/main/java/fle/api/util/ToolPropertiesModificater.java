@@ -27,16 +27,7 @@ public class ToolPropertiesModificater
 {
 	public static enum Property
 	{
-		ATTACK_SPEED(2),
-		ATTACK_DAMAGE(1),
-		HARVEST_LEVEL(1),
-		MINING_SPEED(2),
-		DURABILITY(0),
-		THROUGHNESS(1),
-		BRITTLENESS(1),
-		ENCHANTABILITY(0),
-		SPECIAL(2),
-		UNKNOWN(0);
+		ATTACK_SPEED(2), ATTACK_DAMAGE(1), HARVEST_LEVEL(1), MINING_SPEED(2), DURABILITY(0), THROUGHNESS(1), BRITTLENESS(1), ENCHANTABILITY(0), SPECIAL(2), UNKNOWN(0);
 		
 		int digit;
 		
@@ -53,20 +44,17 @@ public class ToolPropertiesModificater
 	
 	public static enum ModificationType
 	{
-		BASE_ADD,
-		BASE_MUL,
-		MULTIPLIER,
-		SPECIAL;
+		BASE_ADD, BASE_MUL, MULTIPLIER, SPECIAL;
 		
 		public static final int length = ModificationType.values().length;
 	}
 	
 	public static class ToolPropertyTag
 	{
-		String name;
-		Property property;
-		ModificationType type;
-		float amount;
+		String				name;
+		Property			property;
+		ModificationType	type;
+		float				amount;
 		
 		public ToolPropertyTag(String name, Property property, ModificationType type, float amount)
 		{
@@ -82,8 +70,8 @@ public class ToolPropertiesModificater
 		}
 	}
 	
-	private Map<String, ToolPropertyTag> tags = new HashMap<>();
-	private EnumMap<Property, List<ToolPropertyTag>[]> properties = new EnumMap<>(Property.class);
+	private Map<String, ToolPropertyTag>				tags		= new HashMap<>();
+	private EnumMap<Property, List<ToolPropertyTag>[]>	properties	= new EnumMap<>(Property.class);
 	
 	public ToolPropertiesModificater()
 	{
@@ -107,15 +95,15 @@ public class ToolPropertiesModificater
 	
 	public ToolPropertiesModificater addProperties(ToolPropertyTag...tags)
 	{
-		for (ToolPropertyTag tag : tags) addProperty(tag);
+		for (ToolPropertyTag tag : tags)
+			addProperty(tag);
 		return this;
 	}
 	
 	public ToolPropertyTag addProperty(ToolPropertyTag tag)
 	{
 		ToolPropertyTag old = this.tags.put(tag.name, tag);
-		List<ToolPropertyTag>[] lists = this.properties.computeIfAbsent(tag.property,
-				p-> A.createArray(ModificationType.length, new ArrayList<>()));
+		List<ToolPropertyTag>[] lists = this.properties.computeIfAbsent(tag.property, p -> A.createArray(ModificationType.length, new ArrayList<>()));
 		assert (old == null || old.property == tag.property);
 		if (old != null)
 		{
@@ -150,13 +138,13 @@ public class ToolPropertiesModificater
 			String formats = LanguageManager.translateToLocal(tag.property.getTranslateName());
 			switch (tag.type)
 			{
-			case BASE_ADD :
-			case SPECIAL :
-			default :
+			case BASE_ADD:
+			case SPECIAL:
+			default:
 				formats += " +" + Strings.getDecimalNumber(tag.amount, tag.property.digit);
 				break;
-			case BASE_MUL :
-			case MULTIPLIER :
+			case BASE_MUL:
+			case MULTIPLIER:
 				formats += " x" + Strings.progress((1.0F + tag.amount) * 100);
 				break;
 			}
@@ -166,22 +154,27 @@ public class ToolPropertiesModificater
 	
 	public float applyModification(float value, Property property)
 	{
-		assert (property != Property.SPECIAL);//Special property can not use this to get modification.
+		assert (property != Property.SPECIAL);// Special property can not use
+												// this to get modification.
 		List<ToolPropertyTag>[] tags = this.properties.get(property);
 		if (tags == null) return value;
 		
 		float value1;
 		value1 = 0;
-		for (ToolPropertyTag tag : tags[0]) value1 += tag.amount;
+		for (ToolPropertyTag tag : tags[0])
+			value1 += tag.amount;
 		value += value1;
 		value1 = 1.0F;
-		for (ToolPropertyTag tag : tags[1]) value1 += tag.amount;
+		for (ToolPropertyTag tag : tags[1])
+			value1 += tag.amount;
 		value *= value1;
 		value1 = 1.0F;
-		for (ToolPropertyTag tag : tags[2]) value1 += tag.amount;
+		for (ToolPropertyTag tag : tags[2])
+			value1 += tag.amount;
 		value *= value1;
 		value1 = 0;
-		for (ToolPropertyTag tag : tags[3]) value1 += tag.amount;
+		for (ToolPropertyTag tag : tags[3])
+			value1 += tag.amount;
 		value += value1;
 		
 		return value;
@@ -215,11 +208,7 @@ public class ToolPropertiesModificater
 		for (String key : tag.getKeySet())
 		{
 			NBTTagCompound compound = tag.getCompoundTag(key);
-			ToolPropertyTag propertyTag = new ToolPropertyTag(
-					key,
-					NBTs.getEnumOrDefault(compound, "prop", Property.UNKNOWN),
-					NBTs.getEnumOrDefault(compound, "type", ModificationType.BASE_ADD),
-					compound.getFloat("value"));
+			ToolPropertyTag propertyTag = new ToolPropertyTag(key, NBTs.getEnumOrDefault(compound, "prop", Property.UNKNOWN), NBTs.getEnumOrDefault(compound, "type", ModificationType.BASE_ADD), compound.getFloat("value"));
 			if (propertyTag.property == Property.UNKNOWN) continue;
 			addProperty(propertyTag);
 		}

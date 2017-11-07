@@ -24,11 +24,9 @@ public class ModelPartCollection
 	
 	public INebulaModelPart getModelPart(String key)
 	{
-		if (!this.variants.containsKey(key))
-			throw new RuntimeException("The model part variant '" + key + "' not found.");
+		if (!this.variants.containsKey(key)) throw new RuntimeException("The model part variant '" + key + "' not found.");
 		return this.variants.get(key);
 	}
 	
-	static final JsonDeserializer<ModelPartCollection> DESERIALIZER = (json, typeOfType, context)->
-	new ModelPartCollection(Jsons.getAsMap(json.getAsJsonObject(), j->context.deserialize(j, INebulaModelPart.class)));
+	static final JsonDeserializer<ModelPartCollection> DESERIALIZER = (json, typeOfType, context) -> new ModelPartCollection(Jsons.getAsMap(json.getAsJsonObject(), j -> context.deserialize(j, INebulaModelPart.class)));
 }

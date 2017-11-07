@@ -101,202 +101,216 @@ import net.minecraftforge.fml.relauncher.IFMLCallHook;
  */
 public class NebulaSetup implements IFMLCallHook
 {
-	/** The ASM file version, uses to determine if it need replaced ASM files. */
+	/**
+	 * The ASM file version, uses to determine if it need replaced ASM files.
+	 */
 	private static final int VERSION = 12;
 	
-	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
-		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
-		JsonObject object = json.getAsJsonObject();
-		OpInformation information = new OpInformation(object.get("name").getAsString());
-		try
-		{
-			if (!object.has("modification"))
-			{
-				NebulaASMLogHelper.LOG.warn("No modification of " + information.mcpname + " detected.");
-			}
-			else
-			{
-				if (object.has("values"))
-				{
-					JsonArray array = object.getAsJsonArray("values");
-					for (JsonElement json1 : array)
-						context.deserialize(json1, Function.class);
-				}
-				JsonArray array = object.getAsJsonArray("modification");
-				for (JsonElement json1 : array)
-				{
-					JsonObject object1 = json1.getAsJsonObject();
-					String name = object1.get("name").getAsString();
-					if (Jsons.getOrDefault(object1, "remove", false))
-					{
-						information.modifies.put(name, ImmutableList.of());
-						continue;
-					}
-					
-					{
-						List<OpLabel> list = Jsons.getAsList(object1.getAsJsonArray("labels"),
-								json2->context.deserialize(json2, OpLabel.class));
-						if (!list.isEmpty())
-						{
-							information.modifies.put(name, list);
-						}
-					}
-				}
-			}
-		}
-		catch (RuntimeException exception)
-		{
-			throw new JsonParseException("Can not parse asm config of " + information.mcpname, exception);
-		}
-		return information;
-	};
-	final JsonDeserializer<OpLabel> DESERIALIZER2 = (json, typeOfT, context) -> {
-		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
-		JsonObject object = json.getAsJsonObject();
-		OpType type = OpType.parseValue(object.get("type").getAsString());
-		int off = Jsons.getOrDefault(object, "off", 0);
-		int len = Jsons.getOrDefault(object, "len", 1);
-		List<AbstractInsnNode> nodes;
-		if (object.has("nodes"))
-		{
-			nodes = new ArrayList<>();
-			for (JsonElement element : object.getAsJsonArray("nodes"))
-			{
-				AbstractInsnNode node = context.deserialize(element, AbstractInsnNode.class);
-				if (node == null)
-					throw new JsonParseException("No node exist!");
-				nodes.add(node);
-			}
-		}
-		else nodes = null;
-		OpLabel label;
-		if (object.has("name"))
-		{
-			String owner = object.get("owner").getAsString();
-			String name = object.get("name").getAsString();
-			String desc = object.get("desc").getAsString();
-			int count = Jsons.getOrDefault(object, "count", 1);//Each prefer first for replacement.
-			label = new OpLabel.OpLabelMethodAsTag(count, owner, name, desc, off, len, type, nodes);
-		}
-		else switch (Jsons.getOrDefault(object, "marker", -1))
-		{
-		case 1 : label = new OpLabel.OpLabelBegining(off, len, type, nodes); break;
-		default:
-			int line = Jsons.getOrDefault(object, "line", 0);
-			label = new OpLabel.OpLabelLineNumber(line, off, len, type, nodes);
-			break;
-		}
-		return label;
-	};
-	final JsonDeserializer<AbstractInsnNode> DESERIALIZER3 = (json, typeOfT, context) -> {
-		if (!json.isJsonObject())
-		{
-			return new InsnNode(json.getAsInt());
-		}
-		JsonObject object = json.getAsJsonObject();
-		int val = object.get("opcode").getAsInt();
-		switch (val)
-		{
-		case BIPUSH :
-		case SIPUSH :
-		case NEWARRAY :
-			int operand = object.get("operand").getAsInt();
-			return new IntInsnNode(val, operand);
-		case LDC :
-			Object value;
-			switch (Jsons.getOrDefault(object, "type", "string"))
-			{
-			case "int" : value = object.get("cst").getAsInt(); break;
-			case "long" : value = object.get("cst").getAsLong(); break;
-			case "float" : value = object.get("cst").getAsFloat(); break;
-			case "double" : value = object.get("cst").getAsDouble(); break;
-			case "string" : value = object.get("cst").getAsString(); break;
-			default :
-				throw new RuntimeException("Unknown type LDC node got, type: " + object.get("type").getAsString());
-			}
-			return new LdcInsnNode(value);
-		case ILOAD :
-		case LLOAD :
-		case FLOAD :
-		case DLOAD :
-		case ALOAD :
-		case ISTORE :
-		case LSTORE :
-		case FSTORE :
-		case ASTORE :
-		case RET :
-			int var = object.get("var").getAsInt();
-			return new VarInsnNode(val, var);
-		case IINC :
-			int incr = object.get("incr").getAsInt();
-			return new IincInsnNode(val, incr);
-		case IFEQ :
-		case IFNE :
-		case IFLT :
-		case IFGE :
-		case IFGT :
-		case IFLE :
-		case IF_ICMPEQ :
-		case IF_ICMPNE :
-		case IF_ICMPLT :
-		case IF_ICMPGE :
-		case IF_ICMPGT :
-		case IF_ICMPLE :
-		case IF_ACMPEQ :
-		case IF_ACMPNE :
-		case GOTO :
-		case JSR :
-		case IFNULL :
-		case IFNONNULL :
-			throw new RuntimeException("This node can not used, sorry.");
-		case TABLESWITCH :
-			throw new RuntimeException("This node can not used, sorry.");
-		case LOOKUPSWITCH :
-			throw new RuntimeException("This node can not used, sorry.");
-		case GETSTATIC :
-		case PUTSTATIC :
-		case GETFIELD :
-		case PUTFIELD :
-			String owner = object.get("owner").getAsString();
-			String name = object.get("name").getAsString();
-			String desc = object.get("desc").getAsString();
-			return new FieldInsnNode(val, owner, name, desc);
-		case INVOKEVIRTUAL :
-		case INVOKESPECIAL :
-		case INVOKESTATIC :
-		case INVOKEINTERFACE :
-			owner = object.get("owner").getAsString();
-			name = object.get("name").getAsString();
-			desc = object.get("desc").getAsString();
-			boolean itf = object.get("itf").getAsBoolean();
-			return new MethodInsnNode(val, owner, name, desc, itf);
-		case INVOKEDYNAMIC :
-			name = object.get("name").getAsString();
-			desc = object.get("desc").getAsString();
-			throw new RuntimeException("This node can not used, sorry.");
-		case NEW :
-		case ANEWARRAY :
-		case CHECKCAST :
-		case INSTANCEOF :
-			desc = object.get("desc").getAsString();
-			return new TypeInsnNode(val, desc);
-		case MULTIANEWARRAY :
-			desc = object.get("desc").getAsString();
-			int dims = object.get("dims").getAsInt();
-			return new MultiANewArrayInsnNode(desc, dims);
-		default :
-			return new InsnNode(val);
-		}
-	};
+	final JsonDeserializer<OpInformation>		DESERIALIZER1	= (json, typeOfT, context) -> {
+																	if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
+																	JsonObject object = json.getAsJsonObject();
+																	OpInformation information = new OpInformation(object.get("name").getAsString());
+																	try
+																	{
+																		if (!object.has("modification"))
+																		{
+																			NebulaASMLogHelper.LOG.warn("No modification of " + information.mcpname + " detected.");
+																		}
+																		else
+																		{
+																			if (object.has("values"))
+																			{
+																				JsonArray array = object.getAsJsonArray("values");
+																				for (JsonElement json1 : array)
+																					context.deserialize(json1, Function.class);
+																			}
+																			JsonArray array = object.getAsJsonArray("modification");
+																			for (JsonElement json1 : array)
+																			{
+																				JsonObject object1 = json1.getAsJsonObject();
+																				String name = object1.get("name").getAsString();
+																				if (Jsons.getOrDefault(object1, "remove", false))
+																				{
+																					information.modifies.put(name, ImmutableList.of());
+																					continue;
+																				}
+																				
+																				{
+																					List<OpLabel> list = Jsons.getAsList(object1.getAsJsonArray("labels"), json2 -> context.deserialize(json2, OpLabel.class));
+																					if (!list.isEmpty())
+																					{
+																						information.modifies.put(name, list);
+																					}
+																				}
+																			}
+																		}
+																	}
+																	catch (RuntimeException exception)
+																	{
+																		throw new JsonParseException("Can not parse asm config of " + information.mcpname, exception);
+																	}
+																	return information;
+																};
+	final JsonDeserializer<OpLabel>				DESERIALIZER2	= (json, typeOfT, context) -> {
+																	if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
+																	JsonObject object = json.getAsJsonObject();
+																	OpType type = OpType.parseValue(object.get("type").getAsString());
+																	int off = Jsons.getOrDefault(object, "off", 0);
+																	int len = Jsons.getOrDefault(object, "len", 1);
+																	List<AbstractInsnNode> nodes;
+																	if (object.has("nodes"))
+																	{
+																		nodes = new ArrayList<>();
+																		for (JsonElement element : object.getAsJsonArray("nodes"))
+																		{
+																			AbstractInsnNode node = context.deserialize(element, AbstractInsnNode.class);
+																			if (node == null) throw new JsonParseException("No node exist!");
+																			nodes.add(node);
+																		}
+																	}
+																	else
+																		nodes = null;
+																	OpLabel label;
+																	if (object.has("name"))
+																	{
+																		String owner = object.get("owner").getAsString();
+																		String name = object.get("name").getAsString();
+																		String desc = object.get("desc").getAsString();
+																		int count = Jsons.getOrDefault(object, "count", 1);																																			// Each
+																																																																	// prefer
+																																																																	// first
+																																																																	// for
+																																																																	// replacement.
+																		label = new OpLabel.OpLabelMethodAsTag(count, owner, name, desc, off, len, type, nodes);
+																	}
+																	else
+																		switch (Jsons.getOrDefault(object, "marker", -1))
+																		{
+																		case 1:
+																			label = new OpLabel.OpLabelBegining(off, len, type, nodes);
+																			break;
+																		default:
+																			int line = Jsons.getOrDefault(object, "line", 0);
+																			label = new OpLabel.OpLabelLineNumber(line, off, len, type, nodes);
+																			break;
+																		}
+																	return label;
+																};
+	final JsonDeserializer<AbstractInsnNode>	DESERIALIZER3	= (json, typeOfT, context) -> {
+																	if (!json.isJsonObject())
+																	{
+																		return new InsnNode(json.getAsInt());
+																	}
+																	JsonObject object = json.getAsJsonObject();
+																	int val = object.get("opcode").getAsInt();
+																	switch (val)
+																	{
+																	case BIPUSH:
+																	case SIPUSH:
+																	case NEWARRAY:
+																		int operand = object.get("operand").getAsInt();
+																		return new IntInsnNode(val, operand);
+																	case LDC:
+																		Object value;
+																		switch (Jsons.getOrDefault(object, "type", "string"))
+																		{
+																		case "int":
+																			value = object.get("cst").getAsInt();
+																			break;
+																		case "long":
+																			value = object.get("cst").getAsLong();
+																			break;
+																		case "float":
+																			value = object.get("cst").getAsFloat();
+																			break;
+																		case "double":
+																			value = object.get("cst").getAsDouble();
+																			break;
+																		case "string":
+																			value = object.get("cst").getAsString();
+																			break;
+																		default:
+																			throw new RuntimeException("Unknown type LDC node got, type: " + object.get("type").getAsString());
+																		}
+																		return new LdcInsnNode(value);
+																	case ILOAD:
+																	case LLOAD:
+																	case FLOAD:
+																	case DLOAD:
+																	case ALOAD:
+																	case ISTORE:
+																	case LSTORE:
+																	case FSTORE:
+																	case ASTORE:
+																	case RET:
+																		int var = object.get("var").getAsInt();
+																		return new VarInsnNode(val, var);
+																	case IINC:
+																		int incr = object.get("incr").getAsInt();
+																		return new IincInsnNode(val, incr);
+																	case IFEQ:
+																	case IFNE:
+																	case IFLT:
+																	case IFGE:
+																	case IFGT:
+																	case IFLE:
+																	case IF_ICMPEQ:
+																	case IF_ICMPNE:
+																	case IF_ICMPLT:
+																	case IF_ICMPGE:
+																	case IF_ICMPGT:
+																	case IF_ICMPLE:
+																	case IF_ACMPEQ:
+																	case IF_ACMPNE:
+																	case GOTO:
+																	case JSR:
+																	case IFNULL:
+																	case IFNONNULL:
+																		throw new RuntimeException("This node can not used, sorry.");
+																	case TABLESWITCH:
+																		throw new RuntimeException("This node can not used, sorry.");
+																	case LOOKUPSWITCH:
+																		throw new RuntimeException("This node can not used, sorry.");
+																	case GETSTATIC:
+																	case PUTSTATIC:
+																	case GETFIELD:
+																	case PUTFIELD:
+																		String owner = object.get("owner").getAsString();
+																		String name = object.get("name").getAsString();
+																		String desc = object.get("desc").getAsString();
+																		return new FieldInsnNode(val, owner, name, desc);
+																	case INVOKEVIRTUAL:
+																	case INVOKESPECIAL:
+																	case INVOKESTATIC:
+																	case INVOKEINTERFACE:
+																		owner = object.get("owner").getAsString();
+																		name = object.get("name").getAsString();
+																		desc = object.get("desc").getAsString();
+																		boolean itf = object.get("itf").getAsBoolean();
+																		return new MethodInsnNode(val, owner, name, desc, itf);
+																	case INVOKEDYNAMIC:
+																		name = object.get("name").getAsString();
+																		desc = object.get("desc").getAsString();
+																		throw new RuntimeException("This node can not used, sorry.");
+																	case NEW:
+																	case ANEWARRAY:
+																	case CHECKCAST:
+																	case INSTANCEOF:
+																		desc = object.get("desc").getAsString();
+																		return new TypeInsnNode(val, desc);
+																	case MULTIANEWARRAY:
+																		desc = object.get("desc").getAsString();
+																		int dims = object.get("dims").getAsInt();
+																		return new MultiANewArrayInsnNode(desc, dims);
+																	default:
+																		return new InsnNode(val);
+																	}
+																};
 	
-	private final Gson gson = new GsonBuilder()
-			.registerTypeAdapter(OpInformation.class, this.DESERIALIZER1)
-			.registerTypeAdapter(OpLabel.class, this.DESERIALIZER2)
-			.registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3)
-			.create();
+	private final Gson gson = new GsonBuilder().registerTypeAdapter(OpInformation.class, this.DESERIALIZER1).registerTypeAdapter(OpLabel.class, this.DESERIALIZER2).registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3).create();
 	
-	private static File mcPath;
-	private static boolean runtimeDeobf;
+	private static File		mcPath;
+	private static boolean	runtimeDeobf;
 	
 	public static File getMcPath()
 	{
@@ -357,7 +371,8 @@ public class NebulaSetup implements IFMLCallHook
 		{
 			for (File file2 : file.listFiles(name -> name.getName().endsWith(".json")))
 			{
-				try (BufferedReader reader = new BufferedReader(new FileReader(file2)))
+				try (
+						BufferedReader reader = new BufferedReader(new FileReader(file2)))
 				{
 					OpInformation information = this.gson.fromJson(reader, OpInformation.class);
 					information.put();
@@ -406,14 +421,13 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		else
 		{
-			try (InputStream stream1 = new BufferedInputStream(new FileInputStream(file)))
+			try (
+					InputStream stream1 = new BufferedInputStream(new FileInputStream(file)))
 			{
 				int version = stream1.read();
 				if (version != VERSION)
 				{
-					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, "
-							+ "there may cause some bug, it is suggested that you should clean your ./asm file if "
-							+ "you don't known what is happening and your game got crashed.");
+					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, " + "there may cause some bug, it is suggested that you should clean your ./asm file if " + "you don't known what is happening and your game got crashed.");
 				}
 				stream1.close();
 				return false;
@@ -451,7 +465,7 @@ public class NebulaSetup implements IFMLCallHook
 			for (String str : NebulaCoreAPI.ASM_SEARCHING_DIRECTION)
 			{
 				String targetLocation = "asm/" + str + "/" + suffix;
-				try //Insert Operation Files source to location.
+				try // Insert Operation Files source to location.
 				{
 					extractASMFile(file, targetLocation, destination);
 				}

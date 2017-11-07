@@ -27,8 +27,6 @@ public class TECircuitNot extends TECircuitFrontBack
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? getRedstonePower(Facing.BACK) :
-			i == 1 ? this.power :
-				0;
+		return i == 0 ? getRedstonePower(Facing.BACK) : i == 1 ? this.power : 0;
 	}
 }

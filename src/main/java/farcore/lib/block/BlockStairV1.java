@@ -41,114 +41,99 @@ import net.minecraft.world.World;
  */
 public class BlockStairV1 extends BlockBase
 {
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	public static final PropertyEnum<BlockStairs.EnumHalf> HALF = BlockStairs.HALF;
-	public static final PropertyEnum<BlockStairs.EnumShape> SHAPE = BlockStairs.SHAPE;
+	public static final PropertyDirection					FACING				= BlockHorizontal.FACING;
+	public static final PropertyEnum<BlockStairs.EnumHalf>	HALF				= BlockStairs.HALF;
+	public static final PropertyEnum<BlockStairs.EnumShape>	SHAPE				= BlockStairs.SHAPE;
 	/**
-	 * B: .. T: xx
-	 * B: .. T: xx
+	 * B: .. T: xx B: .. T: xx
 	 */
-	protected static final AxisAlignedBB AABB_SLAB_TOP = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_SLAB_TOP		= new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
 	/**
-	 * B: .. T: x.
-	 * B: .. T: x.
+	 * B: .. T: x. B: .. T: x.
 	 */
-	protected static final AxisAlignedBB AABB_QTR_TOP_WEST = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_TOP_WEST	= new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 1.0D);
 	/**
-	 * B: .. T: .x
-	 * B: .. T: .x
+	 * B: .. T: .x B: .. T: .x
 	 */
-	protected static final AxisAlignedBB AABB_QTR_TOP_EAST = new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_TOP_EAST	= new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 1.0D);
 	/**
-	 * B: .. T: xx
-	 * B: .. T: ..
+	 * B: .. T: xx B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_QTR_TOP_NORTH = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB					AABB_QTR_TOP_NORTH	= new AxisAlignedBB(0.0D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
 	/**
-	 * B: .. T: ..
-	 * B: .. T: xx
+	 * B: .. T: .. B: .. T: xx
 	 */
-	protected static final AxisAlignedBB AABB_QTR_TOP_SOUTH = new AxisAlignedBB(0.0D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_TOP_SOUTH	= new AxisAlignedBB(0.0D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
 	/**
-	 * B: .. T: x.
-	 * B: .. T: ..
+	 * B: .. T: x. B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_TOP_NW = new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB					AABB_OCT_TOP_NW		= new AxisAlignedBB(0.0D, 0.5D, 0.0D, 0.5D, 1.0D, 0.5D);
 	/**
-	 * B: .. T: .x
-	 * B: .. T: ..
+	 * B: .. T: .x B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_TOP_NE = new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
+	protected static final AxisAlignedBB					AABB_OCT_TOP_NE		= new AxisAlignedBB(0.5D, 0.5D, 0.0D, 1.0D, 1.0D, 0.5D);
 	/**
-	 * B: .. T: ..
-	 * B: .. T: x.
+	 * B: .. T: .. B: .. T: x.
 	 */
-	protected static final AxisAlignedBB AABB_OCT_TOP_SW = new AxisAlignedBB(0.0D, 0.5D, 0.5D, 0.5D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_OCT_TOP_SW		= new AxisAlignedBB(0.0D, 0.5D, 0.5D, 0.5D, 1.0D, 1.0D);
 	/**
-	 * B: .. T: ..
-	 * B: .. T: .x
+	 * B: .. T: .. B: .. T: .x
 	 */
-	protected static final AxisAlignedBB AABB_OCT_TOP_SE = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
+	protected static final AxisAlignedBB					AABB_OCT_TOP_SE		= new AxisAlignedBB(0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
 	/**
-	 * B: xx T: ..
-	 * B: xx T: ..
+	 * B: xx T: .. B: xx T: ..
 	 */
-	protected static final AxisAlignedBB AABB_SLAB_BOTTOM = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_SLAB_BOTTOM	= new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 	/**
-	 * B: x. T: ..
-	 * B: x. T: ..
+	 * B: x. T: .. B: x. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_QTR_BOT_WEST = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_BOT_WEST	= new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 1.0D);
 	/**
-	 * B: .x T: ..
-	 * B: .x T: ..
+	 * B: .x T: .. B: .x T: ..
 	 */
-	protected static final AxisAlignedBB AABB_QTR_BOT_EAST = new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_BOT_EAST	= new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 	/**
-	 * B: xx T: ..
-	 * B: .. T: ..
+	 * B: xx T: .. B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_QTR_BOT_NORTH = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB					AABB_QTR_BOT_NORTH	= new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
 	/**
-	 * B: .. T: ..
-	 * B: xx T: ..
+	 * B: .. T: .. B: xx T: ..
 	 */
-	protected static final AxisAlignedBB AABB_QTR_BOT_SOUTH = new AxisAlignedBB(0.0D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_QTR_BOT_SOUTH	= new AxisAlignedBB(0.0D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
 	/**
-	 * B: x. T: ..
-	 * B: .. T: ..
+	 * B: x. T: .. B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_BOT_NW = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB					AABB_OCT_BOT_NW		= new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.5D, 0.5D, 0.5D);
 	/**
-	 * B: .x T: ..
-	 * B: .. T: ..
+	 * B: .x T: .. B: .. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_BOT_NE = new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
+	protected static final AxisAlignedBB					AABB_OCT_BOT_NE		= new AxisAlignedBB(0.5D, 0.0D, 0.0D, 1.0D, 0.5D, 0.5D);
 	/**
-	 * B: .. T: ..
-	 * B: x. T: ..
+	 * B: .. T: .. B: x. T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_BOT_SW = new AxisAlignedBB(0.0D, 0.0D, 0.5D, 0.5D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_OCT_BOT_SW		= new AxisAlignedBB(0.0D, 0.0D, 0.5D, 0.5D, 0.5D, 1.0D);
 	/**
-	 * B: .. T: ..
-	 * B: .x T: ..
+	 * B: .. T: .. B: .x T: ..
 	 */
-	protected static final AxisAlignedBB AABB_OCT_BOT_SE = new AxisAlignedBB(0.5D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
+	protected static final AxisAlignedBB					AABB_OCT_BOT_SE		= new AxisAlignedBB(0.5D, 0.0D, 0.5D, 1.0D, 0.5D, 1.0D);
 	
 	public BlockStairV1(String name, Material materialIn)
 	{
 		super(name, materialIn);
 	}
+	
 	public BlockStairV1(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(name, blockMaterialIn, blockMapColorIn);
 		this.useNeighborBrightness = true;
 	}
+	
 	public BlockStairV1(String modid, String name, Material materialIn)
 	{
 		super(modid, name, materialIn);
 		this.useNeighborBrightness = true;
 	}
+	
 	public BlockStairV1(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
@@ -180,7 +165,7 @@ public class BlockStairV1 extends BlockBase
 	
 	private static List<AxisAlignedBB> getCollisionBoxList(IBlockState bstate)
 	{
-		List<AxisAlignedBB> list = Lists.<AxisAlignedBB>newArrayList();
+		List<AxisAlignedBB> list = Lists.<AxisAlignedBB> newArrayList();
 		boolean flag = bstate.getValue(HALF) == BlockStairs.EnumHalf.TOP;
 		list.add(flag ? AABB_SLAB_TOP : AABB_SLAB_BOTTOM);
 		BlockStairs.EnumShape blockstairs$enumshape = bstate.getValue(SHAPE);
@@ -199,8 +184,9 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Returns a bounding box representing an eighth of a block (a block whose three dimensions are halved).
-	 * Used in all stair shapes except STRAIGHT (gets added alone in the case of OUTER; alone with a quarter block in
+	 * Returns a bounding box representing an eighth of a block (a block whose
+	 * three dimensions are halved). Used in all stair shapes except STRAIGHT
+	 * (gets added alone in the case of OUTER; alone with a quarter block in
 	 * case of INSIDE).
 	 */
 	private static AxisAlignedBB getCollEighthBlock(IBlockState bstate)
@@ -241,8 +227,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Returns a bounding box representing a quarter of a block (two eight-size cubes back to back).
-	 * Used in all stair shapes except OUTER.
+	 * Returns a bounding box representing a quarter of a block (two eight-size
+	 * cubes back to back). Used in all stair shapes except OUTER.
 	 */
 	private static AxisAlignedBB getCollQuarterBlock(IBlockState bstate)
 	{
@@ -263,7 +249,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -278,7 +265,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Checks if an IBlockState represents a block that is opaque and a full cube.
+	 * Checks if an IBlockState represents a block that is opaque and a full
+	 * cube.
 	 */
 	@Override
 	public boolean isFullyOpaque(IBlockState state)
@@ -287,12 +275,11 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-	 * IBlockstate
+	 * Called by ItemBlocks just before a block is actually set in the world, to
+	 * allow for adjustments to the IBlockstate
 	 */
 	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		IBlockState state = super.getBlockPlaceState(worldIn, pos, facing, hitX, hitY, hitZ, stackIn, placer);
 		state = state.withProperty(FACING, placer.getHorizontalFacing()).withProperty(SHAPE, BlockStairs.EnumShape.STRAIGHT);
@@ -300,7 +287,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
+	 * Ray traces through the blocks collision from start vector to end vector
+	 * returning a ray trace hit.
 	 */
 	@Override
 	@Nullable
@@ -368,8 +356,9 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Get the actual Block state of this Block at the given position. This applies properties not visible in the
-	 * metadata, such as fence connections.
+	 * Get the actual Block state of this Block at the given position. This
+	 * applies properties not visible in the metadata, such as fence
+	 * connections.
 	 */
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
@@ -388,8 +377,7 @@ public class BlockStairV1 extends BlockBase
 			
 			if (enumfacing1.getAxis() != state.getValue(FACING).getAxis() && isDifferentStairs(state, world, pos, enumfacing1.getOpposite()))
 			{
-				if (enumfacing1 == enumfacing.rotateYCCW())
-					return BlockStairs.EnumShape.OUTER_LEFT;
+				if (enumfacing1 == enumfacing.rotateYCCW()) return BlockStairs.EnumShape.OUTER_LEFT;
 				
 				return BlockStairs.EnumShape.OUTER_RIGHT;
 			}
@@ -403,8 +391,7 @@ public class BlockStairV1 extends BlockBase
 			
 			if (enumfacing2.getAxis() != state.getValue(FACING).getAxis() && isDifferentStairs(state, world, pos, enumfacing2))
 			{
-				if (enumfacing2 == enumfacing.rotateYCCW())
-					return BlockStairs.EnumShape.INNER_LEFT;
+				if (enumfacing2 == enumfacing.rotateYCCW()) return BlockStairs.EnumShape.INNER_LEFT;
 				
 				return BlockStairs.EnumShape.INNER_RIGHT;
 			}
@@ -420,8 +407,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given rotation from the passed
+	 * blockstate. If inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot)
@@ -430,8 +417,8 @@ public class BlockStairV1 extends BlockBase
 	}
 	
 	/**
-	 * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	 * blockstate.
+	 * Returns the blockstate with the given mirror of the passed blockstate. If
+	 * inapplicable, returns the passed blockstate.
 	 */
 	@Override
 	@SuppressWarnings("incomplete-switch")
@@ -488,14 +475,13 @@ public class BlockStairV1 extends BlockBase
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {FACING, HALF, SHAPE});
+		return new BlockStateContainer(this, new IProperty[] { FACING, HALF, SHAPE });
 	}
 	
 	@Override
 	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		if (state.isOpaqueCube())
-			return true;
+		if (state.isOpaqueCube()) return true;
 		EnumHalf half = state.getValue(HALF);
 		EnumFacing side = state.getValue(FACING);
 		return side == face || (half == EnumHalf.TOP && face == EnumFacing.UP) || (half == EnumHalf.BOTTOM && face == EnumFacing.DOWN);

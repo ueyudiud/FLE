@@ -17,10 +17,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public final class IO
 {
-	private IO() {}
+	private IO()
+	{
+	}
 	
 	/**
 	 * Copy resource to byte array, this method only take effect in client side.
+	 * 
 	 * @param manager
 	 * @param location
 	 * @return the copied of source.

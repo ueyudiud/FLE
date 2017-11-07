@@ -97,7 +97,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		builder1.put("sensor_light", Arrays.asList("_"));
 		ALLOWED_STATES = builder1.build();
 		HashSet<String> set = new HashSet<>();
-		for(List<String> list : ALLOWED_STATES.values())
+		for (List<String> list : ALLOWED_STATES.values())
 		{
 			set.addAll(list);
 		}
@@ -139,11 +139,11 @@ public class BlockRedstoneCircuit extends BlockTE
 		ModelLoaderRegistry.registerLoader(ModelRedstoneCircuit.RedstoneCircuitModelLoader.INSTANCE);
 		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuit.plate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
 		ModelLoader.setCustomStateMapper(this, new StateMapperCircuit());
-		for(TETag tag : this.property_TE.getAllowedValues())
+		for (TETag tag : this.property_TE.getAllowedValues())
 		{
 			ModelLoader.setCustomModelResourceLocation(this.item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
 		}
-		FarCoreRegistry.registerColorMultiplier(this, (state, worldIn, pos, tintIndex)-> {
+		FarCoreRegistry.registerColorMultiplier(this, (state, worldIn, pos, tintIndex) -> {
 			if (tintIndex < 0) return -1;
 			if (worldIn != null && pos != null)
 			{
@@ -152,23 +152,11 @@ public class BlockRedstoneCircuit extends BlockTE
 			}
 			return 0xFF0000;
 		});
-		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex)-> tintIndex < 0 ? -1 : 0x400000);
-		NebulaModelLoader.registerModel(
-				new ResourceLocation(FarCore.ID, "circuit/cross_base"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/cross_base.json"),
-				NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(
-				new ResourceLocation(FarCore.ID, "circuit/integrator_base"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base.json"),
-				NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(
-				new ResourceLocation(FarCore.ID, "circuit/invert/d"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_d.json"),
-				NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(
-				new ResourceLocation(FarCore.ID, "circuit/invert/e"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_e.json"),
-				NebulaModelDeserializer.BLOCK);
+		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex) -> tintIndex < 0 ? -1 : 0x400000);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/cross_base.json"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/integrator_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base.json"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/d"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_d.json"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/e"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_e.json"), NebulaModelDeserializer.BLOCK);
 	}
 	
 	public static ItemStack createItemStack(int meta, Mat material)
@@ -197,18 +185,15 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 		state = this.property_TE.withProperty(state, tile);
-		if(tile instanceof TECircuitBase)
+		if (tile instanceof TECircuitBase)
 		{
 			try
 			{
-				state = state
-						.withProperty(Misc.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
-						.withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
+				state = state.withProperty(Misc.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation()).withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
-				if(Nebula.debug)
-					throw exception;
+				if (Nebula.debug) throw exception;
 				return state;
 			}
 		}
@@ -219,8 +204,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TECircuitBase)
-			return BlockStateTileEntityWapper.wrap(tile, state);
+		if (tile instanceof TECircuitBase) return BlockStateTileEntityWapper.wrap(tile, state);
 		return super.getExtendedState(state, world, pos);
 	}
 	
@@ -228,8 +212,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		TileEntity tile = source.getTileEntity(pos);
-		if(tile instanceof ITP_BoundingBox)
-			return ((ITP_BoundingBox) tile).getCollisionBoundingBox(state);
+		if (tile instanceof ITP_BoundingBox) return ((ITP_BoundingBox) tile).getCollisionBoundingBox(state);
 		return super.getBoundingBox(state, source, pos);
 	}
 	
@@ -284,7 +267,8 @@ public class BlockRedstoneCircuit extends BlockTE
 	}
 	
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -295,7 +279,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		if(!canBlockStay(worldIn, pos))
+		if (!canBlockStay(worldIn, pos))
 		{
 			dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockToAir(pos);
@@ -307,7 +291,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		if(!canBlockStay(worldIn, pos))
+		if (!canBlockStay(worldIn, pos))
 		{
 			dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockToAir(pos);
@@ -345,8 +329,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	}
 	
 	@Override
-	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
-			boolean advanced)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
 		Mat material = Mat.material(ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);

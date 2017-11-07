@@ -15,12 +15,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 {
-	private static final float off = 0.25F;
-	private BrightnessUtil util = BrightnessUtil.instance();
+	private static final float	off		= 0.25F;
+	private BrightnessUtil		util	= BrightnessUtil.instance();
 	
 	@Override
-	public void renderTileEntityAt(TECustomCarvedStone tile, double x, double y, double z, float partialTicks,
-			int destroyStage)
+	public void renderTileEntityAt(TECustomCarvedStone tile, double x, double y, double z, float partialTicks, int destroyStage)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
@@ -41,10 +40,10 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 					float z2 = off * (k + 1);
 					this.renderNorth = tile.shouldSideRender(i, j, k, Direction.N);
 					this.renderSouth = tile.shouldSideRender(i, j, k, Direction.S);
-					this.renderWest  = tile.shouldSideRender(i, j, k, Direction.W);
-					this.renderEast  = tile.shouldSideRender(i, j, k, Direction.E);
-					this.renderDown  = tile.shouldSideRender(i, j, k, Direction.D);
-					this.renderUp    = tile.shouldSideRender(i, j, k, Direction.U);
+					this.renderWest = tile.shouldSideRender(i, j, k, Direction.W);
+					this.renderEast = tile.shouldSideRender(i, j, k, Direction.E);
+					this.renderDown = tile.shouldSideRender(i, j, k, Direction.D);
+					this.renderUp = tile.shouldSideRender(i, j, k, Direction.U);
 					renderCubeWithLight(x1, y1, z1, x2, y2, z2, this.util, tile, i, j, k, icon);
 				}
 			}

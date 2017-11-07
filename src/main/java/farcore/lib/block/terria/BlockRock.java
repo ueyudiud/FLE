@@ -37,12 +37,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockRock extends BlockSubBehavior implements ISmartFallableBlock
 {
-	public static final PropertyBool				HEATED = PropertyBool.create("heated");
-	public static final PropertyEnum<EnumRockType>	TYPE = Properties.get(EnumRockType.class);
+	public static final PropertyBool				HEATED	= PropertyBool.create("heated");
+	public static final PropertyEnum<EnumRockType>	TYPE	= Properties.get(EnumRockType.class);
 	
-	//	protected final BlockRockSlab slab;
-	public final IBlockBehavior<BlockRock> behavior;
-	public final Mat material;
+	// protected final BlockRockSlab slab;
+	public final IBlockBehavior<BlockRock>	behavior;
+	public final Mat						material;
 	
 	public BlockRock(Mat material, IBlockBehavior<BlockRock> behavior)
 	{
@@ -51,13 +51,13 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlock
 		this.material = material;
 		setSoundType(SoundType.STONE);
 		setTickRandomly(true);
-		//		this.slab = createRockSlab();
+		// this.slab = createRockSlab();
 	}
 	
-	//	protected BlockRockSlab createRockSlab()
-	//	{
-	//		return new BlockRockSlab(this);
-	//	}
+	// protected BlockRockSlab createRockSlab()
+	// {
+	// return new BlockRockSlab(this);
+	// }
 	
 	@Override
 	protected IBlockBehavior<?> getBehavior(IBlockState state)
@@ -79,8 +79,7 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlock
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED),
-				this, TYPE);
+		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED), this, TYPE);
 	}
 	
 	@Override
@@ -110,22 +109,22 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlock
 	@Override
 	public CreativeTabs[] getCreativeTabs()
 	{
-		return new CreativeTabs[]{CT.BUILDING, CT.TERRIA};
+		return new CreativeTabs[] { CT.BUILDING, CT.TERRIA };
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		if(tab == CT.TERRIA)
+		if (tab == CT.TERRIA)
 		{
 			list.add(new ItemStack(item));
 		}
 		else
 		{
-			for(EnumRockType type : EnumRockType.values())
+			for (EnumRockType type : EnumRockType.values())
 			{
-				if(type.displayInTab)
+				if (type.displayInTab)
 				{
 					list.add(new ItemStack(item, 1, type.ordinal()));
 				}

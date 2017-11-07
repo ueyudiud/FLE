@@ -43,6 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Here provide most of registration for FarCore and Minecraft.
+ * 
  * @author ueyudiud
  */
 public class FarCoreRegistry
@@ -54,10 +55,14 @@ public class FarCoreRegistry
 	public static final List<IWorldGenerateReplacer> WORLD_GENERATE_REPLACERS = new ArrayList<>();
 	
 	/**
-	 * Add material register.<p>
-	 * The material should initialized <b>before</b> block, items, etc has. For loading material,
-	 * a material register is needed.<p>
-	 * Call this method before {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent}.
+	 * Add material register.
+	 * <p>
+	 * The material should initialized <b>before</b> block, items, etc has. For
+	 * loading material, a material register is needed.
+	 * <p>
+	 * Call this method before
+	 * {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent}.
+	 * 
 	 * @param register the material register.
 	 */
 	public static void addMaterialRegister(Runnable register)
@@ -67,6 +72,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Add world generate replacer to generator.
+	 * 
 	 * @param replacer
 	 */
 	public static void addWorldGenerateReplacer(IWorldGenerateReplacer replacer)
@@ -75,8 +81,9 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * The tile entity need a register name for saving to NBT.
-	 * Register tile to map.
+	 * The tile entity need a register name for saving to NBT. Register tile to
+	 * map.
+	 * 
 	 * @param id The save name of tile entity.
 	 * @param tileEntityClass The tile entity class.
 	 * @see net.minecraft.tileentity.TileEntity#addMapping(Class, String)
@@ -88,10 +95,12 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register tile entity special render.
+	 * 
 	 * @param <T> the tile entity type.
 	 * @param tileEntityClass the tile entity class.
 	 * @param renderer the tile entity renderer.
-	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class, TileEntitySpecialRenderer)
+	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class,
+	 *      TileEntitySpecialRenderer)
 	 */
 	public static <T extends TileEntity> void registerTESR(Class<T> tileEntityClass, TileEntitySpecialRenderer<? super T> renderer)
 	{
@@ -100,9 +109,11 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register tile entity special render.
+	 * 
 	 * @param <T> the tile entity type.
 	 * @param tesrClass the tile entity special renderer.
-	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class, TileEntitySpecialRenderer)
+	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class,
+	 *      TileEntitySpecialRenderer)
 	 */
 	public static <T extends TileEntity> void registerTESR(Class<? extends TileEntitySpecialRenderer<T>> tesrClass)
 	{
@@ -112,11 +123,11 @@ public class FarCoreRegistry
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
 			registerTESR(clazz, tesrClass.newInstance());
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			/**
-			 * I think no one like to register an invalid class,
-			 * but it shouldn't be crash for game still can run without a renderer.
+			 * I think no one like to register an invalid class, but it
+			 * shouldn't be crash for game still can run without a renderer.
 			 */
 			Log.catching(exception);
 		}
@@ -124,6 +135,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register tile entity special render with item special renderer.
+	 * 
 	 * @param <T> the tile entity type.
 	 * @param tileEntityClass the tile entity class.
 	 * @param renderer the tile entity renderer.
@@ -148,19 +160,20 @@ public class FarCoreRegistry
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
 			registerTESR(clazz, tesrClass.newInstance(), item, meta);
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			/**
-			 * I think no one like to register an invalid class,
-			 * but it shouldn't be crash for game still can run without a renderer.
+			 * I think no one like to register an invalid class, but it
+			 * shouldn't be crash for game still can run without a renderer.
 			 */
 			Log.catching(exception);
 		}
 	}
 	
 	/**
-	 * Mark block render by built-in model(TESR), which will not
-	 * tried to load model in file.
+	 * Mark block render by built-in model(TESR), which will not tried to load
+	 * model in file.
+	 * 
 	 * @param block the marked block.
 	 * @see net.minecraft.client.renderer.BlockModelShapes#registerBuiltInBlocks(Block...)
 	 */
@@ -171,6 +184,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register event listener to MinecraftForge EventBus.
+	 * 
 	 * @param listener the listener.
 	 * @see net.minecraftforge.common.MinecraftForge#EVENT_BUS
 	 */
@@ -181,6 +195,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Added new energy net(Which handle in whole world).
+	 * 
 	 * @param net the energy net.
 	 * @see farcore.handler.FarCoreEnergyHandler#addNet(IEnergyNet)
 	 */
@@ -190,11 +205,10 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Register a object current in world, which is contain
-	 * in a world but is not a block or entity.
-	 * (Such as node in Thaumcraft)<br>
-	 * Give it a save name when saving.
-	 * which is not a entity,
+	 * Register a object current in world, which is contain in a world but is
+	 * not a block or entity. (Such as node in Thaumcraft)<br>
+	 * Give it a save name when saving. which is not a entity,
+	 * 
 	 * @param id
 	 * @param objInWorldClass
 	 */
@@ -205,6 +219,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a thermal handler of world.
+	 * 
 	 * @param handler
 	 */
 	public static void registerWorldThermalHandler(IWorldThermalHandler handler)
@@ -214,13 +229,15 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register entity type to FML.
+	 * 
 	 * @param name The entity registered name.
 	 * @param entityClass The entity class.
 	 * @param id The id of entity (Different mod needn't to sort same id).
 	 * @param mod The modification of this entity type belong.
 	 * @param trackingRange The update range.
 	 * @param updateFrequency The frequency of update.
-	 * @param sendsVelocityUpdates Should send velocity to client side. (I don't know what effect this option takes)
+	 * @param sendsVelocityUpdates Should send velocity to client side. (I don't
+	 *            know what effect this option takes)
 	 */
 	public static void registerEntity(String name, Class<? extends Entity> entityClass, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
@@ -229,6 +246,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Add localized name to mapping.
+	 * 
 	 * @param unlocalized The key name need translate.
 	 * @param localized The translated name in English.
 	 */
@@ -238,7 +256,9 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Get network if it already exist, or create a new network with specific name.
+	 * Get network if it already exist, or create a new network with specific
+	 * name.
+	 * 
 	 * @param name the name of network.
 	 * @return the network instance.
 	 */
@@ -249,6 +269,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a packet type to mapping.<br>
+	 * 
 	 * @param id the name of packet, the number id will generates automatically.
 	 * @param packetClass the type of packet.
 	 * @param sendTo which side should packet send.
@@ -260,6 +281,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a key binding.
+	 * 
 	 * @param modid the modid register this key.
 	 * @param id the name of key.
 	 * @param keycode the key code, see Keyboard to get key.
@@ -272,6 +294,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a key for client side with current mod container.<br>
+	 * 
 	 * @param id the name of key.
 	 * @param keycode the key code, see Keyboard to get key.
 	 * @see org.lwjgl.input.Keyboard
@@ -282,10 +305,10 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Register item model location to FarCoreItemModelLoader,
-	 * which can make more flexible item models.
-	 * Provide custom color multiplier, auto-generated texture replacer,
-	 * etc.
+	 * Register item model location to FarCoreItemModelLoader, which can make
+	 * more flexible item models. Provide custom color multiplier,
+	 * auto-generated texture replacer, etc.
+	 * 
 	 * @param item the item to set model.
 	 * @param location the model location.
 	 * @see farcore.lib.model.item.unused.FarCoreItemModelLoader
@@ -298,6 +321,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a Model Selector for block.
+	 * 
 	 * @param block
 	 * @param selector
 	 */
@@ -309,6 +333,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register item model selector, which can switch model in code.
+	 * 
 	 * @param item The item need model selector.
 	 * @param selector The model selector.
 	 */
@@ -332,9 +357,10 @@ public class FarCoreRegistry
 	
 	/**
 	 * Get a Color Map (2D coordinated RGB value), loaded from selected path.
+	 * 
 	 * @param location the resource location of color map.
-	 * @return the color map, it will be reload when resources reloading,
-	 *         do not use the data in map straightly during initializing game.
+	 * @return the color map, it will be reload when resources reloading, do not
+	 *         use the data in map straightly during initializing game.
 	 */
 	@SideOnly(Side.CLIENT)
 	public static Colormap getColormap(String location)
@@ -344,6 +370,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Added Icon Loader, for loading icon during resource manager reloaded.
+	 * 
 	 * @param loader the icon loader.
 	 */
 	@SideOnly(Side.CLIENT)

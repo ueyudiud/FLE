@@ -29,11 +29,11 @@ public class EntityAttributeTag
 		float armor();
 	}
 	
-	public float maxHealth;
-	public float followRange;
-	public float movementSpeed;
-	public float attackDamage;
-	public float armor;
+	public float	maxHealth;
+	public float	followRange;
+	public float	movementSpeed;
+	public float	attackDamage;
+	public float	armor;
 	
 	public EntityAttributeTag()
 	{

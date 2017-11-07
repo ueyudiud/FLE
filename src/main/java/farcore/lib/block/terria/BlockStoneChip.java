@@ -88,8 +88,7 @@ public class BlockStoneChip extends BlockMaterial<PropertyBlockable>
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox,
-			List<AxisAlignedBB> collidingBoxes, Entity entityIn)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn)
 	{
 	}
 	
@@ -159,8 +158,7 @@ public class BlockStoneChip extends BlockMaterial<PropertyBlockable>
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.chip_rock));
 	}
@@ -172,8 +170,7 @@ public class BlockStoneChip extends BlockMaterial<PropertyBlockable>
 		for (int i = 0; i < 16; ++i)
 		{
 			int x = random.nextInt(4) + 1, y = random.nextInt(5) + 1, z = random.nextInt(4) + 1;
-			AABBS[i] = new AxisAlignedBB(
-					(8 - x) * 0.0625F, 0, (8 - z) * 0.0625F, (8 + x) * 0.0625F, y * 0.0625, (8 + z) * 0.0625F);
+			AABBS[i] = new AxisAlignedBB((8 - x) * 0.0625F, 0, (8 - z) * 0.0625F, (8 + x) * 0.0625F, y * 0.0625, (8 + z) * 0.0625F);
 		}
 	}
 }

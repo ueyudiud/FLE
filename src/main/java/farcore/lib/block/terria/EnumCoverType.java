@@ -12,18 +12,7 @@ import net.minecraft.util.IStringSerializable;
 @EnumStateName("cover")
 public enum EnumCoverType implements IStringSerializable
 {
-	NONE("none"),
-	FROZEN("frozen"),
-	GRASS("grass"),
-	TUNDRA("tundra"),
-	MYCELIUM("mycelium"),
-	TUNDRA_FROZEN("tundra_frozen"),
-	SNOW("snow"),
-	FROZEN_SNOW("frozen_snow"),
-	GRASS_SNOW("grass_snow"),
-	TUNDRA_SNOW("tundra_snow"),
-	TUNDRA_FROZEN_SNOW("tundra_frozen_snow"),
-	MYCELIUM_SNOW("mycelium_snow");
+	NONE("none"), FROZEN("frozen"), GRASS("grass"), TUNDRA("tundra"), MYCELIUM("mycelium"), TUNDRA_FROZEN("tundra_frozen"), SNOW("snow"), FROZEN_SNOW("frozen_snow"), GRASS_SNOW("grass_snow"), TUNDRA_SNOW("tundra_snow"), TUNDRA_FROZEN_SNOW("tundra_frozen_snow"), MYCELIUM_SNOW("mycelium_snow");
 	
 	public static final EnumCoverType[] VALUES = values();
 	
@@ -42,17 +31,17 @@ public enum EnumCoverType implements IStringSerializable
 	
 	static void setCover(EnumCoverType no, EnumCoverType snow)
 	{
-		no.noCover    = snow.noCover    = no;
-		no.snowCover  = snow.snowCover  = snow;
+		no.noCover = snow.noCover = no;
+		no.snowCover = snow.snowCover = snow;
 		snow.isSnow = true;
 	}
 	
-	String name;
-	EnumCoverType noFrozen = this;
-	EnumCoverType noCover = this;
-	EnumCoverType snowCover = this;
-	boolean isSnow;
-	boolean isFrozen;
+	String			name;
+	EnumCoverType	noFrozen	= this;
+	EnumCoverType	noCover		= this;
+	EnumCoverType	snowCover	= this;
+	boolean			isSnow;
+	boolean			isFrozen;
 	
 	EnumCoverType(String name)
 	{

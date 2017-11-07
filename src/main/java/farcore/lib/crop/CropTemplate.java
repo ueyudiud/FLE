@@ -15,17 +15,18 @@ import net.minecraftforge.common.EnumPlantType;
 
 /**
  * The template crop type.
+ * 
  * @author ueyudiud
  */
 public class CropTemplate extends Crop
 {
-	public EnumPlantType type = EnumPlantType.Crop;
-	public EnumPlantType wildType = EnumPlantType.Plains;
-	private Applicable<ItemStack> drop;
-	private int dropChance;
-	private Applicable<ItemStack> dropRare;
-	private int grain = 1;
-	private int seed = 1;
+	public EnumPlantType			type		= EnumPlantType.Crop;
+	public EnumPlantType			wildType	= EnumPlantType.Plains;
+	private Applicable<ItemStack>	drop;
+	private int						dropChance;
+	private Applicable<ItemStack>	dropRare;
+	private int						grain		= 1;
+	private int						seed		= 1;
 	
 	public CropTemplate(Mat material, String localName, int maxStage, int growRequire)
 	{
@@ -44,7 +45,7 @@ public class CropTemplate extends Crop
 	
 	public CropTemplate setNativeData(int grain, int growth, int resistance, int vitality, int saving)
 	{
-		this.nativeCropData = new int[]{grain, growth, resistance, vitality, saving};
+		this.nativeCropData = new int[] { grain, growth, resistance, vitality, saving };
 		return this;
 	}
 	
@@ -92,7 +93,7 @@ public class CropTemplate extends Crop
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-		if(access.stage() == this.maxStage)
+		if (access.stage() == this.maxStage)
 		{
 			ItemStack stack = applyChildSeed(this.seed + L.nextInt(5 + access.info().resistance / 2 + access.info().grain) / 3, access.info());
 			if (stack != null)

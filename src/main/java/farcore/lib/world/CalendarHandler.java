@@ -12,13 +12,14 @@ import net.minecraft.world.World;
 
 /**
  * The calendar handler.
+ * 
  * @author ueyudiud
  */
 public class CalendarHandler
 {
-	private static final Map<Integer, ICalendar> CALENDARS = new HashMap();
-	private static final ICalendar EMPTY = new CalendarEmpty();
-	public static final ICalendarWithMonth OVERWORLD;
+	private static final Map<Integer, ICalendar>	CALENDARS	= new HashMap();
+	private static final ICalendar					EMPTY		= new CalendarEmpty();
+	public static final ICalendarWithMonth			OVERWORLD;
 	
 	static
 	{

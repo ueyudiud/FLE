@@ -27,28 +27,28 @@ public class TEGear extends TEGearBase implements ITB_BlockPlacedBy, ITP_Drops
 {
 	public static enum GearSize
 	{
-		SMALL_4 (0.25F, 4),
-		SMALL_8 (0.25F, 8),
+		SMALL_4(0.25F, 4),
+		SMALL_8(0.25F, 8),
 		SMALL_16(0.25F, 16),
 		SMALL_24(0.25F, 24),
 		SMALL_32(0.25F, 32),
-		MID_8   (0.5F , 8),
-		MID_16  (0.5F , 16),
-		MID_24  (0.5F , 24),
-		MID_32  (0.5F , 32),
-		MID_48  (0.5F , 48),
-		MID_64  (0.5F , 64),
-		MID_96  (0.5F , 96),
-		BIG_12  (0.75F, 12),
-		BIG_24  (0.75F, 32),
-		BIG_48  (0.75F, 48),
-		BIG_64  (0.75F, 64),
-		BIG_96  (0.75F, 96),
-		BIG_128 (0.75F, 128);
+		MID_8(0.5F, 8),
+		MID_16(0.5F, 16),
+		MID_24(0.5F, 24),
+		MID_32(0.5F, 32),
+		MID_48(0.5F, 48),
+		MID_64(0.5F, 64),
+		MID_96(0.5F, 96),
+		BIG_12(0.75F, 12),
+		BIG_24(0.75F, 32),
+		BIG_48(0.75F, 48),
+		BIG_64(0.75F, 64),
+		BIG_96(0.75F, 96),
+		BIG_128(0.75F, 128);
 		
-		final float gearSize;
-		final float gearTeethSize;
-		final int gearTeethCount;
+		final float	gearSize;
+		final float	gearTeethSize;
+		final int	gearTeethCount;
 		
 		GearSize(float s, int c)
 		{
@@ -58,8 +58,8 @@ public class TEGear extends TEGearBase implements ITB_BlockPlacedBy, ITP_Drops
 		}
 	}
 	
-	public GearSize size = GearSize.MID_8;
-	public Mat material = M.oak;
+	public GearSize	size		= GearSize.MID_8;
+	public Mat		material	= M.oak;
 	
 	public TEGear()
 	{

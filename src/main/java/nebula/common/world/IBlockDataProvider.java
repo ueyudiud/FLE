@@ -7,8 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
 /**
- * The Block Data Provider,
- * use to provide network data and saving data.
+ * The Block Data Provider, use to provide network data and saving data.
+ * 
  * @see nebula.Nebula#blockDataProvider
  * @author ueyudiud
  */

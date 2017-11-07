@@ -28,36 +28,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * The extended block state map, included vanilla state map abilities.<br>
  * Also can make custom variant key for block for sub blocks.
+ * 
  * @author ueyudiud
  * @see net.minecraft.client.renderer.block.statemap.StateMapperBase
- * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, int)
- * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, IProperty)
+ * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt,
+ *      net.minecraft.block.Block, int)
+ * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt,
+ *      net.minecraft.block.Block, IProperty)
  */
 @SideOnly(Side.CLIENT)
 public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 {
 	private static final Comparator<IProperty<?>> PROPERTY_COMPARATOR = (property1, property2) -> property1.getName().compareTo(property2.getName());
 	
-	private String path;
-	private IProperty<?> fileProperty;
-	private List<IProperty> ignore;
-	private String variantsKey;
-	private String variantsValue;
+	private String			path;
+	private IProperty<?>	fileProperty;
+	private List<IProperty>	ignore;
+	private String			variantsKey;
+	private String			variantsValue;
 	
 	IProperty<String> fakeProperty;
 	
 	/**
 	 * Create a new extended block state map.
+	 * 
 	 * @param modid the mod belong.
 	 * @param path the state file path.
-	 * @param property1 the file split property, use this property value name as file name, no property
-	 *                  means state mapper don't split file.
-	 * @param properties the ignore properties, those properties will not present in model state.
+	 * @param property1 the file split property, use this property value name as
+	 *            file name, no property means state mapper don't split file.
+	 * @param properties the ignore properties, those properties will not
+	 *            present in model state.
 	 */
 	public StateMapperExt(String modid, String path, @Nullable IProperty property1, IProperty...properties)
 	{
 		this(modid + ":" + path, property1, properties);
 	}
+	
 	public StateMapperExt(String path, @Nullable IProperty property1, IProperty...properties)
 	{
 		this.path = path;
@@ -65,7 +71,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		this.ignore = ImmutableList.copyOf(properties);
 	}
 	
-	/** Now it is only an internal method, use to create a fake property.  */
+	/** Now it is only an internal method, use to create a fake property. */
 	public void markVariantProperty()
 	{
 		markVariantProperty(createFakeProperty(this.variantsKey, this.variantsValue));
@@ -79,6 +85,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	/**
 	 * The block may is a sub block in a block group (But for different id), set
 	 * the variant entry for each block to identify them.
+	 * 
 	 * @param key the property name.
 	 * @param value the state mapper variant name.
 	 */
@@ -89,7 +96,9 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	}
 	
 	/**
-	 * The map will create a instance ModelResourceLocation for selected block state.
+	 * The map will create a instance ModelResourceLocation for selected block
+	 * state.
+	 * 
 	 * @param state the state for location.
 	 * @return the mapping location.
 	 */
@@ -107,9 +116,9 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	}
 	
 	/**
-	 * For it was start as {@link #getLocationFromState} and this method is not exist.
-	 * But it is reported that game crashed on obf environment without this method, so
-	 * I split two method.
+	 * For it was start as {@link #getLocationFromState} and this method is not
+	 * exist. But it is reported that game crashed on obf environment without
+	 * this method, so I split two method.
 	 */
 	@Override
 	protected final ModelResourceLocation getModelResourceLocation(IBlockState state)
@@ -119,6 +128,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	
 	/**
 	 * Modify property map.
+	 * 
 	 * @param map
 	 * @return
 	 */
@@ -148,6 +158,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	
 	/**
 	 * Create a fake property, only contain a single value.
+	 * 
 	 * @param key
 	 * @param values
 	 * @return
@@ -156,20 +167,32 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	{
 		return new PropertyHelper<String>(key, String.class)
 		{
-			public Collection<String> getAllowedValues() { return ImmutableList.copyOf(values); }
-			public Optional<String> parseValue(String value) { return Optional.of(value); }
-			public String getName(String value) { return value; }
+			public Collection<String> getAllowedValues()
+			{
+				return ImmutableList.copyOf(values);
+			}
+			
+			public Optional<String> parseValue(String value)
+			{
+				return Optional.of(value);
+			}
+			
+			public String getName(String value)
+			{
+				return value;
+			}
 		};
 	}
 	
 	/**
 	 * Get key name of properties mapping.
+	 * 
 	 * @param values the properties map.
 	 * @return the key name.
 	 */
 	public static String getPropertyKey(Map<IProperty<?>, Comparable<?>> values)
 	{
-		if(!(values instanceof ImmutableSortedMap))
+		if (!(values instanceof ImmutableSortedMap))
 		{
 			values = ImmutableSortedMap.copyOf(values, PROPERTY_COMPARATOR);
 		}

@@ -9,20 +9,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * A font map example.
+ * 
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
 public class FontMap implements IFontMap
 {
-	private String fontMap;
-	private ResourceLocation location;
-	private int readSize;
-	private int[] characterWidth;
+	private String				fontMap;
+	private ResourceLocation	location;
+	private int					readSize;
+	private int[]				characterWidth;
 	
 	public FontMap(ResourceLocation location, String fontMap)
 	{
 		this(location, fontMap, 16);
 	}
+	
 	public FontMap(ResourceLocation location, String fontMap, int readSize)
 	{
 		this.location = location;
@@ -84,7 +86,7 @@ public class FontMap implements IFontMap
 				}
 			}
 			++l1;
-			this.characterWidth[i] = (int)(0.5D + l1 * width) + 1;
+			this.characterWidth[i] = (int) (0.5D + l1 * width) + 1;
 		}
 	}
 	
@@ -98,7 +100,7 @@ public class FontMap implements IFontMap
 	public int renderCharacter(char chr, boolean italic, FontRenderExtend render)
 	{
 		int i0 = this.fontMap.indexOf(chr);
-		if(i0 == -1) return 0;
+		if (i0 == -1) return 0;
 		int i = (i0 % 16) * 8;
 		int j = (i0 / 16) * 8;
 		int k = italic ? 1 : 0;

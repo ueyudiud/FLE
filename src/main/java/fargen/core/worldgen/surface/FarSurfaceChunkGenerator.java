@@ -48,34 +48,34 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 
 public class FarSurfaceChunkGenerator implements IChunkGenerator
 {
-	private static final IBlockState ROCK = Blocks.STONE.getDefaultState();
-	private static final IBlockState WATER = Blocks.WATER.getDefaultState();
-	private static final IBlockState CROP = EnumBlock.crop.block.getDefaultState();
+	private static final IBlockState	ROCK	= Blocks.STONE.getDefaultState();
+	private static final IBlockState	WATER	= Blocks.WATER.getDefaultState();
+	private static final IBlockState	CROP	= EnumBlock.crop.block.getDefaultState();
 	
 	protected void switchState(boolean flag)
 	{
 		V.generateState = FarCore.worldGenerationFlag = flag;
 	}
 	
-	private final World world;
-	private final FarSurfaceBiomeProvider biomeProvider;
+	private final World						world;
+	private final FarSurfaceBiomeProvider	biomeProvider;
 	
-	private final NoiseBase noise1;
-	private final NoiseBase noise2;
-	private final NoiseBase noise3;
-	private final NoiseBase noise4;
-	private final NoiseBase noise5;//Stone noise.
-	private final NoiseBase noise6;//Plants noise.
+	private final NoiseBase	noise1;
+	private final NoiseBase	noise2;
+	private final NoiseBase	noise3;
+	private final NoiseBase	noise4;
+	private final NoiseBase	noise5;		// Stone noise.
+	private final NoiseBase	noise6;		// Plants noise.
 	
 	private Random random = new Random();
 	
 	private BiomeBase[] biomes;
 	
-	private double[] cache1;
-	private double[] cache2;
-	private double[] cache3;
-	private double[] cache4;
-	private double[] cache5;
+	private double[]	cache1;
+	private double[]	cache2;
+	private double[]	cache3;
+	private double[]	cache4;
+	private double[]	cache5;
 	
 	private double[] cachea;
 	
@@ -92,29 +92,28 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.noise6 = new NoisePerlin(random, 3, 8.0, 2.5, 2.0);
 	}
 	
-	private static final byte
-	size = 3, scale = size * 2 + 1;
+	private static final byte size = 3, scale = size * 2 + 1;
 	
 	private static final float[] parabolicField;
 	
 	private static final DoubleUnaryOperator randomNoiseOperator = x -> {
-		//[0.0, 1.0]
+		// [0.0, 1.0]
 		x = x * 1.5 - 0.5;
-		//[-0.5, 1.0]
+		// [-0.5, 1.0]
 		if (x < 0)
 		{
 			x *= -0.5F;
 		}
-		//[-0.25, 1.0]
+		// [-0.25, 1.0]
 		x = x * 4.0 - 2.0;
-		//[-1.0, 2.0]
+		// [-1.0, 2.0]
 		if (x > 0)
 		{
 			x *= 2;
 		}
-		//[-1.0, 4.0]
+		// [-1.0, 4.0]
 		return (x - 1.5) * 0.2;
-		//[-0.5, 0.5]
+		// [-0.5, 0.5]
 	};
 	
 	private double[] initializeNoiseFieldHigh(double[] outArray, final int xPos, final int yPos, final int zPos, final int xSize, final int ySize, final int zSize)
@@ -139,7 +138,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				float variation = 0.0F;
 				float root = 0.0F;
 				float total = 0.0F;
-				//Biome height caculate.
+				// Biome height caculate.
 				BiomeBase baseBiome = this.biomes[(x + size + (z + size) * (xSize + scale))];
 				for (int xR = -size; xR <= size; xR++)
 				{
@@ -158,19 +157,17 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				}
 				variation /= total;
 				root /= total;
-				//Rescaled
+				// Rescaled
 				double d1 = (ySize - 1) * (root * 0.15625 + 0.125 + 0.03125);
 				double d2 = 1.0 + variation * randomNoiseOperator.applyAsDouble(this.cache4[i2]);
 				if (d2 < 0.5F) d2 = 0.5F + (d2 - 0.5F) * 0.3F;
-				//Height calculate
+				// Height calculate
 				for (int y = 1; y <= ySize; y++)
 				{
 					double off = (d1 - y) / d2;
-					if (off >= 0.0)
-						off *= 4.0;
+					if (off >= 0.0) off *= 4.0;
 					double output = off + Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]);
-					if (y > ySize - 4)
-						output = Maths.lerp(output, -1.0, (ySize - y) / 3.0F);
+					if (y > ySize - 4) output = Maths.lerp(output, -1.0, (ySize - y) / 3.0F);
 					outArray[i1] = output;
 					i1++;
 				}
@@ -180,12 +177,9 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		return outArray;
 	}
 	
-	private static final
-	byte subDivXZ = 4, subDivY = 16, xzSize = subDivXZ + 1, ySize = 17;
-	private static final
-	short seaLevel = 144, arrayYHeight = 128;
-	private static final
-	double yLerp = 0.125, xzLerp = 0.25;
+	private static final byte	subDivXZ	= 4, subDivY = 16, xzSize = subDivXZ + 1, ySize = 17;
+	private static final short	seaLevel	= 144, arrayYHeight = 128;
+	private static final double	yLerp		= 0.125, xzLerp = 0.25;
 	
 	private void generateChunkData(ChunkPrimer primer, int chunkX, int chunkZ)
 	{
@@ -197,13 +191,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			{
 				for (int y = 0; y < subDivY; y++)
 				{
-					double noiseDL  =  this.cachea[(((z    ) * xzSize + x    ) * ySize + y)];
-					double noiseUL  =  this.cachea[(((z + 1) * xzSize + x    ) * ySize + y)];
-					double noiseDR  =  this.cachea[(((z    ) * xzSize + x + 1) * ySize + y)];
-					double noiseUR  =  this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y)];
-					double noiseDLA = (this.cachea[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
-					double noiseULA = (this.cachea[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
-					double noiseDRA = (this.cachea[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
+					double noiseDL = this.cachea[(((z) * xzSize + x) * ySize + y)];
+					double noiseUL = this.cachea[(((z + 1) * xzSize + x) * ySize + y)];
+					double noiseDR = this.cachea[(((z) * xzSize + x + 1) * ySize + y)];
+					double noiseUR = this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y)];
+					double noiseDLA = (this.cachea[(((z) * xzSize + x) * ySize + y + 1)] - noiseDL) * yLerp;
+					double noiseULA = (this.cachea[(((z + 1) * xzSize + x) * ySize + y + 1)] - noiseUL) * yLerp;
+					double noiseDRA = (this.cachea[(((z) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
 					double noiseURA = (this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
 					for (int y1 = 0; y1 < 8; y1++)
 					{
@@ -246,9 +240,9 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		}
 	}
 	
-	public static final IProperty<IBlockState[]> ROCKS = IPropertyMap.IProperty.to(FarSurfaceDataGenerator.ROCK_DEFAULT);
-	public static final IProperty<IBlockState[]> SOILS = IPropertyMap.IProperty.to(FarSurfaceDataGenerator.SOIL_DEFAULT);
-	public static final IProperty<Double> RAND_HEIGHT = IPropertyMap.IProperty.to(0.0D);
+	public static final IProperty<IBlockState[]>	ROCKS		= IPropertyMap.IProperty.to(FarSurfaceDataGenerator.ROCK_DEFAULT);
+	public static final IProperty<IBlockState[]>	SOILS		= IPropertyMap.IProperty.to(FarSurfaceDataGenerator.SOIL_DEFAULT);
+	public static final IProperty<Double>			RAND_HEIGHT	= IPropertyMap.IProperty.to(0.0D);
 	
 	private static IPropertyMap compact(IPropertyMap map, double randHeight, IBlockState[] rocks, IBlockState[] covers)
 	{
@@ -300,7 +294,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	{
 		this.random.setSeed(x * 341873128712L ^ z * 132897987541L);
 		
-		//Data provide.
+		// Data provide.
 		Chunk chunk = this.world.getChunkFromChunkCoords(x, z);
 		MutableBlockPos pos = new MutableBlockPos(x << 4, 0, z << 4);
 		BiomeBase biome = (BiomeBase) chunk.getBiome(pos.add(16, 0, 16), this.biomeProvider);
@@ -308,13 +302,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		float temp = provider.getAverageTemperature(this.world, pos) - V.WATER_FREEZE_POINT_F;
 		float rainfall = provider.getAverageHumidity(this.world, pos) / 4.0F;
 		
-		//MinX & MinZ coordinate.
+		// MinX & MinZ coordinate.
 		final int x1 = x << 4;
 		final int z1 = z << 4;
 		
 		switchState(true);
 		
-		//Tree generation.
+		// Tree generation.
 		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(TREE, this.world, x, z, this)))
 		{
 			WeightedRandomSelector<ITreeGenerator> treeGenerationSelector = new WeightedRandomSelector<>();
@@ -332,13 +326,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					ITreeGenerator generator = treeGenerationSelector.next(this.random);
 					if (generator.generateTreeAt(this.world, x2, y2, z2, this.random, null))
 					{
-						count --;
+						count--;
 					}
 				}
 			}
 		}
 		
-		//Wild Crop generation.
+		// Wild Crop generation.
 		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(WILD_CROP, this.world, x, z, this)))
 		{
 			WeightedRandomSelector<ICrop> cropGenerationSelector = new WeightedRandomSelector<>();

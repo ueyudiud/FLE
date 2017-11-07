@@ -38,8 +38,8 @@ public class ResearchGraph
 	{
 		public int clickingNode = -1;
 		
-		EntityPlayer player;
-		ResearchInstance instance;
+		EntityPlayer		player;
+		ResearchInstance	instance;
 		
 		public ResearchInstanceProxyClient(EntityPlayer player, ResearchInstance instance)
 		{
@@ -72,7 +72,8 @@ public class ResearchGraph
 		
 		public void refreshGraph()
 		{
-			while (this.instance.removeIsolatedNodes());
+			while (this.instance.removeIsolatedNodes())
+				;
 		}
 		
 		public int[][] getPositions()
@@ -88,17 +89,17 @@ public class ResearchGraph
 	
 	public static class ResearchInstance
 	{
-		int nodeSize;
-		int[][] positions;
-		int[][] idToLinks;
-		int[][] links;
+		int		nodeSize;
+		int[][]	positions;
+		int[][]	idToLinks;
+		int[][]	links;
 		
-		public ResearchInstance (int[][] p, int[][] l)
+		public ResearchInstance(int[][] p, int[][] l)
 		{
 			this.nodeSize = p.length;
 			for (int i = 0; i < p.length; ++i)
 			{
-				if (!L.inRange(GRAPH_SIZE-1, 0, p[i][0]) || !L.inRange(GRAPH_SIZE-1, 0, p[i][1]))
+				if (!L.inRange(GRAPH_SIZE - 1, 0, p[i][0]) || !L.inRange(GRAPH_SIZE - 1, 0, p[i][1]))
 				{
 					throw new IllegalArgumentException("Illegal node : (" + p[i][0] + "," + p[i][1] + ")");
 				}
@@ -106,17 +107,14 @@ public class ResearchGraph
 			this.positions = p.clone();
 			this.links = l.clone();
 			/**
-			 * The id to links map buffer.
-			 * For each int[] in array,
-			 * the first array is buffer current length and afters are datas.
+			 * The id to links map buffer. For each int[] in array, the first
+			 * array is buffer current length and afters are datas.
 			 */
 			int[][] map = new int[p.length][p.length];
 			for (int i = 0; i < l.length; ++i)
 			{
 				int[] is = l[i];
-				if (is.length != 2 || !L.inRange(p.length-1, 0, is[0]) || !L.inRange(p.length-1, 0, is[1]) ||
-						is[0] == is[1])
-					throw new IllegalArgumentException("Illegal link : (" + is[0] + "," + is[1] + ")");
+				if (is.length != 2 || !L.inRange(p.length - 1, 0, is[0]) || !L.inRange(p.length - 1, 0, is[1]) || is[0] == is[1]) throw new IllegalArgumentException("Illegal link : (" + is[0] + "," + is[1] + ")");
 				map[is[0]][++map[is[0]][0]] = i;
 				map[is[1]][++map[is[1]][0]] = i;
 			}
@@ -145,7 +143,7 @@ public class ResearchGraph
 		
 		public boolean removeIsolatedNodes()
 		{
-			int[] markremove = new int[this.nodeSize+1];
+			int[] markremove = new int[this.nodeSize + 1];
 			for (int i = 0; i < this.nodeSize; ++i)
 			{
 				if (isIsolated(i))
@@ -166,10 +164,10 @@ public class ResearchGraph
 			int[] noderemapid = new int[this.positions.length];
 			int[][] posbuf = new int[this.positions.length][];
 			int nodebuflen = 0;
-			//Relist nodes.
+			// Relist nodes.
 			for (int i = 0; i < this.positions.length; ++i)
 			{
-				if (this.positions[i] == null)//The node were removed.
+				if (this.positions[i] == null)// The node were removed.
 				{
 					noderemapid[i] = -1;
 				}
@@ -180,7 +178,7 @@ public class ResearchGraph
 					nodebuflen++;
 				}
 			}
-			//Relist links.
+			// Relist links.
 			int[] linkremapid = new int[this.links.length];
 			int[][] linksbuf = new int[this.links.length][];
 			int linkbuflen = 0;
@@ -199,7 +197,7 @@ public class ResearchGraph
 					linkbuflen++;
 				}
 			}
-			//Remap links.
+			// Remap links.
 			int[][] itlbuf = new int[this.idToLinks.length][nodebuflen];
 			for (int i = 0; i < this.idToLinks.length; ++i)
 			{
@@ -212,7 +210,7 @@ public class ResearchGraph
 						is[++is[0]] = linkremapid[this.idToLinks[i][j]];
 					}
 				}
-				itlbuf[noderemapid[i]] = Arrays.copyOfRange(is, 1, is[0]+1);
+				itlbuf[noderemapid[i]] = Arrays.copyOfRange(is, 1, is[0] + 1);
 			}
 			this.nodeSize = nodebuflen;
 			this.positions = A.copyToLength(posbuf, nodebuflen);
@@ -238,12 +236,10 @@ public class ResearchGraph
 					y3 = this.positions[is[0]][1];
 					x4 = this.positions[is[1]][0];
 					y4 = this.positions[is[1]][1];
-					int d1 = (x1-x3)*(y3-y4)+(x4-x3)*(y1-y3);
-					int d2 = (x1-x3)*(y1-y2)+(x2-x1)*(y1-y3);
-					int d3 = (x1-x2)*(y3-y4)+(x3-x4)*(y2-y1);
-					if (d3 != 0 && (d3 > 0 ?
-							L.inRange(d3, 0, d1) && L.inRange(d3, 0, d2) :
-								L.inRange(0, d3, d1) && L.inRange(0, d3, d2)))
+					int d1 = (x1 - x3) * (y3 - y4) + (x4 - x3) * (y1 - y3);
+					int d2 = (x1 - x3) * (y1 - y2) + (x2 - x1) * (y1 - y3);
+					int d3 = (x1 - x2) * (y3 - y4) + (x3 - x4) * (y2 - y1);
+					if (d3 != 0 && (d3 > 0 ? L.inRange(d3, 0, d1) && L.inRange(d3, 0, d2) : L.inRange(0, d3, d1) && L.inRange(0, d3, d2)))
 					{
 						return false;
 					}

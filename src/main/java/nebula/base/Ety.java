@@ -9,18 +9,18 @@ import nebula.common.util.L;
 
 /**
  * Nebula entry instance.
+ * 
  * @author ueyudiud
  *
  * @param <K> the <tt>key</tt> type.
  * @param <V> the <tt>value</tt> type.
  */
-public
-class Ety<K, V> implements Entry<K, V>
+public class Ety<K, V> implements Entry<K, V>
 {
 	/** The key object. */
-	public final K key;
+	public final K	key;
 	/** The value object. */
-	public V value;
+	public V		value;
 	
 	public Ety(K key, V value)
 	{
@@ -57,9 +57,12 @@ class Ety<K, V> implements Entry<K, V>
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(obj == this) return true;
-		else if(!(obj instanceof Entry)) return false;
-		else return L.equal(this.key, ((Entry<?, ?>) obj).getKey());
+		if (obj == this)
+			return true;
+		else if (!(obj instanceof Entry))
+			return false;
+		else
+			return L.equal(this.key, ((Entry<?, ?>) obj).getKey());
 	}
 	
 	@Override

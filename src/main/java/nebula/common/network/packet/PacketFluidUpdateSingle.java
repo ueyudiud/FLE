@@ -13,12 +13,13 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidUpdateSingle extends PacketGui
 {
-	private int id;
-	private FluidStack stack;
+	private int			id;
+	private FluidStack	stack;
 	
 	public PacketFluidUpdateSingle()
 	{
 	}
+	
 	public PacketFluidUpdateSingle(ContainerBase container, int id, FluidStack stack)
 	{
 		super(container);
@@ -46,7 +47,7 @@ public class PacketFluidUpdateSingle extends PacketGui
 	public IPacket process(Network network)
 	{
 		ContainerBase container = container();
-		if(container != null)
+		if (container != null)
 		{
 			container.getFluidSlots().get(this.id).putStack(this.stack);
 		}

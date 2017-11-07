@@ -10,10 +10,10 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 public abstract class FarWorldGenerator extends WorldGenerator implements ICoord
 {
-	protected World world;
-	protected BlockPos pos;
-	protected Random rand;
-	protected IChunkGenerator chunkGenerator;
+	protected World				world;
+	protected BlockPos			pos;
+	protected Random			rand;
+	protected IChunkGenerator	chunkGenerator;
 	
 	@Override
 	public boolean generate(World worldIn, Random rand, BlockPos position)

@@ -14,16 +14,14 @@ public class FluidStackExt extends FluidStack
 	public int temperature = getFluid().getTemperature(this);
 	
 	/**
-	 * This provides a safe method for retrieving a FluidStack - if the Fluid is invalid, the stack
-	 * will return as null.
+	 * This provides a safe method for retrieving a FluidStack - if the Fluid is
+	 * invalid, the stack will return as null.
 	 */
 	public static FluidStackExt loadFluidStackFromNBT(NBTTagCompound nbt)
 	{
-		if (nbt == null)
-			return null;
+		if (nbt == null) return null;
 		String fluidName = nbt.getString("FluidName");
-		if (fluidName == null || FluidRegistry.getFluid(fluidName) == null)
-			return null;
+		if (fluidName == null || FluidRegistry.getFluid(fluidName) == null) return null;
 		FluidStackExt stack = new FluidStackExt(FluidRegistry.getFluid(fluidName));
 		stack.readFromNBT(nbt);
 		return stack;
@@ -31,8 +29,7 @@ public class FluidStackExt extends FluidStack
 	
 	public static boolean areFluidStackEqual(FluidStack stacka, FluidStack stackb)
 	{
-		return stacka == null || stackb == null ? stacka == stackb :
-			stacka.isFluidEqual(stackb) && stacka.amount == stackb.amount;
+		return stacka == null || stackb == null ? stacka == stackb : stacka.isFluidEqual(stackb) && stacka.amount == stackb.amount;
 	}
 	
 	public static FluidStackExt copyOf(FluidStack stack)
@@ -44,36 +41,42 @@ public class FluidStackExt extends FluidStack
 	{
 		super(fluid, amount);
 	}
+	
 	public FluidStackExt(Fluid fluid, int amount, NBTTagCompound nbt)
 	{
 		super(fluid, amount, nbt);
 	}
+	
 	public FluidStackExt(Fluid fluid, int amount, int temperature, NBTTagCompound nbt)
 	{
 		super(fluid, amount, nbt);
 		this.temperature = temperature;
 	}
+	
 	public FluidStackExt(FluidStack stack, int amount)
 	{
 		super(stack, amount);
-		if(stack instanceof FluidStackExt)
+		if (stack instanceof FluidStackExt)
 		{
 			this.temperature = ((FluidStackExt) stack).temperature;
 		}
 	}
+	
 	public FluidStackExt(FluidStack stack, int amount, int temperature)
 	{
 		super(stack, amount);
 		this.temperature = temperature;
 	}
+	
 	FluidStackExt(FluidStack stack)
 	{
 		super(stack.getFluid(), stack.amount, stack.tag);
-		if(stack instanceof FluidStackExt)
+		if (stack instanceof FluidStackExt)
 		{
 			this.temperature = ((FluidStackExt) stack).temperature;
 		}
 	}
+	
 	FluidStackExt(Fluid fluid)
 	{
 		super(fluid, 1);
@@ -82,10 +85,8 @@ public class FluidStackExt extends FluidStack
 	@Override
 	public boolean isFluidEqual(FluidStack other)
 	{
-		if(!super.isFluidEqual(other))
-			return false;
-		return !(other instanceof FluidStackExt) ? true :
-			isPropertiesEqual((FluidStackExt) other);
+		if (!super.isFluidEqual(other)) return false;
+		return !(other instanceof FluidStackExt) ? true : isPropertiesEqual((FluidStackExt) other);
 	}
 	
 	public boolean isPropertiesEqual(FluidStackExt other)
@@ -96,16 +97,14 @@ public class FluidStackExt extends FluidStack
 	public int getTemperature()
 	{
 		Fluid fluid = getFluid();
-		if(fluid instanceof IFP_Temperature)
-			return ((IFP_Temperature) fluid).regetTemperature(this, this.temperature);
+		if (fluid instanceof IFP_Temperature) return ((IFP_Temperature) fluid).regetTemperature(this, this.temperature);
 		return this.temperature;
 	}
 	
 	public boolean isSolutable(ItemStack stack)
 	{
 		Fluid fluid = getFluid();
-		if(fluid instanceof IFP_Solutability)
-			return ((IFP_Solutability) fluid).isItemSolutable(this, stack);
+		if (fluid instanceof IFP_Solutability) return ((IFP_Solutability) fluid).isItemSolutable(this, stack);
 		return false;
 	}
 	
@@ -120,7 +119,7 @@ public class FluidStackExt extends FluidStack
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		this.amount = nbt.getInteger("Amount");
-		if(nbt.hasKey("Tag"))
+		if (nbt.hasKey("Tag"))
 		{
 			this.tag = nbt.getCompoundTag("Tag");
 		}

@@ -21,9 +21,9 @@ import net.minecraftforge.common.util.Constants.NBT;
  */
 public class StackContainer<E>
 {
-	private long capacity;
-	private long amount;
-	private Map<E, Stack<E>> stacks = new HashMap<>();
+	private long				capacity;
+	private long				amount;
+	private Map<E, Stack<E>>	stacks	= new HashMap<>();
 	
 	public StackContainer(long capacity)
 	{
@@ -144,7 +144,8 @@ public class StackContainer<E>
 				return stack.split(maxDrain);
 			}
 		}
-		else return null;
+		else
+			return null;
 	}
 	
 	public synchronized void clear()

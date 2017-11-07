@@ -35,14 +35,11 @@ abstract class StateDelegate
 	
 	static StateDelegate create(Block block)
 	{
-		return block == Blocks.AIR ? AIR :
-			block.getBlockState().getProperties().isEmpty() ? new StateDegegateSingle(block) :
-				(EDConfig.buildStateIn || (block instanceof IExtendedDataBlock)) ? new StateDelegateExt(block) :
-					new StateDegegateNormal(block);
+		return block == Blocks.AIR ? AIR : block.getBlockState().getProperties().isEmpty() ? new StateDegegateSingle(block) : (EDConfig.buildStateIn || (block instanceof IExtendedDataBlock)) ? new StateDelegateExt(block) : new StateDegegateNormal(block);
 	}
 	
-	final Block block;
-	int id = -1;
+	final Block	block;
+	int			id	= -1;
 	
 	StateDelegate(Block block)
 	{
@@ -69,16 +66,28 @@ abstract class StateDelegate
 	
 	static class StateDegegateSingle extends StateDelegate
 	{
-		StateDegegateSingle(Block block) { super(block); }
+		StateDegegateSingle(Block block)
+		{
+			super(block);
+		}
 		
 		@Override
-		IBlockState get(int meta) { return this.block.getDefaultState(); }
+		IBlockState get(int meta)
+		{
+			return this.block.getDefaultState();
+		}
 		
 		@Override
-		int getMeta(IBlockState state) { return 0; }
+		int getMeta(IBlockState state)
+		{
+			return 0;
+		}
 		
 		@Override
-		int capacity() { return 1; }
+		int capacity()
+		{
+			return 1;
+		}
 		
 		@Override
 		void logInformation()
@@ -136,7 +145,9 @@ abstract class StateDelegate
 				{
 					Log.trace("{}=>{}", this.id + i, this.block.getStateFromMeta(i));
 				}
-				catch (RuntimeException exception) {}
+				catch (RuntimeException exception)
+				{
+				}
 			}
 			Map<Integer, List<IBlockState>> map = new HashMap<>();
 			for (IBlockState state : this.block.getBlockState().getValidStates())
@@ -166,7 +177,7 @@ abstract class StateDelegate
 				}
 				
 				@Override
-				public void registerStates(IProperty<?>... properties)
+				public void registerStates(IProperty<?>...properties)
 				{
 					if (properties.length == 0)
 					{
@@ -183,9 +194,10 @@ abstract class StateDelegate
 						forEach1(0, properties, L.cast(list, IProperty.class), delegate.block.getDefaultState(), map = new HashMap<>());
 						
 						List<IBlockState> states = new ArrayList<>(map.keySet());
-						states.sort((s1, s2)-> A.compare(A.transform(properties, s1::getValue), A.transform(properties, s2::getValue)));
+						states.sort((s1, s2) -> A.compare(A.transform(properties, s1::getValue), A.transform(properties, s2::getValue)));
 						
-						for (int i = 0; i < states.size(); registerStateMap(state = states.get(i++), map.get(state)));
+						for (int i = 0; i < states.size(); registerStateMap(state = states.get(i++), map.get(state)))
+							;
 					}
 				}
 				
@@ -208,8 +220,9 @@ abstract class StateDelegate
 					{
 						IProperty property = properties1[id++];
 						IBlockState state2 = state;
-						do forEach1(id, properties1, properties2, state2, map);
-						while((state2 = state2.cycleProperty(property)) != state);
+						do
+							forEach1(id, properties1, properties2, state2, map);
+						while ((state2 = state2.cycleProperty(property)) != state);
 					}
 				}
 				
@@ -223,19 +236,28 @@ abstract class StateDelegate
 					{
 						IProperty property = properties[id++];
 						IBlockState state2 = state;
-						do forEach2(id, properties, state2, list);
-						while((state2 = state2.cycleProperty(property)) != state);
+						do
+							forEach2(id, properties, state2, list);
+						while ((state2 = state2.cycleProperty(property)) != state);
 					}
 				}
 				
-				public void registerState(IBlockState state) { registerStateMap(state, ImmutableList.of(state)); }
-				public void registerStateMap(IBlockState source, IBlockState...castable) { registerStateMap(source, ArrayListAddWithCheck.argument(castable)); }
+				public void registerState(IBlockState state)
+				{
+					registerStateMap(state, ImmutableList.of(state));
+				}
+				
+				public void registerStateMap(IBlockState source, IBlockState...castable)
+				{
+					registerStateMap(source, ArrayListAddWithCheck.argument(castable));
+				}
 				
 				public void registerStateMap(IBlockState source, Collection<IBlockState> castable)
 				{
 					int id = delegate.id_to_state.size();
 					delegate.id_to_state.add(id, source);
-					for (IBlockState state : castable) delegate.state_to_id.put(state, id);
+					for (IBlockState state : castable)
+						delegate.state_to_id.put(state, id);
 				}
 			};
 			if (block instanceof IExtendedDataBlock)
@@ -245,8 +267,8 @@ abstract class StateDelegate
 			delegate.id_to_state = ImmutableList.copyOf(delegate.id_to_state);
 		}
 		
-		List<IBlockState> id_to_state;
-		IntegerMap<IBlockState> state_to_id;
+		List<IBlockState>		id_to_state;
+		IntegerMap<IBlockState>	state_to_id;
 		
 		StateDelegateExt(Block block)
 		{

@@ -14,7 +14,9 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public final class OreDict
 {
-	private OreDict() {}
+	private OreDict()
+	{
+	}
 	
 	public static void registerValid(String name, Block ore)
 	{
@@ -28,20 +30,21 @@ public final class OreDict
 	
 	public static void registerValid(String name, ItemStack ore)
 	{
-		if(ItemStacks.valid(ore) == null) return;
+		if (ItemStacks.valid(ore) == null) return;
 		ItemStack register = ore.copy();
 		register.stackSize = 1;
 		OreDictionary.registerOre(name, ore);
 	}
 	
-	//	public static void registerValid(String name, Item item, IDataChecker<ItemStack> function, ItemStack...instances)
-	//	{
-	//		OreDictExt.registerOreFunction(name, item, function, instances);
-	//	}
+	// public static void registerValid(String name, Item item,
+	// IDataChecker<ItemStack> function, ItemStack...instances)
+	// {
+	// OreDictExt.registerOreFunction(name, item, function, instances);
+	// }
 	
 	public static void registerValid(String name, ItemStack ore, boolean autoValid)
 	{
-		if(autoValid)
+		if (autoValid)
 		{
 			name = nebula.common.util.Strings.validateOre(false, name);
 		}

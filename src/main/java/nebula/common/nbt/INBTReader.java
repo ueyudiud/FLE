@@ -16,6 +16,7 @@ public interface INBTReader<T, N extends NBTBase>
 {
 	/**
 	 * Read target from nbt with sub tag.
+	 * 
 	 * @param nbt
 	 * @param key
 	 * @return
@@ -27,6 +28,7 @@ public interface INBTReader<T, N extends NBTBase>
 	
 	/**
 	 * Used if this instance implements target type.
+	 * 
 	 * @param nbt
 	 * @param key
 	 */

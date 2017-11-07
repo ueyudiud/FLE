@@ -29,9 +29,9 @@ import nebula.common.util.A;
 public class ObjArrayParseHelper
 {
 	/** The read offset. */
-	private int off;
+	private int			off;
 	/** The object array. */
-	private Object[] array;
+	private Object[]	array;
 	
 	public static <K, V> Map<K, V> newImmutableMap(Object...objects)
 	{
@@ -75,12 +75,10 @@ public class ObjArrayParseHelper
 	
 	public boolean match(Class<?>...classes)
 	{
-		if (!hasNext(classes.length))
-			return false;
+		if (!hasNext(classes.length)) return false;
 		for (int i = 0; i < classes.length; ++i)
 		{
-			if (!classes[i].isInstance(this.array[i + this.off]))
-				return false;
+			if (!classes[i].isInstance(this.array[i + this.off])) return false;
 		}
 		return true;
 	}
@@ -108,7 +106,8 @@ public class ObjArrayParseHelper
 		if (this.off >= this.array.length) return (R[]) Array.newInstance(clazz, 0);
 		int r = this.array.length - this.off;
 		int l = 0;
-		for (; l < r && clazz.isInstance(this.array[this.off + l]); ++l);
+		for (; l < r && clazz.isInstance(this.array[this.off + l]); ++l)
+			;
 		R[] array = (R[]) Array.newInstance(clazz, l);
 		if (l == 0) return array;
 		System.arraycopy(this.array, this.off, array, 0, l);
@@ -118,33 +117,27 @@ public class ObjArrayParseHelper
 	
 	public boolean readOrSkip(boolean def)
 	{
-		return !hasNext() ? def : this.array[this.off] instanceof Boolean ?
-				((Boolean) this.array[this.off++]).booleanValue() : def;
+		return !hasNext() ? def : this.array[this.off] instanceof Boolean ? ((Boolean) this.array[this.off++]).booleanValue() : def;
 	}
 	
 	public int readOrSkip(int def)
 	{
-		return !hasNext() ? def : this.array[this.off] instanceof Integer ?
-				((Integer) this.array[this.off++]).intValue() : def;
+		return !hasNext() ? def : this.array[this.off] instanceof Integer ? ((Integer) this.array[this.off++]).intValue() : def;
 	}
 	
 	public long readOrSkip(long def)
 	{
-		return !hasNext() ? def : this.array[this.off] instanceof Long ||
-				this.array[this.off] instanceof Integer?
-						((Number) this.array[this.off++]).longValue() : def;
+		return !hasNext() ? def : this.array[this.off] instanceof Long || this.array[this.off] instanceof Integer ? ((Number) this.array[this.off++]).longValue() : def;
 	}
 	
 	public float readOrSkip(float def)
 	{
-		return !hasNext() ? def : this.array[this.off] instanceof Number ?
-				((Number) this.array[this.off++]).floatValue() : def;
+		return !hasNext() ? def : this.array[this.off] instanceof Number ? ((Number) this.array[this.off++]).floatValue() : def;
 	}
 	
 	public double readOrSkip(double def)
 	{
-		return !hasNext() ? def : this.array[this.off] instanceof Number ?
-				((Double) this.array[this.off++]).doubleValue() : def;
+		return !hasNext() ? def : this.array[this.off] instanceof Number ? ((Double) this.array[this.off++]).doubleValue() : def;
 	}
 	
 	public <T> T readOrSkip(Class<T> clazz)
@@ -184,7 +177,8 @@ public class ObjArrayParseHelper
 	
 	public <I> void readToEnd(Consumer<I> consumer)
 	{
-		while (hasNext()) consumer.accept(read());
+		while (hasNext())
+			consumer.accept(read());
 	}
 	
 	/**
@@ -194,7 +188,8 @@ public class ObjArrayParseHelper
 	 */
 	public <I1, I2> boolean readToEnd(BiConsumer<I1, I2> consumer)
 	{
-		while (hasNext(2)) consumer.accept(read(), read());
+		while (hasNext(2))
+			consumer.accept(read(), read());
 		return this.array.length == this.off;
 	}
 	
@@ -210,37 +205,37 @@ public class ObjArrayParseHelper
 	
 	public <K, V> boolean readEntryToEnd(Consumer<Entry<K, V>> consumer)
 	{
-		return readToEnd((K k, V v)-> consumer.accept(new Ety<>(k, v)));
+		return readToEnd((K k, V v) -> consumer.accept(new Ety<>(k, v)));
 	}
 	
 	public <R> Stack<R> readStack()
 	{
-		if (hasNext(2) && (this.array[this.off + 1] instanceof Integer ||
-				this.array[this.off + 1] instanceof Long))
+		if (hasNext(2) && (this.array[this.off + 1] instanceof Integer || this.array[this.off + 1] instanceof Long))
 		{
-			return new Stack<>(read(), this.<Number>read().longValue());
+			return new Stack<>(read(), this.<Number> read().longValue());
 		}
 		return new Stack<>(read());
 	}
 	
 	public <R, I> Stack<R> readStack(Function<I, R> function)
 	{
-		if (hasNext(2) && (this.array[this.off + 1] instanceof Integer ||
-				this.array[this.off + 1] instanceof Long))
+		if (hasNext(2) && (this.array[this.off + 1] instanceof Integer || this.array[this.off + 1] instanceof Long))
 		{
-			return new Stack<>(function.apply(read()), this.<Number>read().longValue());
+			return new Stack<>(function.apply(read()), this.<Number> read().longValue());
 		}
 		return new Stack<>(function.apply(read()));
 	}
 	
 	public <R> void readStackToEnd(Consumer<Stack<R>> consumer)
 	{
-		while (hasNext()) consumer.accept(readStack());
+		while (hasNext())
+			consumer.accept(readStack());
 	}
 	
 	public <R, I> void readStackToEnd(Function<I, R> function, Consumer<Stack<R>> consumer)
 	{
-		while (hasNext()) consumer.accept(readStack(function));
+		while (hasNext())
+			consumer.accept(readStack(function));
 	}
 	
 	public <E> List<E> toList()
@@ -261,13 +256,14 @@ public class ObjArrayParseHelper
 	public <K, V> Map<K, V> toMap() throws IllegalArgumentException
 	{
 		ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
-		if (!readToEnd((BiConsumer<K, V>) builder::put))
-			throw new IllegalArgumentException();
+		if (!readToEnd((BiConsumer<K, V>) builder::put)) throw new IllegalArgumentException();
 		return builder.build();
 	}
 	
 	/**
-	 * Format string with remain array by {@link String#format(String, Object...)}.
+	 * Format string with remain array by
+	 * {@link String#format(String, Object...)}.
+	 * 
 	 * @param key the string to format.
 	 * @return the formatted string.
 	 * @see String#format(String, Object...)

@@ -19,16 +19,16 @@ import nebula.common.util.L;
  */
 class OpInformation
 {
-	final String mcpname;
-	Map<String, List<OpLabel>> modifies = new HashMap<>();
-	String cacheName;
-	List<OpLabel> label;
-	int line = -1;
-	int off = -1;
-	int length = 1;
-	List<AbstractInsnNode> cacheList;
+	final String				mcpname;
+	Map<String, List<OpLabel>>	modifies	= new HashMap<>();
+	String						cacheName;
+	List<OpLabel>				label;
+	int							line		= -1;
+	int							off			= -1;
+	int							length		= 1;
+	List<AbstractInsnNode>		cacheList;
 	@Deprecated
-	Map<Label, int[]> labelLocate = new HashMap<>();
+	Map<Label, int[]>			labelLocate	= new HashMap<>();
 	
 	OpInformation(String name)
 	{
@@ -57,11 +57,11 @@ class OpInformation
 	
 	public OpInformation lNode(AbstractInsnNode...nodes)
 	{
-		if(this.cacheList == null)
+		if (this.cacheList == null)
 		{
 			this.cacheList = new ArrayList<>();
 		}
-		for(AbstractInsnNode node : nodes)
+		for (AbstractInsnNode node : nodes)
 		{
 			this.cacheList.add(node);
 		}
@@ -70,7 +70,7 @@ class OpInformation
 	
 	public OpInformation lLabel(OpType type)
 	{
-		if(this.label == null)
+		if (this.label == null)
 		{
 			this.label = new ArrayList<>();
 		}
@@ -83,7 +83,7 @@ class OpInformation
 	
 	public OpInformation lPut()
 	{
-		if(!this.modifies.containsKey(this.cacheName))
+		if (!this.modifies.containsKey(this.cacheName))
 		{
 			this.modifies.put(this.cacheName, this.label);
 		}
@@ -111,6 +111,7 @@ class OpInformation
 	{
 		return replace(line, off, 1, nodes);
 	}
+	
 	public OpInformation replace(int line, int off, int len, AbstractInsnNode...nodes)
 	{
 		return lPosition(line, off).lLength(len).lNode(nodes).lLabel(OpType.REPLACE);
@@ -130,9 +131,7 @@ class OpInformation
 	
 	private OpInformation merge(OpInformation information)
 	{
-		NebulaASMLogHelper.LOG.warn("Same class " + this.mcpname +
-				" type modification detected, this may cause modification "
-				+ "failed, please change them if necessary.");
+		NebulaASMLogHelper.LOG.warn("Same class " + this.mcpname + " type modification detected, this may cause modification " + "failed, please change them if necessary.");
 		information.modifies.forEach((key, labels) -> L.put(this.modifies, key, labels));
 		return this;
 	}

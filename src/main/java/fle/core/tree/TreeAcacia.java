@@ -23,7 +23,7 @@ public class TreeAcacia extends Tree
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null)
+		if (info != null)
 		{
 			this.generator1.setHeight(5 + info.height, 6 + info.height);
 		}

@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 /**
  * Handler to handle default block thermal properties.
+ * 
  * @author ueyudiud
  *
  */

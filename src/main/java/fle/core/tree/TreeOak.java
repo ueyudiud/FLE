@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 
 public class TreeOak extends Tree
 {
-	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.04F);
-	private final TreeGenBig generator2 = new TreeGenBig(this, 0.02F);
+	private final TreeGenClassic	generator1	= new TreeGenClassic(this, 0.04F);
+	private final TreeGenBig		generator2	= new TreeGenBig(this, 0.02F);
 	
 	public TreeOak(Mat material)
 	{
@@ -24,14 +24,14 @@ public class TreeOak extends Tree
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null && info.map.get("huge") > 0)
+		if (info != null && info.map.get("huge") > 0)
 		{
 			this.generator2.setScale(1.0 + info.height * 0.03125, 1.0, 1.0);
 			return this.generator2.generateTreeAt(world, x, y, z, random, info);
 		}
 		else
 		{
-			if(info != null)
+			if (info != null)
 			{
 				this.generator1.setHeight(info.height / 4 + 4, info.height / 3 + 3);
 			}

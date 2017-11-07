@@ -16,8 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * This leaves will drop tree sapling.
- * It has a tile entity to save DNA.
+ * This leaves will drop tree sapling. It has a tile entity to save DNA.
+ * 
  * @author ueyudiud
  *
  */
@@ -61,7 +61,7 @@ public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 	{
 		super.breakBlock(worldIn, pos, state);
 		TileEntity tile;
-		if((tile = worldIn.getTileEntity(pos)) instanceof ITB_BreakBlock)
+		if ((tile = worldIn.getTileEntity(pos)) instanceof ITB_BreakBlock)
 		{
 			((ITB_BreakBlock) tile).onBlockBreak(state);
 		}
@@ -69,13 +69,11 @@ public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		try
 		{
-			return this.tree.onLeavesRightClick(playerIn, worldIn, pos, state, Direction.of(side), hitX, hitY, hitZ,
-					(TECoreLeaves) worldIn.getTileEntity(pos));
+			return this.tree.onLeavesRightClick(playerIn, worldIn, pos, state, Direction.of(side), hitX, hitY, hitZ, (TECoreLeaves) worldIn.getTileEntity(pos));
 		}
 		catch (Exception e)
 		{

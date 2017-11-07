@@ -12,23 +12,44 @@ class TelomereNode<T> implements INode<T>
 	}
 	
 	@Override
-	public INode<T> cutLast() { return null; }
+	public INode<T> cutLast()
+	{
+		return null;
+	}
 	
 	@Override
-	public INode<T> cutNext() { return this.next; }
+	public INode<T> cutNext()
+	{
+		return this.next;
+	}
 	
 	@Override
-	public T value() { return null; }
+	public T value()
+	{
+		return null;
+	}
 	
 	@Override
-	public INode<T> next() { return this.next; }
+	public INode<T> next()
+	{
+		return this.next;
+	}
 	
 	@Override
-	public boolean hasNext() { return true; }
+	public boolean hasNext()
+	{
+		return true;
+	}
 	
 	@Override
-	public boolean hasLast() { return false; }
+	public boolean hasLast()
+	{
+		return false;
+	}
 	
 	@Override
-	public INode<T> last() { return null; }
+	public INode<T> last()
+	{
+		return null;
+	}
 }

@@ -45,7 +45,8 @@ public class FarNetherProvider extends WorldProvider
 	}
 	
 	/**
-	 * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
+	 * Returns 'true' if in the "main surface world", but 'false' if in the
+	 * Nether or End dimensions.
 	 */
 	@Override
 	public boolean isSurfaceWorld()
@@ -54,7 +55,8 @@ public class FarNetherProvider extends WorldProvider
 	}
 	
 	/**
-	 * Will check if the x, z position specified is alright to be set as the map spawn point
+	 * Will check if the x, z position specified is alright to be set as the map
+	 * spawn point
 	 */
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
@@ -63,7 +65,8 @@ public class FarNetherProvider extends WorldProvider
 	}
 	
 	/**
-	 * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+	 * Calculates the angle of sun and moon in the sky relative to a specified
+	 * time (usually worldTime)
 	 */
 	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks)
@@ -72,7 +75,8 @@ public class FarNetherProvider extends WorldProvider
 	}
 	
 	/**
-	 * True if the player can respawn in this dimension (true = overworld, false = nether).
+	 * True if the player can respawn in this dimension (true = overworld, false
+	 * = nether).
 	 */
 	@Override
 	public boolean canRespawnHere()
@@ -100,6 +104,7 @@ public class FarNetherProvider extends WorldProvider
 			{
 				return super.getCenterX() / 8.0D;
 			}
+			
 			@Override
 			public double getCenterZ()
 			{

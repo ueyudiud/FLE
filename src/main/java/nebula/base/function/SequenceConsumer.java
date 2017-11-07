@@ -35,7 +35,8 @@ public interface SequenceConsumer<T> extends ObjIntConsumer<T>
 	
 	default <T1 extends T> void accept(T1[] list, int start, int end)
 	{
-		for (int i = start; i < end; accept(i++, list[i]));
+		for (int i = start; i < end; accept(i++, list[i]))
+			;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,6 +60,7 @@ public interface SequenceConsumer<T> extends ObjIntConsumer<T>
 	@SuppressWarnings("unchecked")
 	default void accept(List<? extends T> list)
 	{
-		for (int i = 0; i < list.size(); accept(i++, list.get(i)));
+		for (int i = 0; i < list.size(); accept(i++, list.get(i)))
+			;
 	}
 }

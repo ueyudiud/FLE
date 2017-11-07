@@ -48,15 +48,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
-implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile,
-ITP_BlockHardness, ITP_ExplosionResistance
+public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>> implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
 	private static final int[] IN = A.rangeIntArray(0, 1), OUT = A.rangeIntArray(1, 2);
 	
-	public final FluidTankN tank = new FluidTankN(4000);
-	protected int energy;
-	protected int angle;
+	public final FluidTankN	tank	= new FluidTankN(4000);
+	protected int			energy;
+	protected int			angle;
 	
 	public TELeverOilMill()
 	{
@@ -120,7 +118,7 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	@Override
 	protected void onRecipeInput()
 	{
-		decrStackSize(0, this.cache.<AbstractStack>get1(0));
+		decrStackSize(0, this.cache.<AbstractStack> get1(0));
 		this.recipeMaxTick = this.cache.get(0);
 	}
 	
@@ -134,10 +132,10 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	protected boolean onRecipeOutput()
 	{
 		if (insertStack(0, this.cache.get(1), false) &&
-				//this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
-				this.tank.insertFluid(this.cache.<FluidStack>get(2), false))
+		// this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
+				this.tank.insertFluid(this.cache.<FluidStack> get(2), false))
 		{
-			//this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
+			// this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
 			incrStack(1, this.cache.get(1), true);
 			return true;
 		}
@@ -175,8 +173,7 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tileGUICheck(hand))
 		{
@@ -226,8 +223,10 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	{
 		switch (id)
 		{
-		case 2 : return this.energy;
-		default: return super.getField(id);
+		case 2:
+			return this.energy;
+		default:
+			return super.getField(id);
 		}
 	}
 	
@@ -236,8 +235,12 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	{
 		switch (id)
 		{
-		case 2 : this.energy = value; break;
-		default: super.setField(id, value); break;
+		case 2:
+			this.energy = value;
+			break;
+		default:
+			super.setField(id, value);
+			break;
 		}
 	}
 	
@@ -267,23 +270,19 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	@SideOnly(Side.CLIENT)
 	public float getRotationAngle()
 	{
-		return - MathHelper.cos((float) (this.angle * Math.PI / 50));
+		return -MathHelper.cos((float) (this.angle * Math.PI / 50));
 	}
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ||
-				capability == Capabilities.CAPABILITY_ITEM ||
-				super.hasCapability(capability, facing);
+		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP || capability == Capabilities.CAPABILITY_ITEM || super.hasCapability(capability, facing);
 	}
 	
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ?
-				Capabilities.CAPABILITY_FLUID.cast(new IFluidHandler.FluidHandlerWrapper(this, facing)) :
-					capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(InventoryWrapFactory.wrap(getName(), this)) :
-						super.getCapability(capability, facing);
+		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ? Capabilities.CAPABILITY_FLUID.cast(new IFluidHandler.FluidHandlerWrapper(this, facing))
+				: capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(InventoryWrapFactory.wrap(getName(), this)) : super.getCapability(capability, facing);
 	}
 }

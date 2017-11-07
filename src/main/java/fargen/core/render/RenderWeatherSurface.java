@@ -24,10 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWeatherSurface extends IRenderHandler
 {
-	private static final ResourceLocation RAIN_TEXTURES = new ResourceLocation("textures/environment/rain.png");
-	private static final ResourceLocation SNOW_TEXTURES = new ResourceLocation("textures/environment/snow.png");
-	private static final float[] rainXCoords = new float[1024];
-	private static final float[] rainYCoords = new float[1024];
+	private static final ResourceLocation	RAIN_TEXTURES	= new ResourceLocation("textures/environment/rain.png");
+	private static final ResourceLocation	SNOW_TEXTURES	= new ResourceLocation("textures/environment/snow.png");
+	private static final float[]			rainXCoords		= new float[1024];
+	private static final float[]			rainYCoords		= new float[1024];
 	
 	static
 	{
@@ -127,14 +127,15 @@ public class RenderWeatherSurface extends IRenderHandler
 									mc.getTextureManager().bindTexture(RAIN_TEXTURES);
 									vertexbuffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 								}
-								double d5 = -((double)(rendererUpdateCount + l1 * l1 * 3121 + l1 * 45238971 + k1 * k1 * 418711 + k1 * 13761 & 31) + partialTicks) / 32.0D * (3.0D + random.nextDouble());
+								double d5 = -((double) (rendererUpdateCount + l1 * l1 * 3121 + l1 * 45238971 + k1 * k1 * 418711 + k1 * 13761 & 31) + partialTicks) / 32.0D * (3.0D + random.nextDouble());
 								double d6 = l1 + 0.5F - entity.posX;
 								double d7 = k1 + 0.5F - entity.posZ;
 								float f3 = MathHelper.sqrt(d6 * d6 + d7 * d7) / i1;
 								float f4 = ((1.0F - f3 * f3) * 0.5F + 0.5F) * f;
 								pos.setPos(l1, i3, k1);
 								int j3 = world.getCombinedLight(pos, 0);
-								int k3 = j3 >> 16 & 65535; int l3 = j3 & 65535;
+								int k3 = j3 >> 16 & 65535;
+								int l3 = j3 & 65535;
 								vertexbuffer.pos(l1 - d3 + 0.5D, l2, k1 - d4 + 0.5D).tex(0.0D, k2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, f4).lightmap(k3, l3).endVertex();
 								vertexbuffer.pos(l1 + d3 + 0.5D, l2, k1 + d4 + 0.5D).tex(1.0D, k2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, f4).lightmap(k3, l3).endVertex();
 								vertexbuffer.pos(l1 + d3 + 0.5D, k2, k1 + d4 + 0.5D).tex(1.0D, l2 * 0.25D + d5).color(1.0F, 1.0F, 1.0F, f4).lightmap(k3, l3).endVertex();
@@ -153,8 +154,8 @@ public class RenderWeatherSurface extends IRenderHandler
 									vertexbuffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 								}
 								double d8 = -((rendererUpdateCount & 511) + partialTicks) / 512.0F;
-								double d9 = random.nextDouble() + f1 * 0.01D * ((float)random.nextGaussian());
-								double d10 = random.nextDouble() + f1 * (float)random.nextGaussian() * 0.001D;
+								double d9 = random.nextDouble() + f1 * 0.01D * ((float) random.nextGaussian());
+								double d10 = random.nextDouble() + f1 * (float) random.nextGaussian() * 0.001D;
 								double d11 = l1 + 0.5F - entity.posX;
 								double d12 = k1 + 0.5F - entity.posZ;
 								float f6 = MathHelper.sqrt(d11 * d11 + d12 * d12) / i1;
@@ -162,11 +163,11 @@ public class RenderWeatherSurface extends IRenderHandler
 								pos.setPos(l1, i3, k1);
 								int i4 = (world.getCombinedLight(pos, 0) * 3 + 15728880) / 4;
 								int j4 = i4 >> 16 & 65535;
-				int k4 = i4 & 65535;
-				vertexbuffer.pos(l1 - d3 + 0.5D, l2, k1 - d4 + 0.5D).tex(0.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
-				vertexbuffer.pos(l1 + d3 + 0.5D, l2, k1 + d4 + 0.5D).tex(1.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
-				vertexbuffer.pos(l1 + d3 + 0.5D, k2, k1 + d4 + 0.5D).tex(1.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
-				vertexbuffer.pos(l1 - d3 + 0.5D, k2, k1 - d4 + 0.5D).tex(0.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
+								int k4 = i4 & 65535;
+								vertexbuffer.pos(l1 - d3 + 0.5D, l2, k1 - d4 + 0.5D).tex(0.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
+								vertexbuffer.pos(l1 + d3 + 0.5D, l2, k1 + d4 + 0.5D).tex(1.0D + d9, k2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
+								vertexbuffer.pos(l1 + d3 + 0.5D, k2, k1 + d4 + 0.5D).tex(1.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
+								vertexbuffer.pos(l1 - d3 + 0.5D, k2, k1 - d4 + 0.5D).tex(0.0D + d9, l2 * 0.25D + d8 + d10).color(1.0F, 1.0F, 1.0F, f5).lightmap(j4, k4).endVertex();
 							}
 						}
 					}

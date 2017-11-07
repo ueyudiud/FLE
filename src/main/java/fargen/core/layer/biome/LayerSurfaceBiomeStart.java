@@ -38,7 +38,8 @@ public class LayerSurfaceBiomeStart extends Layer
 	
 	protected int temperature(int x, int y)
 	{
-		float off = (float) ((y + 4 /** The generation offset. */ & 0x1F) * Math.PI / DataSurface.TEMP_RANGE_SIZE);
+		float off = (float) ((y + 4 /** The generation offset. */
+				& 0x1F) * Math.PI / DataSurface.TEMP_RANGE_SIZE);
 		int ret = (int) ((1.0F - MathHelper.sin(off)) * DataSurface.TEMP_LEVEL_SIZE + this.noise.noise(x, y) * 0.25F) - 1;
 		return L.range(0, 7, ret);
 	}

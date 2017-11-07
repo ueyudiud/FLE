@@ -30,7 +30,7 @@ public class RenderSurface implements IWorldRender
 	@Override
 	public boolean renderDropOnGround(World world, Entity entity, Random random, int rendererUpdateCount)
 	{
-		if(world.provider.getDimension() != 0) return false;
+		if (world.provider.getDimension() != 0) return false;
 		Minecraft minecraft = Minecraft.getMinecraft();
 		float f = world.getRainStrength(1.0F);
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
@@ -48,7 +48,7 @@ public class RenderSurface implements IWorldRender
 			double d1 = 0.0D;
 			double d2 = 0.0D;
 			int j = 0;
-			int k = (int)(100.0F * f * f);
+			int k = (int) (100.0F * f * f);
 			
 			if (minecraft.gameSettings.particleSetting == 1)
 			{
@@ -66,10 +66,7 @@ public class RenderSurface implements IWorldRender
 				BlockPos blockpos2 = blockpos1.down();
 				IBlockState state = world.getBlockState(blockpos2);
 				
-				if (blockpos1.getY() <= blockpos.getY() + 10 &&
-						blockpos1.getY() >= blockpos.getY() - 10 &&
-						properties.getRainstrength(world, blockpos1) >= 1E-4F &&
-						properties.getTemperature(world, blockpos1) >= BiomeBase.minSnowTemperature)
+				if (blockpos1.getY() <= blockpos.getY() + 10 && blockpos1.getY() >= blockpos.getY() - 10 && properties.getRainstrength(world, blockpos1) >= 1E-4F && properties.getTemperature(world, blockpos1) >= BiomeBase.minSnowTemperature)
 				{
 					double d3 = random.nextDouble();
 					double d4 = random.nextDouble();

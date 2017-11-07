@@ -33,7 +33,7 @@ public class ItemTreeLog extends ItemMulti
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
@@ -52,7 +52,7 @@ public class ItemTreeLog extends ItemMulti
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ItemStack stack = new ItemStack(itemIn, 1, material.id);
 			setLogSize(stack, 16);
@@ -62,8 +62,7 @@ public class ItemTreeLog extends ItemMulti
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		unlocalizedList.add("info.tree.log.length", getLogSize(stack));

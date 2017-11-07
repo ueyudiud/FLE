@@ -14,6 +14,7 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 {
 	/**
 	 * Write target to nbt with sub tag.
+	 * 
 	 * @param target
 	 * @param nbt
 	 * @param key
@@ -21,13 +22,14 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 	 */
 	default NBTTagCompound writeToNBT(@Nullable T target, NBTTagCompound nbt, String key)
 	{
-		if(target == null) return nbt;
+		if (target == null) return nbt;
 		nbt.setTag(key, writeToNBT(target));
 		return nbt;
 	}
 	
 	/**
 	 * Only call when this type is implements the writer.
+	 * 
 	 * @param nbt
 	 * @return
 	 */
@@ -39,6 +41,7 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 	
 	/**
 	 * Only call when this type is implements the writer.
+	 * 
 	 * @param nbt
 	 * @return
 	 */

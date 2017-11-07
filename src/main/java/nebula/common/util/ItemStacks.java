@@ -43,7 +43,9 @@ public final class ItemStacks
 {
 	public static final UnaryOperator<ItemStack> COPY_ITEMSTACK = ItemStack::copyItemStack;
 	
-	private ItemStacks() {}
+	private ItemStacks()
+	{
+	}
 	
 	@Nullable
 	public static NBTTagCompound writeItemStackToNBT(@Nullable ItemStack stack)
@@ -52,9 +54,9 @@ public final class ItemStacks
 	}
 	
 	/**
-	 * Some item may override item meta get method,
-	 * this method will give a stack with item select
-	 * meta.
+	 * Some item may override item meta get method, this method will give a
+	 * stack with item select meta.
+	 * 
 	 * @param item
 	 * @param meta
 	 * @return
@@ -68,14 +70,14 @@ public final class ItemStacks
 	
 	/**
 	 * Validate item stack, the stack size is negative will returned as null.
+	 * 
 	 * @param stack
 	 * @return
 	 */
 	@Nullable
 	public static ItemStack valid(@Nullable ItemStack stack)
 	{
-		if(stack == null || stack.stackSize <= 0)
-			return null;
+		if (stack == null || stack.stackSize <= 0) return null;
 		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
 		{
 			stack = stack.copy();
@@ -86,16 +88,18 @@ public final class ItemStacks
 	
 	/**
 	 * Get item stack NBT or create a new stack NBT.
+	 * 
 	 * @param stack The stack.
-	 * @param createTag Should create a new NBT for stack, or only give a simulated NBT as empty NBT.
+	 * @param createTag Should create a new NBT for stack, or only give a
+	 *            simulated NBT as empty NBT.
 	 * @return
 	 */
 	@Nonnull
 	public static NBTTagCompound getOrSetupNBT(ItemStack stack, boolean createTag)
 	{
-		if(!stack.hasTagCompound())
+		if (!stack.hasTagCompound())
 		{
-			if(createTag)
+			if (createTag)
 			{
 				stack.setTagCompound(new NBTTagCompound());
 				return stack.getTagCompound();
@@ -107,6 +111,7 @@ public final class ItemStacks
 	
 	/**
 	 * Get sub NBT compound.
+	 * 
 	 * @param stack
 	 * @param tag
 	 * @param createTag
@@ -115,9 +120,9 @@ public final class ItemStacks
 	public static NBTTagCompound getSubOrSetupNBT(ItemStack stack, String tag, boolean createTag)
 	{
 		NBTTagCompound nbt = stack.getTagCompound();
-		if(nbt == null)
+		if (nbt == null)
 		{
-			if(!createTag) return NBTTagCompoundEmpty.INSTANCE;
+			if (!createTag) return NBTTagCompoundEmpty.INSTANCE;
 			stack.setTagInfo(tag, nbt = new NBTTagCompound());
 			return nbt;
 		}
@@ -126,10 +131,10 @@ public final class ItemStacks
 	
 	public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
 	{
-		if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
+		if (stacks == null || stacks.isEmpty()) return ImmutableList.of();
 		ImmutableList.Builder builder = ImmutableList.builder();
-		for(ItemStack stack : stacks)
-			if(stack != null)
+		for (ItemStack stack : stacks)
+			if (stack != null)
 			{
 				ItemStack stack2 = stack.copy();
 				stack2.stackSize = size;
@@ -140,6 +145,7 @@ public final class ItemStacks
 	
 	/**
 	 * Copy a new stack with same data of old stack but different size.
+	 * 
 	 * @param stack
 	 * @param size
 	 * @return
@@ -152,8 +158,10 @@ public final class ItemStacks
 	}
 	
 	/**
-	 * Copy a new stack no more than selected size.<p>
+	 * Copy a new stack no more than selected size.
+	 * <p>
 	 * This method can be used in inventory by decreasing stack size.
+	 * 
 	 * @param stack
 	 * @param size
 	 * @return
@@ -166,25 +174,19 @@ public final class ItemStacks
 	@Deprecated
 	public static AbstractStack sizeOf(AbstractStack stack, int size)
 	{
-		return size <= 0 ? null : stack instanceof BaseStack ?
-				BaseStack.sizeOf((BaseStack) stack, size) :
-					stack instanceof ArrayStack ?
-							ArrayStack.sizeOf((ArrayStack) stack, size) :
-								stack instanceof OreStack ?
-										OreStack.sizeOf((OreStack) stack, size) : null;
+		return size <= 0 ? null : stack instanceof BaseStack ? BaseStack.sizeOf((BaseStack) stack, size) : stack instanceof ArrayStack ? ArrayStack.sizeOf((ArrayStack) stack, size) : stack instanceof OreStack ? OreStack.sizeOf((OreStack) stack, size) : null;
 	}
 	
 	/**
 	 * Matched is item and tag is equal.
+	 * 
 	 * @param stack1
 	 * @param stack2
 	 * @return
 	 */
 	public static boolean isItemAndTagEqual(ItemStack stack1, ItemStack stack2)
 	{
-		return stack1 == null || stack2 == null ?
-				stack1 == stack2 :
-					stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		return stack1 == null || stack2 == null ? stack1 == stack2 : stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
 	
 	public static boolean areTagEqual(NBTTagCompound nbt1, NBTTagCompound nbt2)
@@ -194,6 +196,7 @@ public final class ItemStacks
 	
 	/**
 	 * This method should called by item onItemUse.
+	 * 
 	 * @param stack The using stack.
 	 * @param player The player.
 	 * @param world
@@ -215,7 +218,8 @@ public final class ItemStacks
 		{
 			toolTypes = ((ITool) stack.getItem()).getToolTypes(stack);
 		}
-		else return EnumActionResult.PASS;
+		else
+			return EnumActionResult.PASS;
 		Direction direction = Direction.of(side);
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() instanceof IToolableBlock)
@@ -224,7 +228,7 @@ public final class ItemStacks
 			for (EnumToolType toolType : toolTypes)
 			{
 				ActionResult<Float> result = block.onToolClick(player, toolType, getToolLevel(stack, toolType), stack, world, pos, direction, hitX, hitY, hitZ);
-				if(result.getType() != EnumActionResult.PASS)
+				if (result.getType() != EnumActionResult.PASS)
 				{
 					if (stack.getItem() instanceof ITool)
 					{
@@ -240,14 +244,14 @@ public final class ItemStacks
 	
 	/**
 	 * Get all kinds of tool type this stack can be.
+	 * 
 	 * @param stack
 	 * @return
 	 */
 	public static List<EnumToolType> getCurrentToolType(@Nullable ItemStack stack)
 	{
-		if(stack == null) return EnumToolType.HAND_USABLE_TOOL;
-		if(stack.getItem() instanceof ITool)
-			return ((ITool) stack.getItem()).getToolTypes(stack);
+		if (stack == null) return EnumToolType.HAND_USABLE_TOOL;
+		if (stack.getItem() instanceof ITool) return ((ITool) stack.getItem()).getToolTypes(stack);
 		Set<String> toolClasses = stack.getItem().getToolClasses(stack);
 		List<EnumToolType> list = new ArrayList<>();
 		for (String toolClass : toolClasses)
@@ -257,7 +261,7 @@ public final class ItemStacks
 			{
 				list.add(toolType);
 			}
-			else //If the tool type does not present, create a new tool type.
+			else // If the tool type does not present, create a new tool type.
 			{
 				list.add(new EnumToolType(toolClass, Strings.validateOre(true, toolClass)));
 			}
@@ -267,15 +271,14 @@ public final class ItemStacks
 	
 	/**
 	 * Get tool level with supposed tool type.
+	 * 
 	 * @param stack
 	 * @param toolType
 	 * @return
 	 */
 	public static int getToolLevel(@Nullable ItemStack stack, EnumToolType toolType)
 	{
-		return stack == null ? (toolType == EnumToolType.HAND ? 0 : -1) :
-			stack.getItem() instanceof ITool ? ((ITool) stack.getItem()).getToolLevel(stack, toolType) :
-				stack.getItem().getHarvestLevel(stack, toolType.name);
+		return stack == null ? (toolType == EnumToolType.HAND ? 0 : -1) : stack.getItem() instanceof ITool ? ((ITool) stack.getItem()).getToolLevel(stack, toolType) : stack.getItem().getHarvestLevel(stack, toolType.name);
 	}
 	
 	public static ItemStack getFromOreDict(String ore)
@@ -286,6 +289,7 @@ public final class ItemStacks
 	
 	/**
 	 * The custom damage getter.
+	 * 
 	 * @param stack
 	 * @return
 	 */
@@ -296,6 +300,7 @@ public final class ItemStacks
 	
 	/**
 	 * The custom damage setter.
+	 * 
 	 * @param stack
 	 * @param damage
 	 */

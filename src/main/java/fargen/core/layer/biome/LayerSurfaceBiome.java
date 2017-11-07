@@ -62,57 +62,22 @@ public class LayerSurfaceBiome extends Layer
 	{
 		switch (temp)
 		{
-		case 0 :
-			return (rain < 4 ? rocky_desert :
-				rain < 8 ? tundra :
-					rain < 12 ? frozen_tundra :
-						glacispical_land).biomeID;
-		case 1 :
-			return (rain < 4 ? rocky_desert :
-				rain < 8 ? meadow :
-					rain < 12 ? boreal_forest :
-						rain < 15 ? sequoia_forest :
-							glacispical_land).biomeID;
-		case 2 :
-			return (rain < 4 ? rocky_desert :
-				rain < 8 ? grassland :
-					rain < 12 ? boreal_forest :
-						sequoia_forest).biomeID;
-		case 3 :
-			return (rain < 3 ? temperate_desert :
-				rain < 4 ? rockland :
-					rain < 7 ? grassland :
-						rain < 10 ? temperate_broadleaf_forest :
-							rain < 11 ? temperate_mixed_forest :
-								rain < 13 ? swamp :
-									gigafungal_forest).biomeID;
-		case 4 :
-			return (rain < 3 ? temperate_desert :
-				rain < 5 ? shrubland :
-					rain < 8 ? sclerophyll_forest :
-						rain < 11 ? temperate_broadleaf_forest :
-							rain < 14 ? swamp :
-								gigafungal_forest).biomeID;
-		case 5 :
-			return (rain < 3 ? temperate_desert :
-				rain < 6 ? shrubland :
-					rain < 9 ? subtropical_broadleaf_forest :
-						rain < 12 ? subtropical_coniferous_forest :
-							rain < 14 ? mangrove :
-								temperate_rainforest).biomeID;
-		case 6 :
-			return (rain < 2 ? tropical_desert :
-				rain < 6 ? savanna :
-					rain < 9 ? subtropical_broadleaf_forest :
-						rain < 12 ? subtropical_coniferous_forest :
-							rain < 14 ? mangrove :
-								(rare > 9 ? gigafteral_forest : tropical_rainforest)).biomeID;
-		case 7 :
-			return (rain < 3 ? tropical_desert :
-				rain < 7 ? savanna :
-					rain < 10 ? tropical_thorny_forest :
-						rain < 13 ? tropical_monsoon_forest :
-							(rare > 8 ? gigafteral_forest : tropical_rainforest)).biomeID;
+		case 0:
+			return (rain < 4 ? rocky_desert : rain < 8 ? tundra : rain < 12 ? frozen_tundra : glacispical_land).biomeID;
+		case 1:
+			return (rain < 4 ? rocky_desert : rain < 8 ? meadow : rain < 12 ? boreal_forest : rain < 15 ? sequoia_forest : glacispical_land).biomeID;
+		case 2:
+			return (rain < 4 ? rocky_desert : rain < 8 ? grassland : rain < 12 ? boreal_forest : sequoia_forest).biomeID;
+		case 3:
+			return (rain < 3 ? temperate_desert : rain < 4 ? rockland : rain < 7 ? grassland : rain < 10 ? temperate_broadleaf_forest : rain < 11 ? temperate_mixed_forest : rain < 13 ? swamp : gigafungal_forest).biomeID;
+		case 4:
+			return (rain < 3 ? temperate_desert : rain < 5 ? shrubland : rain < 8 ? sclerophyll_forest : rain < 11 ? temperate_broadleaf_forest : rain < 14 ? swamp : gigafungal_forest).biomeID;
+		case 5:
+			return (rain < 3 ? temperate_desert : rain < 6 ? shrubland : rain < 9 ? subtropical_broadleaf_forest : rain < 12 ? subtropical_coniferous_forest : rain < 14 ? mangrove : temperate_rainforest).biomeID;
+		case 6:
+			return (rain < 2 ? tropical_desert : rain < 6 ? savanna : rain < 9 ? subtropical_broadleaf_forest : rain < 12 ? subtropical_coniferous_forest : rain < 14 ? mangrove : (rare > 9 ? gigafteral_forest : tropical_rainforest)).biomeID;
+		case 7:
+			return (rain < 3 ? tropical_desert : rain < 7 ? savanna : rain < 10 ? tropical_thorny_forest : rain < 13 ? tropical_monsoon_forest : (rare > 8 ? gigafteral_forest : tropical_rainforest)).biomeID;
 		default:
 			return -1;
 		}

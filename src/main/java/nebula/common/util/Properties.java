@@ -27,6 +27,7 @@ public class Properties
 	
 	/**
 	 * Get a enumeration property.
+	 * 
 	 * @param enumClass
 	 * @return
 	 */
@@ -41,7 +42,9 @@ public class Properties
 	}
 	
 	/**
-	 * Create a {@link Integer} property, from min (include) value to max (include) value.
+	 * Create a {@link Integer} property, from min (include) value to max
+	 * (include) value.
+	 * 
 	 * @param name the name of property.
 	 * @param min the minimum value.
 	 * @param max the max value.
@@ -70,29 +73,34 @@ public class Properties
 	
 	/**
 	 * The state annotation, mark on Enum class and provide auto property.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.TYPE})
+	@Target({ ElementType.TYPE })
 	public static @interface EnumStateName
 	{
 		/**
 		 * The name of enum property key.
+		 * 
 		 * @return
 		 */
 		String value();
 	}
 	
 	/**
-	 * The property injection will be given if it is on a enum property.<p>
-	 * It dose not take effect now!<p>
+	 * The property injection will be given if it is on a enum property.
+	 * <p>
+	 * It dose not take effect now!
+	 * <p>
 	 * XXX
+	 * 
 	 * @author ueyudiud
 	 */
 	@Deprecated
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD})
+	@Target({ ElementType.FIELD })
 	public static @interface PropertyInject
 	{
 	}

@@ -6,13 +6,12 @@ package fle.core.entity.animal;
 
 /**
  * The gender of biology.
+ * 
  * @author ueyudiud
  */
 public enum EnumGender
 {
-	FEMALE,
-	MALE,
-	UNKNOWN;
+	FEMALE, MALE, UNKNOWN;
 	
-	public static final EnumGender[] SEXUAL = {MALE, FEMALE};
+	public static final EnumGender[] SEXUAL = { MALE, FEMALE };
 }

@@ -42,9 +42,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TECrop extends TEAged
-implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects,
-ITB_AddHitEffects
+public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(0.0F, .0F, 0.0F, 1.0F, .125F, 1.0F);
 	
@@ -55,17 +53,18 @@ ITB_AddHitEffects
 		NO_DATA_INFO.geneticMaterial = new GeneticMaterial("", -1, Misc.LONGS_EMPTY, Misc.INTS_EMPTY);
 	}
 	
-	private int waterLevel = 6400;
-	private boolean isWild = false;
-	private float growBuffer;
-	private int stage = 1;
-	private ICrop card = ICrop.VOID;
-	private CropInfo info = NO_DATA_INFO;
+	private int			waterLevel	= 6400;
+	private boolean		isWild		= false;
+	private float		growBuffer;
+	private int			stage		= 1;
+	private ICrop		card		= ICrop.VOID;
+	private CropInfo	info		= NO_DATA_INFO;
 	
 	public TECrop()
 	{
 		
 	}
+	
 	public TECrop(ICrop crop)
 	{
 		this(crop, crop.createNativeGeneticMaterial());
@@ -73,6 +72,7 @@ ITB_AddHitEffects
 		this.stage = this.random.nextInt(3) == 0 ? crop.getMaxStage() : L.nextInt(crop.getMaxStage() - 2, this.random) + 1;
 		this.growBuffer = L.nextInt(crop.getGrowReq(this), this.random);
 	}
+	
 	public TECrop(ICrop crop, GeneticMaterial geneticMaterial)
 	{
 		this.card = crop;
@@ -90,7 +90,7 @@ ITB_AddHitEffects
 		nbt.setFloat("growBuf", this.growBuffer);
 		NBTs.setNumber(nbt, "stage", this.stage);
 		nbt.setString("crop", this.card.getRegisteredName());
-		if(this.info != null)
+		if (this.info != null)
 		{
 			this.info.writeToNBT(nbt);
 		}
@@ -127,11 +127,11 @@ ITB_AddHitEffects
 		super.readFromDescription1(nbt);
 		this.stage = NBTs.getIntOrDefault(nbt, "s", this.stage);
 		Mat material = Mat.getMaterialByNameOrDefault(nbt, "c", null);
-		if(material != null)
+		if (material != null)
 		{
 			this.card = material.getProperty(MP.property_crop, ICrop.VOID);
 		}
-		if(nbt.hasKey("i"))
+		if (nbt.hasKey("i"))
 		{
 			this.info = new CropInfo();
 			this.info.readFromNBT(nbt.getCompoundTag("i"));
@@ -152,8 +152,7 @@ ITB_AddHitEffects
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
-			Entity entity)
+	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity)
 	{
 	}
 	
@@ -246,15 +245,15 @@ ITB_AddHitEffects
 	@Override
 	public void grow(int amt)
 	{
-		if(this.stage < this.card.getMaxStage())
+		if (this.stage < this.card.getMaxStage())
 		{
 			int i = this.card.getGrowReq(this);
 			this.growBuffer += amt;
-			if(this.growBuffer > i)
+			if (this.growBuffer > i)
 			{
 				this.growBuffer -= i;
 				this.stage++;
-				markBlockUpdate();//BUD?
+				markBlockUpdate();// BUD?
 				markBlockRenderUpdate();
 				syncToNearby();
 			}
@@ -317,7 +316,7 @@ ITB_AddHitEffects
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		if(!canBlockStay())
+		if (!canBlockStay())
 		{
 			Worlds.spawnDropsInWorld(this, getDrops(state, 0, false));
 			killCrop();
@@ -326,15 +325,14 @@ ITB_AddHitEffects
 	
 	public EnumPlantType getPlantType()
 	{
-		return this.card == null ? EnumPlantType.Crop :
-			this.card.getPlantType(this);
+		return this.card == null ? EnumPlantType.Crop : this.card.getPlantType(this);
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList();
-		if(this.card != null)
+		if (this.card != null)
 		{
 			this.card.getDrops(this, list);
 		}
@@ -344,7 +342,7 @@ ITB_AddHitEffects
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
-		if(!canPlantAt())
+		if (!canPlantAt())
 		{
 			removeBlock();
 		}
@@ -353,7 +351,7 @@ ITB_AddHitEffects
 	@Override
 	public void pollinate(GeneticMaterial gm)
 	{
-		if(this.info.gamete == null && this.card.getRegisteredName().equals(gm.specie))
+		if (this.info.gamete == null && this.card.getRegisteredName().equals(gm.specie))
 		{
 			this.info.gamete = this.card.createGameteGeneticMaterial(this, gm);
 		}

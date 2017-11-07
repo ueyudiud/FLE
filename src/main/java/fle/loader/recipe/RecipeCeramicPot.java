@@ -17,7 +17,6 @@ public class RecipeCeramicPot
 {
 	public static void init()
 	{
-		addBoilingPotRecipe(new BaseStack(IBFS.iResources.getSubItem("crushed_bone")), new FluidStack(FluidRegistry.WATER, 1000),
-				null, 400, 1000, IBFS.iResources.getSubItem("defatted_crushed_bone"), null);
+		addBoilingPotRecipe(new BaseStack(IBFS.iResources.getSubItem("crushed_bone")), new FluidStack(FluidRegistry.WATER, 1000), null, 400, 1000, IBFS.iResources.getSubItem("defatted_crushed_bone"), null);
 	}
 }

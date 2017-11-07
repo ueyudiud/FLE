@@ -55,7 +55,7 @@ public class BlockRockyTank extends BlockTE
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelSmallRockyTank());
 		Client.registerModel(this.item, new ModelResourceLocation(getRegistryName(), "normal"));
-		FarCoreRegistry.registerTESR(TESmallRockyTank.class, new TESRFluidFase<TESmallRockyTank>(0.25F, 0.25F, 0.25F, 0.75F, 0.9375F, 0.75F, t->t.getFluidTank().getInfo()));
+		FarCoreRegistry.registerTESR(TESmallRockyTank.class, new TESRFluidFase<TESmallRockyTank>(0.25F, 0.25F, 0.25F, 0.75F, 0.9375F, 0.75F, t -> t.getFluidTank().getInfo()));
 	}
 	
 	@Override

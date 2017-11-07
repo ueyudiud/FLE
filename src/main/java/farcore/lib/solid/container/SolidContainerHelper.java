@@ -14,16 +14,16 @@ public class SolidContainerHelper
 {
 	public static SolidStack getSolidFromItemStack(ItemStack stack)
 	{
-		return null;//TODO when solid container system finished.
+		return null;// TODO when solid container system finished.
 	}
 	
 	public static boolean drainFromItem(IBasicInventory inventory, int amount, int in, int out)
 	{
-		return false;//TODO when solid container system finished.
+		return false;// TODO when solid container system finished.
 	}
 	
 	public static boolean drainOrFillTank(IBasicInventory inventory, ISolidHandlerIO io, int in, int out, byte fdType)
 	{
-		return false;//TODO when solid container system finished.
+		return false;// TODO when solid container system finished.
 	}
 }

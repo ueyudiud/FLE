@@ -27,14 +27,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MultiQuadBuilder implements Consumer<BakedQuad>
 {
-	private final BakedQuadBuilder builder;
-	private int tindex = -1;
-	private ImmutableList.Builder<BakedQuad> quadBuilder;
+	private final BakedQuadBuilder				builder;
+	private int									tindex	= -1;
+	private ImmutableList.Builder<BakedQuad>	quadBuilder;
 	
 	public MultiQuadBuilder(VertexFormat format, IModelModifier modifier)
 	{
 		this(format, modifier, false);
 	}
+	
 	public MultiQuadBuilder(VertexFormat format, IModelModifier modifier, final boolean flag)
 	{
 		final TextureAtlasSprite defIcon = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
@@ -69,18 +70,14 @@ public class MultiQuadBuilder implements Consumer<BakedQuad>
 		this.quadBuilder.add(quad);
 	}
 	
-	public Map<String, List<BakedQuad>> bake(
-			com.google.common.base.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
-			IIconCollection handler)
+	public Map<String, List<BakedQuad>> bake(com.google.common.base.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, IIconCollection handler)
 	{
 		Map<String, ResourceLocation> map = handler.build();
 		List<BakedQuad> bakedQuads = this.quadBuilder.build();
-		Map<String, List<BakedQuad>> map2 =
-				Maps.<String, ResourceLocation, List<BakedQuad>>transformValues(map,
-						(com.google.common.base.Function<ResourceLocation, List<BakedQuad>>) loc-> {
-							TextureAtlasSprite icon = bakedTextureGetter.apply(loc);
-							return ImmutableList.copyOf(Lists.transform(bakedQuads, quad->new BakedQuadRetex(quad, icon)));
-						});
+		Map<String, List<BakedQuad>> map2 = Maps.<String, ResourceLocation, List<BakedQuad>> transformValues(map, (com.google.common.base.Function<ResourceLocation, List<BakedQuad>>) loc -> {
+			TextureAtlasSprite icon = bakedTextureGetter.apply(loc);
+			return ImmutableList.copyOf(Lists.transform(bakedQuads, quad -> new BakedQuadRetex(quad, icon)));
+		});
 		return ImmutableMap.copyOf(map2);
 	}
 }

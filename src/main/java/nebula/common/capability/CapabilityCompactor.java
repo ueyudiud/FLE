@@ -15,12 +15,13 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 /**
  * Will ignore facing.
+ * 
  * @author ueyudiud
  */
 public class CapabilityCompactor<S> implements ICapabilityProvider
 {
-	private final S source;
-	private Map<Capability<?>, Applicable<?>> map;
+	private final S								source;
+	private Map<Capability<?>, Applicable<?>>	map;
 	
 	public CapabilityCompactor(S source, Object...appliers)
 	{
@@ -43,7 +44,7 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			else if (appliable instanceof Function)
 			{
 				final Function<S, ?> function = (Function<S, ?>) appliable;
-				cache = Applicable.asCached(()-> function.apply(this.source));
+				cache = Applicable.asCached(() -> function.apply(this.source));
 			}
 			else
 			{

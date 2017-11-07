@@ -32,12 +32,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NebulaKeyHandler
 {
-	@SidedProxy(serverSide = "nebula.common.NebulaKeyHandler$KeyB",
-			clientSide= "nebula.common.NebulaKeyHandler$KeyC")
+	@SidedProxy(serverSide = "nebula.common.NebulaKeyHandler$KeyB", clientSide = "nebula.common.NebulaKeyHandler$KeyC")
 	static KeyB keyRegister;
 	
-	static IRegister<Object> keys = new Register<>();
-	private static Map<EntityPlayer, List<String>> keyMap = new HashMap<>();
+	static IRegister<Object>						keys	= new Register<>();
+	private static Map<EntityPlayer, List<String>>	keyMap	= new HashMap<>();
 	
 	public static void remove(EntityPlayer player)
 	{
@@ -46,21 +45,18 @@ public class NebulaKeyHandler
 	
 	public static void reset(EntityPlayer player)
 	{
-		if(keyMap.containsKey(player))
-			keyMap.get(player).clear();
+		if (keyMap.containsKey(player)) keyMap.get(player).clear();
 	}
 	
 	public static void add(EntityPlayer player, String key)
 	{
-		if(!keyMap.containsKey(player))
-			keyMap.put(player, new ArrayList<>());
+		if (!keyMap.containsKey(player)) keyMap.put(player, new ArrayList<>());
 		keyMap.get(player).add(key);
 	}
 	
 	public static boolean get(EntityPlayer player, String key)
 	{
-		return "sneak".equals(key) ? player.isSneaking() :
-			keyMap.containsKey(player) && keyMap.get(player).contains(key);
+		return "sneak".equals(key) ? player.isSneaking() : keyMap.containsKey(player) && keyMap.get(player).contains(key);
 	}
 	
 	public static void register(String name, int keycode)
@@ -101,16 +97,14 @@ public class NebulaKeyHandler
 	public static void onServerRecieve(EntityPlayer player, long code)
 	{
 		reset(player);
-		for(int i = 0; i < keys.size(); ++i)
-			if((code & (1L << i)) != 0)
-				add(player, keys.name(i));
+		for (int i = 0; i < keys.size(); ++i)
+			if ((code & (1L << i)) != 0) add(player, keys.name(i));
 	}
 	
 	@SubscribeEvent
 	public void onPlayerLogOut(PlayerLoggedOutEvent event)
 	{
-		if (!Sides.isClient())
-			remove(event.player);
+		if (!Sides.isClient()) remove(event.player);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -120,26 +114,23 @@ public class NebulaKeyHandler
 		GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 		if (currentScreen == null || currentScreen.allowUserInput)
 		{
-			if(event.phase == Phase.START)
+			if (event.phase == Phase.START)
 			{
-				if(Sides.isSimulating())
+				if (Sides.isSimulating())
 				{
 					long v = 0;
-					for(int i = 0; i < keys.size(); ++i)
-						if(GameSettings.isKeyDown((KeyBinding) keys.get(i)))
-							v |= (1L << i);
+					for (int i = 0; i < keys.size(); ++i)
+						if (GameSettings.isKeyDown((KeyBinding) keys.get(i))) v |= (1L << i);
 					Nebula.network.sendToServer(new PacketKey(v));
 				}
 				reset(Players.player());
-				for(int i = 0; i < keys.size(); ++i)
-					if(GameSettings.isKeyDown((KeyBinding) keys.get(i)))
-						add(Players.player(), keys.name(i));
+				for (int i = 0; i < keys.size(); ++i)
+					if (GameSettings.isKeyDown((KeyBinding) keys.get(i))) add(Players.player(), keys.name(i));
 			}
 		}
 		else
 		{
-			if(Sides.isSimulating())
-				Nebula.network.sendToServer(new PacketKey(0L));
+			if (Sides.isSimulating()) Nebula.network.sendToServer(new PacketKey(0L));
 			reset(Players.player());
 		}
 	}

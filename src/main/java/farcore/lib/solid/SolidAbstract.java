@@ -21,8 +21,8 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 		REGISTRY = PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"), 0, 32768, true, null, null, null);
 	}
 	
-	public final RegistryDelegate<SolidAbstract> delegate = PersistentRegistryManager.makeDelegate(this, SolidAbstract.class);
-	private ResourceLocation registryName = null;
+	public final RegistryDelegate<SolidAbstract>	delegate		= PersistentRegistryManager.makeDelegate(this, SolidAbstract.class);
+	private ResourceLocation						registryName	= null;
 	
 	public SolidAbstract()
 	{
@@ -47,8 +47,7 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	@Override
 	public final SolidAbstract setRegistryName(ResourceLocation name)
 	{
-		if (getRegistryName() != null)
-			throw new IllegalStateException("Attempted to set registry name with existing registry name! New: " + name + " Old: " + getRegistryName());
+		if (getRegistryName() != null) throw new IllegalStateException("Attempted to set registry name with existing registry name! New: " + name + " Old: " + getRegistryName());
 		
 		this.registryName = name;
 		return this;

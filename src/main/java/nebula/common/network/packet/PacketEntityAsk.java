@@ -19,6 +19,7 @@ public class PacketEntityAsk extends PacketWorld
 	{
 		
 	}
+	
 	public PacketEntityAsk(Entity entity)
 	{
 		super(entity.world);
@@ -43,7 +44,7 @@ public class PacketEntityAsk extends PacketWorld
 	public IPacket process(Network network)
 	{
 		Entity entity = world().getEntityByID(this.entityID);
-		if(entity instanceof IDescribable)
+		if (entity instanceof IDescribable)
 		{
 			((IDescribable) entity).markNBTSync(getPlayer());
 		}

@@ -74,7 +74,9 @@ public class GuiPolishTable extends GuiContainerTileInventory<TEWoodenPolishTabl
 	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
-		sendGuiData(0, button.id, false);//Let server to handle if the item is success deleted and return back to client.
+		sendGuiData(0, button.id, false);// Let server to handle if the item is
+											// success deleted and return back
+											// to client.
 	}
 	
 	@Override
@@ -95,8 +97,7 @@ public class GuiPolishTable extends GuiContainerTileInventory<TEWoodenPolishTabl
 			for (int i = 0; i < 3; ++i)
 				for (int j = 0; j < 3; ++j)
 				{
-					drawTexturedModalRect(this.guiLeft + 44 + 17 * i, this.guiTop + 18 + 17 * j,
-							PolishingStateIconLoader.getIconFromChr(array[j * 3 + i]), 16, 16);
+					drawTexturedModalRect(this.guiLeft + 44 + 17 * i, this.guiTop + 18 + 17 * j, PolishingStateIconLoader.getIconFromChr(array[j * 3 + i]), 16, 16);
 				}
 			bindDefaultTexture();
 		}

@@ -51,16 +51,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEDitch extends TESynchronization
-implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, ITP_BlockHardness,
-IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects,
-ITP_BoundingBox
+public class TEDitch extends TESynchronization implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, ITP_BlockHardness, IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_BoundingBox
 {
-	private static final AxisAlignedBB
-	AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F),
-	AABB_DITCH_BOUNDS[];
+	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F), AABB_DITCH_BOUNDS[];
 	
-	private static final int[] Connect = {0x0, 0x1, 0x2, 0x3};
+	private static final int[] Connect = { 0x0, 0x1, 0x2, 0x3 };
 	
 	static
 	{
@@ -76,20 +71,18 @@ ITP_BoundingBox
 		}
 	}
 	
-	private int[]
-			flowBuffer = new int[4],
-			flowAmount = {0, 0, 0, 0},
-			lastFlowAmount = {0, 0, 0, 0};
-	private byte[] lastConnectionState = new byte[4];
+	private int[]	flowBuffer			= new int[4], flowAmount = { 0, 0, 0, 0 }, lastFlowAmount = { 0, 0, 0, 0 };
+	private byte[]	lastConnectionState	= new byte[4];
 	
-	private Mat material = Mat.VOID;
-	private DitchFactory factory = DitchBlockHandler.getFactory(null);
-	private FluidTankN tank;
+	private Mat				material	= Mat.VOID;
+	private DitchFactory	factory		= DitchBlockHandler.getFactory(null);
+	private FluidTankN		tank;
 	
 	public TEDitch()
 	{
 		this.tank = new FluidTankN(0);
-		for(int i : Connect) enable(i);
+		for (int i : Connect)
+			enable(i);
 	}
 	
 	public TEDitch(Mat material)
@@ -128,8 +121,7 @@ ITP_BoundingBox
 	{
 		byte i = 0;
 		for (Direction direction : Direction.DIRECTIONS_2D)
-			if (canLink(direction, getTE(direction)))
-				i |= direction.flag1;
+			if (canLink(direction, getTE(direction))) i |= direction.flag1;
 		return AABB_DITCH_BOUNDS[i];
 	}
 	
@@ -144,16 +136,16 @@ ITP_BoundingBox
 	{
 		super.causeUpdate(pos, state, tileUpdate);
 		boolean flag = false;
-		for(Direction direction : Direction.DIRECTIONS_2D)
+		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
 			byte s = (byte) getLinkState(direction);
-			if(this.lastConnectionState[direction.horizontalOrdinal] != s)
+			if (this.lastConnectionState[direction.horizontalOrdinal] != s)
 			{
 				flag = true;
 				this.lastConnectionState[direction.horizontalOrdinal] = s;
 			}
 		}
-		if(flag)
+		if (flag)
 		{
 			markBlockUpdate();
 			markBlockRenderUpdate();
@@ -186,7 +178,7 @@ ITP_BoundingBox
 	{
 		super.readFromDescription1(nbt);
 		Mat material1 = Mat.getMaterialByIDOrDefault(nbt, "m", this.material);
-		if(this.material != material1)
+		if (this.material != material1)
 		{
 			this.material = material1;
 			this.factory = DitchBlockHandler.getFactory(material1);
@@ -223,10 +215,10 @@ ITP_BoundingBox
 		FluidStack stack = FluidStacks.copy(this.tank.getFluid());
 		super.updateServer();
 		this.factory.onUpdate(this);
-		if(!isInvalid())
+		if (!isInvalid())
 		{
-			if(this.tank.getFluid() == null) return;
-			if(FluidStacks.isGaseous(this.tank.getFluid()))
+			if (this.tank.getFluid() == null) return;
+			if (FluidStacks.isGaseous(this.tank.getFluid()))
 			{
 				this.tank.setFluid(null);
 			}
@@ -281,7 +273,7 @@ ITP_BoundingBox
 			}
 			if (fluid == null)
 			{
-				if(fluid1 == null) return -1;
+				if (fluid1 == null) return -1;
 				fluid = fluid1;
 			}
 			float h1 = getFlowHeight();
@@ -290,12 +282,12 @@ ITP_BoundingBox
 			if (h1 > h2)
 			{
 				int speed = getFlowSpeed(buffer, limit, viscosity);
-				if(speed < 1) return 0;
+				if (speed < 1) return 0;
 				int amount = ditch.getTank().fill(this.tank.drain(speed, false), true);
 				this.tank.drain(amount, true);
 				return amount;
 			}
-			//else if(h1 < h2) ? Let another ditch tile to handle!
+			// else if(h1 < h2) ? Let another ditch tile to handle!
 			return 0;
 		}
 		else
@@ -312,7 +304,9 @@ ITP_BoundingBox
 				speed = getFlowSpeed(buffer, limit, viscosity / 2);
 				if (tile instanceof IDitchTile)
 				{
-					FluidStack stack = this.tank.drain(speed, true);//Force to drain fluid.
+					FluidStack stack = this.tank.drain(speed, true);// Force to
+																	// drain
+																	// fluid.
 					return ((IDitchTile) tile).getTank().fill(stack, true);
 				}
 				else
@@ -339,15 +333,13 @@ ITP_BoundingBox
 	
 	public int getLinkState(Direction direction)
 	{
-		return !isLinked(direction) ? 0 : canLink(direction, getTE(direction)) ? 1 :
-			isAirBlock(direction) && canLink(Direction.U, getTE(direction.x, direction.y - 1, direction.z)) ? 2 : 0;
+		return !isLinked(direction) ? 0 : canLink(direction, getTE(direction)) ? 1 : isAirBlock(direction) && canLink(Direction.U, getTE(direction.x, direction.y - 1, direction.z)) ? 2 : 0;
 	}
 	
 	public boolean canLink(Direction face, TileEntity tile)
 	{
 		EnumFacing facing = face.getOpposite().of();
-		return tile == null ? false : tile instanceof IDitchTile ||
-				tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+		return tile == null ? false : tile instanceof IDitchTile || tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
 	}
 	
 	@Override
@@ -395,7 +387,7 @@ ITP_BoundingBox
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			buf.writeFluidStack(this.tank.getFluid());
 			break;
 		default:
@@ -409,7 +401,7 @@ ITP_BoundingBox
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			this.tank.setFluid(buf.readFluidStack());
 			break;
 		default:
@@ -421,7 +413,7 @@ ITP_BoundingBox
 	public int fill(Direction direction, FluidStack resource, boolean process)
 	{
 		int amount = IDitchTile.super.fill(direction, resource, process);
-		if(process && direction.horizontal)
+		if (process && direction.horizontal)
 		{
 			this.flowAmount[direction.horizontalOrdinal] -= amount;
 		}
@@ -432,7 +424,7 @@ ITP_BoundingBox
 	public FluidStack drain(Direction direction, FluidStack required, boolean process)
 	{
 		FluidStack stack = IDitchTile.super.drain(direction, required, process);
-		if(process && direction.horizontal)
+		if (process && direction.horizontal)
 		{
 			this.flowAmount[direction.horizontalOrdinal] += FluidStacks.getAmount(stack);
 		}
@@ -443,7 +435,7 @@ ITP_BoundingBox
 	public FluidStack drain(Direction direction, int maxAmount, boolean process)
 	{
 		FluidStack stack = IDitchTile.super.drain(direction, maxAmount, process);
-		if(process && direction.horizontal)
+		if (process && direction.horizontal)
 		{
 			this.flowAmount[direction.horizontalOrdinal] += FluidStacks.getAmount(stack);
 		}

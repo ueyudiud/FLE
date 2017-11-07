@@ -14,8 +14,10 @@ public interface IEnvironment extends ICoord
 	
 	/**
 	 * Get property of environment.
+	 * 
 	 * @param property
 	 * @return Null if property is not present.
 	 */
-	@Nullable <T> T getValue(@Nonnull IPropertyMap.IProperty<T> property);
+	@Nullable
+	<T> T getValue(@Nonnull IPropertyMap.IProperty<T> property);
 }

@@ -21,25 +21,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public abstract class TEScreenLineChart extends TESynchronization
-implements INetworkedSyncTile
+public abstract class TEScreenLineChart extends TESynchronization implements INetworkedSyncTile
 {
 	public class ChartOption
 	{
-		boolean enable;
-		int width;
-		int tickDelay;
-		int maxValue;
-		int minValue;
+		boolean	enable;
+		int		width;
+		int		tickDelay;
+		int		maxValue;
+		int		minValue;
 	}
 	
 	private final int WIDTH, DURATION, MIN_VALUE, MAX_VALUE;
 	
 	protected static final int Enabled = 1;
 	
-	protected int[] lineHeight;
-	protected TimeMarker marker;
-	protected int maxDisplayValue, minDisplayValue;
+	protected int[]			lineHeight;
+	protected TimeMarker	marker;
+	protected int			maxDisplayValue, minDisplayValue;
 	
 	public TEScreenLineChart(int width, int duration, int min, int max)
 	{
@@ -90,10 +89,8 @@ implements INetworkedSyncTile
 			return;
 		}
 		set(Enabled, option.enable);
-		if (option.width != this.lineHeight.length)
-			this.lineHeight = new int[option.width];
-		if (option.tickDelay != this.marker.duration)
-			this.marker = new TimeMarker(option.tickDelay, this::updateChart);
+		if (option.width != this.lineHeight.length) this.lineHeight = new int[option.width];
+		if (option.tickDelay != this.marker.duration) this.marker = new TimeMarker(option.tickDelay, this::updateChart);
 		this.maxDisplayValue = option.maxValue;
 		this.minDisplayValue = option.minValue;
 	}
@@ -103,7 +100,7 @@ implements INetworkedSyncTile
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			buf.readFixedIntArray(this.lineHeight);
 			break;
 		default:
@@ -116,7 +113,7 @@ implements INetworkedSyncTile
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			buf.writeFixedIntArray(this.lineHeight);
 			break;
 		default:

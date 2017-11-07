@@ -25,9 +25,9 @@ import net.minecraft.world.World;
 
 public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implements IThermalCustomBehaviorBlock
 {
-	public final Mat material;
-	protected final PropertyBasic basic;
-	public final P property;
+	public final Mat				material;
+	protected final PropertyBasic	basic;
+	public final P					property;
 	
 	public BlockMaterial(String modid, String name, Material materialIn, Mat mat, P property)
 	{
@@ -36,6 +36,7 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 		this.basic = this.material.getProperty(MP.property_basic);
 		this.property = property;
 	}
+	
 	public BlockMaterial(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat, P property)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);

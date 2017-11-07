@@ -13,7 +13,7 @@ public abstract class FarWorldGenOreBase extends FarWorldGenerator
 	
 	protected void generateOre(int xOffset, int yOffset, int zOffset, Mat ore, EnumOreAmount amount, Mat rock, EnumRockType type)
 	{
-		BlockOre.ORE_ELEMENT_THREAD.set(new Object[]{ore, amount, rock, type});
+		BlockOre.ORE_ELEMENT_THREAD.set(new Object[] { ore, amount, rock, type });
 		setBlockAndNotifyAdequately(this.world, this.pos.add(xOffset, yOffset, zOffset), this.ore);
 		BlockOre.ORE_ELEMENT_THREAD.set(null);
 	}

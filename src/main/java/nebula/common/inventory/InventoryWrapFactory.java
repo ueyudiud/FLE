@@ -21,11 +21,14 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.IItemHandler;
 
 /**
- * The inventory wrapper, uses to wrap inventory (item container).<p>
+ * The inventory wrapper, uses to wrap inventory (item container).
+ * <p>
  * <code>
  * IItemHandler handler = InventoryWrapFactory.wrap("yourinventoryname", inventory);
- * </code><p>
+ * </code>
+ * <p>
  * For you needn't take case about each side for a new handler.
+ * 
  * @author ueyudiud
  */
 public final class InventoryWrapFactory
@@ -53,12 +56,14 @@ public final class InventoryWrapFactory
 		}
 	}
 	
-	public static interface I2 extends I1, IItemHandlerIO { }
+	public static interface I2 extends I1, IItemHandlerIO
+	{
+	}
 	
 	static class InventoryBasicWrapper implements I1
 	{
-		private final IBasicInventory inventory;
-		private final String name;
+		private final IBasicInventory	inventory;
+		private final String			name;
 		
 		InventoryBasicWrapper(String name, IBasicInventory inventory)
 		{
@@ -78,28 +83,111 @@ public final class InventoryWrapFactory
 			this.inventory.fromArray(stacks);
 		}
 		
-		public String getName() { return this.name; }
-		public boolean hasCustomName() { return false; }
-		public ITextComponent getDisplayName() { return this.name == null ? EMPTY : new TextComponentString(getName()); }
-		public void markDirty() { }
-		public boolean isUsableByPlayer(EntityPlayer player) { return true; }
-		public void openInventory(EntityPlayer player) { }
-		public void closeInventory(EntityPlayer player) { }
-		public boolean isItemValidForSlot(int index, ItemStack stack) { return this.inventory.isItemValidForSlot(index, stack); }
-		public int getField(int id) { return 0; }
-		public void setField(int id, int value) { }
-		public int getFieldCount() { return 0; }
-		public void clear() { }
-		public int getSizeInventory() { return this.inventory.getSizeInventory(); }
-		public @Nullable ItemStack getStackInSlot(int index) { return this.inventory.getStack(index); }
-		public @Nullable ItemStack getStack(int index) { return this.inventory.getStack(index); }
-		public int incrStack(int index, ItemStack resource, boolean process) { return this.inventory.incrStack(index, resource, process); }
-		public ItemStack decrStackSize(int index, int count) { return decrStack(index, count, true); }
-		public @Nullable ItemStack decrStack(int index, int count, boolean process) { return this.inventory.decrStack(index, count, process); }
-		public @Nullable ItemStack removeStackFromSlot(int index) { return this.inventory.removeStackFromSlot(index); }
-		public void setInventorySlotContents(int index, @Nullable ItemStack stack) { this.inventory.setInventorySlotContents(index, stack); }
-		public int getInventoryStackLimit() { return this.inventory.getInventoryStackLimit(); }
-		public int getSlots() { return this.inventory.getSizeInventory(); }
+		public String getName()
+		{
+			return this.name;
+		}
+		
+		public boolean hasCustomName()
+		{
+			return false;
+		}
+		
+		public ITextComponent getDisplayName()
+		{
+			return this.name == null ? EMPTY : new TextComponentString(getName());
+		}
+		
+		public void markDirty()
+		{
+		}
+		
+		public boolean isUsableByPlayer(EntityPlayer player)
+		{
+			return true;
+		}
+		
+		public void openInventory(EntityPlayer player)
+		{
+		}
+		
+		public void closeInventory(EntityPlayer player)
+		{
+		}
+		
+		public boolean isItemValidForSlot(int index, ItemStack stack)
+		{
+			return this.inventory.isItemValidForSlot(index, stack);
+		}
+		
+		public int getField(int id)
+		{
+			return 0;
+		}
+		
+		public void setField(int id, int value)
+		{
+		}
+		
+		public int getFieldCount()
+		{
+			return 0;
+		}
+		
+		public void clear()
+		{
+		}
+		
+		public int getSizeInventory()
+		{
+			return this.inventory.getSizeInventory();
+		}
+		
+		public @Nullable ItemStack getStackInSlot(int index)
+		{
+			return this.inventory.getStack(index);
+		}
+		
+		public @Nullable ItemStack getStack(int index)
+		{
+			return this.inventory.getStack(index);
+		}
+		
+		public int incrStack(int index, ItemStack resource, boolean process)
+		{
+			return this.inventory.incrStack(index, resource, process);
+		}
+		
+		public ItemStack decrStackSize(int index, int count)
+		{
+			return decrStack(index, count, true);
+		}
+		
+		public @Nullable ItemStack decrStack(int index, int count, boolean process)
+		{
+			return this.inventory.decrStack(index, count, process);
+		}
+		
+		public @Nullable ItemStack removeStackFromSlot(int index)
+		{
+			return this.inventory.removeStackFromSlot(index);
+		}
+		
+		public void setInventorySlotContents(int index, @Nullable ItemStack stack)
+		{
+			this.inventory.setInventorySlotContents(index, stack);
+		}
+		
+		public int getInventoryStackLimit()
+		{
+			return this.inventory.getInventoryStackLimit();
+		}
+		
+		public int getSlots()
+		{
+			return this.inventory.getSizeInventory();
+		}
+		
 		public ItemStack insertItem(int slot, @Nullable ItemStack stack, boolean simulate)
 		{
 			if (!this.inventory.isItemValidForSlot(slot, stack) || stack == null) return stack;
@@ -108,7 +196,11 @@ public final class InventoryWrapFactory
 			stack.stackSize -= size;
 			return stack;
 		}
-		public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.inventory.decrStack(slot, amount, simulate); }
+		
+		public ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
+			return this.inventory.decrStack(slot, amount, simulate);
+		}
 	}
 	
 	static class InventoryContainerWrapper extends InventoryBasicWrapper
@@ -156,8 +248,8 @@ public final class InventoryWrapFactory
 	
 	static class InventorySidedWrapper<I extends IBasicInventory & IItemHandlerIO> extends InventoryBasicWrapper implements I2
 	{
-		I inventory;
-		Direction direction;
+		I			inventory;
+		Direction	direction;
 		
 		InventorySidedWrapper(String name, I inventory, EnumFacing facing)
 		{
@@ -174,7 +266,8 @@ public final class InventoryWrapFactory
 			{
 				return size == stack.stackSize ? null : ItemStacks.sizeOf(stack, stack.stackSize - size);
 			}
-			else return stack;
+			else
+				return stack;
 		}
 		
 		@Override
@@ -183,25 +276,45 @@ public final class InventoryWrapFactory
 			return extractItem(amount, this.direction, simulate);
 		}
 		
-		public boolean canExtractItem(Direction to) { return this.inventory.canExtractItem(to); }
-		public boolean canInsertItem(Direction from, ItemStack stack) { return this.inventory.canInsertItem(from, stack); }
-		public ItemStack extractItem(int size, Direction to, boolean simulate) { return this.inventory.extractItem(size, to, simulate); }
-		public ItemStack extractItem(AbstractStack suggested, Direction to, boolean simulate) { return this.inventory.extractItem(suggested, to, simulate); }
-		public int insertItem(ItemStack stack, Direction from, boolean simulate) { return this.inventory.insertItem(stack, from, simulate); }
-		public ActionResult<ItemStack> onPlayerTryUseIO(ItemStack current, EntityPlayer player, Direction side, float x,
-				float y, float z, boolean isActiveHeld) { return this.inventory.onPlayerTryUseIO(current, player, side, x, y, z, isActiveHeld); }
+		public boolean canExtractItem(Direction to)
+		{
+			return this.inventory.canExtractItem(to);
+		}
+		
+		public boolean canInsertItem(Direction from, ItemStack stack)
+		{
+			return this.inventory.canInsertItem(from, stack);
+		}
+		
+		public ItemStack extractItem(int size, Direction to, boolean simulate)
+		{
+			return this.inventory.extractItem(size, to, simulate);
+		}
+		
+		public ItemStack extractItem(AbstractStack suggested, Direction to, boolean simulate)
+		{
+			return this.inventory.extractItem(suggested, to, simulate);
+		}
+		
+		public int insertItem(ItemStack stack, Direction from, boolean simulate)
+		{
+			return this.inventory.insertItem(stack, from, simulate);
+		}
+		
+		public ActionResult<ItemStack> onPlayerTryUseIO(ItemStack current, EntityPlayer player, Direction side, float x, float y, float z, boolean isActiveHeld)
+		{
+			return this.inventory.onPlayerTryUseIO(current, player, side, x, y, z, isActiveHeld);
+		}
 	}
 	
 	public static I1 wrap(String name, IBasicInventory inventory)
 	{
-		return 	wrap(name, inventory, null);
+		return wrap(name, inventory, null);
 	}
 	
 	public static I1 wrap(String name, IBasicInventory inventory, @Nullable EnumFacing facing)
 	{
-		return inventory instanceof IItemHandlerIO ?
-				new InventorySidedWrapper(name, inventory, facing) :
-					new InventoryBasicWrapper(name, inventory);
+		return inventory instanceof IItemHandlerIO ? new InventorySidedWrapper(name, inventory, facing) : new InventoryBasicWrapper(name, inventory);
 	}
 	
 	public static I1 wrap(String name, Container container, IBasicInventory inventory)

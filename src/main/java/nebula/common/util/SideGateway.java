@@ -5,8 +5,8 @@ package nebula.common.util;
 
 public final class SideGateway<T>
 {
-	private final T clientInstance;
-	private final T serverInstance;
+	private final T	clientInstance;
+	private final T	serverInstance;
 	
 	public SideGateway(String serverClass, String clientClass)
 	{

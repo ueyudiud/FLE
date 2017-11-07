@@ -7,8 +7,8 @@ import net.minecraft.util.DamageSource;
 
 public class MobEffectBleeding extends MobEffect
 {
-	protected int duration;
-	protected float amount;
+	protected int	duration;
+	protected float	amount;
 	
 	public MobEffectBleeding(String name, int liquidColorIn, int duration, float amount)
 	{
@@ -25,10 +25,9 @@ public class MobEffectBleeding extends MobEffect
 	}
 	
 	@Override
-	public void affectEntity(Entity source, Entity indirectSource,
-			EntityLivingBase entityLivingBaseIn, int amplifier, double health)
+	public void affectEntity(Entity source, Entity indirectSource, EntityLivingBase entityLivingBaseIn, int amplifier, double health)
 	{
-		if(entityLivingBaseIn.isEntityUndead())
+		if (entityLivingBaseIn.isEntityUndead())
 		{
 			entityLivingBaseIn.attackEntityFrom(DamageSource.generic, this.amount);
 		}

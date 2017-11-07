@@ -27,18 +27,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockPlankSlab extends BlockSlab
 {
-	private final Mat material;
-	private final BlockPlank parent;
-	private final String localName;
+	private final Mat				material;
+	private final BlockPlank		parent;
+	private final String			localName;
 	/**
 	 * The meta of main block.
 	 */
-	private int meta;
+	private int						meta;
 	/**
 	 * The group of rock slab.
 	 */
-	private final BlockPlankSlab[] group;
-	private final PropertyWood property;
+	private final BlockPlankSlab[]	group;
+	private final PropertyWood		property;
 	
 	public BlockPlankSlab(int id, BlockPlank parent, BlockPlankSlab[] group, String localName)
 	{
@@ -49,7 +49,7 @@ public class BlockPlankSlab extends BlockSlab
 		this.localName = localName;
 		this.material = parent.material;
 		this.property = parent.property;
-		if(id == EnumPlankState.BROKE.ordinal())
+		if (id == EnumPlankState.BROKE.ordinal())
 		{
 			this.lightOpacity = 100;
 		}

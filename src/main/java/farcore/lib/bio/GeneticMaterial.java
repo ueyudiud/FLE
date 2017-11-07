@@ -13,10 +13,10 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class GeneticMaterial
 {
-	public String specie;
-	public int generation;
-	public long[] coders;
-	public int[] nativeValues;
+	public String	specie;
+	public int		generation;
+	public long[]	coders;
+	public int[]	nativeValues;
 	
 	public GeneticMaterial(String specie, int generation, long[] coders, int[] nativeValues)
 	{
@@ -38,7 +38,7 @@ public class GeneticMaterial
 		@Override
 		public GeneticMaterial readFromNBT(NBTTagCompound nbt)
 		{
-			if(nbt.hasKey("specie"))
+			if (nbt.hasKey("specie"))
 			{
 				String specie = nbt.getString("specie");
 				int generation = nbt.getInteger("generation");

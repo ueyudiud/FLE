@@ -14,10 +14,10 @@ public class TECircuitRepeater extends TECircuitFrontBack
 	protected void updateBody()
 	{
 		super.updateBody();
-		if(this.updateDelay == 0)
+		if (this.updateDelay == 0)
 		{
 			int power = getRedstonePower(Facing.BACK);
-			if(power != 0)
+			if (power != 0)
 			{
 				setRedstonePower(15);
 				enable(Actived);
@@ -35,7 +35,7 @@ public class TECircuitRepeater extends TECircuitFrontBack
 	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		this.mode++;
-		if(this.mode == 4)
+		if (this.mode == 4)
 		{
 			this.mode = 0;
 		}
@@ -45,9 +45,9 @@ public class TECircuitRepeater extends TECircuitFrontBack
 	@Override
 	protected void updateCircuit()
 	{
-		if(this.updateDelay > 0) return;
+		if (this.updateDelay > 0) return;
 		int power = getRedstonePower(Facing.BACK);
-		if((power != 0) ^ is(Actived))
+		if ((power != 0) ^ is(Actived))
 		{
 			markForDelayUpdate((this.mode + 1) * 2);
 		}

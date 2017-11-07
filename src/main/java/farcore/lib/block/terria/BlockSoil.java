@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 
 /**
  * This provide the ground related block, which is fallable.
+ * 
  * @author ueyudiud
  */
 public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
@@ -44,14 +45,15 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	{
 		BlockPos pos1 = pos.down();
 		IBlockState state1 = world.getBlockState(pos1);
-		if(state1.getBlock().isAir(state1, world, pos1))
+		if (state1.getBlock().isAir(state1, world, pos1))
 			return true;
-		else if(state1.getBlock() instanceof IHitByFallenBehaviorBlock)
+		else if (state1.getBlock() instanceof IHitByFallenBehaviorBlock)
 		{
 			IHitByFallenBehaviorBlock block = (IHitByFallenBehaviorBlock) state1.getBlock();
 			return block.isPermeatableBy(world, pos1, state1, state);
 		}
-		else return state1.getMaterial().isReplaceable();
+		else
+			return state1.getMaterial().isReplaceable();
 	}
 	
 	protected static List<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
@@ -60,22 +62,22 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 		List<EnumFacing> result = new ArrayList();
 		BlockPos pos2;
 		pos2 = pos1.north();
-		if(canFallBelow(world, pos2, state))
+		if (canFallBelow(world, pos2, state))
 		{
 			result.add(EnumFacing.NORTH);
 		}
 		pos2 = pos1.south();
-		if(canFallBelow(world, pos2, state))
+		if (canFallBelow(world, pos2, state))
 		{
 			result.add(EnumFacing.SOUTH);
 		}
 		pos2 = pos1.west();
-		if(canFallBelow(world, pos2, state))
+		if (canFallBelow(world, pos2, state))
 		{
 			result.add(EnumFacing.WEST);
 		}
 		pos2 = pos1.east();
-		if(canFallBelow(world, pos2, state))
+		if (canFallBelow(world, pos2, state))
 		{
 			result.add(EnumFacing.EAST);
 		}
@@ -102,13 +104,12 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		//The meta higher than 5 can not be harvested, so no name display.
+		// The meta higher than 5 can not be harvested, so no name display.
 		MC.soil.registerOre(this.material, this);
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			EnumFacing facing, ItemStack stack)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
@@ -122,27 +123,23 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	
 	protected boolean checkAndFall(World world, BlockPos pos, IBlockState state, Random rand, boolean checkFallToNearby)
 	{
-		if (canFallBelow(world, pos, state))
-			return Worlds.fallBlock(world, pos, state);
+		if (canFallBelow(world, pos, state)) return Worlds.fallBlock(world, pos, state);
 		if (checkFallToNearby)
 		{
 			List<EnumFacing> sides = canFallNearby(world, pos, state);
 			switch (state.getValue(COVER_TYPE).noCover)
 			{
-			case NONE :
-				if(sides.size() >= 2)
-					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+			case NONE:
+				if (sides.size() >= 2) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
-			case FROZEN :
-				if(!sides.isEmpty())
-					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+			case FROZEN:
+				if (!sides.isEmpty()) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
-			case GRASS :
-			case MYCELIUM :
-			case TUNDRA :
-			case TUNDRA_FROZEN :
-				if(sides.size() >= 3 || (sides.size() == 2 && rand.nextInt(5) == 0))
-					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+			case GRASS:
+			case MYCELIUM:
+			case TUNDRA:
+			case TUNDRA_FROZEN:
+				if (sides.size() >= 3 || (sides.size() == 2 && rand.nextInt(5) == 0)) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			default:
 				break;
@@ -176,8 +173,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + RANDOM.nextInt(3)));
 	}
@@ -185,8 +181,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
-		if(canFallBelow(world, pos, state))
-			return false;
+		if (canFallBelow(world, pos, state)) return false;
 		return canFallNearby(world, pos, state).size() < 2;
 	}
 	
@@ -228,7 +223,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
 		super.fillWithRain(worldIn, pos);
-		if(worldIn.canSnowAt(pos, false))
+		if (worldIn.canSnowAt(pos, false))
 		{
 			IBlockState state = worldIn.getBlockState(pos);
 			EnumCoverType type = state.getValue(COVER_TYPE);

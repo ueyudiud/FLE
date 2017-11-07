@@ -50,9 +50,9 @@ public class ItemRenderWithTESR implements IItemCustomRender
 	public void renderItemStack(ItemStack stack)
 	{
 		IBakedModel model = this.render.getItemModelMesher().getItemModel(stack);
-		GL11.glPopMatrix();//For RenderItem will translate matrix again.
+		GL11.glPopMatrix();// For RenderItem will translate matrix again.
 		this.render.renderItem(stack, new Wrapper(model));
-		GL11.glPushMatrix();//Repush matrix.
+		GL11.glPushMatrix();// Repush matrix.
 		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 		ForgeHooksClient.renderTileItem(stack.getItem(), stack.getMetadata());
 	}
@@ -87,9 +87,7 @@ public class ItemRenderWithTESR implements IItemCustomRender
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
-			return this.model instanceof ICustomItemRenderModel ?
-					((ICustomItemRenderModel) this.model).getQuads(stack, facing, rand) :
-						this.model.getQuads(null, facing, rand);
+			return this.model instanceof ICustomItemRenderModel ? ((ICustomItemRenderModel) this.model).getQuads(stack, facing, rand) : this.model.getQuads(null, facing, rand);
 		}
 		
 		@Override

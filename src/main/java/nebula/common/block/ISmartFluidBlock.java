@@ -8,7 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 public interface ISmartFluidBlock
 {
 	/**
-	 * Attempt to drain the block. This method should be called by devices such as pumps.
+	 * Attempt to drain the block. This method should be called by devices such
+	 * as pumps.
 	 *
 	 * NOTE: The block is intended to handle its own state changes.
 	 *
@@ -20,6 +21,7 @@ public interface ISmartFluidBlock
 	
 	/**
 	 * Fill fluid to the block.
+	 * 
 	 * @param resource The resource of this action.
 	 * @param doFill If false, the fill will only be simulated.
 	 * @return

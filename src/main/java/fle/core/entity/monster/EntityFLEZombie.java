@@ -28,11 +28,11 @@ public class EntityFLEZombie extends EntityZombie implements IEntityDamageEffect
 		super(worldIn);
 	}
 	
-	//	@Override
-	//	protected PathNavigate createNavigator(World worldIn)
-	//	{
-	//		return new PathNavigateGroundExt(this, worldIn);
-	//	}
+	// @Override
+	// protected PathNavigate createNavigator(World worldIn)
+	// {
+	// return new PathNavigateGroundExt(this, worldIn);
+	// }
 	
 	@Override
 	protected void applyEntityAttributes()
@@ -59,10 +59,13 @@ public class EntityFLEZombie extends EntityZombie implements IEntityDamageEffect
 	{
 		switch (type)
 		{
-		case CUT : return 1.2F;
-		default :
-		case PUNCTURE : return 1.0F;
-		case SMASH : return 0.8F;
+		case CUT:
+			return 1.2F;
+		default:
+		case PUNCTURE:
+			return 1.0F;
+		case SMASH:
+			return 0.8F;
 		}
 	}
 }

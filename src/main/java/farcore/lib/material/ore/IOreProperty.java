@@ -36,8 +36,7 @@ public interface IOreProperty
 	
 	boolean onBurningTick(TEOre ore, Random rand, Direction fireSourceDir, IBlockState fireState);
 	
-	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-			Direction side, float hitX, float hitY, float hitZ);
+	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side, float hitX, float hitY, float hitZ);
 	
 	@SideOnly(Side.CLIENT)
 	void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, TEOre ore, Random rand);

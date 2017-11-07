@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author ueyudiud
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface Config
 {
 	String value();

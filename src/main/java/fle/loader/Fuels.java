@@ -24,7 +24,7 @@ public class Fuels
 	public static void init()
 	{
 		FlamableRecipes.addFlamableItem(new BaseStack(Items.PAPER), 60F, 200F);
-		FlamableRecipes.addFlameSource(coord-> {
+		FlamableRecipes.addFlameSource(coord -> {
 			TileEntity tile = coord.getTE();
 			if (tile instanceof TEFirewood)
 			{

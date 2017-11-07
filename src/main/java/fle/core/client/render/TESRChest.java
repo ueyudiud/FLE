@@ -44,13 +44,14 @@ public abstract class TESRChest<T extends TEChest> extends TESRBase<T>
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
-		//Render chest body.
+		// Render chest body.
 		GL11.glTranslated(x + .5F, y, z + .5F);
 		GL11.glRotatef(te.facing.getHorizontalAngle(), 0, -1, 0);
-		GL11.glTranslatef(-.5F, 0, -.5F);;
+		GL11.glTranslatef(-.5F, 0, -.5F);
+		;
 		renderChestBody(te);
 		
-		//Render chest top.
+		// Render chest top.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0, this.midY, this.maxZ);
 		GL11.glRotatef(Maths.lerp(te.prevLidAngle, te.lidAngle, partialTicks) * 60.0F, 1, 0, 0);

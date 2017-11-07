@@ -7,20 +7,21 @@ import net.minecraft.item.ItemStack;
 public class SlotButton extends SlotTool
 {
 	private ItemStack currentStack;
-
+	
 	public SlotButton(int index, int xPosition, int yPosition)
 	{
 		super(null, index, xPosition, yPosition);
 	}
-
+	
 	@Override
 	public void putStack(ItemStack stack)
 	{
 		currentStack = ItemStack.copyItemStack(stack);
 	}
-
+	
 	/**
 	 * Get stack from this method please.
+	 * 
 	 * @return
 	 */
 	public ItemStack getCurrentStack()

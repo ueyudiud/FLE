@@ -45,20 +45,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class ItemSimpleFluidContainer extends ItemSubBehavior
-implements IIP_CustomOverlayInGui, IItemFluidContainerV1
+public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 {
 	public static class FluidContainerProperty
 	{
-		int capacity;
-		int durbility;
-		boolean enableToFill;
-		boolean enableToDrain;
+		int		capacity;
+		int		durbility;
+		boolean	enableToFill;
+		boolean	enableToDrain;
 		
 		public FluidContainerProperty(int capacity, int durbility)
 		{
 			this(capacity, durbility, false, false);
 		}
+		
 		public FluidContainerProperty(int capacity, int durbility, boolean enableToFill, boolean enableToDrain)
 		{
 			this.capacity = capacity;
@@ -76,8 +76,8 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private IProgressBarStyle style;
-	private Map<Integer, FluidContainerProperty> propertyMap = new HashMap<>();
+	private IProgressBarStyle						style;
+	private Map<Integer, FluidContainerProperty>	propertyMap	= new HashMap<>();
 	
 	public ItemSimpleFluidContainer()
 	{
@@ -96,12 +96,10 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	public void postInitalizedItems()
 	{
 		super.postInitalizedItems();
-		LanguageManager.registerLocal("info.fluidcontainer.completely.damaged", EnumChatFormatting.RED +
-				"This fluid container has already damaged, you can only drain fluid from this container.");
+		LanguageManager.registerLocal("info.fluidcontainer.completely.damaged", EnumChatFormatting.RED + "This fluid container has already damaged, you can only drain fluid from this container.");
 	}
 	
-	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
-			IBehavior... behaviors)
+	public void addSubItem(int id, String name, String localName, FluidContainerProperty property, IBehavior...behaviors)
 	{
 		super.addSubItem(id, name, localName, behaviors);
 		this.propertyMap.put(id, property);
@@ -126,8 +124,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 			@Override
 			public double getProgressScale(ItemStack stack)
 			{
-				return ItemSimpleFluidContainer.this.propertyMap.containsKey(getBaseDamage(stack)) ?
-						(float) getFluidAmount(stack) / (float) ItemSimpleFluidContainer.this.propertyMap.get(getBaseDamage(stack)).capacity : 0;
+				return ItemSimpleFluidContainer.this.propertyMap.containsKey(getBaseDamage(stack)) ? (float) getFluidAmount(stack) / (float) ItemSimpleFluidContainer.this.propertyMap.get(getBaseDamage(stack)).capacity : 0;
 			}
 			
 			@Override
@@ -141,8 +138,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x,
-			int z, String text)
+	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, String text)
 	{
 		Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
 		Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, this.style);
@@ -151,8 +147,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		ActionResult<ItemStack> result = super.onItemRightClick(stackIn, worldIn, playerIn, hand);
 		if (result.getType() != EnumActionResult.PASS) return result;
@@ -176,9 +171,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 			if (property.enableToFill && capability.canUse())
 			{
 				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, true);
-				if (raytraceresult == null ||
-						!playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, stackIn) ||
-						!worldIn.canMineBlockBody(playerIn, raytraceresult.getBlockPos())) return result;
+				if (raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, stackIn) || !worldIn.canMineBlockBody(playerIn, raytraceresult.getBlockPos())) return result;
 				FluidStack stack = FluidStacks.fillFluidFromWorld(worldIn, raytraceresult, property.capacity - FluidStacks.getAmount(fluid), FluidStacks.getFluid(fluid), !worldIn.isRemote);
 				
 				if (stack != null)
@@ -193,14 +186,12 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	
 	public static FluidStack getFluid(ItemStack stack)
 	{
-		return ((CapabilityProviderSimpleFluidContainer)
-				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getFluid();
+		return ((CapabilityProviderSimpleFluidContainer) stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getFluid();
 	}
 	
 	public static int getCustomDamage(ItemStack stack)
 	{
-		return ((CapabilityProviderSimpleFluidContainer)
-				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getDamage();
+		return ((CapabilityProviderSimpleFluidContainer) stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getDamage();
 	}
 	
 	public int getMaxCustomDamage(ItemStack stack)
@@ -210,8 +201,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	
 	public static void setCustomDamage(ItemStack stack, int damage)
 	{
-		((CapabilityProviderSimpleFluidContainer)
-				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setDamage(damage);
+		((CapabilityProviderSimpleFluidContainer) stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setDamage(damage);
 	}
 	
 	public static int getFluidAmount(ItemStack stack)
@@ -222,8 +212,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	
 	public static void setFluid(ItemStack stack, @Nullable FluidStack contain)
 	{
-		((CapabilityProviderSimpleFluidContainer)
-				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setFluid(contain);
+		((CapabilityProviderSimpleFluidContainer) stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setFluid(contain);
 	}
 	
 	@Override
@@ -267,8 +256,7 @@ implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		Localization.addFluidInformation(getFluid(stack), unlocalizedList);

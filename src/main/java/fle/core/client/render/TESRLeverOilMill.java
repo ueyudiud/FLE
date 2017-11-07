@@ -21,12 +21,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 {
-	private TextureAtlasSprite handle;
-	private TextureAtlasSprite rope;
-	private TextureAtlasSprite rock;
+	private TextureAtlasSprite	handle;
+	private TextureAtlasSprite	rope;
+	private TextureAtlasSprite	rock;
 	
 	{
-		NebulaTextureHandler.addIconLoader(loader-> {
+		NebulaTextureHandler.addIconLoader(loader -> {
 			this.handle = loader.registerIcon("minecraft", "blocks/logs/oak_side");
 			this.rope = loader.registerIcon(FLE.MODID, "blocks/iconset/linen");
 			this.rock = loader.registerIcon("minecraft", "blocks/rock/stone/resource");
@@ -34,15 +34,14 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 	}
 	
 	@Override
-	public void renderTileEntityAt(TELeverOilMill tile, double x, double y, double z, float partialTicks,
-			int destroyStage)
+	public void renderTileEntityAt(TELeverOilMill tile, double x, double y, double z, float partialTicks, int destroyStage)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GL11.glTranslatef((float) x, (float) y, (float) z);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		float angle = tile == null ? -1 : tile.getRotationAngle();
-		//Render lever.
+		// Render lever.
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.4625F, 0.8F, 0.0625F);

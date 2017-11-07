@@ -23,6 +23,7 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * A object contain a coordinate in world.<br>
  * Some useful method is given by.
+ * 
  * @author ueyudiud
  *
  */
@@ -30,12 +31,14 @@ public interface ICoord
 {
 	/**
 	 * The world belong.
+	 * 
 	 * @return
 	 */
 	World world();
 	
 	/**
 	 * The position at.
+	 * 
 	 * @return
 	 */
 	BlockPos pos();
@@ -258,8 +261,7 @@ public interface ICoord
 		World world = world();
 		BlockPos pos = offset.offset(pos());
 		TileEntity tile = world.getTileEntity(pos);
-		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) ?
-				tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
+		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
 	}
 	
 	default IItemHandler getItemHandler(Direction offset)
@@ -267,16 +269,17 @@ public interface ICoord
 		World world = world();
 		BlockPos pos = offset.offset(pos());
 		TileEntity tile = world.getTileEntity(pos);
-		return tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) ?
-				tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
+		return tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
 	}
 	
-	//	default IItemHandlerIO getItemIOHandler(Direction offset)
-	//	{
-	//		World world = world();
-	//		BlockPos pos = offset.offset(pos());
-	//		TileEntity tile = world.getTileEntity(pos);
-	//		return tile.hasCapability(Capabilities.ITEM_HANDLER_IO, offset.getOpposite().of()) ?
-	//				tile.getCapability(Capabilities.ITEM_HANDLER_IO, offset.getOpposite().of()) : null;
-	//	}
+	// default IItemHandlerIO getItemIOHandler(Direction offset)
+	// {
+	// World world = world();
+	// BlockPos pos = offset.offset(pos());
+	// TileEntity tile = world.getTileEntity(pos);
+	// return tile.hasCapability(Capabilities.ITEM_HANDLER_IO,
+	// offset.getOpposite().of()) ?
+	// tile.getCapability(Capabilities.ITEM_HANDLER_IO,
+	// offset.getOpposite().of()) : null;
+	// }
 }

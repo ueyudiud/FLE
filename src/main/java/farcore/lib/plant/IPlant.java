@@ -27,8 +27,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IPlant<B extends BlockPlant> extends
-IMetaExtHandler, IBlockBehavior<B>, IPlantable
+public interface IPlant<B extends BlockPlant> extends IMetaExtHandler, IBlockBehavior<B>, IPlantable
 {
 	AxisAlignedBB BUSH_AABB = new AxisAlignedBB(0.125, 0.0, 0.125, 0.875, 0.75, 0.875);
 	
@@ -79,8 +78,7 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 	}
 	
 	@Override
-	default boolean canSustainPlant(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	default boolean canSustainPlant(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
 		return false;
 	}
@@ -160,8 +158,7 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 	}
 	
 	@Override
-	default float getExplosionResistance(B block, IBlockState state, World world, BlockPos pos, Entity exploder,
-			Explosion explosion)
+	default float getExplosionResistance(B block, IBlockState state, World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return 0.0F;
 	}

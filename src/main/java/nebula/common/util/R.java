@@ -19,14 +19,17 @@ import nebula.NebulaLoadingPlugin;
 
 /**
  * Reflection helper.
+ * 
  * @author ueyudiud
  */
 public final class R
 {
-	private R() {}
+	private R()
+	{
+	}
 	
-	static final Map<String, Field> FIELD_CACHE = new HashMap();
-	private static Field modifiersField;
+	static final Map<String, Field>	FIELD_CACHE	= new HashMap();
+	private static Field			modifiersField;
 	
 	public static void resetFieldCache()
 	{
@@ -37,13 +40,16 @@ public final class R
 	{
 		try
 		{
-			if(modifiersField == null)
+			if (modifiersField == null)
 			{
 				modifiersField = Field.class.getDeclaredField("modifiers");
 				modifiersField.setAccessible(true);
 			}
 		}
-		catch(Throwable e) { throw new InternalError(e); }
+		catch (Throwable e)
+		{
+			throw new InternalError(e);
+		}
 	}
 	
 	private static Field getField(Class<?> clazz, String mcpName, String obfName, boolean isPrivate, boolean isFinal, boolean alwaysInit) throws ReflectiveOperationException
@@ -54,13 +60,14 @@ public final class R
 		}
 		String key = NebulaLoadingPlugin.runtimeDeobf ? obfName : mcpName;
 		String key1 = clazz.getName() + "|" + key;
-		if (!alwaysInit && FIELD_CACHE.containsKey(key1))
-			return FIELD_CACHE.get(key1);
+		if (!alwaysInit && FIELD_CACHE.containsKey(key1)) return FIELD_CACHE.get(key1);
 		try
 		{
 			Field field = isPrivate ? clazz.getDeclaredField(key) : clazz.getField(key);
-			if (isFinal)//Remove final modifier.
-				modifiersField.setInt(field, field.getModifiers() & 0xFFFFFFEF/**~Modifier.FINAL*/);
+			if (isFinal)// Remove final modifier.
+				modifiersField.setInt(field,
+						field.getModifiers() & 0xFFFFFFEF/** ~Modifier.FINAL */
+				);
 			if (field != null)
 			{
 				field.setAccessible(true);
@@ -123,22 +130,24 @@ public final class R
 	
 	/**
 	 * Get specific field from class.
+	 * 
 	 * @param clazz the class type which field are at.
 	 * @param mcpName the field name running in MCP environment.
 	 * @param obfName the field name running in obf environment.
 	 * @param target the value to get field, input <code>null</code> when
-	 *               getting <tt>static</tt> field.
+	 *            getting <tt>static</tt> field.
 	 * @param alwaysInit the ReflectionHelper will cache the field to list if
-	 *                   input <code>true</code>, enable this option if this field
-	 *                   is usually be called.
-	 * @param <T> the target type, for you need try to use <code>instanceof</code> to
-	 *            check if <tt>target</tt> can be cast to this type.
+	 *            input <code>true</code>, enable this option if this field is
+	 *            usually be called.
+	 * @param <T> the target type, for you need try to use
+	 *            <code>instanceof</code> to check if <tt>target</tt> can be
+	 *            cast to this type.
 	 * @param <V> the return value type.
 	 * @return the value of field.
-	 * @throws InternalError when field is illegal or does not has access to visit.
+	 * @throws InternalError when field is illegal or does not has access to
+	 *             visit.
 	 */
-	public static <T, V> V getValue(@Nonnull Class<? extends T> clazz, String mcpName, String obfName,
-			@Nullable T target, boolean alwaysInit)
+	public static <T, V> V getValue(@Nonnull Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, boolean alwaysInit)
 	{
 		try
 		{
@@ -177,6 +186,7 @@ public final class R
 	
 	/**
 	 * Get method from class.
+	 * 
 	 * @param clazz the class of method at.
 	 * @param mcpName the MCP name of method.
 	 * @param obfName the obf name of method.
@@ -188,11 +198,8 @@ public final class R
 	{
 		try
 		{
-			Method method = clazz.getDeclaredMethod(NebulaLoadingPlugin.runtimeDeobf ?
-					obfName : mcpName, classes);
-			if (Modifier.isPrivate(method.getModifiers()) ||
-					Modifier.isProtected(method.getModifiers()))
-				method.setAccessible(true);
+			Method method = clazz.getDeclaredMethod(NebulaLoadingPlugin.runtimeDeobf ? obfName : mcpName, classes);
+			if (Modifier.isPrivate(method.getModifiers()) || Modifier.isProtected(method.getModifiers())) method.setAccessible(true);
 			return method;
 		}
 		catch (ReflectiveOperationException exception)
@@ -203,6 +210,7 @@ public final class R
 	
 	/**
 	 * Invoke method without checking.
+	 * 
 	 * @param method
 	 * @param obj
 	 * @param arguments
@@ -221,11 +229,12 @@ public final class R
 		catch (InvocationTargetException exception)
 		{
 			Throwable throwable = exception.getTargetException();
-			throw (throwable instanceof RuntimeException) ?
-					(RuntimeException) throwable :
-						new RuntimeException("Catch an exception during creating new instance.", throwable);
+			throw (throwable instanceof RuntimeException) ? (RuntimeException) throwable : new RuntimeException("Catch an exception during creating new instance.", throwable);
 		}
-		catch (ReflectiveOperationException exception) { throw new InternalError(exception); }
+		catch (ReflectiveOperationException exception)
+		{
+			throw new InternalError(exception);
+		}
 	}
 	
 	public static <T> T newInstance(Constructor constructor, Object...objects)
@@ -237,9 +246,7 @@ public final class R
 		catch (InvocationTargetException exception)
 		{
 			Throwable throwable = exception.getTargetException();
-			throw (throwable instanceof RuntimeException) ?
-					(RuntimeException) throwable :
-						new RuntimeException("Catch an exception during creating new instance.", throwable);
+			throw (throwable instanceof RuntimeException) ? (RuntimeException) throwable : new RuntimeException("Catch an exception during creating new instance.", throwable);
 		}
 		catch (ReflectiveOperationException exception)
 		{

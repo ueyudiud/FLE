@@ -56,12 +56,11 @@ public class BlockTools extends BlockTE
 		
 		registerCustomBlockRender(map, 0, "tool/oillamp");
 		registerCustomBlockRender(map, 1, "tool/wooden_bowl");
-		registerCustomBlockRender(map, 2, "tool/wooden_brick_mold");//FIXME
+		registerCustomBlockRender(map, 2, "tool/wooden_brick_mold");// FIXME
 		
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "tool/brick_mold/duration"), state->
-		Integer.toString(BlockStateTileEntityWapper.<TEAdobeDrying>unwrap(state).duration));
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "tool/brick_mold/duration"), state -> Integer.toString(BlockStateTileEntityWapper.<TEAdobeDrying> unwrap(state).duration));
 		
-		FarCoreRegistry.registerTESR(TEWoodenBowl.class, new TESRFluidFase<TEWoodenBowl>(0.3125F, 0.0625F, 0.3125F, 0.6875F, 0.25F, 0.6875F, t->t.getTank().getInfo()));
+		FarCoreRegistry.registerTESR(TEWoodenBowl.class, new TESRFluidFase<TEWoodenBowl>(0.3125F, 0.0625F, 0.3125F, 0.6875F, 0.25F, 0.6875F, t -> t.getTank().getInfo()));
 	}
 	
 	@Override
@@ -112,7 +111,7 @@ public class BlockTools extends BlockTE
 	@Override
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		//The item were already set, blocks needn't to be display.
+		// The item were already set, blocks needn't to be display.
 	}
 	
 	@Override

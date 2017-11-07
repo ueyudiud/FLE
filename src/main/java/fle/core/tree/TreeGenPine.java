@@ -20,8 +20,8 @@ import net.minecraft.world.World;
  */
 public class TreeGenPine extends TreeGenAbstract
 {
-	protected int minHeight;
-	protected int randHeight;
+	protected int	minHeight;
+	protected int	randHeight;
 	
 	public TreeGenPine(ITree tree, float generateCoreLeavesChance)
 	{
@@ -51,7 +51,7 @@ public class TreeGenPine extends TreeGenAbstract
 		{
 			BlockPos down = pos.down();
 			IBlockState state = world.getBlockState(down);
-			boolean isSoil = state.getBlock().canSustainPlant(state, world, down,EnumFacing.UP, (net.minecraft.block.BlockSapling) Blocks.SAPLING);
+			boolean isSoil = state.getBlock().canSustainPlant(state, world, down, EnumFacing.UP, (net.minecraft.block.BlockSapling) Blocks.SAPLING);
 			
 			if (isSoil && y < 256 - height - 1)
 			{

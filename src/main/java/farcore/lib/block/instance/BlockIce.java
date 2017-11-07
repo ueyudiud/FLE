@@ -39,7 +39,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	{
 		super(FarCore.ID, "ice", Materials.ICE);
 		this.slipperiness = 0.98F;
-		//Do you think you can easily break a 1m^3 icy cube?
+		// Do you think you can easily break a 1m^3 icy cube?
 		this.uneffectiveSpeedMultiplier = 1F / 800F;
 		setHardness(0.7F);
 		setTickRandomly(true);
@@ -81,10 +81,9 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	}
 	
 	@Override
-	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
-			boolean silkHarvest)
+	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
-		if(!silkHarvest)
+		if (!silkHarvest)
 		{
 			Material material = worldIn.getBlockState(pos.down()).getMaterial();
 			if ((material.blocksMovement() || material.isLiquid()))
@@ -99,10 +98,11 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		if(Config.enableWaterFreezeAndIceMeltTempCheck)
+		if (Config.enableWaterFreezeAndIceMeltTempCheck)
 		{
-			//			IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
-			if(!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.WATER_FREEZE_POINT_F && random.nextInt(3) == 0)
+			// IWorldPropProvider properties =
+			// WorldPropHandler.getWorldProperty(worldIn);
+			if (!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.WATER_FREEZE_POINT_F && random.nextInt(3) == 0)
 			{
 				turnIntoWater(worldIn, pos, state, true);
 			}
@@ -110,7 +110,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 		else
 		{
 			int light = worldIn.getLightFor(EnumSkyBlock.BLOCK, pos);
-			if(light > 10 && random.nextInt(8) == 0)
+			if (light > 10 && random.nextInt(8) == 0)
 			{
 				turnIntoWater(worldIn, pos, state, true);
 			}
@@ -119,8 +119,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return silkTouch ? ImmutableList.of(new ItemStack(this, 1)) : new ArrayList<>();
 	}
@@ -132,7 +131,8 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	}
 	
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -153,7 +153,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	{
 		if (worldIn.provider.doesWaterVaporize())
 		{
-			if(setToAir)
+			if (setToAir)
 			{
 				worldIn.setBlockToAir(pos);
 			}
@@ -186,10 +186,10 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	@Override
 	public boolean onFallingOn(World world, BlockPos pos, IBlockState state, IBlockState fallen, int height)
 	{
-		if(height > 10 || height > 4 && L.nextInt(11 - height) == 0)
+		if (height > 10 || height > 4 && L.nextInt(11 - height) == 0)
 		{
 			world.setBlockToAir(pos);
-			//Drop ice cube? TODO
+			// Drop ice cube? TODO
 			return true;
 		}
 		return false;

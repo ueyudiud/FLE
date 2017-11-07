@@ -29,11 +29,12 @@ public class FarEndProvider extends WorldProvider
 		this.biomeProvider = new BiomeProviderSingle(Biomes.SKY);
 		this.hasNoSky = true;
 		NBTTagCompound nbttagcompound = this.world.getWorldInfo().getDimensionData(DimensionType.THE_END);
-		this.dragonFightManager = this.world instanceof WorldServer ? new DragonFightManager((WorldServer)this.world, nbttagcompound.getCompoundTag("DragonFight")) : null;
+		this.dragonFightManager = this.world instanceof WorldServer ? new DragonFightManager((WorldServer) this.world, nbttagcompound.getCompoundTag("DragonFight")) : null;
 	}
 	
 	/**
-	 * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+	 * Calculates the angle of sun and moon in the sky relative to a specified
+	 * time (usually worldTime)
 	 */
 	@Override
 	public float calculateCelestialAngle(long worldTime, float partialTicks)
@@ -59,7 +60,7 @@ public class FarEndProvider extends WorldProvider
 	public Vec3d getFogColor(float p_76562_1_, float p_76562_2_)
 	{
 		int i = 10518688;
-		float f = MathHelper.cos(p_76562_1_ * ((float)Math.PI * 2F)) * 2.0F + 0.5F;
+		float f = MathHelper.cos(p_76562_1_ * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
 		float f1 = 0.627451F;
 		float f2 = 0.5019608F;
@@ -78,7 +79,8 @@ public class FarEndProvider extends WorldProvider
 	}
 	
 	/**
-	 * True if the player can respawn in this dimension (true = overworld, false = nether).
+	 * True if the player can respawn in this dimension (true = overworld, false
+	 * = nether).
 	 */
 	@Override
 	public boolean canRespawnHere()
@@ -87,7 +89,8 @@ public class FarEndProvider extends WorldProvider
 	}
 	
 	/**
-	 * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
+	 * Returns 'true' if in the "main surface world", but 'false' if in the
+	 * Nether or End dimensions.
 	 */
 	@Override
 	public boolean isSurfaceWorld()
@@ -106,7 +109,8 @@ public class FarEndProvider extends WorldProvider
 	}
 	
 	/**
-	 * Will check if the x, z position specified is alright to be set as the map spawn point
+	 * Will check if the x, z position specified is alright to be set as the map
+	 * spawn point
 	 */
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
@@ -143,8 +147,8 @@ public class FarEndProvider extends WorldProvider
 	}
 	
 	/**
-	 * Called when the world is performing a save. Only used to save the state of the Dragon Boss fight in
-	 * WorldProviderEnd in Vanilla.
+	 * Called when the world is performing a save. Only used to save the state
+	 * of the Dragon Boss fight in WorldProviderEnd in Vanilla.
 	 */
 	@Override
 	public void onWorldSave()
@@ -160,8 +164,8 @@ public class FarEndProvider extends WorldProvider
 	}
 	
 	/**
-	 * Called when the world is updating entities. Only used in WorldProviderEnd to update the DragonFightManager in
-	 * Vanilla.
+	 * Called when the world is updating entities. Only used in WorldProviderEnd
+	 * to update the DragonFightManager in Vanilla.
 	 */
 	@Override
 	public void onWorldUpdateEntities()

@@ -8,8 +8,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-public
-class HashPropertyMap implements IPropertyMap
+public class HashPropertyMap implements IPropertyMap
 {
 	private transient HashMap<IProperty<?>, Object> map;
 	
@@ -17,10 +16,12 @@ class HashPropertyMap implements IPropertyMap
 	{
 		this.map = new HashMap<>();
 	}
+	
 	public HashPropertyMap(int initialCapacity)
 	{
 		this.map = new HashMap<>(initialCapacity);
 	}
+	
 	public HashPropertyMap(int initialCapacity, float loadFactor)
 	{
 		this.map = new HashMap<>(initialCapacity, loadFactor);

@@ -11,15 +11,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 
 /**
- * The <tt>modifiable</tt> coordinate helper,
- * which can modify block state in world.
+ * The <tt>modifiable</tt> coordinate helper, which can modify block state in
+ * world.
+ * 
  * @author ueyudiud
  */
 public interface IModifiableCoord extends ICoord
 {
 	/**
-	 * Mark tile entity in this coordinate is
-	 * required refreshing saved NBT.
+	 * Mark tile entity in this coordinate is required refreshing saved NBT.
 	 */
 	default void markDirty()
 	{
@@ -88,10 +88,9 @@ public interface IModifiableCoord extends ICoord
 	}
 	
 	/**
-	 * Mark light for update.
-	 * Usually used when machine state changed,
-	 * example : furnace start burning fuel.
-	 * Marked to recalculate light.
+	 * Mark light for update. Usually used when machine state changed, example :
+	 * furnace start burning fuel. Marked to recalculate light.
+	 * 
 	 * @param type
 	 */
 	default void markLightForUpdate(EnumSkyBlock type)
@@ -101,8 +100,7 @@ public interface IModifiableCoord extends ICoord
 	
 	default void explode(boolean removeTile, float strength, boolean isFlaming, boolean isSmoking)
 	{
-		if (removeTile)
-			world().removeTileEntity(pos());
+		if (removeTile) world().removeTileEntity(pos());
 		
 		world().newExplosion(null, pos().getX() + .5, pos().getY() + .5, pos().getZ() + .5, strength, isFlaming, isSmoking);
 	}

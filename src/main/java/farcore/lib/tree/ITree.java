@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 
 /**
  * Unused now, use PropertyTree instead.
+ * 
  * @author ueyudiud
  * @see farcore.lib.material.prop.PropertyTree
  */
@@ -38,15 +39,12 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 {
 	enum BlockType
 	{
-		LOG,
-		LOG_ART,
-		LEAVES,
-		LEAVES_CORE;
+		LOG, LOG_ART, LEAVES, LEAVES_CORE;
 	}
 	
 	Tree VOID = new TreeVoid();
 	
-	//	Mat material();
+	// Mat material();
 	
 	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
 	
@@ -104,22 +102,20 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	void beginLeavesDecay(World world, BlockPos pos);
 	
-	boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos,
-			float zPos, boolean isArt);
+	boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos, float zPos, boolean isArt);
 	
-	default boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side,
-			float xPos, float yPos, float zPos, @Nullable TECoreLeaves tile) { return false; }
+	default boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side, float xPos, float yPos, float zPos, @Nullable TECoreLeaves tile)
+	{
+		return false;
+	}
 	
-	ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
+	ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt);
 	
-	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ);
+	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ);
 	
 	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList<ItemStack> list);
 	
-	ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
-			boolean silkTouching, ArrayList<ItemStack> list);
+	ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList<ItemStack> list);
 	
 	int onSaplingUpdate(ISaplingAccess access);
 	

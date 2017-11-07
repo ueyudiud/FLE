@@ -19,10 +19,10 @@ public class DataCache<D>
 {
 	public final class Data
 	{
-		final int x;
-		final int z;
-		public final D store;
-		long lastAccessTime;
+		final int		x;
+		final int		z;
+		public final D	store;
+		long			lastAccessTime;
 		
 		public Data(int x, int z)
 		{
@@ -33,20 +33,21 @@ public class DataCache<D>
 	}
 	
 	/** The applier function. */
-	private final BiIntToObjFunction<D> function;
+	private final BiIntToObjFunction<D>	function;
 	/** The last time this cache was cleaned, in milliseconds. */
-	private long lastCleanupTime;
+	private long						lastCleanupTime;
 	/** The cache not be removed duration. */
-	private final long cacheDuration;
+	private final long					cacheDuration;
 	/** The cache store map. */
-	private final Long2ObjectMap<Data> cacheMap = new Long2ObjectOpenHashMap<>(4096);
+	private final Long2ObjectMap<Data>	cacheMap	= new Long2ObjectOpenHashMap<>(4096);
 	/** The cache store list. */
-	private final LinkedList<Data> caches = new LinkedList<>();
+	private final LinkedList<Data>		caches		= new LinkedList<>();
 	
 	public DataCache(BiIntToObjFunction<D> function)
 	{
 		this(function, 30000L);
 	}
+	
 	public DataCache(BiIntToObjFunction<D> function, long cacheDuration)
 	{
 		this.function = function;

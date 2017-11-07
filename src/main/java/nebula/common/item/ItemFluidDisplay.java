@@ -30,9 +30,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * A item to let fluid display as item.<p>
- * You can generate fluid block in world by use this
- * item in world, or find fluid data in game.
+ * A item to let fluid display as item.
+ * <p>
+ * You can generate fluid block in world by use this item in world, or find
+ * fluid data in game.
+ * 
  * @author ueyudiud
  */
 public class ItemFluidDisplay extends ItemBase
@@ -49,8 +51,7 @@ public class ItemFluidDisplay extends ItemBase
 	{
 		super.registerRender();
 		NebulaModelLoader.registerModel(this, new ResourceLocation("nebula", "fluid"));
-		NebulaModelLoader.registerItemMetaGenerator(
-				new ResourceLocation(Nebula.MODID, "display_fluid"), stack->getFluid(stack).getName());
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(Nebula.MODID, "display_fluid"), stack -> getFluid(stack).getName());
 	}
 	
 	public static Fluid getFluid(ItemStack stack)
@@ -87,9 +88,9 @@ public class ItemFluidDisplay extends ItemBase
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		if(NebulaConfig.displayFluidInTab)
+		if (NebulaConfig.displayFluidInTab)
 		{
-			for(Entry<Fluid, Integer> entry : FluidRegistry.getRegisteredFluidIDs().entrySet())
+			for (Entry<Fluid, Integer> entry : FluidRegistry.getRegisteredFluidIDs().entrySet())
 			{
 				subItems.add(new ItemStack(itemIn, 1, entry.getValue()));
 			}
@@ -98,8 +99,7 @@ public class ItemFluidDisplay extends ItemBase
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList list,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList list, boolean advanced)
 	{
 		Fluid fluid = FluidRegistry.getFluid(getDamage(stack));
 		int amount = stack.hasTagCompound() ? stack.getTagCompound().getInteger("amount") : 0;
@@ -117,18 +117,16 @@ public class ItemFluidDisplay extends ItemBase
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		Fluid fluid = FluidRegistry.getFluid(getDamage(stack));
-		if(fluid != null && fluid.getBlock() != null)
+		if (fluid != null && fluid.getBlock() != null)
 		{
 			try
 			{
-				return worldIn.setBlockState(pos.offset(facing), fluid.getBlock().getDefaultState(), 3) ?
-						EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+				return worldIn.setBlockState(pos.offset(facing), fluid.getBlock().getDefaultState(), 3) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.warn("Catching an exception during put fluid block on ground.", exception);
 				return EnumActionResult.FAIL;

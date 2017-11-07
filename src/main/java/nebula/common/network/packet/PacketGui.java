@@ -18,6 +18,7 @@ public abstract class PacketGui extends PacketAbstract
 	{
 		
 	}
+	
 	public PacketGui(ContainerBase container)
 	{
 		this.guiid = container.windowId;

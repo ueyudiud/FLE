@@ -39,13 +39,14 @@ import net.minecraftforge.common.ForgeHooks;
 
 /**
  * Tool using checking hooks.
+ * 
  * @author ueyudiud
  */
 public class ToolHooks
 {
-	private static final Map<Material, List<EnumToolType>> breakableToolMap = new HashMap<>();
-	private static final Map<Material, List<EnumToolType>> efficiencyToolMap = new HashMap<>();
-	private static final Map<Material, List<EnumToolType>> harvestableToolMap = new HashMap<>();
+	private static final Map<Material, List<EnumToolType>>	breakableToolMap	= new HashMap<>();
+	private static final Map<Material, List<EnumToolType>>	efficiencyToolMap	= new HashMap<>();
+	private static final Map<Material, List<EnumToolType>>	harvestableToolMap	= new HashMap<>();
 	
 	static
 	{
@@ -71,13 +72,17 @@ public class ToolHooks
 	
 	public static void addEfficiencyTool(Material material, EnumToolType...toolTypes)
 	{
-		L.put(breakableToolMap, material, toolTypes);//The efficiency tool should be able to break it.
+		L.put(breakableToolMap, material, toolTypes);// The efficiency tool
+														// should be able to
+														// break it.
 		L.put(efficiencyToolMap, material, toolTypes);
 	}
 	
 	public static void addHarvestableTool(Material material, boolean efficiency, EnumToolType...toolTypes)
 	{
-		L.put(breakableToolMap, material, toolTypes);//The harvestable tool should be able to break it.
+		L.put(breakableToolMap, material, toolTypes);// The harvestable tool
+														// should be able to
+														// break it.
 		if (efficiency) L.put(efficiencyToolMap, material, toolTypes);
 		L.put(harvestableToolMap, material, toolTypes);
 	}
@@ -103,7 +108,8 @@ public class ToolHooks
 		if (!mapMatch(harvestableToolMap, state, stack)) return false;
 		Set<String> set = stack.getItem().getToolClasses(stack);
 		if (set.isEmpty()) return false;
-		//Only get a default level, I don't think there is any tool have different harvest level for different tool type...
+		// Only get a default level, I don't think there is any tool have
+		// different harvest level for different tool type...
 		int level = stack.getItem().getHarvestLevel(stack, set.iterator().next());
 		return level >= state.getBlock().getHarvestLevel(state);
 	}
@@ -111,8 +117,8 @@ public class ToolHooks
 	private static boolean mapMatch(Map<Material, List<EnumToolType>> map, IBlockState state, ItemStack stack)
 	{
 		Material material = state.getMaterial();
-		if(material.isToolNotRequired()) return true;
-		if(!map.containsKey(material)) return false;
+		if (material.isToolNotRequired()) return true;
+		if (!map.containsKey(material)) return false;
 		List<EnumToolType> toolTypes = map.get(material);
 		List<EnumToolType> target = ItemStacks.getCurrentToolType(stack);
 		return L.contain(toolTypes, type -> target.contains(type));

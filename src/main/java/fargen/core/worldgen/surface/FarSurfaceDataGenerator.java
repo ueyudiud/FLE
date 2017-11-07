@@ -42,14 +42,9 @@ import net.minecraft.world.World;
  */
 public class FarSurfaceDataGenerator
 {
-	static final TreeGenAbstract
-	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F).enableVineGen(),
-	OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F),
-	OAK2 = new TreeGenShrub(M.oak.getProperty(MP.property_tree), 0.025F),
-	BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F),
-	ACACIA = new TreeGenAcacia(M.acacia.getProperty(MP.property_tree), 0.03F),
-	SPRUCE1 = new TreeGenPine(M.spruce.getProperty(MP.property_tree), 0.03F),
-	WILLOW = new TreeGenSimple(M.willow.getProperty(MP.property_tree), 0.08F, true).setTreeLeavesShape(1, 6, 2, 3.6F);
+	static final TreeGenAbstract CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F).enableVineGen(), OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F), OAK2 = new TreeGenShrub(M.oak.getProperty(MP.property_tree), 0.025F),
+			BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F), ACACIA = new TreeGenAcacia(M.acacia.getProperty(MP.property_tree), 0.03F), SPRUCE1 = new TreeGenPine(M.spruce.getProperty(MP.property_tree), 0.03F),
+			WILLOW = new TreeGenSimple(M.willow.getProperty(MP.property_tree), 0.08F, true).setTreeLeavesShape(1, 6, 2, 3.6F);
 	
 	static final SelectorEntryListProvider<ITreeGenerator> TREE_GEN_PROVIDER;
 	
@@ -58,8 +53,7 @@ public class FarSurfaceDataGenerator
 		TREE_GEN_PROVIDER.addToSelector(x, z, temp, rain, noise, selector);
 	}
 	
-	static final ICrop
-	WHEAT = Mat.propertyOf("wheat", MP.property_crop);
+	static final ICrop WHEAT = Mat.propertyOf("wheat", MP.property_crop);
 	
 	static final SelectorEntryListProvider<ICrop> CROP_PROVIDER;
 	
@@ -84,13 +78,10 @@ public class FarSurfaceDataGenerator
 		return SOIL_LAYER_REGISTER.get(id, SOIL_DEFAULT);
 	}
 	
-	static final IBlockState
-	ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState(),
-	SOIL_DEFAULT[] = {Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState()},
-	ROCK_DEFAULT[] = {ROCK};
+	static final IBlockState ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState(), SOIL_DEFAULT[] = { Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState() }, ROCK_DEFAULT[] = { ROCK };
 	
-	static final IRegister<IBlockState> ROCK_LAYER_REGISTER = new Register<>();
-	static final IRegister<IBlockState[]> SOIL_LAYER_REGISTER = new Register<>(256);
+	static final IRegister<IBlockState>		ROCK_LAYER_REGISTER	= new Register<>();
+	static final IRegister<IBlockState[]>	SOIL_LAYER_REGISTER	= new Register<>(256);
 	
 	public static @Nonnull IBlockState[] getSoilLayerByName(String name)
 	{
@@ -104,18 +95,14 @@ public class FarSurfaceDataGenerator
 	
 	protected final FarSurfaceBiomeProvider biomeProvider;
 	
-	private DataCacheCoord<IBlockState[]> rockDataCache;
-	private DataCacheCoord<IBlockState[]> topDataCache;
+	private DataCacheCoord<IBlockState[]>	rockDataCache;
+	private DataCacheCoord<IBlockState[]>	topDataCache;
 	
 	public FarSurfaceDataGenerator(FarSurfaceBiomeProvider provider, long seed)
 	{
 		this.biomeProvider = provider;
-		this.rockDataCache = new DataCacheCoord<>((x, z)-> A.transform(
-				provider.layers[2].getInts(x << 4, z << 4, 16, 16),
-				IBlockState[].class, FarSurfaceDataGenerator::getRockLayer), 4);
-		this.topDataCache = new DataCacheCoord<>((x, z)-> A.transform(
-				provider.layers[3].getInts(x << 4, z << 4, 16, 16),
-				IBlockState[].class, FarSurfaceDataGenerator::getSoilLayer), 4);
+		this.rockDataCache = new DataCacheCoord<>((x, z) -> A.transform(provider.layers[2].getInts(x << 4, z << 4, 16, 16), IBlockState[].class, FarSurfaceDataGenerator::getRockLayer), 4);
+		this.topDataCache = new DataCacheCoord<>((x, z) -> A.transform(provider.layers[3].getInts(x << 4, z << 4, 16, 16), IBlockState[].class, FarSurfaceDataGenerator::getSoilLayer), 4);
 	}
 	
 	void cleanCache()
@@ -179,29 +166,20 @@ public class FarSurfaceDataGenerator
 	{
 		final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
 		
-		for (Mat rock : new Mat[]{M.andesite, M.basalt, M.diorite, M.gabbro, M.granite, M.kimberlite,
-				M.limestone, M.marble, M.peridotite, M.rhyolite, M.graniteP})
+		for (Mat rock : new Mat[] { M.andesite, M.basalt, M.diorite, M.gabbro, M.granite, M.kimberlite, M.limestone, M.marble, M.peridotite, M.rhyolite, M.graniteP })
 		{
 			ROCK_LAYER_REGISTER.register(rock.name, rock.getProperty(MP.property_rock).block.getDefaultState());
 		}
 		
-		for (Mat soil : new Mat[]{M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam,
-				M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol,
-				M.brunnocalcosol, M.brunnodesertosol, M.cinerodesertosol, M.flavobrunnoloam,
-				M.brunnoloam, M.tundrosol, M.moraine, M.aterobrunnoloam, M.spaticocalcosol,
-				M.palosol})
+		for (Mat soil : new Mat[] { M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam, M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol, M.brunnocalcosol, M.brunnodesertosol, M.cinerodesertosol, M.flavobrunnoloam, M.brunnoloam, M.tundrosol, M.moraine, M.aterobrunnoloam, M.spaticocalcosol, M.palosol })
 		{
 			IBlockState state = soil.getProperty(MP.property_soil).block.getDefaultState();
-			SOIL_LAYER_REGISTER.register(soil.name, new IBlockState[] {
-					state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS),
-					state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.NONE),
-					GRAVEL
-			});
+			SOIL_LAYER_REGISTER.register(soil.name, new IBlockState[] { state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS), state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.NONE), GRAVEL });
 		}
-		for (Mat sand : new Mat[]{M.sand, M.redsand})
+		for (Mat sand : new Mat[] { M.sand, M.redsand })
 		{
 			IBlockState state = sand.getProperty(MP.property_sand).block.getDefaultState();
-			SOIL_LAYER_REGISTER.register(sand.name, new IBlockState[]{state, state, GRAVEL});
+			SOIL_LAYER_REGISTER.register(sand.name, new IBlockState[] { state, state, GRAVEL });
 		}
 		
 		CEIBA1.setHeight(32, 10);

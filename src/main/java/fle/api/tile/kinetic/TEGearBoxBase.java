@@ -20,15 +20,13 @@ public class TEGearBoxBase extends TESynchronization implements IKineticHandler
 {
 	public static enum RotationType
 	{
-		EDGE_ROTATE,
-		ROPE_ROTATE,
-		AXIS_ROTATE;
+		EDGE_ROTATE, ROPE_ROTATE, AXIS_ROTATE;
 	}
 	
 	public static class KineticPackageExt extends KineticPackage
 	{
-		public final RotationType type;
-		public final Direction direction;
+		public final RotationType	type;
+		public final Direction		direction;
 		
 		protected KineticPackageExt(RotationType type, Direction direction, double t, double s)
 		{
@@ -45,9 +43,9 @@ public class TEGearBoxBase extends TESynchronization implements IKineticHandler
 	
 	public static class KineticPackageGearEdgeRotate extends KineticPackageExt
 	{
-		public int gearTeethCount;
-		public float gearLen;
-		public float gearTeethLen;
+		public int		gearTeethCount;
+		public float	gearLen;
+		public float	gearTeethLen;
 		
 		public KineticPackageGearEdgeRotate(Direction direction, double t, double s)
 		{
@@ -118,15 +116,13 @@ public class TEGearBoxBase extends TESynchronization implements IKineticHandler
 	}
 	
 	@Override
-	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction,
-			KineticPackage pkg)
+	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction, KineticPackage pkg)
 	{
 		
 	}
 	
 	@Override
-	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction,
-			KineticPackage pkg)
+	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction, KineticPackage pkg)
 	{
 		return 0;
 	}

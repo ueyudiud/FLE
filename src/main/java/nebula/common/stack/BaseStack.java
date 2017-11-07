@@ -21,98 +21,101 @@ public class BaseStack implements AbstractStack
 		return size <= 0 ? null : new BaseStack(stack.stack, size);
 	}
 	
-	private ImmutableList<ItemStack> list;
-	private ItemStack stack;
-	public final boolean isWildcardValue;
+	private ImmutableList<ItemStack>	list;
+	private ItemStack					stack;
+	public final boolean				isWildcardValue;
 	
 	public BaseStack(String modid, String name, int size, int meta)
 	{
 		Item item = GameRegistry.findItem(modid, name);
-		if(item != null)
+		if (item != null)
 		{
 			this.stack = new ItemStack(item, size, meta);
 		}
 		this.isWildcardValue = item != null && ((item.getHasSubtypes() || item instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE);
 	}
+	
 	public BaseStack(Block block)
 	{
 		this(block, 1);
 	}
+	
 	public BaseStack(Block block, int size)
 	{
 		this(block, size, OreDictionary.WILDCARD_VALUE);
 	}
+	
 	public BaseStack(Block block, int size, int meta)
 	{
-		if(block != null)
+		if (block != null)
 		{
 			this.stack = new ItemStack(block, size, meta);
 		}
 		this.isWildcardValue = meta == OreDictionary.WILDCARD_VALUE;
 	}
+	
 	public BaseStack(Item item)
 	{
 		this(item, 1);
 	}
+	
 	public BaseStack(Item item, int size)
 	{
 		this(item, size, OreDictionary.WILDCARD_VALUE);
 	}
+	
 	public BaseStack(Item item, int size, int meta)
 	{
-		if(item != null)
+		if (item != null)
 		{
 			this.stack = new ItemStack(item, size, meta);
 		}
-		this.isWildcardValue = item != null &&
-				((item.getHasSubtypes() || item instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE);
+		this.isWildcardValue = item != null && ((item.getHasSubtypes() || item instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE);
 	}
+	
 	public BaseStack(ItemStack stack)
 	{
 		this.stack = ItemStack.copyItemStack(stack);
 		this.isWildcardValue = false;
 	}
+	
 	public BaseStack(ItemStack stack, int size)
 	{
-		if(stack != null)
+		if (stack != null)
 		{
 			this.stack = stack.copy();
 			this.stack.stackSize = size;
 		}
-		this.isWildcardValue = stack != null &&
-				(stack.getHasSubtypes() || stack.getItem() instanceof ItemBlock) && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE;
+		this.isWildcardValue = stack != null && (stack.getHasSubtypes() || stack.getItem() instanceof ItemBlock) && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE;
 	}
+	
 	public BaseStack(ItemStack stack, int size, int meta)
 	{
-		if(stack != null)
+		if (stack != null)
 		{
 			this.stack = stack.copy();
 			this.stack.stackSize = size;
 			this.stack.setItemDamage(meta);
 		}
-		this.isWildcardValue = stack != null &&
-				(stack.getHasSubtypes() || stack.getItem() instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE;
+		this.isWildcardValue = stack != null && (stack.getHasSubtypes() || stack.getItem() instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE;
 	}
 	
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return this.stack == null ? stack == null :
-			OreDictionary.itemMatches(this.stack, stack, false);
+		return this.stack == null ? stack == null : OreDictionary.itemMatches(this.stack, stack, false);
 	}
 	
 	@Override
 	public boolean contain(ItemStack stack)
 	{
-		return similar(stack) &&
-				(this.stack == null || this.stack.stackSize <= stack.stackSize);
+		return similar(stack) && (this.stack == null || this.stack.stackSize <= stack.stackSize);
 	}
 	
 	@Override
 	public int size(ItemStack stack)
 	{
-		return this.stack == null ? 0 :
-			this.stack.stackSize;
+		return this.stack == null ? 0 : this.stack.stackSize;
 	}
 	
 	@Override
@@ -142,8 +145,7 @@ public class BaseStack implements AbstractStack
 	{
 		if (this.list == null)
 		{
-			this.list = this.stack != null ?
-					ImmutableList.of(this.stack.copy()) : ImmutableList.of();
+			this.list = this.stack != null ? ImmutableList.of(this.stack.copy()) : ImmutableList.of();
 		}
 		return this.list;
 	}
@@ -163,8 +165,7 @@ public class BaseStack implements AbstractStack
 	@Override
 	public int hashCode()
 	{
-		return this.stack == null ? 31 :
-			this.stack.getItem().hashCode() * 31 + this.stack.getItemDamage();
+		return this.stack == null ? 31 : this.stack.getItem().hashCode() * 31 + this.stack.getItemDamage();
 	}
 	
 	@Override
@@ -172,7 +173,7 @@ public class BaseStack implements AbstractStack
 	{
 		if ((obj == this) || (this.stack == null && obj == EMPTY))
 			return true;
-		else if(!(obj instanceof BaseStack)) return false;
+		else if (!(obj instanceof BaseStack)) return false;
 		return ItemStack.areItemStacksEqual(this.stack, ((BaseStack) obj).stack);
 	}
 }

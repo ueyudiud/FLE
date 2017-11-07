@@ -5,6 +5,7 @@ package nebula.common.gui;
 
 /**
  * The GUI action listener.
+ * 
  * @see nebula.common.network.packet.PacketGuiAction
  * @see nebula.client.gui.GuiContainerBase#sendGuiData(int,long,boolean)
  * @author ueyudiud

@@ -61,66 +61,58 @@ public class CommandSkill extends CommandBase
 			{
 				switch (args[0])
 				{
-				case "help" :
-				case "h" :
-				case "?" :
+				case "help":
+				case "h":
+				case "?":
 					notifyCommandListener(sender, this, "commands.skill.help.1");
 					notifyCommandListener(sender, this, "commands.skill.help.2");
 					notifyCommandListener(sender, this, "commands.skill.help.3");
 					notifyCommandListener(sender, this, "commands.skill.help.4");
 					break;
 				case "list":
-				case "l" :
+				case "l":
 					notifyCommandListener(sender, this, ISkill.REGISTER.toString());
 					break;
-				case "get" :
-				case "g" :
-					if (args.length > 3)
-						throw new CommandException("commands.skill.help.2");
+				case "get":
+				case "g":
+					if (args.length > 3) throw new CommandException("commands.skill.help.2");
 					int i;
 					EntityPlayer player;
 					if (args.length == 3)
 					{
 						i = 2;
 						player = server.getPlayerList().getPlayerByUsername(args[2]);
-						if (player == null)
-							throw new CommandException("commands.skill.get.player.notexist.err", args[2]);
+						if (player == null) throw new CommandException("commands.skill.get.player.notexist.err", args[2]);
 					}
 					else
 					{
 						i = 1;
-						if (! (sender instanceof ICommandSender))
-							throw new CommandException("commands.skill.get.onlyusablebyplayer.err");
+						if (!(sender instanceof ICommandSender)) throw new CommandException("commands.skill.get.onlyusablebyplayer.err");
 						player = (EntityPlayer) sender.getCommandSenderEntity();
 					}
 					ISkill skill = ISkill.REGISTER.get(args[i]);
-					if (skill == null)
-						throw new CommandException("commands.skill.get.skill.notexist.err", args[i]);
+					if (skill == null) throw new CommandException("commands.skill.get.skill.notexist.err", args[i]);
 					notifyCommandListener(sender, this, skill.getSkillInfo(player));
 					break;
-				case "set" :
-				case "s" :
+				case "set":
+				case "s":
 					if (sender.canUseCommand(2, ""))
 					{
-						if (args.length > 4 || args.length == 1)
-							throw new CommandException("commands.skill.help.3");
+						if (args.length > 4 || args.length == 1) throw new CommandException("commands.skill.help.3");
 						if (args.length == 4)
 						{
 							i = 2;
 							player = server.getPlayerList().getPlayerByUsername(args[2]);
-							if (player == null)
-								throw new CommandException("commands.skill.get.player.notexist.err", args[2]);
+							if (player == null) throw new CommandException("commands.skill.get.player.notexist.err", args[2]);
 						}
 						else
 						{
 							i = 1;
-							if (! (sender instanceof ICommandSender))
-								throw new CommandException("commands.skill.get.onlyusablebyplayer.err");
+							if (!(sender instanceof ICommandSender)) throw new CommandException("commands.skill.get.onlyusablebyplayer.err");
 							player = (EntityPlayer) sender.getCommandSenderEntity();
 						}
 						skill = ISkill.REGISTER.get(args[i]);
-						if (skill == null)
-							throw new CommandException("commands.skill.get.skill.notexist.err", args[i]);
+						if (skill == null) throw new CommandException("commands.skill.get.skill.notexist.err", args[i]);
 						int level;
 						try
 						{

@@ -22,8 +22,8 @@ import net.minecraftforge.common.EnumPlantType;
  */
 public abstract class PlantNormal implements IPlant<BlockPlant>
 {
-	protected final Mat material;
-	protected BlockPlant block;
+	protected final Mat		material;
+	protected BlockPlant	block;
 	
 	public PlantNormal(Mat material)
 	{
@@ -50,23 +50,18 @@ public abstract class PlantNormal implements IPlant<BlockPlant>
 	
 	protected abstract IBlockState randomGrowState(IBlockState parent, Random random);
 	
-	protected void spreadSeed(BlockPlant block, World world, BlockPos pos, Random random,
-			IBlockState source, int range, int seedbase, int seedrand)
+	protected void spreadSeed(BlockPlant block, World world, BlockPos pos, Random random, IBlockState source, int range, int seedbase, int seedrand)
 	{
 		int maxCount = seedbase + random.nextInt(seedrand);
 		MutableBlockPos pos2 = new MutableBlockPos();
 		for (int i = 0; i < maxCount; ++i)
 		{
-			pos2.setPos(
-					pos.getX() + random.nextInt(range << 1) - range,
-					pos.getY() + random.nextInt(range << 1) - range,
-					pos.getZ() + random.nextInt(range << 1) - range);
+			pos2.setPos(pos.getX() + random.nextInt(range << 1) - range, pos.getY() + random.nextInt(range << 1) - range, pos.getZ() + random.nextInt(range << 1) - range);
 			while (world.isAirBlock(pos2.down()) && pos2.getY() > 0)
 			{
 				pos2.move(EnumFacing.DOWN);
 			}
-			if (canBlockStay(block, block.getDefaultState(), world, pos2) &&
-					Worlds.isAirOrReplacable(world, pos2))
+			if (canBlockStay(block, block.getDefaultState(), world, pos2) && Worlds.isAirOrReplacable(world, pos2))
 			{
 				world.setBlockState(pos2, randomGrowState(source, random));
 			}

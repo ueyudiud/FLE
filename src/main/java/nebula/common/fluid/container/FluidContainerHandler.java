@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * The fluid container function helper.
+ * 
  * @author ueyudiud
  * @see net.minecraftforge.fluids.capability.IFluidHandler
  * @see nebula.common.fluid.container.IItemFluidContainer
@@ -38,7 +39,7 @@ public class FluidContainerHandler
 			{
 				if (raw.isV1())
 					return raw.castV1().drain(stack, Integer.MAX_VALUE, false);
-				else//if (raw.isV2())
+				else// if (raw.isV2())
 					return raw.castV2().getContain(stack);
 			}
 		}
@@ -117,26 +118,27 @@ public class FluidContainerHandler
 	}
 	
 	/**
-	 * Drain fluid from fluid container in inventory.<p>
+	 * Drain fluid from fluid container in inventory.
+	 * <p>
 	 * The <tt>drain</tt> action will be handled with follows rules:
-	 * <li>
-	 * The stack should be non-null and the
-	 * item should implements <code>IItemFluidContainer</code> or has
+	 * <li>The stack should be non-null and the item should implements
+	 * <code>IItemFluidContainer</code> or has
 	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
 	 * capability, or action will not process.
-	 * <li>
-	 * If item implements {@link nebula.common.fluid.container.IItemFluidContainer},
-	 * its capability will not be checked.
-	 * <li>
-	 * The action will be process when output slot can insert output stack or when item
-	 * implements <code>IItemFluidContainer</code> and stack not changed after drained fluid,
-	 * then the output will remain at input slot.
+	 * <li>If item implements
+	 * {@link nebula.common.fluid.container.IItemFluidContainer}, its capability
+	 * will not be checked.
+	 * <li>The action will be process when output slot can insert output stack
+	 * or when item implements <code>IItemFluidContainer</code> and stack not
+	 * changed after drained fluid, then the output will remain at input slot.
 	 * </li>
+	 * 
 	 * @param inventory the inventory contain fluid container.
 	 * @param required the fluid type and amount required.
 	 * @param in the input slot id.
 	 * @param out the output slot id.
-	 * @return <tt>true</tt> when <tt>drain</tt> action is processed, and <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> when <tt>drain</tt> action is processed, and
+	 *         <tt>false</tt> otherwise.
 	 * @see net.minecraftforge.fluids.capability.IFluidHandler
 	 * @see nebula.common.fluid.container.IItemFluidContainer
 	 */
@@ -155,8 +157,7 @@ public class FluidContainerHandler
 					{
 						IItemFluidContainerV1 container = containerRaw.castV1();
 						container.drain(stack, required, true);
-						if (!container.hasFluid(stack) &&
-								inventory.insertStack(out, stack, true))
+						if (!container.hasFluid(stack) && inventory.insertStack(out, stack, true))
 						{
 							inventory.decrStackSize(in, 1);
 						}
@@ -168,8 +169,7 @@ public class FluidContainerHandler
 						if (container.getContain(stack).containsFluid(required))
 						{
 							ItemStack stack2 = container.drain(stack, false);
-							if (stack2 != null &&
-									inventory.insertStack(out, stack2, true))
+							if (stack2 != null && inventory.insertStack(out, stack2, true))
 							{
 								return true;
 							}
@@ -192,26 +192,27 @@ public class FluidContainerHandler
 	}
 	
 	/**
-	 * Drain fluid from fluid container in inventory.<p>
+	 * Drain fluid from fluid container in inventory.
+	 * <p>
 	 * The <tt>drain</tt> action will be handled with follows rules:
-	 * <li>
-	 * The stack should be non-null and the
-	 * item should implements <code>IItemFluidContainer</code> or has
+	 * <li>The stack should be non-null and the item should implements
+	 * <code>IItemFluidContainer</code> or has
 	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
 	 * capability, or action will not process.
-	 * <li>
-	 * If item implements {@link nebula.common.fluid.container.IItemFluidContainer},
-	 * its capability will not be checked.
-	 * <li>
-	 * The action will be process when output slot can insert output stack or when item
-	 * implements <code>IItemFluidContainer</code> and stack not changed after drained fluid,
-	 * then the output will remain at input slot.
+	 * <li>If item implements
+	 * {@link nebula.common.fluid.container.IItemFluidContainer}, its capability
+	 * will not be checked.
+	 * <li>The action will be process when output slot can insert output stack
+	 * or when item implements <code>IItemFluidContainer</code> and stack not
+	 * changed after drained fluid, then the output will remain at input slot.
 	 * </li>
+	 * 
 	 * @param inventory the inventory contain fluid container.
 	 * @param amount the fluid amount required.
 	 * @param in the input slot id.
 	 * @param out the output slot id.
-	 * @return <tt>true</tt> when <tt>drain</tt> action is processed, and <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> when <tt>drain</tt> action is processed, and
+	 *         <tt>false</tt> otherwise.
 	 * @see net.minecraftforge.fluids.capability.IFluidHandler
 	 * @see nebula.common.fluid.container.IItemFluidContainer
 	 */
@@ -230,8 +231,7 @@ public class FluidContainerHandler
 					{
 						IItemFluidContainerV1 container = containerRaw.castV1();
 						container.drain(stack, amount, true);
-						if (!container.hasFluid(stack) &&
-								inventory.insertStack(out, stack, true))
+						if (!container.hasFluid(stack) && inventory.insertStack(out, stack, true))
 						{
 							inventory.decrStackSize(in, 1);
 						}
@@ -243,8 +243,7 @@ public class FluidContainerHandler
 						if (container.capacity(stack) >= amount)
 						{
 							ItemStack stack2 = container.drain(stack, false);
-							if (stack2 != null &&
-									inventory.insertStack(out, stack2, true))
+							if (stack2 != null && inventory.insertStack(out, stack2, true))
 							{
 								return true;
 							}
@@ -309,7 +308,6 @@ public class FluidContainerHandler
 		return null;
 	}
 	
-	
 	public static @Nullable Entry<ItemStack, FluidStack> drainContainer(ItemStack stack, int amount)
 	{
 		if (stack.getItem() instanceof IItemFluidContainer)
@@ -323,7 +321,7 @@ public class FluidContainerHandler
 					FluidStack stack2 = raw.castV1().drain(stack, amount, true);
 					return new Ety(stack, stack2);
 				}
-				else//if (raw.isV2())
+				else// if (raw.isV2())
 				{
 					FluidStack stack2 = raw.castV2().getContain(stack);
 					stack = raw.castV2().drain(stack, true);

@@ -15,12 +15,14 @@ public interface ISolidHandlerIO
 {
 	/**
 	 * Match side can extract solid.
+	 * 
 	 * @return
 	 */
 	boolean canExtractSolid(Direction to);
 	
 	/**
 	 * Match side can insert solid.
+	 * 
 	 * @param stack For asked stack, null for ask general behavior.
 	 * @return
 	 */

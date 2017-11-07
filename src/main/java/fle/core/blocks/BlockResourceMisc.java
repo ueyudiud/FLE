@@ -35,8 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class BlockResourceMisc extends BlockTE
-implements IThermalCustomBehaviorBlock
+public class BlockResourceMisc extends BlockTE implements IThermalCustomBehaviorBlock
 {
 	public BlockResourceMisc()
 	{
@@ -59,15 +58,12 @@ implements IThermalCustomBehaviorBlock
 		registerRenderMapper(mapper);
 		registerCustomBlockRender(mapper, 0, "misc_resource/firewood");
 		
-		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "firewood/states"),
-				state-> {
-					TEFirewood tile = BlockStateTileEntityWapper.unwrap(state);
-					return tile == null ? M.oak.name : tile.isCarbonate() ? "charcoal" : tile.getMaterial().name;
-				});
-		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "firewood/side_base"),
-				()-> Maps.toMap(Lists.transform(Mat.filt(SubTags.WOOD), m->m.name), name->new ResourceLocation(FLE.MODID, "blocks/firewood/" + name + "_side")));
-		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "firewood/top_base"),
-				()-> Maps.toMap(Lists.transform(Mat.filt(SubTags.WOOD), m->m.name), name->new ResourceLocation(FLE.MODID, "blocks/firewood/" + name + "_top")));
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "firewood/states"), state -> {
+			TEFirewood tile = BlockStateTileEntityWapper.unwrap(state);
+			return tile == null ? M.oak.name : tile.isCarbonate() ? "charcoal" : tile.getMaterial().name;
+		});
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "firewood/side_base"), () -> Maps.toMap(Lists.transform(Mat.filt(SubTags.WOOD), m -> m.name), name -> new ResourceLocation(FLE.MODID, "blocks/firewood/" + name + "_side")));
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "firewood/top_base"), () -> Maps.toMap(Lists.transform(Mat.filt(SubTags.WOOD), m -> m.name), name -> new ResourceLocation(FLE.MODID, "blocks/firewood/" + name + "_top")));
 	}
 	
 	@Override

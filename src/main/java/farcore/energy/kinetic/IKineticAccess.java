@@ -4,6 +4,7 @@ import nebula.common.util.Direction;
 
 /**
  * The kinetic energy handler interface.
+ * 
  * @author ueyudiud
  *
  */

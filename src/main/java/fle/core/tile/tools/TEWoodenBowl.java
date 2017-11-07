@@ -40,14 +40,12 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public class TEWoodenBowl extends TESingleTank
-implements ITP_Drops, IFluidHandler, IFluidHandlerIO, ITB_BlockPlacedBy, ILogProductionCollector,
-ITP_BoundingBox, ITB_BlockActived
+public class TEWoodenBowl extends TESingleTank implements ITP_Drops, IFluidHandler, IFluidHandlerIO, ITB_BlockPlacedBy, ILogProductionCollector, ITP_BoundingBox, ITB_BlockActived
 {
 	private static final AxisAlignedBB AABB_BOWL = new AxisAlignedBB(0.25F, 0F, 0.25F, 0.75F, 0.25F, 0.75F);
 	
-	private int damage;
-	private FluidTankN tank = new FluidTankN(250).enableTemperature();
+	private int			damage;
+	private FluidTankN	tank	= new FluidTankN(250).enableTemperature();
 	
 	@Override
 	public AxisAlignedBB getBoundBox(IBlockState state)
@@ -86,8 +84,7 @@ ITP_BoundingBox, ITB_BlockActived
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (hand == EnumHand.MAIN_HAND && stack == null && this.tank.hasFluid())
 		{

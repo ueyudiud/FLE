@@ -25,8 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 /**
  * @author ueyudiud
  */
-public abstract class TEInventoryDynamicSize extends TESynchronization
-implements IBasicInventory, IInventory, ITB_BreakBlock
+public abstract class TEInventoryDynamicSize extends TESynchronization implements IBasicInventory, IInventory, ITB_BreakBlock
 {
 	protected ItemStack[] stacks;
 	

@@ -51,24 +51,22 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TECustomCarvedStone extends TEStatic
-implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_BoundingBox,
-ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestCheck, IToolableTile
+public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_BoundingBox, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestCheck, IToolableTile
 {
-	private static final long EMPTY = ~0L;
-	private static final float BLOCK_SCALE = 0.25F;
-	private static final long[] X_LAYER = {0x1111111111111111L, 0x2222222222222222L, 0x4444444444444444L, 0x8888888888888888L};
-	private static final long[] Y_LAYER = {0x000F000F000F000FL, 0x00F000F000F000F0L, 0x0F000F000F000F00L, 0xF000F000F000F000L};
-	private static final long[] Z_LAYER = {0x000000000000FFFFL, 0x00000000FFFF0000L, 0x00FFFF0000000000L, 0xFFFF000000000000L};
-	private static final AxisAlignedBB[] AXISALIGNEDBBS = new AxisAlignedBB[64];
+	private static final long				EMPTY			= ~0L;
+	private static final float				BLOCK_SCALE		= 0.25F;
+	private static final long[]				X_LAYER			= { 0x1111111111111111L, 0x2222222222222222L, 0x4444444444444444L, 0x8888888888888888L };
+	private static final long[]				Y_LAYER			= { 0x000F000F000F000FL, 0x00F000F000F000F0L, 0x0F000F000F000F00L, 0xF000F000F000F000L };
+	private static final long[]				Z_LAYER			= { 0x000000000000FFFFL, 0x00000000FFFF0000L, 0x00FFFF0000000000L, 0xFFFF000000000000L };
+	private static final AxisAlignedBB[]	AXISALIGNEDBBS	= new AxisAlignedBB[64];
 	
 	static
 	{
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			for(int j = 0; j < 4; ++j)
+			for (int j = 0; j < 4; ++j)
 			{
-				for(int k = 0; k < 4; ++k)
+				for (int k = 0; k < 4; ++k)
 				{
 					AXISALIGNEDBBS[index8i(i, j, k)] = new AxisAlignedBB(.25F * i, .25F * j, .25F * k, .25F * (i + 1), .25F * (j + 1), .25F * (k + 1));
 				}
@@ -76,20 +74,20 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		}
 	}
 	
-	private Mat rock = M.stone;
-	private RockBehavior property = null;
-	public EnumRockType type = EnumRockType.resource;
-	private boolean neighbourChanged = false;
-	private boolean modified = true;
-	private AxisAlignedBB box = null;
-	private byte[] lightmapSky = new byte[64];
-	private byte[] lightmapBlock = new byte[64];
+	private Mat				rock				= M.stone;
+	private RockBehavior	property			= null;
+	public EnumRockType		type				= EnumRockType.resource;
+	private boolean			neighbourChanged	= false;
+	private boolean			modified			= true;
+	private AxisAlignedBB	box					= null;
+	private byte[]			lightmapSky			= new byte[64];
+	private byte[]			lightmapBlock		= new byte[64];
 	
-	private long carvedState= 0x0;
+	private long carvedState = 0x0;
 	
 	private RockBehavior property()
 	{
-		if(this.property == null)
+		if (this.property == null)
 		{
 			this.property = this.rock.getProperty(MP.property_rock);
 		}
@@ -168,7 +166,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		this.type = NBTs.getEnumOrDefault(nbt, "t", this.type);
 		this.property = null;
 		long state = NBTs.getLongOrDefault(nbt, "c", this.carvedState);
-		if(state != this.carvedState)
+		if (state != this.carvedState)
 		{
 			this.carvedState = state;
 			this.modified = true;
@@ -193,15 +191,15 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		double vx1 = hitX == 1.0 ? 0.9999 : hitX;
 		double vy1 = hitY == 1.0 ? 0.9999 : hitY;
 		double vz1 = hitZ == 1.0 ? 0.9999 : hitZ;
-		while(nebula.common.util.L.inRange(1.0, 0.0, vx1) && nebula.common.util.L.inRange(1.0, 0.0, vy1) && nebula.common.util.L.inRange(1.0, 0.0, vz1))
+		while (nebula.common.util.L.inRange(1.0, 0.0, vx1) && nebula.common.util.L.inRange(1.0, 0.0, vy1) && nebula.common.util.L.inRange(1.0, 0.0, vz1))
 		{
 			int x = (int) (vx1 * 4);
 			int y = (int) (vy1 * 4);
 			int z = (int) (vz1 * 4);
-			if(!isCarved(x, y, z))
+			if (!isCarved(x, y, z))
 			{
 				carveRockUnmark(x, y, z);
-				if(isEmpty())
+				if (isEmpty())
 				{
 					removeBlock();
 				}
@@ -229,20 +227,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideRender(int x, int y, int z, Direction facing)
 	{
-		if(isCarved(x, y, z))
-			return false;
-		if(x == 3 && facing == Direction.E)
-			return !this.world.isSideSolid(this.pos.east(), EnumFacing.WEST);
-		if(y == 3 && facing == Direction.U)
-			return !this.world.isSideSolid(this.pos.up(), EnumFacing.DOWN);
-		if(z == 3 && facing == Direction.S)
-			return !this.world.isSideSolid(this.pos.south(), EnumFacing.NORTH);
-		if(x == 0 && facing == Direction.W)
-			return !this.world.isSideSolid(this.pos.west(), EnumFacing.EAST);
-		if(y == 0 && facing == Direction.D)
-			return !this.world.isSideSolid(this.pos.down(), EnumFacing.UP);
-		if(z == 0 && facing == Direction.N)
-			return !this.world.isSideSolid(this.pos.north(), EnumFacing.SOUTH);
+		if (isCarved(x, y, z)) return false;
+		if (x == 3 && facing == Direction.E) return !this.world.isSideSolid(this.pos.east(), EnumFacing.WEST);
+		if (y == 3 && facing == Direction.U) return !this.world.isSideSolid(this.pos.up(), EnumFacing.DOWN);
+		if (z == 3 && facing == Direction.S) return !this.world.isSideSolid(this.pos.south(), EnumFacing.NORTH);
+		if (x == 0 && facing == Direction.W) return !this.world.isSideSolid(this.pos.west(), EnumFacing.EAST);
+		if (y == 0 && facing == Direction.D) return !this.world.isSideSolid(this.pos.down(), EnumFacing.UP);
+		if (z == 0 && facing == Direction.N) return !this.world.isSideSolid(this.pos.north(), EnumFacing.SOUTH);
 		return isCarved(x + facing.x, y + facing.y, z + facing.z);
 	}
 	
@@ -261,13 +252,20 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		switch (side)
 		{
-		case U : return (~this.carvedState & Y_LAYER[3]) == 0;
-		case D : return (~this.carvedState & Y_LAYER[0]) == 0;
-		case S : return (~this.carvedState & Z_LAYER[3]) == 0;
-		case N : return (~this.carvedState & Z_LAYER[0]) == 0;
-		case E : return (~this.carvedState & X_LAYER[3]) == 0;
-		case W : return (~this.carvedState & X_LAYER[0]) == 0;
-		default: return true;
+		case U:
+			return (~this.carvedState & Y_LAYER[3]) == 0;
+		case D:
+			return (~this.carvedState & Y_LAYER[0]) == 0;
+		case S:
+			return (~this.carvedState & Z_LAYER[3]) == 0;
+		case N:
+			return (~this.carvedState & Z_LAYER[0]) == 0;
+		case E:
+			return (~this.carvedState & X_LAYER[3]) == 0;
+		case W:
+			return (~this.carvedState & X_LAYER[0]) == 0;
+		default:
+			return true;
 		}
 	}
 	
@@ -279,7 +277,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private void checkModified()
 	{
-		if(this.modified)
+		if (this.modified)
 		{
 			long negS = ~this.carvedState;
 			int minX = 0;
@@ -288,49 +286,49 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			int maxX = 4;
 			int maxY = 4;
 			int maxZ = 4;
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				if((negS & X_LAYER[i]) != 0L)
+				if ((negS & X_LAYER[i]) != 0L)
 				{
 					minX = i;
 					break;
 				}
 			}
-			for(int i = 4; i > 0; --i)
+			for (int i = 4; i > 0; --i)
 			{
-				if((negS & X_LAYER[i - 1]) != 0L)
+				if ((negS & X_LAYER[i - 1]) != 0L)
 				{
 					maxX = i;
 					break;
 				}
 			}
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				if((negS & Y_LAYER[i]) != 0L)
+				if ((negS & Y_LAYER[i]) != 0L)
 				{
 					minY = i;
 					break;
 				}
 			}
-			for(int i = 4; i > 0; --i)
+			for (int i = 4; i > 0; --i)
 			{
-				if((negS & Y_LAYER[i - 1]) != 0L)
+				if ((negS & Y_LAYER[i - 1]) != 0L)
 				{
 					maxY = i;
 					break;
 				}
 			}
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				if((negS & Z_LAYER[i]) != 0L)
+				if ((negS & Z_LAYER[i]) != 0L)
 				{
 					minZ = i;
 					break;
 				}
 			}
-			for(int i = 4; i > 0; --i)
+			for (int i = 4; i > 0; --i)
 			{
-				if((negS & Z_LAYER[i - 1]) != 0L)
+				if ((negS & Z_LAYER[i - 1]) != 0L)
 				{
 					maxZ = i;
 					break;
@@ -341,7 +339,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			this.modified = false;
 			this.neighbourChanged = false;
 		}
-		if(this.neighbourChanged)
+		if (this.neighbourChanged)
 		{
 			generateLightmap();
 			this.neighbourChanged = false;
@@ -350,7 +348,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private void generateLightmap()
 	{
-		if(!Config.splitBrightnessOfSmallBlock) return;
+		if (!Config.splitBrightnessOfSmallBlock) return;
 		Arrays.fill(this.lightmapBlock, (byte) 0);
 		Arrays.fill(this.lightmapSky, (byte) 0);
 		generateLightmap(EnumSkyBlock.SKY, this.lightmapSky);
@@ -361,21 +359,21 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		byte l1 = (byte) (getLight(0, 1, 0, type) << 4 & 0xFF);
 		int idx;
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(type == EnumSkyBlock.SKY)
+					if (type == EnumSkyBlock.SKY)
 					{
 						int k = 4;
-						while(k > 0 && isCarved(i, --k, j))
+						while (k > 0 && isCarved(i, --k, j))
 						{
 							lightmap[index8i(i, k, j)] = l1;
 						}
 					}
-					else if(lightmap[idx = index8i(i, 3, j)] < l1)
+					else if (lightmap[idx = index8i(i, 3, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -383,13 +381,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			}
 		}
 		l1 = (byte) (getLight(0, -1, 0, type) << 4 & 0xFF);
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index8i(i, 0, j)] < l1)
+					if (lightmap[idx = index8i(i, 0, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -397,13 +395,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			}
 		}
 		l1 = (byte) (getLight(1, 0, 0, type) << 4 & 0xFF);
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index8i(3, i, j)] < l1)
+					if (lightmap[idx = index8i(3, i, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -411,13 +409,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			}
 		}
 		l1 = (byte) (getLight(-1, 0, 0, type) << 4 & 0xFF);
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index8i(0, i, j)] < l1)
+					if (lightmap[idx = index8i(0, i, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -425,13 +423,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			}
 		}
 		l1 = (byte) (getLight(0, 0, -1, type) << 4 & 0xFF);
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index8i(i, j, 0)] < l1)
+					if (lightmap[idx = index8i(i, j, 0)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -439,24 +437,24 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			}
 		}
 		l1 = (byte) (getLight(0, 0, 1, type) << 4 & 0xFF);
-		if(l1 != 0)
+		if (l1 != 0)
 		{
-			for(int i = 0; i < 4; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
-				for(int j = 0; j < 4; ++j)
+				for (int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index8i(i, j, 3)] < l1)
+					if (lightmap[idx = index8i(i, j, 3)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
 				}
 			}
 		}
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			for(int j = 0; j < 4; ++j)
+			for (int j = 0; j < 4; ++j)
 			{
-				for(int k = 0; k < 4; ++k)
+				for (int k = 0; k < 4; ++k)
 				{
 					scanLight(i, j, k, (byte) 0x2F, -1, lightmap);
 				}
@@ -466,41 +464,41 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private void scanLight(int x, int y, int z, byte side, int light, byte[] lightmap)
 	{
-		if(!isCarved(x, y, z)) return;
+		if (!isCarved(x, y, z)) return;
 		int idx = index8i(x, y, z);
-		if(light < 0)
+		if (light < 0)
 		{
 			light = L.castPositive(lightmap[idx]);
 		}
 		else
 		{
-			if(lightmap[idx] >= light) return;
+			if (lightmap[idx] >= light) return;
 			lightmap[idx] = (byte) light;
 		}
-		if(light >= 4)
+		if (light >= 4)
 		{
 			light -= 4;
-			if((side & 0x1) != 0 && x > 0 && L.castPositive(lightmap[idx - 0x1]) < light)
+			if ((side & 0x1) != 0 && x > 0 && L.castPositive(lightmap[idx - 0x1]) < light)
 			{
 				scanLight(x - 1, y, z, (byte) (side & ~0x2), light, lightmap);
 			}
-			if((side & 0x2) != 0 && x < 3 && L.castPositive(lightmap[idx + 0x1]) < light)
+			if ((side & 0x2) != 0 && x < 3 && L.castPositive(lightmap[idx + 0x1]) < light)
 			{
 				scanLight(x + 1, y, z, (byte) (side & ~0x1), light, lightmap);
 			}
-			if((side & 0x4) != 0 && y > 0 && L.castPositive(lightmap[idx - 0x4]) < light)
+			if ((side & 0x4) != 0 && y > 0 && L.castPositive(lightmap[idx - 0x4]) < light)
 			{
 				scanLight(x, y - 1, z, (byte) (side & ~0x8), light, lightmap);
 			}
-			if((side & 0x8) != 0 && y < 3 && L.castPositive(lightmap[idx + 0x4]) < light)
+			if ((side & 0x8) != 0 && y < 3 && L.castPositive(lightmap[idx + 0x4]) < light)
 			{
 				scanLight(x, y + 1, z, (byte) (side & ~0x4), light, lightmap);
 			}
-			if((side & 0x10) != 0 && z > 0 && L.castPositive(lightmap[idx - 0x10]) < light)
+			if ((side & 0x10) != 0 && z > 0 && L.castPositive(lightmap[idx - 0x10]) < light)
 			{
 				scanLight(x, y, z - 1, (byte) (side & ~0x20), light, lightmap);
 			}
-			if((side & 0x20) != 0 && z < 3 && L.castPositive(lightmap[idx + 0x10]) < light)
+			if ((side & 0x20) != 0 && z < 3 && L.castPositive(lightmap[idx + 0x10]) < light)
 			{
 				scanLight(x, y, z + 1, (byte) (side & ~0x10), light, lightmap);
 			}
@@ -529,12 +527,11 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
-			Entity entity)
+	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity)
 	{
-		for(int i = 0; i < 64; ++i)
+		for (int i = 0; i < 64; ++i)
 		{
-			if((this.carvedState & (1 << i)) == 0L)
+			if ((this.carvedState & (1 << i)) == 0L)
 			{
 				collidingBoxes.add(AXISALIGNEDBBS[i]);
 			}
@@ -542,13 +539,11 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
-			float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if(tool == EnumToolTypes.CHISEL)
+		if (tool == EnumToolTypes.CHISEL)
 		{
-			if(player.canPlayerEdit(this.pos, side.of(), stack))
-				return carveRock(player, hitX, hitY, hitZ);
+			if (player.canPlayerEdit(this.pos, side.of(), stack)) return carveRock(player, hitX, hitY, hitZ);
 		}
 		return IToolableTile.DEFAULT_RESULT;
 	}
@@ -576,8 +571,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	}
 	
 	@Override
-	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
-			int numberOfParticles)
+	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles)
 	{
 		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRock.TYPE, this.type);
 		Server.addBlockLandingEffects(this.world, this.pos, state2, entity, numberOfParticles);
@@ -589,9 +583,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public int getBrightnessLocal(int x, int y, int z)
 	{
 		int idx = index8i(x, y, z);
-		return Config.splitBrightnessOfSmallBlock ?
-				Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) :
-					this.world.getCombinedLight(this.pos, 0);
+		return Config.splitBrightnessOfSmallBlock ? Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) : this.world.getCombinedLight(this.pos, 0);
 	}
 	
 	@Override

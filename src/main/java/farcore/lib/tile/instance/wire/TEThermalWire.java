@@ -20,14 +20,16 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class TEThermalWire extends TESynchronization//TEWiring? No, you can't transfer heat through dimension :D.
-implements IThermalHandler, IDebugableTile
+public class TEThermalWire extends TESynchronization// TEWiring? No, you can't
+													// transfer heat through
+													// dimension :D.
+		implements IThermalHandler, IDebugableTile
 {
 	private Mat material;
 	
 	private ThermalEnergyHelper helper = new ThermalEnergyHelper();
 	
-	long[] currentChangingHeat = new long[6],  lastChangedHeat = new long[6];
+	long[] currentChangingHeat = new long[6], lastChangedHeat = new long[6];
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -70,7 +72,7 @@ implements IThermalHandler, IDebugableTile
 	protected void updateServer()
 	{
 		super.updateServer();
-		//Reinitialize heat counter.
+		// Reinitialize heat counter.
 		System.arraycopy(this.currentChangingHeat, 0, this.lastChangedHeat, 0, 6);
 		Arrays.fill(this.currentChangingHeat, 0);
 	}

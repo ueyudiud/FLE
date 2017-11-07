@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The icon register.
+ * 
  * @author ueyudiud
  * @see nebula.client.render.IIconLoader
  * @see nebula.client.NebulaTextureHandler

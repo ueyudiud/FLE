@@ -62,13 +62,13 @@ public class Layers
 	{
 		switch (state)
 		{
-		case 0 :
+		case 0:
 			layer = new LayerZoom(6276L, 2, layer);
 			drawImage(256, layer, "17-" + key + "-1 Zoom");
-		case 1 :
+		case 1:
 			layer = new GenLayerSmooth(29383L, layer);
 			drawImage(256, layer, "17-" + key + "-2 Zoom End");
-		case 2 :
+		case 2:
 			layer = new LayerZoom(471827L, 2, layer);
 			drawImage(256, layer, "17-" + key + " Zoom End");
 		default:
@@ -173,21 +173,19 @@ public class Layers
 		rock.initWorldGenSeed(seed);
 		soil.initWorldGenSeed(seed);
 		
-		return new GenLayer[] {layer3, layerResult, rock, soil};
+		return new GenLayer[] { layer3, layerResult, rock, soil };
 	}
 	
 	private static final boolean DRAW_IMG = false;
 	
 	public static void drawImage(int size, GenLayer genlayer, String name)
 	{
-		if (!DRAW_IMG)
-			return;
+		if (!DRAW_IMG) return;
 		try
 		{
 			genlayer.initWorldGenSeed(84L);
 			File outFile = new File(name + ".png");
-			if (outFile.exists())
-				return;
+			if (outFile.exists()) return;
 			int[] ints = genlayer.getInts(0, 0, size, size);
 			BufferedImage outBitmap = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
@@ -198,7 +196,7 @@ public class Layers
 				for (int z = 0; z < size; z++)
 				{
 					int v = ints[(x * size + z)];
-					if(v < 0)
+					if (v < 0)
 					{
 						v = -v;
 						v ^= 716282619;

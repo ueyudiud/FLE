@@ -17,19 +17,20 @@ public class CommonOverride
 {
 	/**
 	 * Used by ASM.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @return
 	 */
 	public static boolean isRainingAtBiome(Biome biome, World world, BlockPos pos)
 	{
-		if(biome instanceof IBiomeExtended)
-			return ((IBiomeExtended) biome).canRainingAt(world, pos);
+		if (biome instanceof IBiomeExtended) return ((IBiomeExtended) biome).canRainingAt(world, pos);
 		return biome.canRain();
 	}
 	
 	/**
 	 * Used by ASM.
+	 * 
 	 * @param oldBiome
 	 * @param pos
 	 * @param provider
@@ -37,8 +38,7 @@ public class CommonOverride
 	 */
 	public static Biome regetBiome(int saveID, BlockPos pos, BiomeProvider provider)
 	{
-		if(provider instanceof IBiomeRegetter)
-			return ((IBiomeRegetter) provider).getBiome(saveID, pos);
+		if (provider instanceof IBiomeRegetter) return ((IBiomeRegetter) provider).getBiome(saveID, pos);
 		return Biome.getBiome(saveID);
 	}
 }

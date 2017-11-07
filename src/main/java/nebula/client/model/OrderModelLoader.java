@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 /**
  * For model which is load without resource reloading.
+ * 
  * @author ueyudiud
  */
 public enum OrderModelLoader implements ICustomModelLoader
@@ -28,6 +29,7 @@ public enum OrderModelLoader implements ICustomModelLoader
 	{
 		putModel(value.getRegistryName(), model);
 	}
+	
 	public static void putModel(ResourceLocation location, IModel model)
 	{
 		MODEL_MAP.put(location, model);

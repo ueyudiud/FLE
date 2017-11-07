@@ -25,8 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 /**
  * @author ueyudiud
  */
-public class TEInventoryBasic extends TESynchronization
-implements IBasicInventory, IInventory, ITB_BreakBlock
+public class TEInventoryBasic extends TESynchronization implements IBasicInventory, IInventory, ITB_BreakBlock
 {
 	protected final ItemStack[] stacks;
 	
@@ -70,7 +69,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return hasCustomName() ? new TextComponentString(this.customName) :  new TextComponentTranslation(getName());
+		return hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation(getName());
 	}
 	
 	@Override

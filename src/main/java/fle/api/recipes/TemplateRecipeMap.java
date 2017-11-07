@@ -27,9 +27,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	public static class Builder<H>
 	{
-		final String name;
-		List<TemplateRecipeMap.TemplateRecipe<? super H>> list = new ArrayList<>();
-		List<TemplateRecipeCacheEntryHandler<H, ?>> list1 = new ArrayList<>();
+		final String										name;
+		List<TemplateRecipeMap.TemplateRecipe<? super H>>	list	= new ArrayList<>();
+		List<TemplateRecipeCacheEntryHandler<H, ?>>			list1	= new ArrayList<>();
 		
 		public Builder(String name)
 		{
@@ -61,9 +61,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	protected static class TemplateRecipeCacheEntryHandler<H, D>
 	{
-		String entryName;
-		Class<D> type;
-		INBTReaderAndWritter<? super D, ?> nbtHandler;
+		String								entryName;
+		Class<D>							type;
+		INBTReaderAndWritter<? super D, ?>	nbtHandler;
 		
 		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWritter<? super D, ?> nbtHandler)
 		{
@@ -75,13 +75,14 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	public static class TemplateRecipeCache<H>
 	{
-		TemplateRecipeMap<H> map;
+		TemplateRecipeMap<H>	map;
 		/**
-		 * Will not stored into NBT, but it will be exist by {@link TemplateRecipeMap#findRecipe} method.
+		 * Will not stored into NBT, but it will be exist by
+		 * {@link TemplateRecipeMap#findRecipe} method.
 		 */
 		@Nullable
-		TemplateRecipe<H> recipe;
-		Object[] storeData;
+		TemplateRecipe<H>		recipe;
+		Object[]				storeData;
 		
 		TemplateRecipeCache(TemplateRecipeMap<H> map, TemplateRecipe<H> recipe, Object...datas)
 		{
@@ -103,14 +104,15 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	public static class TemplateRecipe<H>
 	{
-		Judgable<? super H> judgable;
-		Function<? super H, ?>[] dataProvider;
-		Object[] customDisplayData;
+		Judgable<? super H>			judgable;
+		Function<? super H, ?>[]	dataProvider;
+		Object[]					customDisplayData;
 		
 		public TemplateRecipe(Judgable<? super H>[] judgables, Function<? super H, ?>...dataProviders)
 		{
 			this(Judgable.and(judgables), dataProviders);
 		}
+		
 		public TemplateRecipe(Judgable<? super H> judgable, Function<? super H, ?>...dataProviders)
 		{
 			this.judgable = judgable;
@@ -129,9 +131,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		}
 	}
 	
-	protected final String name;
-	protected final List<TemplateRecipeMap.TemplateRecipe<? super H>> recipes;
-	protected final TemplateRecipeCacheEntryHandler[] handlers;
+	protected final String												name;
+	protected final List<TemplateRecipeMap.TemplateRecipe<? super H>>	recipes;
+	protected final TemplateRecipeCacheEntryHandler[]					handlers;
 	
 	protected TemplateRecipeMap(String name, List<TemplateRecipeMap.TemplateRecipe<? super H>> recipeList, TemplateRecipeCacheEntryHandler[] handlers)
 	{
@@ -186,7 +188,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	{
 		if (recipe.dataProvider.length != this.handlers.length)
 		{
-			Log.error("Wrong recipe data format, get {}.", new Object[]{recipe.dataProvider});
+			Log.error("Wrong recipe data format, get {}.", new Object[] { recipe.dataProvider });
 			return false;
 		}
 		this.recipes.add(recipe);
@@ -196,10 +198,11 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	@Override
 	public TemplateRecipeCache<H> findRecipe(H handler)
 	{
-		TemplateRecipeMap.TemplateRecipe recipe = L.get(this.recipes, r->r.judgable.isTrue(handler));
+		TemplateRecipeMap.TemplateRecipe recipe = L.get(this.recipes, r -> r.judgable.isTrue(handler));
 		if (recipe == null) return null;
 		Object[] stores = new Object[this.handlers.length];
-		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i);
+		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i)
+			;
 		return new TemplateRecipeCache<>(this, recipe, stores);
 	}
 	
@@ -224,6 +227,6 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	@Override
 	public void removeRecipeByHandler(H handler)
 	{
-		this.recipes.removeIf(r->r.judgable.isTrue(handler));
+		this.recipes.removeIf(r -> r.judgable.isTrue(handler));
 	}
 }

@@ -17,17 +17,17 @@ public class TECircuitSpatial extends TECircuitCompacted
 {
 	protected static final AxisAlignedBB REDSTONE_SPATIAL_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.625D, 1.0D);
 	
-	private static final Facing[] OUT = {Facing.FRONT, Facing.BACK, Facing.LEFT, Facing.RIGHT};
+	private static final Facing[] OUT = { Facing.FRONT, Facing.BACK, Facing.LEFT, Facing.RIGHT };
 	
-	protected byte powerFB;
-	protected byte powerLR;
+	protected byte	powerFB;
+	protected byte	powerLR;
 	
 	@Override
 	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			buf.writeByte(this.powerFB);
 			buf.writeByte(this.powerLR);
 			break;
@@ -41,7 +41,7 @@ public class TECircuitSpatial extends TECircuitCompacted
 	{
 		switch (0)
 		{
-		case 0 :
+		case 0:
 			this.powerFB = buf.readByte();
 			this.powerLR = buf.readByte();
 			break;
@@ -112,17 +112,13 @@ public class TECircuitSpatial extends TECircuitCompacted
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side.horizontal ?
-				(side == this.facing || side == this.facing.getOpposite() ?
-						this.powerFB : this.powerLR) : 0;
+		return side.horizontal ? (side == this.facing || side == this.facing.getOpposite() ? this.powerFB : this.powerLR) : 0;
 	}
 	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side.horizontal ?
-				(side == this.facing || side == this.facing.getOpposite() ?
-						this.powerFB : this.powerLR) : 0;
+		return side.horizontal ? (side == this.facing || side == this.facing.getOpposite() ? this.powerFB : this.powerLR) : 0;
 	}
 	
 	@Override
@@ -130,7 +126,7 @@ public class TECircuitSpatial extends TECircuitCompacted
 	{
 		updateCircuit();
 		NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
-		if(this.updateDelay == 0 && ((this.power = (byte) (this.powerFB << 4 | this.powerLR)) != this.lastPower))
+		if (this.updateDelay == 0 && ((this.power = (byte) (this.powerFB << 4 | this.powerLR)) != this.lastPower))
 		{
 			this.lastPower = this.power;
 			super.notifyNeighbors();
@@ -146,8 +142,9 @@ public class TECircuitSpatial extends TECircuitCompacted
 	protected byte getPowerHigherThan(byte min, byte power, Facing side)
 	{
 		byte power1 = (byte) getRedstonePower(side);
-		if(power1 <= power) return power;
-		else if(power1 < min) return 0;
+		if (power1 <= power)
+			return power;
+		else if (power1 < min) return 0;
 		return (byte) (power1 - 1);
 	}
 	
@@ -161,8 +158,6 @@ public class TECircuitSpatial extends TECircuitCompacted
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? this.powerFB :
-			i == 1 ? this.powerLR :
-				0;
+		return i == 0 ? this.powerFB : i == 1 ? this.powerLR : 0;
 	}
 }

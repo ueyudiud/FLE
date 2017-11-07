@@ -19,6 +19,7 @@ public class PacketTESAsk extends PacketBlockCoord
 	{
 		
 	}
+	
 	public PacketTESAsk(World world, BlockPos pos, int type)
 	{
 		super(world, pos);
@@ -49,20 +50,20 @@ public class PacketTESAsk extends PacketBlockCoord
 	public IPacket process(Network network)
 	{
 		World world = world();
-		if(world != null)
+		if (world != null)
 		{
 			TileEntity tile = world.getTileEntity(this.pos);
-			if(tile instanceof ISynchronizableTile)
+			if (tile instanceof ISynchronizableTile)
 			{
-				if((this.type & 0x1) != 0)
+				if ((this.type & 0x1) != 0)
 				{
 					((ISynchronizableTile) tile).markBlockRenderUpdate();
 				}
-				if((this.type & 0x2) != 0)
+				if ((this.type & 0x2) != 0)
 				{
 					((ISynchronizableTile) tile).markLightForUpdate(EnumSkyBlock.SKY);
 				}
-				if((this.type & 0x4) != 0)
+				if ((this.type & 0x4) != 0)
 				{
 					((ISynchronizableTile) tile).markLightForUpdate(EnumSkyBlock.BLOCK);
 				}

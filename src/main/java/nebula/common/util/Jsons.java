@@ -29,7 +29,9 @@ import nebula.base.function.SequenceFunction;
  */
 public final class Jsons
 {
-	private Jsons() {}
+	private Jsons()
+	{
+	}
 	
 	public static Optional<String> getString(JsonObject object, String key)
 	{
@@ -119,10 +121,9 @@ public final class Jsons
 		try
 		{
 			JsonArray array = object.getAsJsonArray(key);
-			if(length < 0 || array.size() < length)
-				throw new JsonParseException("The array size should be " + length + ", got " + array.size());
+			if (length < 0 || array.size() < length) throw new JsonParseException("The array size should be " + length + ", got " + array.size());
 			int[] ret = new int[array.size()];
-			for(int i = 0; i < array.size(); ++i)
+			for (int i = 0; i < array.size(); ++i)
 			{
 				ret[i] = array.get(i).getAsInt();
 			}
@@ -149,10 +150,9 @@ public final class Jsons
 	
 	public static float[] getFloatArray(JsonArray array, int length) throws JsonParseException
 	{
-		if(length < 0 || array.size() < length)
-			throw new JsonParseException("The array size should be " + length + ", got " + array.size());
+		if (length < 0 || array.size() < length) throw new JsonParseException("The array size should be " + length + ", got " + array.size());
 		float[] ret = new float[array.size()];
-		for(int i = 0; i < array.size(); ++i)
+		for (int i = 0; i < array.size(); ++i)
 		{
 			ret[i] = array.get(i).getAsFloat();
 		}
@@ -164,10 +164,9 @@ public final class Jsons
 		try
 		{
 			JsonArray array = object.getAsJsonArray(key);
-			if(length < 0 || array.size() < length)
-				throw new JsonParseException("The array size should be " + length + ", got " + array.size());
+			if (length < 0 || array.size() < length) throw new JsonParseException("The array size should be " + length + ", got " + array.size());
 			double[] ret = new double[array.size()];
-			for(int i = 0; i < array.size(); ++i)
+			for (int i = 0; i < array.size(); ++i)
 			{
 				ret[i] = array.get(i).getAsDouble();
 			}
@@ -192,7 +191,7 @@ public final class Jsons
 		else
 		{
 			T[] a = ObjectArrays.newArray(clazz, len);
-			A.fill(a, i->function.apply(array.get(i)));
+			A.fill(a, i -> function.apply(array.get(i)));
 			return a;
 		}
 	}
@@ -200,14 +199,16 @@ public final class Jsons
 	public static <E> Map<String, E> getAsMap(JsonObject object, Function<JsonElement, E> function)
 	{
 		Map<String, E> map = new HashMap<>();
-		for (Entry<String, JsonElement> entry : object.entrySet()) map.put(entry.getKey(), function.apply(entry.getValue()));
+		for (Entry<String, JsonElement> entry : object.entrySet())
+			map.put(entry.getKey(), function.apply(entry.getValue()));
 		return map;
 	}
 	
 	public static <E> List<E> getAsList(JsonArray array, Function<JsonElement, E> function)
 	{
 		List<E> list = new ArrayList<>();
-		for (JsonElement element : array) list.add(function.apply(element));
+		for (JsonElement element : array)
+			list.add(function.apply(element));
 		return list;
 	}
 	
@@ -221,21 +222,24 @@ public final class Jsons
 	public static JsonArray toJsonArray(byte[] array)
 	{
 		JsonArray result = new JsonArray();
-		for (byte value : array) result.add(new JsonPrimitive(value));
+		for (byte value : array)
+			result.add(new JsonPrimitive(value));
 		return result;
 	}
 	
 	public static JsonArray toJsonArray(int[] array)
 	{
 		JsonArray result = new JsonArray();
-		for (int value : array) result.add(new JsonPrimitive(value));
+		for (int value : array)
+			result.add(new JsonPrimitive(value));
 		return result;
 	}
 	
 	public static JsonArray toJsonArray(char[] array)
 	{
 		JsonArray result = new JsonArray();
-		for (char value : array) result.add(new JsonPrimitive(value));
+		for (char value : array)
+			result.add(new JsonPrimitive(value));
 		return result;
 	}
 	
@@ -248,21 +252,24 @@ public final class Jsons
 	{
 		JsonArray result = new JsonArray();
 		float value;
-		for (int i = start; i < end; value = array[i++], result.add(new JsonPrimitive(value)));
+		for (int i = start; i < end; value = array[i++], result.add(new JsonPrimitive(value)))
+			;
 		return result;
 	}
 	
 	public static JsonArray toJsonArray(double[] array)
 	{
 		JsonArray result = new JsonArray();
-		for (double value : array) result.add(new JsonPrimitive(value));
+		for (double value : array)
+			result.add(new JsonPrimitive(value));
 		return result;
 	}
 	
 	public static JsonArray toJsonArray(String[] array)
 	{
 		JsonArray result = new JsonArray();
-		for (String value : array) result.add(new JsonPrimitive(value));
+		for (String value : array)
+			result.add(new JsonPrimitive(value));
 		return result;
 	}
 }

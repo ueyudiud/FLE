@@ -32,11 +32,11 @@ public class ModelDitch extends CompactModel
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 	{
-		if(state instanceof BlockStateTileEntityWapper)
+		if (state instanceof BlockStateTileEntityWapper)
 		{
 			TEDitch ditch = ((BlockStateTileEntityWapper<TEDitch>) state).tile;
 			byte s = 0x0;
-			for(Direction facing : Direction.DIRECTIONS_2D)
+			for (Direction facing : Direction.DIRECTIONS_2D)
 			{
 				s |= (ditch.getLinkState(facing) << (facing.horizontalOrdinal * 2));
 			}
@@ -52,21 +52,35 @@ public class ModelDitch extends CompactModel
 		return genQuads(DitchBlockHandler.getFactory(material).getMaterialIcon(material), (byte) 0x11);
 	}
 	
-	private static final float fPixel = 0.0625F;
-	private static final float fMin  = 0.0F;//Block bound min.
-	private static final float fMax  = 1.0F;//Block bound max.
-	private static final float fWN  = 0.375F;//Ditch side min.
-	private static final float fWP  = 0.625F;//Ditch side max.
-	private static final float fEN  = fWN - fPixel;//Ditch edge(state=0) min.
-	private static final float fEP  = fWP + fPixel;//Ditch edge(state=0) max.
-	private static final float fSP  = 0.25F;//Ditch surface height.
-	private static final float fW  = 0.5F;//Ditch wall height.
-	private static final float fSN  = fSP - fPixel;//Ditch bottom height.
-	//	private static final float f10 = -0.375F;//Ditch edge(state=2) min.
-	//	private static final float f11 = 1.375F;//(Ditch edge(state=2) max.
-	//	private static final float f12 = -0.625F;
-	//	private static final float f13 = 1.625F;
-	//	private static final float f14 = -0.5F;
+	private static final float	fPixel	= 0.0625F;
+	private static final float	fMin	= 0.0F;						// Block
+																	// bound
+																	// min.
+	private static final float	fMax	= 1.0F;						// Block
+																	// bound
+																	// max.
+	private static final float	fWN		= 0.375F;				// Ditch side
+																// min.
+	private static final float	fWP		= 0.625F;				// Ditch side
+																// max.
+	private static final float	fEN		= fWN - fPixel;		// Ditch
+															// edge(state=0)
+															// min.
+	private static final float	fEP		= fWP + fPixel;		// Ditch
+															// edge(state=0)
+															// max.
+	private static final float	fSP		= 0.25F;				// Ditch surface
+																// height.
+	private static final float	fW		= 0.5F;						// Ditch
+																	// wall
+																	// height.
+	private static final float	fSN		= fSP - fPixel;		// Ditch bottom
+															// height.
+	// private static final float f10 = -0.375F;//Ditch edge(state=2) min.
+	// private static final float f11 = 1.375F;//(Ditch edge(state=2) max.
+	// private static final float f12 = -0.625F;
+	// private static final float f13 = 1.625F;
+	// private static final float f14 = -0.5F;
 	
 	private List<BakedQuad> genQuads(TextureAtlasSprite retexture, byte connectState)
 	{
@@ -79,7 +93,7 @@ public class ModelDitch extends CompactModel
 		builder.add(this.qb.bakeYNegFace());
 		CoordTransformer transformer = this.qb.getTransformer();
 		this.qb.resetOption();
-		switch (connectState & 0x03)//Z pos
+		switch (connectState & 0x03)// Z pos
 		{
 		case 0x02:
 			transformer.setTransform(0.0, 0.0, 1.0);
@@ -106,7 +120,7 @@ public class ModelDitch extends CompactModel
 			this.qb.setBound(fWP, fSN, fEP, fEP, fW, fMax);
 			builder.add(this.qb.bakeYPosFace());
 			break;
-		case 0x00 :
+		case 0x00:
 			this.qb.setBound(fEN, fSN, fWP, fWP, fW, fEP);
 			builder.add(this.qb.bakeYPosFace());
 			this.qb.setBound(fEN, fSN, fWP, fEP, fW, fEP);
@@ -116,7 +130,7 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		switch (connectState & 0x0C)//X neg
+		switch (connectState & 0x0C)// X neg
 		{
 		case 0x08:
 			transformer.setTransform(-1.0, 0.0, 0.0);
@@ -154,7 +168,7 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		switch (connectState & 0x30)//Z neg
+		switch (connectState & 0x30)// Z neg
 		{
 		case 0x20:
 			transformer.setTransform(0.0, 0.0, -1.0);
@@ -181,7 +195,7 @@ public class ModelDitch extends CompactModel
 			this.qb.setBound(fWP, fSN, fMin, fEP, fW, fWN);
 			builder.add(this.qb.bakeYPosFace());
 			break;
-		case 0x00 :
+		case 0x00:
 			this.qb.setBound(fWN, fSN, fEN, fEP, fW, fWN);
 			builder.add(this.qb.bakeYPosFace());
 			this.qb.setBound(fEN, fSN, fEN, fEP, fW, fWN);
@@ -191,7 +205,7 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		switch (connectState & 0xC0)//X pos
+		switch (connectState & 0xC0)// X pos
 		{
 		case 0x80:
 			transformer.setTransform(1.0, 0.0, 0.0);

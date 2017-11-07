@@ -28,13 +28,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 /**
  * @author ueyudiud
  */
-public class TEAdobeDrying extends TEAged
-implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
+public class TEAdobeDrying extends TEAged implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 {
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25F, 0.0F, 0.125F, 0.75F, 0.375F, 0.875F);
 	
-	public int duration;
-	int wetness;
+	public int	duration;
+	int			wetness;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -71,16 +70,15 @@ implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 	{
 		if (isCatchingRain(true))
 		{
-			if (this.wetness < 100)
-				this.wetness ++;
+			if (this.wetness < 100) this.wetness++;
 		}
 		else if (this.wetness > 0)
 		{
-			this.wetness --;
+			this.wetness--;
 		}
 		else if (this.duration < 10)
 		{
-			this.duration ++;
+			this.duration++;
 			syncToNearby();
 		}
 	}
@@ -95,8 +93,7 @@ implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (isServer())
 		{

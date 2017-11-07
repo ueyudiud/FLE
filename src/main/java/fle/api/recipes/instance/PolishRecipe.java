@@ -32,18 +32,17 @@ public class PolishRecipe
 	
 	public static void addPolishRecipe(AbstractStack input, String map, ItemStack output)
 	{
-		if (map == null || map.length() != 9 || output == null || input == null)
-			throw new IllegalArgumentException("Invalid recipe elements.");
-		POLISHING.addRecipe(new TemplateRecipe<IPolishRecipeHandler>(handler->input.similar(handler.getPolishingInput()) && map.equals(new String(handler.getPolishingMatrix())), Misc.anyTo(output)).setData(input, map, output));
+		if (map == null || map.length() != 9 || output == null || input == null) throw new IllegalArgumentException("Invalid recipe elements.");
+		POLISHING.addRecipe(new TemplateRecipe<IPolishRecipeHandler>(handler -> input.similar(handler.getPolishingInput()) && map.equals(new String(handler.getPolishingMatrix())), Misc.anyTo(output)).setData(input, map, output));
 	}
 	
 	public static boolean isPolishable(ItemStack stack)
 	{
-		return L.contain(POLISHING.recipes(), recipe->((AbstractStack) recipe.get(0)).similar(stack));
+		return L.contain(POLISHING.recipes(), recipe -> ((AbstractStack) recipe.get(0)).similar(stack));
 	}
 	
 	public static int getPolishLevel(ItemStack stack)
 	{
-		return L.cast(L.getFromEntries(MAP, e->e.similar(stack)), -1);
+		return L.cast(L.getFromEntries(MAP, e -> e.similar(stack)), -1);
 	}
 }

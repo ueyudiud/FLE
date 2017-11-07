@@ -12,17 +12,18 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
- * Called before use Far Core weapon attack entity.
- * Posted in {@link MinecraftForge#EVENT_BUS}
+ * Called before use Far Core weapon attack entity. Posted in
+ * {@link MinecraftForge#EVENT_BUS}
+ * 
  * @author ueyudiud
  */
 @Cancelable
 public class AttackEvent extends PlayerEvent
 {
-	public final Entity target;
-	public final ItemStack weapon;
-	public ItemStack newWeapon;
-	public final EnumPhysicalDamageType type;
+	public final Entity					target;
+	public final ItemStack				weapon;
+	public ItemStack					newWeapon;
+	public final EnumPhysicalDamageType	type;
 	
 	public AttackEvent(EntityPlayer player, Entity target, ItemStack weapon, EnumPhysicalDamageType type)
 	{

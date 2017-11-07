@@ -25,12 +25,10 @@ public class StateMapperCrop implements IStateMapper
 	{
 		IBlockState state = blockIn.getDefaultState();
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
-		for(Mat material : Mat.filt(SubTags.CROP))
+		for (Mat material : Mat.filt(SubTags.CROP))
 		{
 			ICrop crop = material.getProperty(MP.property_crop);
-			L.consume(1, 1 + crop.getMaxStage(),
-					idx->builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, material.name + "_" + idx),
-							new ModelResourceLocation(material.modid + ":crop/" + material.name, "state=" + idx)));
+			L.consume(1, 1 + crop.getMaxStage(), idx -> builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, material.name + "_" + idx), new ModelResourceLocation(material.modid + ":crop/" + material.name, "state=" + idx)));
 		}
 		return builder.build();
 	}

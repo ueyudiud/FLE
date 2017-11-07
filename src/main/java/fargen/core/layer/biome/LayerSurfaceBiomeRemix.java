@@ -31,8 +31,8 @@ import net.minecraft.world.gen.layer.GenLayer;
  */
 public class LayerSurfaceBiomeRemix extends Layer
 {
-	private GenLayer biomes;
-	private GenLayer terrain;
+	private GenLayer	biomes;
+	private GenLayer	terrain;
 	
 	public LayerSurfaceBiomeRemix(long seed, GenLayer biomes, GenLayer terrain)
 	{
@@ -101,12 +101,17 @@ public class LayerSurfaceBiomeRemix extends Layer
 		if (b.isOcean()) return biome;
 		switch (b.zone.category1)
 		{
-		case TROPICAL : return (flag ? ocean_t_deep : ocean_t).biomeID;
-		case SUBTROPICAL : return (flag ? ocean_st_deep : ocean_st).biomeID;
+		case TROPICAL:
+			return (flag ? ocean_t_deep : ocean_t).biomeID;
+		case SUBTROPICAL:
+			return (flag ? ocean_st_deep : ocean_st).biomeID;
 		default:
-		case TEMPERATE : return (flag ? ocean_te_deep : ocean_te).biomeID;
-		case SUBFRIGID : return (flag ? ocean_sf_deep : ocean_sf).biomeID;
-		case FRIGID : return (flag ? ocean_f_deep : ocean_f).biomeID;
+		case TEMPERATE:
+			return (flag ? ocean_te_deep : ocean_te).biomeID;
+		case SUBFRIGID:
+			return (flag ? ocean_sf_deep : ocean_sf).biomeID;
+		case FRIGID:
+			return (flag ? ocean_f_deep : ocean_f).biomeID;
 		}
 	}
 	

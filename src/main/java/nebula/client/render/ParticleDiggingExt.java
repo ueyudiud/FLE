@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ParticleDiggingExt extends ParticleDigging
 {
-	public ParticleDiggingExt(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn,
-			double ySpeedIn, double zSpeedIn, IBlockState state)
+	public ParticleDiggingExt(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, IBlockState state)
 	{
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, state);
 	}
 	
 	/**
 	 * The constructor of particle, which allowed replace custom icon.
+	 * 
 	 * @param worldIn the world.
 	 * @param xCoordIn the particle x coordinate.
 	 * @param yCoordIn the particle y coordinate.
@@ -31,11 +31,11 @@ public class ParticleDiggingExt extends ParticleDigging
 	 * @param ySpeedIn the particle y speed.
 	 * @param zSpeedIn the particle z speed.
 	 * @param state the block state.
-	 * @param location the icon of particle, you can use ResourceLocation or TextureAtlasSprite, or
-	 *                 block state for particle icon represented it.
+	 * @param location the icon of particle, you can use ResourceLocation or
+	 *            TextureAtlasSprite, or block state for particle icon
+	 *            represented it.
 	 */
-	public ParticleDiggingExt(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn,
-			double ySpeedIn, double zSpeedIn, IBlockState state, Object location)
+	public ParticleDiggingExt(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, IBlockState state, Object location)
 	{
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, state);
 		if (location instanceof ResourceLocation)
@@ -50,6 +50,7 @@ public class ParticleDiggingExt extends ParticleDigging
 		{
 			setParticleTexture((TextureAtlasSprite) location);
 		}
-		else throw new RuntimeException("The particle texture " + location + " can not be resolved.");
+		else
+			throw new RuntimeException("The particle texture " + location + " can not be resolved.");
 	}
 }

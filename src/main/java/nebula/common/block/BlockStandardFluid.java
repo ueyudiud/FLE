@@ -35,19 +35,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The standard fluid type.
+ * 
  * @author ueyudiud
  *
  */
-public class BlockStandardFluid extends BlockFluidBase
-implements ISmartFluidBlock, IRenderRegister
+public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlock, IRenderRegister
 {
-	public final FluidBase fluid;
-	private final FluidStack blockValue;
+	public final FluidBase		fluid;
+	private final FluidStack	blockValue;
 	
 	protected static Function<Object[], IBlockState> createFunctionApplier(BlockStandardFluid block)
 	{
-		return objects->objects.length == 0 ?  block.getDefaultState() :
-			block.getDefaultState().withProperty(LEVEL, ((Number) objects[0]).intValue() - 1);
+		return objects -> objects.length == 0 ? block.getDefaultState() : block.getDefaultState().withProperty(LEVEL, ((Number) objects[0]).intValue() - 1);
 	}
 	
 	public BlockStandardFluid(String registerName, FluidBase fluid, Material material)
@@ -60,6 +59,7 @@ implements ISmartFluidBlock, IRenderRegister
 		this.blockValue = new FluidStack(fluid, 1000);
 		this.fluid = fluid;
 	}
+	
 	public BlockStandardFluid(FluidBase fluid, Material material)
 	{
 		this("fluid." + fluid.getName(), fluid, material);
@@ -96,10 +96,9 @@ implements ISmartFluidBlock, IRenderRegister
 	
 	public int getFluidLevel(IBlockAccess world, BlockPos pos)
 	{
-		if(world.isAirBlock(pos))
-			return 0;
+		if (world.isAirBlock(pos)) return 0;
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() != this)
+		if (state.getBlock() != this)
 			return -1;
 		else
 			return state.getValue(getLevelProperty()) + 1;
@@ -107,7 +106,7 @@ implements ISmartFluidBlock, IRenderRegister
 	
 	public void setFluidLevel(World world, BlockPos pos, int level, boolean update)
 	{
-		if(level == 0)
+		if (level == 0)
 		{
 			world.setBlockToAir(pos);
 		}
@@ -133,8 +132,7 @@ implements ISmartFluidBlock, IRenderRegister
 		{
 			flowYPosNearByWhenMinimumLevel(worldIn, pos);
 		}
-		if (level == 0)
-			return;
+		if (level == 0) return;
 		if (level == 1)
 		{
 			if (prelevel != 1)
@@ -144,19 +142,19 @@ implements ISmartFluidBlock, IRenderRegister
 			return;
 		}
 		boolean[] repleaced = new boolean[4];
-		for(EnumFacing facing : EnumFacing.HORIZONTALS)
+		for (EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			level = displaceIfPossible(worldIn, pos.offset(facing), pos, level);
-			if(level == 0) return;
+			if (level == 0) return;
 			repleaced[facing.ordinal() - 2] = level >= 0;
-			if(level < 0)
+			if (level < 0)
 			{
 				level = -level;
 			}
 		}
-		if(!(repleaced[0] || repleaced[1] || repleaced[2] || repleaced[3]))
+		if (!(repleaced[0] || repleaced[1] || repleaced[2] || repleaced[3]))
 		{
-			if(level != prelevel)
+			if (level != prelevel)
 			{
 				setFluidLevel(worldIn, pos, level, true);
 			}
@@ -166,19 +164,19 @@ implements ISmartFluidBlock, IRenderRegister
 		int xPos = getFluidLevel(worldIn, pos.add(+1, 0, 0));
 		int zNeg = getFluidLevel(worldIn, pos.add(0, 0, -1));
 		int zPos = getFluidLevel(worldIn, pos.add(0, 0, +1));
-		if(xNeg > level)
+		if (xNeg > level)
 		{
 			xNeg = -1;
 		}
-		if(xPos > level)
+		if (xPos > level)
 		{
 			xPos = -1;
 		}
-		if(zNeg > level)
+		if (zNeg > level)
 		{
 			zNeg = -1;
 		}
-		if(zPos > level)
+		if (zPos > level)
 		{
 			zPos = -1;
 		}
@@ -186,29 +184,29 @@ implements ISmartFluidBlock, IRenderRegister
 		int count = 1;
 		int total = level;
 		
-		if(xNeg >= 0)
+		if (xNeg >= 0)
 		{
 			++count;
 			total += xNeg;
 		}
-		if(xPos >= 0)
+		if (xPos >= 0)
 		{
 			++count;
 			total += xPos;
 		}
-		if(zNeg >= 0)
+		if (zNeg >= 0)
 		{
 			++count;
 			total += zNeg;
 		}
-		if(zPos >= 0)
+		if (zPos >= 0)
 		{
 			++count;
 			total += zPos;
 		}
-		if(count == 1)
+		if (count == 1)
 		{
-			if(level != prelevel)
+			if (level != prelevel)
 			{
 				setFluidLevel(worldIn, pos, level, true);
 			}
@@ -281,7 +279,7 @@ implements ISmartFluidBlock, IRenderRegister
 		{
 			++each;
 		}
-		if(each != prelevel)
+		if (each != prelevel)
 		{
 			setFluidLevel(worldIn, pos, each, true);
 		}
@@ -293,18 +291,17 @@ implements ISmartFluidBlock, IRenderRegister
 		BlockPos pos1 = pos.add(direction.x, 0, direction.z);
 		BlockPos pos2 = pos1.add(0, this.densityDir, 0);
 		int level = displaceIfPossible(world, pos1, pos, 1);
-		if(level < 0)
+		if (level < 0)
 		{
 			level = -level;
 		}
 		else
 		{
-			if(level > 1 || level == 0)
-				return level;
-			if(world.isAirBlock(pos1))
+			if (level > 1 || level == 0) return level;
+			if (world.isAirBlock(pos1))
 			{
 				int l1 = getFluidLevel(world, pos2);
-				if(l1 >= 0 && l1 < this.quantaPerBlock)
+				if (l1 >= 0 && l1 < this.quantaPerBlock)
 				{
 					setFluidLevel(world, pos2, l1 + 1, false);
 					world.scheduleUpdate(pos2, this, this.tickRate);
@@ -328,9 +325,9 @@ implements ISmartFluidBlock, IRenderRegister
 		IBlockState state = world.getBlockState(other);
 		FluidTouchBlockEvent event = new FluidTouchBlockEvent(world, pos, other, state, this, amtToInput);
 		MinecraftForge.EVENT_BUS.post(event);
-		if(event.getResult() == Result.ALLOW)
+		if (event.getResult() == Result.ALLOW)
 		{
-			if(state != event.getEndingTargetState())
+			if (state != event.getEndingTargetState())
 			{
 				world.setBlockState(pos, event.getEndingTargetState(), 3);
 			}
@@ -378,9 +375,9 @@ implements ISmartFluidBlock, IRenderRegister
 				if (density_other < this.density) // then swap
 				{
 					world.setBlockState(other, myState.withProperty(getLevelProperty(), amtToInput - 1), 3);
-					world.setBlockState(pos,   state, 3);
+					world.setBlockState(pos, state, 3);
 					world.scheduleUpdate(other, this, this.tickRate);
-					world.scheduleUpdate(pos,   state.getBlock(), state.getBlock().tickRate(world));
+					world.scheduleUpdate(pos, state.getBlock(), state.getBlock().tickRate(world));
 					return 0;
 				}
 			}
@@ -390,7 +387,7 @@ implements ISmartFluidBlock, IRenderRegister
 				{
 					world.setBlockState(other, myState.withProperty(getLevelProperty(), amtToInput - 1), 3);
 					world.setBlockState(other, state, 3);
-					world.scheduleUpdate(other, this,  this.tickRate);
+					world.scheduleUpdate(other, this, this.tickRate);
 					world.scheduleUpdate(other, state.getBlock(), state.getBlock().tickRate(world));
 					return 0;
 				}
@@ -401,14 +398,14 @@ implements ISmartFluidBlock, IRenderRegister
 	
 	/**
 	 * Try to displace block in world.
+	 * 
 	 * @param level The fluid level.
 	 * @return A value of fluid remain, characteristics decided whether this
-	 * block has been removed (Positive means removed).
+	 *         block has been removed (Positive means removed).
 	 */
 	public int displaceIfPossible(World world, BlockPos pos, BlockPos source, int level)
 	{
-		if (!world.isAreaLoaded(pos, 2))
-			return -level;
+		if (!world.isAreaLoaded(pos, 2)) return -level;
 		if (world.isAirBlock(pos)) return level;
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == this) return level;
@@ -433,8 +430,7 @@ implements ISmartFluidBlock, IRenderRegister
 		}
 		
 		Material material = state.getMaterial();
-		if (material.blocksMovement() || material == Material.PORTAL)
-			return -level;
+		if (material.blocksMovement() || material == Material.PORTAL) return -level;
 		
 		int density = getDensity(world, pos);
 		if (density == Integer.MAX_VALUE)
@@ -444,9 +440,9 @@ implements ISmartFluidBlock, IRenderRegister
 			return level;
 		}
 		
-		//		if (this.density > density)
-		//			return true;
-		//		else
+		// if (this.density > density)
+		// return true;
+		// else
 		return -level;
 	}
 	
@@ -487,27 +483,25 @@ implements ISmartFluidBlock, IRenderRegister
 		float all = maxDrain;
 		int a = getFluidLevel(world, pos);
 		int q = Math.min((int) (all / per), a);
-		if(q == 0) return null;
-		if(doDrain)
+		if (q == 0) return null;
+		if (doDrain)
 		{
 			setFluidLevel(world, pos, a - q, true);
 		}
 		return new FluidStack(this.fluid, (int) (per * q));
 	}
 	
-	
 	@Override
 	public int fill(World world, BlockPos pos, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || resource.getFluid() != this.fluid)
-			return 0;
+		if (resource == null || resource.getFluid() != this.fluid) return 0;
 		int level = getFluidLevel(world, pos);
 		if (level == -1) return 0;
 		int level1 = (int) (resource.amount * this.quantaPerBlockFloat / 1000F);
 		if (level1 == 0) return 0;
 		if (doFill)
 		{
-			if(level + level1 > 16)
+			if (level + level1 > 16)
 			{
 				level1 = 16 - level;
 			}
@@ -523,13 +517,11 @@ implements ISmartFluidBlock, IRenderRegister
 		if (entityIn instanceof EntityLivingBase)
 		{
 			float amount;
-			if (entityIn.motionY < 0 &&
-					!this.fluid.isGaseous() &&
-					(amount = (float) (this.fluid.getDensity(worldIn, pos) * -entityIn.motionY)) > 1500)
+			if (entityIn.motionY < 0 && !this.fluid.isGaseous() && (amount = (float) (this.fluid.getDensity(worldIn, pos) * -entityIn.motionY)) > 1500)
 			{
 				entityIn.attackEntityFrom(DamageSource.fall, amount / 1000F);
 			}
-			if(this.fluid.fireAttackDamage > 0)
+			if (this.fluid.fireAttackDamage > 0)
 			{
 				entityIn.attackEntityFrom(DamageSource.inFire, this.fluid.fireAttackDamage);
 			}

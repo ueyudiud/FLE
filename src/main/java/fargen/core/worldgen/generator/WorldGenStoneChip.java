@@ -43,8 +43,6 @@ public class WorldGenStoneChip extends FarWorldGenerator
 	protected boolean canGenerateOn(BlockPos pos)
 	{
 		IBlockState state = this.world.getBlockState(pos.down()), state2 = this.world.getBlockState(pos);
-		return state2.getBlock().isReplaceableOreGen(state2, this.world, pos, Predicates.equalTo(Misc.AIR)) &&
-				(state.getBlock() instanceof BlockRock || state.getBlock() instanceof BlockSoil ||
-						(state.getBlock() instanceof BlockSand && state.isSideSolid(this.world, pos.down(), EnumFacing.UP)));
+		return state2.getBlock().isReplaceableOreGen(state2, this.world, pos, Predicates.equalTo(Misc.AIR)) && (state.getBlock() instanceof BlockRock || state.getBlock() instanceof BlockSoil || (state.getBlock() instanceof BlockSand && state.isSideSolid(this.world, pos.down(), EnumFacing.UP)));
 	}
 }

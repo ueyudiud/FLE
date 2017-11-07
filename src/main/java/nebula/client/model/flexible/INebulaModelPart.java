@@ -16,9 +16,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 
 /**
- * The Model Part of {@link nebula.client.model.flexible.FlexibleModel}.<p>
- * The each part can provide different data for model, with optional
- * controller exist, the model can be more flexible.
+ * The Model Part of {@link nebula.client.model.flexible.FlexibleModel}.
+ * <p>
+ * The each part can provide different data for model, with optional controller
+ * exist, the model can be more flexible.
+ * 
  * @author ueyudiud
  */
 public interface INebulaModelPart
@@ -32,23 +34,25 @@ public interface INebulaModelPart
 		}
 		
 		@Override
-		public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+		public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 		{
-			return (f, k)->ImmutableList.of();
+			return (f, k) -> ImmutableList.of();
 		}
 	};
 	
-	default Collection<ResourceLocation> getDependencies() { return ImmutableList.of(); }
+	default Collection<ResourceLocation> getDependencies()
+	{
+		return ImmutableList.of();
+	}
 	
-	default Collection<ResourceLocation> getDirectResources() { return ImmutableList.of(); }
+	default Collection<ResourceLocation> getDirectResources()
+	{
+		return ImmutableList.of();
+	}
 	
 	Collection<String> getResources();
 	
-	INebulaBakedModelPart bake(VertexFormat format,
-			Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
-			TRSRTransformation transformation);
+	INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation);
 	
 	default INebulaModelPart retexture(Map<String, String> retexture)
 	{

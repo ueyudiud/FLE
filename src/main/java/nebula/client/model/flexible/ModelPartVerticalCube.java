@@ -44,8 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 {
-	static final JsonDeserializer<ModelPartVerticalCube> LOADER = (json, typeOfT, context) ->
-	{
+	static final JsonDeserializer<ModelPartVerticalCube> LOADER = (json, typeOfT, context) -> {
 		JsonObject object = json.getAsJsonObject();
 		ModelPartVerticalCube part = new ModelPartVerticalCube();
 		part.tint = Jsons.getOrDefault(object, "tint", -1);
@@ -53,29 +52,28 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		if (object.has("pos"))
 		{
 			JsonElement element1 = object.get("pos");
-			if(element1.isJsonArray())
+			if (element1.isJsonArray())
 			{
 				float[] array = Jsons.getFloatArray(object, "pos", 6);
-				if(array.length != 6)
-					throw new JsonParseException("Position array length is 6, got " + array.length);
+				if (array.length != 6) throw new JsonParseException("Position array length is 6, got " + array.length);
 				part.xyzPos = array;
 				part.fullCube = false;
 				part.normalizeUVPos();
-				if (flag)
-					part.renderFlag = 0;
+				if (flag) part.renderFlag = 0;
 			}
 		}
-		else if (object.has("from")/* && object.has("to") */)//Minecraft loader.
+		else if (object.has("from")/* && object.has("to") */)// Minecraft
+																// loader.
 		{
 			float[] array1 = Jsons.getFloatArray(object, "from", 3);
 			float[] array2 = Jsons.getFloatArray(object, "to", 3);
-			part.xyzPos = new float[]{array1[0], array1[1], array1[2], array2[0], array2[1], array2[2]};
+			part.xyzPos = new float[] { array1[0], array1[1], array1[2], array2[0], array2[1], array2[2] };
 			part.fullCube = false;
 			part.normalizeUVPos();
-			if (flag)
-				part.renderFlag = 0;
+			if (flag) part.renderFlag = 0;
 		}
-		if (object.has("layer"))//For normal layer offset, expand cube size to make sure the new layer cover will on.
+		if (object.has("layer"))// For normal layer offset, expand cube size to
+								// make sure the new layer cover will on.
 		{
 			int layer = object.get("layer").getAsInt();
 			part.xyzPos[0] -= 1.6E-3F * layer;
@@ -140,37 +138,49 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		cube.icons[side] = location;
 	}
 	
-	float[] xyzPos = {0, 0, 0, 16, 16, 16};
-	float[][] uvPos = {
-			{0, 0, 16, 16},
-			{0, 0, 16, 16},
-			{0, 0, 16, 16},
-			{0, 0, 16, 16},
-			{0, 0, 16, 16},
-			{0, 0, 16, 16}};
+	float[]		xyzPos	= { 0, 0, 0, 16, 16, 16 };
+	float[][]	uvPos	= { { 0, 0, 16, 16 }, { 0, 0, 16, 16 }, { 0, 0, 16, 16 }, { 0, 0, 16, 16 }, { 0, 0, 16, 16 }, { 0, 0, 16, 16 } };
 	
-	byte renderFlag = 0x3F;
-	CoordTransformer transformer = new CoordTransformer();
-	boolean uvLock;
+	byte				renderFlag	= 0x3F;
+	CoordTransformer	transformer	= new CoordTransformer();
+	boolean				uvLock;
 	
 	int tint = -1;
 	
-	//	int rotateX = 0;
-	//	int rotateY = 0;
+	// int rotateX = 0;
+	// int rotateY = 0;
 	
 	float red = 1.0F, green = 1.0F, blue = 1.0F, alpha = 1.0F;
 	
-	boolean fullCube = true;
-	String[] icons = new String[6];
+	boolean		fullCube	= true;
+	String[]	icons		= new String[6];
 	
 	private void normalizeUVPos()
 	{
-		this.uvPos[0][0] = this.xyzPos[0]; this.uvPos[0][1] = 16.0F - this.xyzPos[5]; this.uvPos[0][2] = this.xyzPos[3]; this.uvPos[0][3] = 16.0F - this.xyzPos[2];
-		this.uvPos[1][0] = this.xyzPos[0]; this.uvPos[1][1] = this.xyzPos[2]; this.uvPos[1][2] = this.xyzPos[3]; this.uvPos[1][3] = this.xyzPos[5];
-		this.uvPos[2][0] = 16.0F - this.xyzPos[3]; this.uvPos[2][1] = 16.0F - this.xyzPos[4]; this.uvPos[2][2] = 16.0F - this.xyzPos[0]; this.uvPos[2][3] = 16.0F - this.xyzPos[1];
-		this.uvPos[3][0] = this.xyzPos[0]; this.uvPos[3][1] = 16.0F - this.xyzPos[4]; this.uvPos[3][2] = this.xyzPos[3]; this.uvPos[3][3] = 16.0F - this.xyzPos[1];
-		this.uvPos[4][0] = this.xyzPos[5]; this.uvPos[4][1] = 16.0F - this.xyzPos[4]; this.uvPos[4][2] = this.xyzPos[2]; this.uvPos[4][3] = 16.0F - this.xyzPos[1];
-		this.uvPos[5][0] = 16.0F - this.xyzPos[2]; this.uvPos[5][1] = 16.0F - this.xyzPos[4]; this.uvPos[5][2] = 16.0F - this.xyzPos[5]; this.uvPos[5][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[0][0] = this.xyzPos[0];
+		this.uvPos[0][1] = 16.0F - this.xyzPos[5];
+		this.uvPos[0][2] = this.xyzPos[3];
+		this.uvPos[0][3] = 16.0F - this.xyzPos[2];
+		this.uvPos[1][0] = this.xyzPos[0];
+		this.uvPos[1][1] = this.xyzPos[2];
+		this.uvPos[1][2] = this.xyzPos[3];
+		this.uvPos[1][3] = this.xyzPos[5];
+		this.uvPos[2][0] = 16.0F - this.xyzPos[3];
+		this.uvPos[2][1] = 16.0F - this.xyzPos[4];
+		this.uvPos[2][2] = 16.0F - this.xyzPos[0];
+		this.uvPos[2][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[3][0] = this.xyzPos[0];
+		this.uvPos[3][1] = 16.0F - this.xyzPos[4];
+		this.uvPos[3][2] = this.xyzPos[3];
+		this.uvPos[3][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[4][0] = this.xyzPos[5];
+		this.uvPos[4][1] = 16.0F - this.xyzPos[4];
+		this.uvPos[4][2] = this.xyzPos[2];
+		this.uvPos[4][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[5][0] = 16.0F - this.xyzPos[2];
+		this.uvPos[5][1] = 16.0F - this.xyzPos[4];
+		this.uvPos[5][2] = 16.0F - this.xyzPos[5];
+		this.uvPos[5][3] = 16.0F - this.xyzPos[1];
 	}
 	
 	@Override
@@ -183,50 +193,12 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 	
 	private float[][][] datas()
 	{
-		return new float[][][]{
-			{
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][1]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][1]}
-			},
-			{
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][1]},
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][1]}
-			},
-			{
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][1]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][3]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][3]},
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][1]}
-			},
-			{
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][1]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][1]}
-			},
-			{
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][1]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][3]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][3]},
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][1]}
-			},
-			{
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][1]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][1]}
-			}
-		};
+		return new float[][][] { { { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][1] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][1] } }, { { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][1] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][3] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][3] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][3] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][3] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][1] } }, { { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][1] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][1] } } };
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IModelModifier modifier = new ModelModifierByCoordTransformer(transformation, this.transformer);
 		float[][][] datas = datas();
@@ -234,12 +206,9 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		for (int i = 0; i < 6; ++i)
 		{
 			final int i0 = i;
-			BakedQuadBuilder builder = new BakedQuadBuilder(format, modifier,
-					quad-> {
-						quadMaps[i0] = ImmutableMap.copyOf(
-								Maps.transformValues(iconHandlerGetter.apply(this.icons[i0]).build(),
-										loc->new BakedQuadRetex(quad, bakedTextureGetter.apply(loc))));
-					});
+			BakedQuadBuilder builder = new BakedQuadBuilder(format, modifier, quad -> {
+				quadMaps[i0] = ImmutableMap.copyOf(Maps.transformValues(iconHandlerGetter.apply(this.icons[i0]).build(), loc -> new BakedQuadRetex(quad, bakedTextureGetter.apply(loc))));
+			});
 			if ((this.renderFlag & (1 << i)) != 0 && this.icons[i] != null)
 			{
 				EnumFacing facing;
@@ -281,13 +250,26 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		{
 			switch (entry.getKey())
 			{
-			case "down" : icons[0] = entry.getValue(); break;
-			case "up"   : icons[1] = entry.getValue(); break;
-			case "north": icons[2] = entry.getValue(); break;
-			case "south": icons[3] = entry.getValue(); break;
-			case "west" : icons[4] = entry.getValue(); break;
-			case "east" : icons[5] = entry.getValue(); break;
-			default: break;
+			case "down":
+				icons[0] = entry.getValue();
+				break;
+			case "up":
+				icons[1] = entry.getValue();
+				break;
+			case "north":
+				icons[2] = entry.getValue();
+				break;
+			case "south":
+				icons[3] = entry.getValue();
+				break;
+			case "west":
+				icons[4] = entry.getValue();
+				break;
+			case "east":
+				icons[5] = entry.getValue();
+				break;
+			default:
+				break;
 			}
 		}
 		return part;
@@ -295,8 +277,8 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 	
 	static class BakedModelPartFullCube implements INebulaBakedModelPart
 	{
-		final boolean fullCube;
-		final Map<String, BakedQuad>[] quads;
+		final boolean					fullCube;
+		final Map<String, BakedQuad>[]	quads;
 		
 		BakedModelPartFullCube(boolean fullCube, Map<String, BakedQuad>[] quadMaps)
 		{
@@ -309,20 +291,20 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		{
 			if (this.fullCube)
 			{
-				return facing == null ||
-						this.quads[facing.getIndex()] == null ||
-						!this.quads[facing.getIndex()].containsKey(key) ? ImmutableList.of() :
-							ImmutableList.of(this.quads[facing.getIndex()].get(key));
+				return facing == null || this.quads[facing.getIndex()] == null || !this.quads[facing.getIndex()].containsKey(key) ? ImmutableList.of() : ImmutableList.of(this.quads[facing.getIndex()].get(key));
 			}
 			else
 			{
 				if (facing == null)
 				{
 					List<BakedQuad> list = ArrayListAddWithCheck.requireNonnull();
-					A.executeAll(this.quads, m-> { if (m != null) list.add(m.get(key)); });
+					A.executeAll(this.quads, m -> {
+						if (m != null) list.add(m.get(key));
+					});
 					return list;
 				}
-				else return ImmutableList.of();
+				else
+					return ImmutableList.of();
 			}
 		}
 	}

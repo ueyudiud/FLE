@@ -10,11 +10,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The baked quad with new texture.<p>
- * The class {@link net.minecraft.client.renderer.block.model.BakedQuadRetextured},
- * has a bug that it can not reuse like:<p>
- * <code>new BakedQuadRetextured(new BakedQuadRetextured(quad, tex1), tex2)</code><p>
+ * The baked quad with new texture.
+ * <p>
+ * The class
+ * {@link net.minecraft.client.renderer.block.model.BakedQuadRetextured}, has a
+ * bug that it can not reuse like:
+ * <p>
+ * <code>new BakedQuadRetextured(new BakedQuadRetextured(quad, tex1), tex2)</code>
+ * <p>
  * For this will repositioned to wrong texture coordinate.
+ * 
  * @author ueyudiud
  * @see net.minecraft.client.renderer.block.model.BakedQuadRetextured
  */
@@ -23,9 +28,7 @@ public class BakedQuadRetex extends BakedQuad
 {
 	public BakedQuadRetex(BakedQuad quad, TextureAtlasSprite textureIn)
 	{
-		super(quad.getVertexData().clone(),
-				quad.getTintIndex(), FaceBakery.getFacingFromVertexData(quad.getVertexData()),
-				textureIn, quad.shouldApplyDiffuseLighting(), quad.getFormat());
+		super(quad.getVertexData().clone(), quad.getTintIndex(), FaceBakery.getFacingFromVertexData(quad.getVertexData()), textureIn, quad.shouldApplyDiffuseLighting(), quad.getFormat());
 		remapQuad(quad.getSprite());
 	}
 	

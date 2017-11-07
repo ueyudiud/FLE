@@ -18,54 +18,56 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The color applying function.
+ * 
  * @author ueyudiud
  *
  */
 @SideOnly(Side.CLIENT)
 public class ColorMultiplier
 {
-	public static final IItemColor MULTI_ITEM_MATERIAL_COLOR = (stack, tintIndex) ->
-	{
+	public static final IItemColor MULTI_ITEM_MATERIAL_COLOR = (stack, tintIndex) -> {
 		switch (tintIndex)
 		{
-		//0 for base.
-		case 1 : return ItemMulti.getMaterial(stack).RGB;
-		//2 for override.
-		default: return 0xFFFFFFFF;
+		// 0 for base.
+		case 1:
+			return ItemMulti.getMaterial(stack).RGB;
+		// 2 for override.
+		default:
+			return 0xFFFFFFFF;
 		}
 	};
 	
-	public static final IItemColor TOOL_ITEM_MATERIAL_COLOR = (stack, tintIndex) ->
-	{
+	public static final IItemColor TOOL_ITEM_MATERIAL_COLOR = (stack, tintIndex) -> {
 		return ItemTool.getColor(stack, tintIndex);
 	};
 	
 	@Deprecated
-	public static final IItemColor ITEMBLOCK_COLOR = (stack, tintIndex) ->
-	{
+	public static final IItemColor ITEMBLOCK_COLOR = (stack, tintIndex) -> {
 		Block block = Block.getBlockFromItem(stack.getItem());
 		return Minecraft.getMinecraft().getBlockColors().colorMultiplier(block.getStateFromMeta(stack.getMetadata()), null, null, tintIndex);
 	};
 	
-	public static final IBlockColor SOIL_COLOR = (state, worldIn, pos, tintIndex) ->
-	{
-		if(tintIndex != 0) return 0xFFFFFFFF;
+	public static final IBlockColor SOIL_COLOR = (state, worldIn, pos, tintIndex) -> {
+		if (tintIndex != 0) return 0xFFFFFFFF;
 		EnumCoverType type = state.getValue(BlockSoil.COVER_TYPE);
 		switch (type.getNoCover())
 		{
-		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiome(pos).getGrassColorAtPos(pos);
-		default : return 0xFFFFFFFF;
+		case GRASS:
+			return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiome(pos).getGrassColorAtPos(pos);
+		default:
+			return 0xFFFFFFFF;
 		}
 	};
 	
-	public static final IItemColor ITEM_SOIL_COLOR = (stack, tintIndex) ->
-	{
-		if(tintIndex != 0) return 0xFFFFFFFF;
+	public static final IItemColor ITEM_SOIL_COLOR = (stack, tintIndex) -> {
+		if (tintIndex != 0) return 0xFFFFFFFF;
 		EnumCoverType type = EnumCoverType.VALUES[stack.getItemDamage()];
 		switch (type.getNoCover())
 		{
-		case GRASS : return ColorizerGrass.getGrassColor(0.7F, 0.7F);
-		default : return 0xFFFFFFFF;
+		case GRASS:
+			return ColorizerGrass.getGrassColor(0.7F, 0.7F);
+		default:
+			return 0xFFFFFFFF;
 		}
 	};
 	

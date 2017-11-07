@@ -27,9 +27,7 @@ public class EntityFLESlime extends EntitySlime
 	{
 		int i = getSlimeSize();
 		
-		if (canEntityBeSeen(entityIn) &&
-				getDistanceSqToEntity(entityIn) < 0.6 * 0.6 * i * i &&
-				entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 1.5F * getAttackStrength()))
+		if (canEntityBeSeen(entityIn) && getDistanceSqToEntity(entityIn) < 0.6 * 0.6 * i * i && entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 1.5F * getAttackStrength()))
 		{
 			playSound(SoundEvents.ENTITY_SLIME_ATTACK, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
 			applyEnchantments(this, entityIn);
@@ -41,9 +39,7 @@ public class EntityFLESlime extends EntitySlime
 	{
 		if (super.attackEntityFrom(source, amount))
 		{
-			if (!source.isMagicDamage() && !source.isFireDamage() &&
-					!source.isCreativePlayer() && !source.isDamageAbsolute() &&
-					!source.isProjectile())
+			if (!source.isMagicDamage() && !source.isFireDamage() && !source.isCreativePlayer() && !source.isDamageAbsolute() && !source.isProjectile())
 			{
 				causeDebufToAttacked(source.getEntity(), amount);
 			}

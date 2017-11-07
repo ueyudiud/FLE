@@ -54,8 +54,8 @@ public interface ICropAccess extends ICoord, IBiology, IPlantable
 	void killCrop();
 	
 	/**
-	 * Pollinating pollen or spore to spread genetic material to
-	 * this crop.
+	 * Pollinating pollen or spore to spread genetic material to this crop.
+	 * 
 	 * @param gm
 	 */
 	void pollinate(GeneticMaterial gm);

@@ -48,17 +48,16 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IIconCollection collection1 = iconHandlerGetter.apply(this.icon);
 		IIconCollection collection2 = iconHandlerGetter.apply(this.convert);
 		TextureAtlasSprite convertIcon;
 		switch (collection2.size())
 		{
-		case 0 :
+		case 0:
 			return INebulaBakedModelPart.EMPTY;
-		case 1 :
+		case 1:
 			convertIcon = bakedTextureGetter.apply(Iterables.getOnlyElement(collection2.build().values()));
 			ImmutableMap.Builder<String, List<BakedQuad>> builder = ImmutableMap.builder();
 			for (Entry<String, ResourceLocation> entry : collection1.build().entrySet())
@@ -72,7 +71,7 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 		default:
 			builder = ImmutableMap.builder();
 			Map<String, TextureAtlasSprite> map1 = new HashMap<>();
-			collection1.build().forEach((s, r)-> map1.put(s, bakedTextureGetter.apply(r)));
+			collection1.build().forEach((s, r) -> map1.put(s, bakedTextureGetter.apply(r)));
 			for (Entry<String, ResourceLocation> entry1 : collection2.build().entrySet())
 			{
 				convertIcon = bakedTextureGetter.apply(entry1.getValue());

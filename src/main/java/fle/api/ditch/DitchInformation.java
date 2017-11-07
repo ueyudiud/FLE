@@ -13,8 +13,8 @@ public class DitchInformation
 {
 	public static final IPropertyMap.IProperty<DitchInformation> DITCH_INFORMATION_PROPERTY = () -> null;
 	
-	public int tankCapacity;
-	public int destroyTemperature;
-	public int speedMultiple;
-	public int maxTransferLimit;
+	public int	tankCapacity;
+	public int	destroyTemperature;
+	public int	speedMultiple;
+	public int	maxTransferLimit;
 }

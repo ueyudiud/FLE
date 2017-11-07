@@ -14,24 +14,29 @@ import java.util.Set;
 import nebula.common.util.A;
 
 /**
- * The mapped register, use index->real id to sort list.<p>
- * When id is not consecutive can use this register to
- * reduce memory used.
+ * The mapped register, use index->real id to sort list.
+ * <p>
+ * When id is not consecutive can use this register to reduce memory used.
+ * 
  * @author ueyudiud
  */
 public class MappedRegister<T> implements IRegister<T>
 {
-	Collection<T> registeredElements;
-	Set<String> registeredNameSet;
+	Collection<T>	registeredElements;
+	Set<String>		registeredNameSet;
 	
-	Integer[] pointToID;
-	Object[] pointToTargets;
-	String[] pointToNames;
-	int size = 0;
-	int point = 0;
-	int idFree = 0;
+	Integer[]	pointToID;
+	Object[]	pointToTargets;
+	String[]	pointToNames;
+	int			size	= 0;
+	int			point	= 0;
+	int			idFree	= 0;
 	
-	public MappedRegister() { this(16); }
+	public MappedRegister()
+	{
+		this(16);
+	}
+	
 	public MappedRegister(int initialCapacity)
 	{
 		this.pointToID = new Integer[initialCapacity];
@@ -41,7 +46,8 @@ public class MappedRegister<T> implements IRegister<T>
 	
 	int nextFreeID()
 	{
-		while (A.contain(this.pointToID, this.idFree++));
+		while (A.contain(this.pointToID, this.idFree++))
+			;
 		return this.idFree;
 	}
 	
@@ -49,7 +55,7 @@ public class MappedRegister<T> implements IRegister<T>
 	{
 		do
 		{
-			if(this.pointToID.length <= this.point)
+			if (this.pointToID.length <= this.point)
 			{
 				int len = this.point + (this.point >> 1);
 				this.pointToID = A.copyToLength(this.pointToID, len);
@@ -57,7 +63,7 @@ public class MappedRegister<T> implements IRegister<T>
 				this.pointToTargets = A.copyToLength(this.pointToTargets, len);
 			}
 		}
-		while (this.pointToID[this.point ++] != null);
+		while (this.pointToID[this.point++] != null);
 		return this.point - 1;
 	}
 	
@@ -78,8 +84,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public void register(int id, String name, T arg)
 	{
-		if(contain(name))
-			throw new IllegalArgumentException("The name is already registered.");
+		if (contain(name)) throw new IllegalArgumentException("The name is already registered.");
 		++this.size;
 		int index = ensureCapacity();
 		this.pointToID[index] = id;
@@ -150,7 +155,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public Collection<T> targets()
 	{
-		if(this.registeredElements == null)
+		if (this.registeredElements == null)
 		{
 			this.registeredElements = new MappedRegisterTargetCollection();
 		}
@@ -180,7 +185,7 @@ public class MappedRegister<T> implements IRegister<T>
 	public T remove(String name)
 	{
 		int id = A.indexOfFirst(this.pointToNames, name);
-		if(id == -1) return null;
+		if (id == -1) return null;
 		Object obj = this.pointToTargets[id];
 		remove(id);
 		return (T) obj;
@@ -190,7 +195,7 @@ public class MappedRegister<T> implements IRegister<T>
 	public String remove(T arg)
 	{
 		int id = A.indexOfFirst(this.pointToTargets, arg);
-		if(id == -1) return null;
+		if (id == -1) return null;
 		String name = this.pointToNames[id];
 		remove(id);
 		return name;
@@ -228,9 +233,7 @@ public class MappedRegister<T> implements IRegister<T>
 			for (int i = 0; i < this.pointToID.length && count < this.size; ++i)
 			{
 				if (this.pointToID[i] == null) continue;
-				if (!this.pointToNames[i].equals(register.name(this.pointToID[i])) ||
-						!Objects.equals(this.pointToTargets[i], register.get(this.pointToID[i])))
-					return false;
+				if (!this.pointToNames[i].equals(register.name(this.pointToID[i])) || !Objects.equals(this.pointToTargets[i], register.get(this.pointToID[i]))) return false;
 				++count;
 			}
 			return true;
@@ -260,7 +263,7 @@ public class MappedRegister<T> implements IRegister<T>
 				public boolean hasNext()
 				{
 					int point = this.point;
-					while(point < MappedRegister.this.pointToNames.length && MappedRegister.this.pointToNames[point] == null)
+					while (point < MappedRegister.this.pointToNames.length && MappedRegister.this.pointToNames[point] == null)
 					{
 						++point;
 					}
@@ -270,7 +273,7 @@ public class MappedRegister<T> implements IRegister<T>
 				@Override
 				public String next()
 				{
-					while(this.point < MappedRegister.this.pointToNames.length && MappedRegister.this.pointToNames[this.point] == null)
+					while (this.point < MappedRegister.this.pointToNames.length && MappedRegister.this.pointToNames[this.point] == null)
 					{
 						++this.point;
 					}
@@ -318,7 +321,7 @@ public class MappedRegister<T> implements IRegister<T>
 				public boolean hasNext()
 				{
 					int point = this.point;
-					while(point < MappedRegister.this.pointToTargets.length && MappedRegister.this.pointToTargets[point] == null)
+					while (point < MappedRegister.this.pointToTargets.length && MappedRegister.this.pointToTargets[point] == null)
 					{
 						++point;
 					}
@@ -328,7 +331,7 @@ public class MappedRegister<T> implements IRegister<T>
 				@Override
 				public T next()
 				{
-					while(this.point < MappedRegister.this.pointToTargets.length && MappedRegister.this.pointToTargets[this.point] == null)
+					while (this.point < MappedRegister.this.pointToTargets.length && MappedRegister.this.pointToTargets[this.point] == null)
 					{
 						++this.point;
 					}

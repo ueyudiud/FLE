@@ -15,6 +15,7 @@ public abstract class PacketWorld extends PacketAbstract
 	{
 		
 	}
+	
 	public PacketWorld(World world)
 	{
 		dimID = world.provider.getDimension();

@@ -8,7 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 public class DamageSourceEntityAttack extends EntityDamageSource
 {
 	private ITextComponent message;
-
+	
 	public DamageSourceEntityAttack(String damageTypeIn, ITextComponent message, Entity damageSourceEntityIn)
 	{
 		super(damageTypeIn, damageSourceEntityIn);

@@ -14,16 +14,16 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * For fluid block caused.
- * Posted in {@link MinecraftForge#EVENT_BUS}
+ * For fluid block caused. Posted in {@link MinecraftForge#EVENT_BUS}
+ * 
  * @author ueyudiud
  *
  */
 public class FluidBlockEvent extends Event
 {
-	public final World world;
-	public final BlockPos resource;
-	public final Block block;
+	public final World		world;
+	public final BlockPos	resource;
+	public final Block		block;
 	
 	public FluidBlockEvent(World world, BlockPos resource, Block block)
 	{
@@ -35,14 +35,15 @@ public class FluidBlockEvent extends Event
 	/**
 	 * Called when fluid drain from container to world.<br>
 	 * The drain action will be prevent if the event is canceled.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
 	@Cancelable
 	public static class FluidDrainToWorldEvent extends FluidBlockEvent
 	{
-		public final FluidStack resource;
-		private int used = -1;
+		public final FluidStack	resource;
+		private int				used	= -1;
 		
 		public FluidDrainToWorldEvent(World world, BlockPos resource, Block block, FluidStack stack)
 		{
@@ -64,15 +65,16 @@ public class FluidBlockEvent extends Event
 	/**
 	 * Called when fluid drain from world to container.<br>
 	 * The fill action will be prevent if the event is canceled.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
 	@Cancelable
 	public static class FluidFillFromWorldEvent extends FluidBlockEvent
 	{
-		public final int maxFill;
-		public final @Nullable Fluid requiredFluid;
-		private FluidStack ret = null;
+		public final int				maxFill;
+		public final @Nullable Fluid	requiredFluid;
+		private FluidStack				ret	= null;
 		
 		public FluidFillFromWorldEvent(World world, BlockPos resource, Fluid requiredFluid, int maxFill)
 		{
@@ -95,11 +97,11 @@ public class FluidBlockEvent extends Event
 	@HasResult
 	public static class FluidTouchBlockEvent extends FluidBlockEvent
 	{
-		public final BlockPos target;
-		public final IBlockState targetState;
-		private IBlockState endingTargetState;
-		public final int amountStart;
-		public int amount;
+		public final BlockPos		target;
+		public final IBlockState	targetState;
+		private IBlockState			endingTargetState;
+		public final int			amountStart;
+		public int					amount;
 		
 		public FluidTouchBlockEvent(World world, BlockPos resource, BlockPos target, IBlockState targetState, BlockFluidBase block, int amt)
 		{

@@ -39,24 +39,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Some bug still contain, it is need to be solved.
- * @author ueyudiud
- * FIXME
+ * 
+ * @author ueyudiud FIXME
  */
 public class EntityProjectileItem extends Entity implements IThrowableEntity, IProjectile, IDescribable
 {
-	private static final Predicate<Entity> ARROW_TARGETS =
-			Predicates.<Entity>and(EntitySelectors.NOT_SPECTATING, EntitySelectors.IS_ALIVE, Entity::canBeCollidedWith);
-	public boolean inGround = false;
-	private int tickInGround;
-	private int tickInAir;
-	private boolean attacked;
-	private IBlockState inBlock;
-	private BlockPos blockPos;
-	boolean inited = false;
-	public int age;
-	public ItemStack currentItem;
-	public EntityLivingBase shooter;
-	private List<EntityPlayer> list = new ArrayList<>();
+	private static final Predicate<Entity>	ARROW_TARGETS	= Predicates.<Entity> and(EntitySelectors.NOT_SPECTATING, EntitySelectors.IS_ALIVE, Entity::canBeCollidedWith);
+	public boolean							inGround		= false;
+	private int								tickInGround;
+	private int								tickInAir;
+	private boolean							attacked;
+	private IBlockState						inBlock;
+	private BlockPos						blockPos;
+	boolean									inited			= false;
+	public int								age;
+	public ItemStack						currentItem;
+	public EntityLivingBase					shooter;
+	private List<EntityPlayer>				list			= new ArrayList<>();
 	
 	public EntityProjectileItem(World worldIn)
 	{
@@ -64,6 +63,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this.blockPos = BlockPos.ORIGIN;
 		setSize(.5F, .5F);
 	}
+	
 	public EntityProjectileItem(World world, ItemStack stack)
 	{
 		this(world);
@@ -81,13 +81,13 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this(world, shooter.posX, shooter.posY + shooter.getEyeHeight() - .1, shooter.posZ, stack);
 		this.shooter = shooter;
 		setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
 		this.posY -= 0.1;
-		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
 		setPosition(this.posX, this.posY, this.posZ);
-		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
 		setThrowableHeading(this.motionX, this.motionY, this.motionZ, hardness * 1.5F, 1.0F);
 	}
 	
@@ -96,13 +96,13 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this(world, shooter.posX, shooter.posY + shooter.getEyeHeight() - .1, shooter.posZ, stack);
 		this.shooter = shooter;
 		setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
 		this.posY -= 0.1;
-		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
 		setPosition(this.posX, this.posY, this.posZ);
-		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
-		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
 		setThrowableHeading(this.motionX, this.motionY, this.motionZ, hardness * 1.5F, inaccuracy);
 	}
 	
@@ -120,8 +120,8 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this.motionY *= velocity;
 		this.motionZ *= velocity;
 		float f3 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, f3) * 180.0D / Math.PI);
+		this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, f3) * 180.0D / Math.PI);
 	}
 	
 	@Override
@@ -153,8 +153,8 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
 			float f = MathHelper.sqrt(x * x + z * z);
-			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, f) * 180.0D / Math.PI);
+			this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(x, z) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(y, f) * 180.0D / Math.PI);
 			this.prevRotationPitch = this.rotationPitch;
 			this.prevRotationYaw = this.rotationYaw;
 			setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -217,9 +217,9 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 			}
 			synchronized (this.list)
 			{
-				if(!this.list.isEmpty())
+				if (!this.list.isEmpty())
 				{
-					for(EntityPlayer player : this.list)
+					for (EntityPlayer player : this.list)
 					{
 						Nebula.network.sendToPlayer(new PacketEntity(this), player);
 					}
@@ -235,8 +235,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		{
 			((IUpdatableItem) this.currentItem.getItem()).updateItem(new EnviornmentEntity(this), this.currentItem);
 		}
-		if (this.isDead)
-			return;
+		if (this.isDead) return;
 		super.onEntityUpdate();
 		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
@@ -259,7 +258,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 			else
 			{
 				++this.tickInGround;
-				if(this.tickInGround >= 72000)
+				if (this.tickInGround >= 72000)
 				{
 					setDead();
 					return;
@@ -276,7 +275,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 			}
 			if (!this.world.isRemote)
 			{
-				if(this.posY <= -32 || this.tickInAir >= 3600)
+				if (this.posY <= -32 || this.tickInAir >= 3600)
 				{
 					setDead();
 					return;
@@ -300,7 +299,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				}
 				if (raytraceresult != null && raytraceresult.entityHit != null && raytraceresult.entityHit instanceof EntityPlayer)
 				{
-					EntityPlayer entityplayer = (EntityPlayer)raytraceresult.entityHit;
+					EntityPlayer entityplayer = (EntityPlayer) raytraceresult.entityHit;
 					if (this.shooter instanceof EntityPlayer && !((EntityPlayer) this.shooter).canAttackPlayer(entityplayer))
 					{
 						raytraceresult = null;
@@ -318,8 +317,8 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		if (!this.inGround)
 		{
 			float f4 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-			this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
-			for (this.rotationPitch = (float)(MathHelper.atan2(this.motionY, f4) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+			this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
+			for (this.rotationPitch = (float) (MathHelper.atan2(this.motionY, f4) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
 			{
 				;
 			}
@@ -368,8 +367,8 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	private void recountYawAndPitch()
 	{
 		float f = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, f) * 180.0D / Math.PI);
+		this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(this.motionY, f) * 180.0D / Math.PI);
 	}
 	
 	private void onHit(RayTraceResult result)
@@ -384,19 +383,19 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		{
 			this.blockPos = result.getBlockPos();
 			state = this.world.getBlockState(this.blockPos);
-			if(!state.getBlock().isAir(state, this.world, this.blockPos))
+			if (!state.getBlock().isAir(state, this.world, this.blockPos))
 			{
 				AxisAlignedBB aabb = state.getCollisionBoundingBox(this.world, this.blockPos).offset(this.blockPos);
 				state.getBlock().onEntityCollidedWithBlock(this.world, this.blockPos, state, this);
 				hitOnGround(aabb);
 			}
 		}
-		if(!this.isDead)
+		if (!this.isDead)
 		{
 			this.posX = result.hitVec.xCoord + this.motionX * 4E-2F;
 			this.posY = result.hitVec.yCoord + this.motionY * 4E-2F;
 			this.posZ = result.hitVec.zCoord + this.motionZ * 4E-2F;
-			if(result.typeOfHit == Type.BLOCK)
+			if (result.typeOfHit == Type.BLOCK)
 			{
 				this.motionX = 0;
 				this.motionY = 0;
@@ -409,15 +408,13 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	
 	private void hitOnGround(AxisAlignedBB aabb)
 	{
-		Direction direction = Worlds.getCollideSide(aabb, new double[]{this.posX, this.posY, this.posZ}, new double[]{this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ});
-		if(direction == null)
+		Direction direction = Worlds.getCollideSide(aabb, new double[] { this.posX, this.posY, this.posZ }, new double[] { this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ });
+		if (direction == null)
 		{
 			direction = Direction.Q;
 		}
-		if(this.currentItem.getItem() instanceof IProjectileItem)
-			if(((IProjectileItem) this.currentItem.getItem()).onHitGround(this.world, this.blockPos, this, direction))
-				return;
-		if(!this.world.isRemote)
+		if (this.currentItem.getItem() instanceof IProjectileItem) if (((IProjectileItem) this.currentItem.getItem()).onHitGround(this.world, this.blockPos, this, direction)) return;
+		if (!this.world.isRemote)
 		{
 			EntityItem entity = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.currentItem);
 			entity.motionX = direction.boundX * this.motionX * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;
@@ -430,14 +427,13 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	
 	private void hitOnEntity(Entity entity)
 	{
-		if(this.currentItem.getItem() instanceof IProjectileItem)
-			if(((IProjectileItem) this.currentItem.getItem()).onHitEntity(this.world, entity, this))
-			{
-				this.attacked = true;
-				return;
-			}
+		if (this.currentItem.getItem() instanceof IProjectileItem) if (((IProjectileItem) this.currentItem.getItem()).onHitEntity(this.world, entity, this))
+		{
+			this.attacked = true;
+			return;
+		}
 		entity.addVelocity(this.motionX * .1, this.motionY * .1 + 0.1, this.motionZ * .1);
-		if(!this.world.isRemote)
+		if (!this.world.isRemote)
 		{
 			EntityItem entity1 = new EntityItem(this.world, this.posX - this.motionX, this.posY - this.motionY, this.posZ - this.motionZ, this.currentItem);
 			entity1.motionX = this.motionX * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;

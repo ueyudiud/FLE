@@ -11,5 +11,5 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public interface ICustomItemModelSelector extends ItemMeshDefinition
 {
-	List<ResourceLocation>	getAllowedResourceLocations(Item item);
+	List<ResourceLocation> getAllowedResourceLocations(Item item);
 }

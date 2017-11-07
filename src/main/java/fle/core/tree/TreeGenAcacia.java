@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 
 public class TreeGenAcacia extends TreeGenAbstract
 {
-	protected int randHeightHlf1;
-	protected int randHeightHlf2;
-	protected int baseHeight;
+	protected int	randHeightHlf1;
+	protected int	randHeightHlf2;
+	protected int	baseHeight;
 	
 	public TreeGenAcacia(ITree tree, float generateCoreLeavesChance)
 	{
@@ -42,8 +42,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 			int j1;
 			int k1;
 			
-			if(!checkLogGrow(world, x, y + 1, z, 2, l - 2, 2, true)) return false;
-			if(!checkLogGrow(world, x, y + l - 1, z, 1, 2, 1, true)) return false;
+			if (!checkLogGrow(world, x, y + 1, z, 2, l - 2, 2, true)) return false;
+			if (!checkLogGrow(world, x, y + l - 1, z, 1, 2, 1, true)) return false;
 			BlockPos pos = new BlockPos(x, y - 1, z);
 			IBlockState state = world.getBlockState(pos);
 			
@@ -81,7 +81,7 @@ public class TreeGenAcacia extends TreeGenAbstract
 				for (j2 = -1; j2 <= 1; ++j2)
 				{
 					for (k2 = -1; k2 <= 1; ++k2)
-						if(isLogReplaceable(world, k3 + j2, i2 + 1, l1 + k2))
+						if (isLogReplaceable(world, k3 + j2, i2 + 1, l1 + k2))
 						{
 							generateTreeLeaves(world, k3 + j2, i2 + 1, l1 + k2, 0, random, info);
 						}

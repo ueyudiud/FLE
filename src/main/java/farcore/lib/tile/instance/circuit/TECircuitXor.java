@@ -8,8 +8,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitXor extends TECircuitTripleInput
 {
-	private static final int Left = 0x5;
-	private static final int Right = 0x6;
+	private static final int	Left	= 0x5;
+	private static final int	Right	= 0x6;
 	
 	@Override
 	protected void updateCircuit()
@@ -37,9 +37,6 @@ public class TECircuitXor extends TECircuitTripleInput
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? getRedstonePower(Facing.LEFT) :
-			i == 1 ? getRedstonePower(Facing.RIGHT) :
-				i == 2 ? this.power :
-					0;
+		return i == 0 ? getRedstonePower(Facing.LEFT) : i == 1 ? getRedstonePower(Facing.RIGHT) : i == 2 ? this.power : 0;
 	}
 }

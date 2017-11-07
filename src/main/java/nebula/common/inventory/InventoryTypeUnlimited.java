@@ -18,10 +18,10 @@ import net.minecraft.item.ItemStack;
  */
 public class InventoryTypeUnlimited implements IBasicInventory
 {
-	private int limit;
-	private int size;
-	private int slots;
-	private INode<ItemStack> stacks;
+	private int					limit;
+	private int					size;
+	private int					slots;
+	private INode<ItemStack>	stacks;
 	
 	private void recaculateSize()
 	{
@@ -54,7 +54,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 			else
 			{
 				Iterator<ItemStack> itr = node1.iterator();
-				itr.forEachRemaining(s-> {
+				itr.forEachRemaining(s -> {
 					if (ItemStacks.isItemAndTagEqual(stack, s))
 					{
 						stack.stackSize += s.stackSize;
@@ -158,7 +158,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 		{
 			ItemStack stack = node.remove();
 			this.size -= stack.stackSize;
-			this.slots --;
+			this.slots--;
 			return stack;
 		}
 		return null;

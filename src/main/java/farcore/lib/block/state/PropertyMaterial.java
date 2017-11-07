@@ -31,6 +31,7 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	{
 		return new PropertyMaterial(name, Mat.filt(checker, false));
 	}
+	
 	public static PropertyMaterial create(String name, Collection<Mat> collection)
 	{
 		Mat[] materials = L.cast(collection, Mat.class);

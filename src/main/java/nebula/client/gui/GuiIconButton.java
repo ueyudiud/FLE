@@ -20,19 +20,19 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GuiIconButton extends GuiButton
 {
-	private static final ResourceLocation VOID = new ResourceLocation(Nebula.MODID, "textures/gui/void.png");
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(Nebula.MODID, "textures/gui/button_background.png");
-	private ButtonSize size;
-	private ResourceLocation texture;
-	private int textureX;
-	private int textureY;
-	private ItemStack itemStack;
-	private boolean drawQuantity;
-	private RenderItem renderItem;
+	private static final ResourceLocation	VOID		= new ResourceLocation(Nebula.MODID, "textures/gui/void.png");
+	private static final ResourceLocation	BACKGROUND	= new ResourceLocation(Nebula.MODID, "textures/gui/button_background.png");
+	private ButtonSize						size;
+	private ResourceLocation				texture;
+	private int								textureX;
+	private int								textureY;
+	private ItemStack						itemStack;
+	private boolean							drawQuantity;
+	private RenderItem						renderItem;
 	
 	public static enum ButtonSize
 	{
-		Standard(18),  Slot(16),  Small(10), Tiny(7);
+		Standard(18), Slot(16), Small(10), Tiny(7);
 		
 		final int size;
 		
@@ -110,7 +110,7 @@ public class GuiIconButton extends GuiButton
 				drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, this.width, this.height);
 				return;
 			}
-			//Draw background.
+			// Draw background.
 			switch (this.size)
 			{
 			case Standard:
@@ -119,13 +119,14 @@ public class GuiIconButton extends GuiButton
 			case Small:
 				drawTexturedModalRect(this.xPosition, this.yPosition, 18, k * this.size.size, this.width, this.height);
 				break;
-			case Tiny :
+			case Tiny:
 				drawTexturedModalRect(this.xPosition, this.yPosition, 28, k * this.size.size, this.width, this.height);
 				break;
-			default:;
+			default:
+				;
 			}
 			mouseDragged(minecraft, i, j);
-			//Draw item stack.
+			// Draw item stack.
 			if (this.itemStack == null)
 			{
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

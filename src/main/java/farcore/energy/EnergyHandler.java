@@ -8,9 +8,9 @@ import nebula.base.Register;
 import nebula.common.util.Strings;
 
 /**
- * The far core provide an energy formatter to give
- * a unification of all of energy unit registered in
- * far addons.
+ * The far core provide an energy formatter to give a unification of all of
+ * energy unit registered in far addons.
+ * 
  * @author ueyudiud
  *
  */
@@ -18,16 +18,13 @@ public class EnergyHandler
 {
 	public static enum EnergyScaleType
 	{
-		INTEGER,
-		LONG,
-		FLOAT,
-		DOUBLE;
+		INTEGER, LONG, FLOAT, DOUBLE;
 	}
 	
 	private static final Register<Energy> REGISTER = new Register<>();
 	
-	public static final Energy STANDARD_DOUBLE;
-	public static final Energy STANDARD_LONG;
+	public static final Energy	STANDARD_DOUBLE;
+	public static final Energy	STANDARD_LONG;
 	
 	static
 	{
@@ -40,8 +37,7 @@ public class EnergyHandler
 		if (REGISTER.contain(name))
 		{
 			Energy energy = REGISTER.get(name);
-			if(energy.energyScale != energyScale || energy.type != type)
-				throw new RuntimeException("The energy can not cast as one energy type!");
+			if (energy.energyScale != energyScale || energy.type != type) throw new RuntimeException("The energy can not cast as one energy type!");
 			return energy;
 		}
 		else
@@ -59,9 +55,9 @@ public class EnergyHandler
 	
 	public static class Energy
 	{
-		public final String unit;
-		private final double energyScale;
-		private final EnergyScaleType type;
+		public final String				unit;
+		private final double			energyScale;
+		private final EnergyScaleType	type;
 		
 		Energy(String unit, double energyScale, EnergyScaleType type)
 		{
@@ -74,15 +70,15 @@ public class EnergyHandler
 		{
 			switch (this.type)
 			{
-			case INTEGER :
+			case INTEGER:
 				return value.intValue();
-			case LONG :
+			case LONG:
 				return value.longValue();
 			case DOUBLE:
 				return Double.doubleToLongBits(value.doubleValue());
 			case FLOAT:
 				return Float.floatToIntBits(value.floatValue());
-			default :
+			default:
 				return 0;
 			}
 		}
@@ -91,15 +87,15 @@ public class EnergyHandler
 		{
 			switch (this.type)
 			{
-			case INTEGER :
+			case INTEGER:
 				return amount & 0xFFFFFFFF;
-			case LONG :
+			case LONG:
 				return amount;
 			case DOUBLE:
 				return Double.longBitsToDouble(amount);
 			case FLOAT:
 				return Float.intBitsToFloat((int) (amount & 0xFFFFFFFF));
-			default :
+			default:
 				return 0;
 			}
 		}
@@ -108,11 +104,11 @@ public class EnergyHandler
 		{
 			switch (this.type)
 			{
-			case INTEGER :
+			case INTEGER:
 				return (int) amount;
-			case LONG :
+			case LONG:
 				return (long) amount;
-			default :
+			default:
 			case DOUBLE:
 				return amount;
 			case FLOAT:
@@ -125,11 +121,16 @@ public class EnergyHandler
 			double mul = energy.energyScale / this.energyScale;
 			switch (energy.type)
 			{
-			case INTEGER : return (int) (amount * mul);
-			case LONG : return (long) (amount * mul);
-			case FLOAT : return (float) (amount * mul);
-			case DOUBLE : return (double) (amount * mul);
-			default : return 0;
+			case INTEGER:
+				return (int) (amount * mul);
+			case LONG:
+				return (long) (amount * mul);
+			case FLOAT:
+				return (float) (amount * mul);
+			case DOUBLE:
+				return (double) (amount * mul);
+			default:
+				return 0;
 			}
 		}
 		
@@ -138,11 +139,16 @@ public class EnergyHandler
 			double mul = energy.energyScale / this.energyScale;
 			switch (energy.type)
 			{
-			case INTEGER : return (int) (amount * mul);
-			case LONG : return (long) (amount * mul);
-			case FLOAT : return (float) (amount * mul);
-			case DOUBLE : return (double) (amount * mul);
-			default : return 0;
+			case INTEGER:
+				return (int) (amount * mul);
+			case LONG:
+				return (long) (amount * mul);
+			case FLOAT:
+				return (float) (amount * mul);
+			case DOUBLE:
+				return (double) (amount * mul);
+			default:
+				return 0;
 			}
 		}
 		
@@ -150,11 +156,15 @@ public class EnergyHandler
 		{
 			switch (this.type)
 			{
-			case INTEGER : return Integer.toString(energy.intValue()) + this.unit;
-			case LONG : return Long.toString(energy.longValue()) + this.unit;
-			case FLOAT : return Strings.getDecimalNumber(energy.floatValue(), 2) + this.unit;
-			default :
-			case DOUBLE : return Strings.getDecimalNumber(energy.doubleValue(), 3) + this.unit;
+			case INTEGER:
+				return Integer.toString(energy.intValue()) + this.unit;
+			case LONG:
+				return Long.toString(energy.longValue()) + this.unit;
+			case FLOAT:
+				return Strings.getDecimalNumber(energy.floatValue(), 2) + this.unit;
+			default:
+			case DOUBLE:
+				return Strings.getDecimalNumber(energy.doubleValue(), 3) + this.unit;
 			}
 		}
 	}

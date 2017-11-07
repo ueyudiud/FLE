@@ -23,7 +23,7 @@ public class TreeBirch extends Tree
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null)
+		if (info != null)
 		{
 			this.generator1.setHeight(info.height / 5 + 5, info.height / 4 + 2);
 		}

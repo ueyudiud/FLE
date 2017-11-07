@@ -11,14 +11,9 @@ import com.google.common.collect.ImmutableMap;
  */
 public enum OpType
 {
-	INSERT("insert"),
-	INSERT_BEFORE("insert_before"),
-	REPLACE("replace"),
-	REMOVE("remove"),
-	SWITCH("switch");
+	INSERT("insert"), INSERT_BEFORE("insert_before"), REPLACE("replace"), REMOVE("remove"), SWITCH("switch");
 	
-	static final ImmutableMap<String, OpType> MAP =
-			ImmutableMap.of("insert", INSERT, "insert_before", INSERT_BEFORE, "replace", REPLACE, "remove", REMOVE, "switch", SWITCH);
+	static final ImmutableMap<String, OpType> MAP = ImmutableMap.of("insert", INSERT, "insert_before", INSERT_BEFORE, "replace", REPLACE, "remove", REMOVE, "switch", SWITCH);
 	
 	static OpType parseValue(String arg) throws IllegalArgumentException
 	{

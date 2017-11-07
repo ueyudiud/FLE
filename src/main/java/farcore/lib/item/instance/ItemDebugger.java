@@ -37,6 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Debugging tool.
+ * 
  * @author ueyudiud
  */
 public class ItemDebugger extends ItemBase
@@ -62,10 +63,9 @@ public class ItemDebugger extends ItemBase
 	}
 	
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
 			try
 			{
@@ -78,7 +78,8 @@ public class ItemDebugger extends ItemBase
 				Block block = state.getBlock();
 				TileEntity tile = world.getTileEntity(pos);
 				List<String> list = new ArrayList<>();
-				//This information is added in F3 information, so should I remove these information display?
+				// This information is added in F3 information, so should I
+				// remove these information display?
 				list.add("================World Info==================");
 				list.add("Block Type : " + block.getClass().getSimpleName());
 				list.add("State : ");
@@ -87,31 +88,31 @@ public class ItemDebugger extends ItemBase
 					list.add(entry.getKey().getName() + " : " + ((IProperty) entry.getKey()).getName(entry.getValue()));
 				}
 				list.add("Temperature : " + EnumChatFormatting.RED + ThermalNet.getTemperature(world, pos, false) + "K");
-				if(block instanceof IDebugableBlock)
+				if (block instanceof IDebugableBlock)
 				{
 					list.add("==========BLOCK INFO==========");
 					((IDebugableBlock) block).addInformation(player, world, pos, Direction.of(side), list);
 					list.add("==============================");
 				}
-				if(tile != null)
+				if (tile != null)
 				{
 					list.add("TE Type : " + tile.getClass().getName());
-					if(tile instanceof IDebugableTile)
+					if (tile instanceof IDebugableTile)
 					{
 						list.add("===========TE INFO============");
 						((IDebugableTile) tile).addDebugInformation(player, Direction.of(side), list);
 						list.add("==============================");
 					}
 				}
-				for(String string : list)
+				for (String string : list)
 				{
 					player.sendMessage(new TextComponentString(string));
 				}
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				player.sendMessage(new TextComponentString("Fail to debug."));
-				if(Nebula.debug)
+				if (Nebula.debug)
 				{
 					Log.warn("Fail to get information from coord.", exception);
 				}
@@ -130,9 +131,9 @@ public class ItemDebugger extends ItemBase
 			{
 				entity.world.removeEntity(entity);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
-				if(Nebula.debug)
+				if (Nebula.debug)
 				{
 					Log.warn("Fail to remove %s from world.", exception, entity);
 				}

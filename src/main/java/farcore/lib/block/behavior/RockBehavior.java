@@ -66,14 +66,14 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	{
 		switch (state.getValue(TYPE))
 		{
-		case cobble :
+		case cobble:
 			return this.hardness * .5F;
-		case cobble_art :
+		case cobble_art:
 			return this.hardness * .1F;
-		case brick :
-		case brick_compacted :
-		case brick_crushed :
-		case brick_mossy :
+		case brick:
+		case brick_compacted:
+		case brick_crushed:
+		case brick_mossy:
 			return this.hardness * 1.2F;
 		default:
 			return this.hardness;
@@ -95,18 +95,16 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		return EnumToolTypes.PICKAXE.name;
 	}
 	
-	public void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer,
-			ItemStack stack)
+	public void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer, ItemStack stack)
 	{
-		if(!canBlockStay(world, pos, state))
+		if (!canBlockStay(world, pos, state))
 		{
 			Worlds.fallBlock(world, pos, state);
 		}
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile,
-			int fortune, boolean silkTouch)
+	public List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		List<ItemStack> ret = new ArrayList();
 		if (silkTouch)
@@ -164,14 +162,13 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		EnumRockType type = state.getValue(TYPE);
 		switch (type)
 		{
-		case resource :
+		case resource:
 			boolean flag = Worlds.isBlockNearby(world, pos, EnumBlock.water.block, true);
 			boolean flag2 = state.getValue(HEATED);
 			if (flag2)
 			{
 				world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble), 3);
-				world.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,
-						.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F, true);
+				world.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, .5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F, true);
 				for (int k = 0; k < 8; ++k)
 				{
 					world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D, new int[0]);
@@ -208,7 +205,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 			int y = pos.getY();
 			int z = pos.getZ();
 			double u1, v1, t1;
-			for(int i = 0; i < 2; ++i)
+			for (int i = 0; i < 2; ++i)
 			{
 				u1 = (1D + random.nextDouble() - random.nextDouble()) * .5;
 				v1 = (1D + random.nextDouble() - random.nextDouble()) * .5;
@@ -276,16 +273,12 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		EnumRockType type = state.getValue(TYPE);
 		switch (type)
 		{
-		case cobble :
-		case mossy :
-		case cobble_art :
+		case cobble:
+		case mossy:
+		case cobble_art:
 			return world.isSideSolid(pos.down(), EnumFacing.UP, false);
 		default:
-			return !world.isAirBlock(pos.down()) ? true :
-				world.isSideSolid(pos.north(), EnumFacing.SOUTH, false) ||
-				world.isSideSolid(pos.south(), EnumFacing.NORTH, false) ||
-				world.isSideSolid(pos.east() , EnumFacing.WEST , false) ||
-				world.isSideSolid(pos.west() , EnumFacing.EAST , false);
+			return !world.isAirBlock(pos.down()) ? true : world.isSideSolid(pos.north(), EnumFacing.SOUTH, false) || world.isSideSolid(pos.south(), EnumFacing.NORTH, false) || world.isSideSolid(pos.east(), EnumFacing.WEST, false) || world.isSideSolid(pos.west(), EnumFacing.EAST, false);
 		}
 	}
 	
@@ -294,36 +287,31 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		EnumRockType type = state.getValue(TYPE);
 		switch (type)
 		{
-		case cobble :
-		case mossy :
-		case cobble_art :
-			if(!world.isSideSolid(pos.down(), EnumFacing.UP, false))
-				return false;
+		case cobble:
+		case mossy:
+		case cobble_art:
+			if (!world.isSideSolid(pos.down(), EnumFacing.UP, false)) return false;
 			BlockPos pos1 = pos.down();
-			for(Direction direction : Direction.DIRECTIONS_2D)
+			for (Direction direction : Direction.DIRECTIONS_2D)
 			{
-				if(world.isAirBlock(direction.offset(pos)) &&
-						world.isAirBlock(direction.offset(pos1)) &&
-						rand.nextInt(7) == 0)
-					return false;
+				if (world.isAirBlock(direction.offset(pos)) && world.isAirBlock(direction.offset(pos1)) && rand.nextInt(7) == 0) return false;
 			}
 			return true;
-		case resource :
-			if(!world.isAirBlock(pos.down())) return true;
+		case resource:
+			if (!world.isAirBlock(pos.down())) return true;
 			int c = 0;
-			for(Direction direction : Direction.DIRECTIONS_3D)
+			for (Direction direction : Direction.DIRECTIONS_3D)
 			{
-				if(world.isAirBlock(direction.offset(pos)))
+				if (world.isAirBlock(direction.offset(pos)))
 				{
 					c++;
 				}
 			}
 			return c > 3 ? true : c == 3 ? rand.nextInt(9) != 0 : rand.nextInt(3) != 0;
-		default :
+		default:
 			return !world.isAirBlock(pos.down());
 		}
 	}
-	
 	
 	public boolean canFallingBlockStay(B block, IBlockState state, World world, BlockPos pos)
 	{
@@ -335,12 +323,11 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		return (float) ((1.0F + this.material.toolDamageToEntity) * entity.motionY * entity.motionY * 0.25F);
 	}
 	
-	public boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height,
-			NBTTagCompound tileNBT)
+	public boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height, NBTTagCompound tileNBT)
 	{
 		EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
 		boolean broken = height < 2 ? false : height < 5 ? world.rand.nextInt(5 - height) == 0 : true;
-		if(broken)
+		if (broken)
 		{
 			state = state.withProperty(TYPE, EnumRockType.values()[state.getValue(TYPE).fallBreakMeta]);
 		}
@@ -349,8 +336,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		return true;
 	}
 	
-	public ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tool == EnumToolTypes.CHISEL_CARVE && this.harvestLevel <= level)
 		{

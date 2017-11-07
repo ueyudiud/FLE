@@ -20,7 +20,9 @@ public class SolidTextureLoader implements IIconLoader
 		NebulaTextureHandler.addIconLoader(new SolidTextureLoader());
 	}
 	
-	private SolidTextureLoader() {}
+	private SolidTextureLoader()
+	{
+	}
 	
 	@Override
 	public void registerIcon(IIconRegister register)

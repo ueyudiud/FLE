@@ -28,7 +28,8 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 	{
 		boolean match(IBasicInventory inventory);
 		
-		@Nullable default int[] getIntScaleRange(IBasicInventory inventory)
+		@Nullable
+		default int[] getIntScaleRange(IBasicInventory inventory)
 		{
 			return null;
 		}
@@ -38,7 +39,8 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 		void onOutput(IBasicInventory inventory, int value);
 		
 		@SideOnly(Side.CLIENT)
-		@Nullable default int[] getDisplayNumbers(IBasicInventory inventory, int value)
+		@Nullable
+		default int[] getDisplayNumbers(IBasicInventory inventory, int value)
 		{
 			return null;
 		}
@@ -73,7 +75,7 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 	@Override
 	public PortableWoodworkRecipe findRecipe(IBasicInventory handler)
 	{
-		return L.get(this.recipes, r->r.match(handler));
+		return L.get(this.recipes, r -> r.match(handler));
 	}
 	
 	@Override

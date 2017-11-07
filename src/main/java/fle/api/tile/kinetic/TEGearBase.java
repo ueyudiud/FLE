@@ -21,9 +21,9 @@ import net.minecraft.util.EnumFacing.Axis;
  */
 public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, IAxisHandler
 {
-	public Axis axis = Axis.Y;
-	public double rotation;
-	public double speed;
+	public Axis		axis	= Axis.Y;
+	public double	rotation;
+	public double	speed;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -68,7 +68,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 	@Override
 	public Axis[] getAxisHandlerAxis()
 	{
-		return new Axis[] {this.axis};
+		return new Axis[] { this.axis };
 	}
 	
 	@Override
@@ -81,15 +81,13 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 	@Nullable
 	public RotationType getRotationType(Direction direction)
 	{
-		return !isSideRotatable(direction) ? null : direction.axis == this.axis ?
-				RotationType.AXIS_ROTATE : RotationType.EDGE_ROTATE;
+		return !isSideRotatable(direction) ? null : direction.axis == this.axis ? RotationType.AXIS_ROTATE : RotationType.EDGE_ROTATE;
 	}
 	
 	@Override
 	public boolean isRotatable(Direction direction, KineticPackage pkg)
 	{
-		return isSideRotatable(direction) && direction.axis == this.axis ? (!(pkg instanceof KineticPackageExt) ||
-				(pkg instanceof KineticPackageAxisRotate)) : (pkg instanceof KineticPackageGearEdgeRotate);
+		return isSideRotatable(direction) && direction.axis == this.axis ? (!(pkg instanceof KineticPackageExt) || (pkg instanceof KineticPackageAxisRotate)) : (pkg instanceof KineticPackageGearEdgeRotate);
 	}
 	
 	@Override
@@ -100,8 +98,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 	}
 	
 	@Override
-	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction,
-			KineticPackage pkg)
+	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction, KineticPackage pkg)
 	{
 		if (direction.axis == this.axis)
 		{
@@ -115,12 +112,13 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 				rotateExclude(access, direction, KineticPackageExt.wrap(RotationType.AXIS_ROTATE, pkg, direction));
 				return pkg.speed;
 			}
-			else return 0;
+			else
+				return 0;
 		}
 		else if (pkg instanceof KineticPackageGearEdgeRotate)
 		{
 			KineticPackageGearEdgeRotate pkg1 = (KineticPackageGearEdgeRotate) pkg;
-			if(pkg1.direction.axis == this.axis)
+			if (pkg1.direction.axis == this.axis)
 			{
 				float g1 = getGearSize(direction);
 				float g2 = getGearTeethSize(direction);
@@ -133,7 +131,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 				}
 				else
 				{
-					pkg1.torque = 0;//Can not touch.
+					pkg1.torque = 0;// Can not touch.
 				}
 				return pkg1.speed;
 			}
@@ -142,7 +140,8 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 				return 0;
 			}
 		}
-		else return 0;
+		else
+			return 0;
 	}
 	
 	protected void rotateExclude(IKineticAccess access, Direction source, KineticPackageExt pkg)
@@ -201,9 +200,8 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 	}
 	
 	@Override
-	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction,
-			KineticPackage pkg)
+	public void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction, KineticPackage pkg)
 	{
-		;//Do nothing.
+		;// Do nothing.
 	}
 }

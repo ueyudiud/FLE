@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Use to open locked tile entity.
+ * 
  * @author ueyudiud
  */
 public interface IIDKeyItem

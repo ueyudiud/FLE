@@ -21,20 +21,19 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TEOilLamp extends TESynchronization
-implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
+public class TEOilLamp extends TESynchronization implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 {
 	public static final AxisAlignedBB AABB_OIL_LAMP = new AxisAlignedBB(0.3125F, 0.0F, 0.3125F, 0.6875F, 0.25F, 0.6875F);
 	
-	public static final byte HasWick = 0x10;
-	public static final byte Burning = 0x11;
-	public static final byte HasSmoke = 0x12;
+	public static final byte	HasWick		= 0x10;
+	public static final byte	Burning		= 0x11;
+	public static final byte	HasSmoke	= 0x12;
 	
-	public Mat material;
-	public long fuelAmount;
-	public byte fuelLightValue;
-	public long fuelBurnTime;
-	public long fuelTotalBurnTime;
+	public Mat	material;
+	public long	fuelAmount;
+	public byte	fuelLightValue;
+	public long	fuelBurnTime;
+	public long	fuelTotalBurnTime;
 	
 	public TEOilLamp()
 	{
@@ -64,9 +63,9 @@ implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 	protected void updateClient()
 	{
 		super.updateClient();
-		if(is(Burning) && is(HasSmoke))
+		if (is(Burning) && is(HasSmoke))
 		{
-			if(this.random.nextInt(4) == 0)
+			if (this.random.nextInt(4) == 0)
 			{
 				this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.pos.getX() + .5, this.pos.getY() + .8, this.pos.getZ() + .5, 0F, 0.01F, 0F);
 			}
@@ -82,18 +81,18 @@ implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 	
 	protected void burnFuel()
 	{
-		if(is(Burning))
+		if (is(Burning))
 		{
-			if(!is(HasWick))
+			if (!is(HasWick))
 			{
 				disable(Burning);
 				return;
 			}
-			if(this.fuelBurnTime <= 0)
+			if (this.fuelBurnTime <= 0)
 			{
-				if(this.fuelAmount > 0)
+				if (this.fuelAmount > 0)
 				{
-					this.fuelAmount --;
+					this.fuelAmount--;
 					this.fuelBurnTime = this.fuelTotalBurnTime;
 				}
 				else
@@ -113,12 +112,11 @@ implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if(tool == EnumToolTypes.FIRESTARTER)
+		if (tool == EnumToolTypes.FIRESTARTER)
 		{
-			if(is(HasWick) && !is(Burning))
+			if (is(HasWick) && !is(Burning))
 			{
 				change(Burning);
 				return new ActionResult<>(EnumActionResult.SUCCESS, 0.2F);

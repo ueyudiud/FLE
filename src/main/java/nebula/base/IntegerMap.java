@@ -21,35 +21,86 @@ import nebula.common.util.L;
 import nebula.common.util.Maths;
 
 /**
- * The <tt>int</tt> value map.
- * Store key-values by {@link nebula.base.IntegerEntry}.<p>
+ * The <tt>int</tt> value map. Store key-values by
+ * {@link nebula.base.IntegerEntry}.
+ * <p>
  * 
- * The key of map can be <code>null</code>, the most of methods
- * can use <code>null</code> as key to put or get entry. The type
- * casting exception will be caught.
+ * The key of map can be <code>null</code>, the most of methods can use
+ * <code>null</code> as key to put or get entry. The type casting exception will
+ * be caught.
+ * 
  * @author ueyudiud
  * @param <T> the type of keys.
  * @see java.util.Map
  */
-public
-class IntegerMap<T> implements Iterable<IntegerEntry<T>>
+public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
 	private static final IntegerMap<?> EMPTY = new IntegerMap<Object>()
 	{
-		@Override public int put(Object key, int value) { throw new UnsupportedOperationException(); }
-		@Override public int size() { return 0; }
-		@Override public boolean containsKey(Object key) { return false; }
-		@Override public boolean contains(Object key, int value) { return false; }
-		@Override public int getOrDefault(Object key, int value) { return value; }
-		@Override public int remove(Object key) { throw new UnsupportedOperationException(); }
-		@Override public void clear() { throw new UnsupportedOperationException(); }
-		@Override public int getSum() { return 0; }
-		@Override public boolean isEmpty() { return true; }
-		@Override public Iterator<IntegerEntry<Object>> iterator() { return Iterators.emptyIterator(); }
+		@Override
+		public int put(Object key, int value)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public int size()
+		{
+			return 0;
+		}
+		
+		@Override
+		public boolean containsKey(Object key)
+		{
+			return false;
+		}
+		
+		@Override
+		public boolean contains(Object key, int value)
+		{
+			return false;
+		}
+		
+		@Override
+		public int getOrDefault(Object key, int value)
+		{
+			return value;
+		}
+		
+		@Override
+		public int remove(Object key)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public void clear()
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public int getSum()
+		{
+			return 0;
+		}
+		
+		@Override
+		public boolean isEmpty()
+		{
+			return true;
+		}
+		
+		@Override
+		public Iterator<IntegerEntry<Object>> iterator()
+		{
+			return Iterators.emptyIterator();
+		}
 	};
 	
 	/**
 	 * Return a immutable empty IntegerMap.
+	 * 
 	 * @return the IntegerMap.
 	 */
 	public static <T> IntegerMap<T> of()
@@ -58,15 +109,17 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	}
 	
 	/**
-	 * The array load factor.<p>
-	 * Use to determine how fast the array length
-	 * increase when try to expend it.<p>
+	 * The array load factor.
+	 * <p>
+	 * Use to determine how fast the array length increase when try to expend
+	 * it.
+	 * <p>
 	 * The default value is <code>0.75F</code>
 	 */
-	private final float loadFactor;
-	int size;
-	int sum;
-	transient INode<IntegerEntry<T>>[] entries;
+	private final float					loadFactor;
+	int									size;
+	int									sum;
+	transient INode<IntegerEntry<T>>[]	entries;
 	
 	protected int hashcode(Object object)
 	{
@@ -77,24 +130,24 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	{
 		this(4);
 	}
+	
 	public IntegerMap(int initialCapacity)
 	{
 		this(initialCapacity, 0.75F);
 	}
+	
 	public IntegerMap(int initialCapacity, float loadFactor)
 	{
-		if (initialCapacity < 0)
-			throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
-		if (loadFactor <= 0 || Float.isNaN(loadFactor))
-			throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
+		if (initialCapacity < 0) throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+		if (loadFactor <= 0 || Float.isNaN(loadFactor)) throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
 		this.loadFactor = loadFactor;
 		this.entries = new INode[initialCapacity];
 	}
 	
 	/**
-	 * Copies data from {@link java.util.Map},
-	 * the value type should predicate be as Byte,
-	 * Short, Integer or Long.
+	 * Copies data from {@link java.util.Map}, the value type should predicate
+	 * be as Byte, Short, Integer or Long.
+	 * 
 	 * @param map the source data map.
 	 */
 	public IntegerMap(Map<? extends T, ? extends Number> map)
@@ -123,14 +176,14 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	private Integer putChecked(T target, int value)
 	{
-		if(this.size + 1 > this.entries.length * this.loadFactor)
+		if (this.size + 1 > this.entries.length * this.loadFactor)
 		{
 			INode<IntegerEntry<T>>[] entries = this.entries;
 			this.entries = new INode[(this.size + 1) + (this.size >> 1)];
-			for(INode<IntegerEntry<T>> node : entries)
+			for (INode<IntegerEntry<T>> node : entries)
 			{
-				if(node == null) continue;
-				for(IntegerEntry<T> entry : node)
+				if (node == null) continue;
+				for (IntegerEntry<T> entry : node)
 				{
 					putUnchecked(entry);
 				}
@@ -143,16 +196,16 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	{
 		int hashcode = hashcode(entry.key);
 		int i = Maths.mod(hashcode, this.entries.length);
-		if(this.entries[i] == null)
+		if (this.entries[i] == null)
 		{
 			this.entries[i] = Node.first(entry);
 			return null;
 		}
 		else
 		{
-			for(IntegerEntry<T> entry1 : this.entries[i])
+			for (IntegerEntry<T> entry1 : this.entries[i])
 			{
-				if(Objects.equals(entry.key, entry1.key))
+				if (Objects.equals(entry.key, entry1.key))
 				{
 					int old = entry1.value;
 					entry1.value = entry.value;
@@ -169,15 +222,15 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		if (this.entries.length == 0) return null;
 		int hashcode = hashcode(key);
 		int i = Maths.mod(hashcode, this.entries.length);
-		if(this.entries[i] == null) return null;
+		if (this.entries[i] == null)
+			return null;
 		else
 		{
 			try
 			{
 				for (IntegerEntry<T> entry : this.entries[i])
 				{
-					if (Objects.equals(key, entry.key))
-						return entry;
+					if (Objects.equals(key, entry.key)) return entry;
 				}
 			}
 			catch (ClassCastException e)
@@ -190,6 +243,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Return the number of key-value mappings in this <tt>int</tt> value map.
+	 * 
 	 * @return the number of key-value mappings in this map.
 	 * @see java.util.Map#size()
 	 */
@@ -208,6 +262,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Match is key exist in map.
+	 * 
 	 * @param key the key.
 	 * @return <code>true</code> if this map contains the key.
 	 */
@@ -218,6 +273,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Match is key-value entry exist in map.
+	 * 
 	 * @param key the key.
 	 * @param value the value.
 	 * @return <code>true</code> if this map contains the entry.
@@ -229,7 +285,9 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	}
 	
 	/**
-	 * Get value which specified key is mapped.<p>
+	 * Get value which specified key is mapped.
+	 * <p>
+	 * 
 	 * @param key
 	 * @return the
 	 * @see java.util.Map#get(Object)
@@ -254,7 +312,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	{
 		Integer old = putChecked(key, value);
 		this.sum += value;
-		if(old == null)
+		if (old == null)
 		{
 			++this.size;
 			return 0;
@@ -269,6 +327,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	/**
 	 * Put key-value pair if <tt>contains(key)</tt> returns <code>false</code>,
 	 * or replace mapped value to <tt>get(key) + amount</tt> for specific key.
+	 * 
 	 * @param key the key.
 	 * @param amount the value to put or add.
 	 */
@@ -287,9 +346,10 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	}
 	
 	/**
-	 * Called this method when regard this collection
-	 * value as probability.<p>
+	 * Called this method when regard this collection value as probability.
+	 * <p>
 	 * For use, divided each value with their GCD.
+	 * 
 	 * @throws IllegalStateException when some value is non-positive.
 	 */
 	public void rescale() throws IllegalStateException
@@ -304,20 +364,19 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			if (i == 1) return;
 		}
 		
-		for (IntegerEntry<T> entry : this) entry.value /= i;
+		for (IntegerEntry<T> entry : this)
+			entry.value /= i;
 	}
 	
 	private static int checkRescaleValue(int i)
 	{
-		if (i <= 0)
-			throw new IllegalStateException("Invalid rescale value.");
+		if (i <= 0) throw new IllegalStateException("Invalid rescale value.");
 		return i;
 	}
 	
 	private int removeAt(int id, INode<IntegerEntry<T>> node)
 	{
-		if (!node.hasLast())
-			this.entries[id] = node.next();
+		if (!node.hasLast()) this.entries[id] = node.next();
 		int v = node.remove().value;
 		this.sum -= v;
 		return v;
@@ -327,14 +386,15 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	{
 		int hashcode = hashcode(key);
 		int i = Maths.mod(hashcode, this.entries.length);
-		if(this.entries[i] == null) return 0;
+		if (this.entries[i] == null)
+			return 0;
 		else
 		{
 			INode<IntegerEntry<T>> node0 = INode.telomereNode(this.entries[i]);
 			do
 			{
 				node0 = node0.next();
-				if(L.equal(node0.value().key, key))
+				if (L.equal(node0.value().key, key))
 				{
 					return removeAt(i, node0);
 				}
@@ -356,6 +416,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Get <tt>Set</tt> collect all key present in this map.
+	 * 
 	 * @return the set.
 	 */
 	public Set<T> keySet()
@@ -377,6 +438,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Get sum of all value.
+	 * 
 	 * @return the sum.
 	 */
 	public int getSum()
@@ -408,8 +470,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		{
 			for (IntegerEntry<?> entry : this)
 			{
-				if (!map.contains(entry.key, entry.value))
-					return false;
+				if (!map.contains(entry.key, entry.value)) return false;
 			}
 		}
 		catch (ClassCastException | NullPointerException e)
@@ -435,6 +496,7 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	/**
 	 * Transform all value.
+	 * 
 	 * @param operator the operator to transform value.
 	 */
 	public void transformAll(IntUnaryOperator operator)
@@ -450,9 +512,9 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	class IntegerMapItr implements Iterator<IntegerEntry<T>>
 	{
-		boolean modified;
-		int pointer = -1;
-		INode<IntegerEntry<T>> currentNode;
+		boolean					modified;
+		int						pointer	= -1;
+		INode<IntegerEntry<T>>	currentNode;
 		
 		@Override
 		public boolean hasNext()
@@ -460,7 +522,8 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			if (this.currentNode == null || !this.currentNode.hasNext())
 			{
 				int pointer = this.pointer;
-				while (++pointer < IntegerMap.this.entries.length && IntegerMap.this.entries[pointer] == null);
+				while (++pointer < IntegerMap.this.entries.length && IntegerMap.this.entries[pointer] == null)
+					;
 				return pointer < IntegerMap.this.entries.length && IntegerMap.this.entries[pointer] != null;
 			}
 			return true;
@@ -472,7 +535,8 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			this.modified = false;
 			if (this.currentNode == null || !this.currentNode.hasNext())
 			{
-				while (IntegerMap.this.entries[++this.pointer] == null);
+				while (IntegerMap.this.entries[++this.pointer] == null)
+					;
 				this.currentNode = IntegerMap.this.entries[this.pointer];
 				return this.currentNode.value();
 			}
@@ -483,10 +547,10 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		@Override
 		public void remove()
 		{
-			if(this.modified) throw new IllegalStateException("The element already removed!");
+			if (this.modified) throw new IllegalStateException("The element already removed!");
 			INode<IntegerEntry<T>> old = this.currentNode;
 			removeAt(this.pointer, old);
-			if(this.currentNode.hasLast())
+			if (this.currentNode.hasLast())
 			{
 				this.currentNode = this.currentNode.last();
 			}
@@ -553,7 +617,8 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		@Override
 		public boolean containsAll(Collection<?> c)
 		{
-			for(Object object : c) if(!IntegerMap.this.containsKey(object)) return false;
+			for (Object object : c)
+				if (!IntegerMap.this.containsKey(object)) return false;
 			return true;
 		}
 		

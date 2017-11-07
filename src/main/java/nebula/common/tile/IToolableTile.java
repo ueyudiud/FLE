@@ -15,6 +15,5 @@ public interface IToolableTile extends ICoord
 {
 	ActionResult<Float> DEFAULT_RESULT = new ActionResult<>(EnumActionResult.PASS, 0.0F);
 	
-	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack,
-			Direction side, float hitX, float hitY, float hitZ);
+	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ);
 }

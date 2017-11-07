@@ -13,12 +13,13 @@ import net.minecraft.util.math.BlockPos;
 
 /**
  * The buffered TileEntity.
+ * 
  * @author ueyudiud
  */
 public class TEBuffered extends TEUpdatable implements IUpdatableTile
 {
-	public long timer = Long.MIN_VALUE;
-	public long lastActived = Long.MIN_VALUE;
+	public long	timer		= Long.MIN_VALUE;
+	public long	lastActived	= Long.MIN_VALUE;
 	
 	private TileEntity[] tileNearby = null;
 	
@@ -55,13 +56,13 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 	
 	private TileEntity[] regetTileNearby(boolean forceToUpdate)
 	{
-		if(this.world.isBlockLoaded(this.pos))
+		if (this.world.isBlockLoaded(this.pos))
 		{
 			boolean flag = this.tileNearby == null;
-			if(flag) this.tileNearby = new TileEntity[6];
-			if(forceToUpdate || flag)
+			if (flag) this.tileNearby = new TileEntity[6];
+			if (forceToUpdate || flag)
 			{
-				for(Direction direction : Direction.DIRECTIONS_3D)
+				for (Direction direction : Direction.DIRECTIONS_3D)
 				{
 					this.tileNearby[direction.ordinal()] = super.getTE(direction);
 				}
@@ -70,7 +71,7 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 		}
 		else
 		{
-			if(this.tileNearby == null) this.tileNearby = new TileEntity[6];
+			if (this.tileNearby == null) this.tileNearby = new TileEntity[6];
 			Arrays.fill(this.tileNearby, null);
 			return this.tileNearby;
 		}
@@ -96,7 +97,7 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 	@Override
 	protected final void updateEntity1()
 	{
-		if(this.timer == Long.MIN_VALUE)
+		if (this.timer == Long.MIN_VALUE)
 		{
 			this.timer = this.world.getWorldTime();
 		}

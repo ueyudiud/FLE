@@ -65,15 +65,21 @@ public class ItemBlockBase extends ItemBlock
 		/**
 		 * The block will be offset if the target block is not replaceable.
 		 */
-		if (!block.isReplaceable(worldIn, pos)
-				|| playerIn.isSneaking())//But will force to offset if player is sneaking.
+		if (!block.isReplaceable(worldIn, pos) || playerIn.isSneaking())// But
+																		// will
+																		// force
+																		// to
+																		// offset
+																		// if
+																		// player
+																		// is
+																		// sneaking.
 		{
 			pos = pos.offset(facing);
 		}
 		
-		if (stack.stackSize > 0 //Minus size also can not use.
-				&& playerIn.canPlayerEdit(pos, facing, stack)
-				&& worldIn.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack))
+		if (stack.stackSize > 0 // Minus size also can not use.
+				&& playerIn.canPlayerEdit(pos, facing, stack) && worldIn.canBlockBePlaced(this.block, pos, false, facing, (Entity) null, stack))
 		{
 			IBlockState iblockstate1 = this.block.getBlockPlaceState(worldIn, pos, facing, hitX, hitY, hitZ, stack, playerIn);
 			
@@ -93,8 +99,7 @@ public class ItemBlockBase extends ItemBlock
 	}
 	
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-			float hitX, float hitY, float hitZ, IBlockState newState)
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
 	{
 		placeflag = true;
 		if (!world.setBlockState(pos, newState, 3))

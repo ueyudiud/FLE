@@ -36,7 +36,7 @@ public class FleClientHandler
 		if (item instanceof ItemTool)
 		{
 			int meta = ((ItemTool) item).getBaseDamage(event.getStack());
-			if(meta == 6)
+			if (meta == 6)
 			{
 				renderSpear(event, meta);
 				event.setResult(Result.ALLOW);
@@ -51,8 +51,12 @@ public class FleClientHandler
 		ResourceLocation location;
 		switch (meta)
 		{
-		case 6 : location = LOCATION_SPEAR_ROCKY; break;
-		default: location = TextureMap.LOCATION_MISSING_TEXTURE; break;
+		case 6:
+			location = LOCATION_SPEAR_ROCKY;
+			break;
+		default:
+			location = TextureMap.LOCATION_MISSING_TEXTURE;
+			break;
 		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.enableRescaleNormal();
@@ -65,60 +69,18 @@ public class FleClientHandler
 		GL11.glScalef(size, size, size);
 		event.bindTexture(location);
 		RenderHelper.instance.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		RenderHelper.instance.face(
-				-1, 0, -1, 1 * pixel, 6 * pixel,
-				+1, 0, -1, 3 * pixel, 6 * pixel,
-				+1, 0, +1, 3 * pixel, 8 * pixel,
-				-1, 0, +1, 1 * pixel, 8 * pixel);
-		RenderHelper.instance.face(
-				-1, 24, -1, 1 * pixel, 6 * pixel,
-				-1, 24, +1, 1 * pixel, 8 * pixel,
-				+1, 24, +1, 3 * pixel, 8 * pixel,
-				+1, 24, -1, 3 * pixel, 6 * pixel);
-		RenderHelper.instance.face(
-				-1, 0 , -1, 0 * pixel, 1 * pixel,
-				-1, 24, -1, 24 * pixel, 1 * pixel,
-				+1, 24, -1, 24 * pixel, 3 * pixel,
-				+1, 0 , -1, 0 * pixel, 3 * pixel);
-		RenderHelper.instance.face(
-				+1, 0 , +1, 0 * pixel, 1 * pixel,
-				+1, 24, +1, 24 * pixel, 1 * pixel,
-				-1, 24, +1, 24 * pixel, 3 * pixel,
-				-1, 0 , +1, 0 * pixel, 3 * pixel);
-		RenderHelper.instance.face(
-				-1, 0 , +1, 0 * pixel, 1 * pixel,
-				-1, 24, +1, 24 * pixel, 1 * pixel,
-				-1, 24, -1, 24 * pixel, 3 * pixel,
-				-1, 0 , -1, 0 * pixel, 3 * pixel);
-		RenderHelper.instance.face(
-				+1, 0 , -1, 0 * pixel, 1 * pixel,
-				+1, 24, -1, 24 * pixel, 1 * pixel,
-				+1, 24, +1, 24 * pixel, 3 * pixel,
-				+1, 0 , +1, 0 * pixel, 3 * pixel);
+		RenderHelper.instance.face(-1, 0, -1, 1 * pixel, 6 * pixel, +1, 0, -1, 3 * pixel, 6 * pixel, +1, 0, +1, 3 * pixel, 8 * pixel, -1, 0, +1, 1 * pixel, 8 * pixel);
+		RenderHelper.instance.face(-1, 24, -1, 1 * pixel, 6 * pixel, -1, 24, +1, 1 * pixel, 8 * pixel, +1, 24, +1, 3 * pixel, 8 * pixel, +1, 24, -1, 3 * pixel, 6 * pixel);
+		RenderHelper.instance.face(-1, 0, -1, 0 * pixel, 1 * pixel, -1, 24, -1, 24 * pixel, 1 * pixel, +1, 24, -1, 24 * pixel, 3 * pixel, +1, 0, -1, 0 * pixel, 3 * pixel);
+		RenderHelper.instance.face(+1, 0, +1, 0 * pixel, 1 * pixel, +1, 24, +1, 24 * pixel, 1 * pixel, -1, 24, +1, 24 * pixel, 3 * pixel, -1, 0, +1, 0 * pixel, 3 * pixel);
+		RenderHelper.instance.face(-1, 0, +1, 0 * pixel, 1 * pixel, -1, 24, +1, 24 * pixel, 1 * pixel, -1, 24, -1, 24 * pixel, 3 * pixel, -1, 0, -1, 0 * pixel, 3 * pixel);
+		RenderHelper.instance.face(+1, 0, -1, 0 * pixel, 1 * pixel, +1, 24, -1, 24 * pixel, 1 * pixel, +1, 24, +1, 24 * pixel, 3 * pixel, +1, 0, +1, 0 * pixel, 3 * pixel);
 		RenderHelper.instance.draw();
 		Mat material = ItemTool.getMaterial(event.getStack(), "head");
-		RenderHelper.instance
-		.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
-		.face(material.RGBa,
-				0,  0, -2, 24 * pixel, 0 * pixel,
-				0, -4, -2, 28 * pixel, 0 * pixel,
-				0, -4, +2, 28 * pixel, 4 * pixel,
-				0,  0, +2, 24 * pixel, 4 * pixel)
-		.face(material.RGBa,
-				0,  0, +2, 24 * pixel, 4 * pixel,
-				0, -4, +2, 28 * pixel, 4 * pixel,
-				0, -4, -2, 28 * pixel, 0 * pixel,
-				0,  0, -2, 24 * pixel, 0 * pixel)
-		.face(material.RGBa,
-				-2,  0, 0, 24 * pixel, 4 * pixel,
-				-2, -4, 0, 28 * pixel, 4 * pixel,
-				+2, -4, 0, 28 * pixel, 0 * pixel,
-				+2,  0, 0, 24 * pixel, 0 * pixel)
-		.face(material.RGBa,
-				+2,  0, 0, 24 * pixel, 0 * pixel,
-				+2, -4, 0, 28 * pixel, 0 * pixel,
-				-2, -4, 0, 28 * pixel, 4 * pixel,
-				-2,  0, 0, 24 * pixel, 4 * pixel).draw();
+		RenderHelper.instance.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR).face(material.RGBa, 0, 0, -2, 24 * pixel, 0 * pixel, 0, -4, -2, 28 * pixel, 0 * pixel, 0, -4, +2, 28 * pixel, 4 * pixel, 0, 0, +2, 24 * pixel, 4 * pixel)
+				.face(material.RGBa, 0, 0, +2, 24 * pixel, 4 * pixel, 0, -4, +2, 28 * pixel, 4 * pixel, 0, -4, -2, 28 * pixel, 0 * pixel, 0, 0, -2, 24 * pixel, 0 * pixel)
+				.face(material.RGBa, -2, 0, 0, 24 * pixel, 4 * pixel, -2, -4, 0, 28 * pixel, 4 * pixel, +2, -4, 0, 28 * pixel, 0 * pixel, +2, 0, 0, 24 * pixel, 0 * pixel)
+				.face(material.RGBa, +2, 0, 0, 24 * pixel, 0 * pixel, +2, -4, 0, 28 * pixel, 0 * pixel, -2, -4, 0, 28 * pixel, 4 * pixel, -2, 0, 0, 24 * pixel, 4 * pixel).draw();
 		
 		GlStateManager.cullFace(GlStateManager.CullFace.BACK);
 		GlStateManager.disableRescaleNormal();

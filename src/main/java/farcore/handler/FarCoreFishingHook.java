@@ -21,19 +21,17 @@ import net.minecraft.world.World;
  */
 public class FarCoreFishingHook
 {
-	private static int allWeight;
-	private static final List<IntegerEntry<FishingResultHander>> FISHING_RESULT_LIST = new ArrayList<>();
+	private static int												allWeight;
+	private static final List<IntegerEntry<FishingResultHander>>	FISHING_RESULT_LIST	= new ArrayList<>();
 	
 	public static void addFisingHandler(int weight, FishingResultHander hander)
 	{
-		if (weight <= 0)
-			throw new IllegalArgumentException("Weight must be positive.");
+		if (weight <= 0) throw new IllegalArgumentException("Weight must be positive.");
 		allWeight += weight;
 		FISHING_RESULT_LIST.add(new IntegerEntry<>(hander, weight));
 	}
 	
-	public static List<ItemStack> getFishingResult(World world, BlockPos pos,
-			@Nullable EntityPlayer player, float amountMultiplier, Random rand)
+	public static List<ItemStack> getFishingResult(World world, BlockPos pos, @Nullable EntityPlayer player, float amountMultiplier, Random rand)
 	{
 		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
 		for (IntegerEntry<FishingResultHander> hander : FISHING_RESULT_LIST)
@@ -46,8 +44,7 @@ public class FarCoreFishingHook
 	
 	public static interface FishingResultHander
 	{
-		@Nullable List<ItemStack> addFishingResult(
-				World world, BlockPos pos, @Nullable EntityPlayer player,
-				float amountMultiplier);
+		@Nullable
+		List<ItemStack> addFishingResult(World world, BlockPos pos, @Nullable EntityPlayer player, float amountMultiplier);
 	}
 }

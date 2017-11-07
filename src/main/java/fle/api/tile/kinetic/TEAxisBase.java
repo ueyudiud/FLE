@@ -19,9 +19,9 @@ import net.minecraft.util.EnumFacing.Axis;
  */
 public class TEAxisBase extends TEGearBoxBase implements IAxisHandler
 {
-	public Axis axis = Axis.Z;
-	public double rotation;
-	public double speed;
+	public Axis		axis	= Axis.Z;
+	public double	rotation;
+	public double	speed;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -64,7 +64,7 @@ public class TEAxisBase extends TEGearBoxBase implements IAxisHandler
 	@Override
 	public Axis[] getAxisHandlerAxis()
 	{
-		return new Axis[] {this.axis};
+		return new Axis[] { this.axis };
 	}
 	
 	@Override
@@ -88,14 +88,13 @@ public class TEAxisBase extends TEGearBoxBase implements IAxisHandler
 	}
 	
 	@Override
-	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction,
-			KineticPackage pkg)
+	public double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction, KineticPackage pkg)
 	{
-		if(direction.axis == this.axis)
+		if (direction.axis == this.axis)
 		{
-			if(pkg instanceof KineticPackageExt)
+			if (pkg instanceof KineticPackageExt)
 			{
-				if(pkg instanceof KineticPackageAxisRotate)
+				if (pkg instanceof KineticPackageAxisRotate)
 				{
 					if (((KineticPackageExt) pkg).direction.isNegative())
 					{

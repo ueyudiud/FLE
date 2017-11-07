@@ -43,8 +43,7 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 	}
 	
 	@Override
-	public void doRender(EntityFallingBlockExtended entity, double x, double y, double z, float entityYaw,
-			float partialTicks)
+	public void doRender(EntityFallingBlockExtended entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		if (entity.getBlock() != null)
 		{
@@ -70,10 +69,10 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 					
 					vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
 					BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY, entity.posZ);
-					GlStateManager.translate((float)(x - blockpos.getX() - 0.5D), (float)(y - blockpos.getY()), (float)(z - blockpos.getZ() - 0.5D));
+					GlStateManager.translate((float) (x - blockpos.getX() - 0.5D), (float) (y - blockpos.getY()), (float) (z - blockpos.getZ() - 0.5D));
 					BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 					BlockPos origin = entity.getOrigin();
-					if(origin == null)
+					if (origin == null)
 					{
 						origin = BlockPos.ORIGIN;
 					}

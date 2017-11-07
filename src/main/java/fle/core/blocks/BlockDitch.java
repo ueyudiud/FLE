@@ -56,7 +56,7 @@ public class BlockDitch extends BlockSingleTE
 	{
 		super.postInitalizedBlocks();
 		FarCoreRegistry.registerTileEntity("Ditch", TEDitch.class);
-		for(Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
+		for (Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
 		{
 			LanguageManager.registerLocal(getTranslateNameForItemStack(material.id), material.localName + " Ditch Block");
 		}
@@ -71,14 +71,16 @@ public class BlockDitch extends BlockSingleTE
 		Client.registerModel(this.item, new ModelResourceLocation(getRegistryName(), "normal"));
 		FarCoreRegistry.registerTESR(TESRDitch.class);
 		
-		//		ModelLoader.setCustomStateMapper(BlocksItems.ditch, new StateMapperExt(FLE.MODID, "ditch", null, Misc.PROPS_SIDE_HORIZONTALS));
+		// ModelLoader.setCustomStateMapper(BlocksItems.ditch, new
+		// StateMapperExt(FLE.MODID, "ditch", null,
+		// Misc.PROPS_SIDE_HORIZONTALS));
 	}
 	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TEDitch)
+		if (tile instanceof TEDitch)
 		{
 			return BlockStateTileEntityWapper.wrap(tile, state);
 		}
@@ -89,7 +91,7 @@ public class BlockDitch extends BlockSingleTE
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
+		for (Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
 		{
 			list.add(new ItemStack(item, 1, material.id));
 		}
@@ -97,8 +99,7 @@ public class BlockDitch extends BlockSingleTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
-			boolean advanced)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
 		if (tooltip.isSneakDown())

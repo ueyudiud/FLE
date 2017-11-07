@@ -62,19 +62,21 @@ import net.minecraftforge.fluids.BlockFluidBase;
 
 /**
  * The world method helper.
+ * 
  * @author ueyudiud
  */
 public final class Worlds
 {
-	private static final int[][] ROTATE_FIX = {
-			{3, 2, 5, 4},
-			{1, 0, 5, 4},
-			{1, 0, 3, 2}};
+	private static final int[][] ROTATE_FIX = { { 3, 2, 5, 4 }, { 1, 0, 5, 4 }, { 1, 0, 3, 2 } };
 	
-	private Worlds() {}
+	private Worlds()
+	{
+	}
 	
 	/**
-	 * I don't know why some modification can be crashed on this method, use this instead.
+	 * I don't know why some modification can be crashed on this method, use
+	 * this instead.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param side
@@ -83,14 +85,14 @@ public final class Worlds
 	 */
 	public static boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side, boolean def)
 	{
-		if (pos.getY() >= 256 || pos.getY() < 0)
-			return def;
+		if (pos.getY() >= 256 || pos.getY() < 0) return def;
 		IBlockState state = world.getBlockState(pos);
 		return state.isSideSolid(world, pos, side);
 	}
 	
 	/**
 	 * Match block at position is air or is replaceable.
+	 * 
 	 * @param world the world.
 	 * @param pos the position.
 	 * @return return <code>true</code> if block is air or replaceable.
@@ -102,20 +104,19 @@ public final class Worlds
 	}
 	
 	/**
-	 * Try place block on the ground.
-	 * This method is simulated to method in {@link net.minecraft.item.ItemBlock#onItemUse(ItemStack, EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)}.<p>
+	 * Try place block on the ground. This method is simulated to method in
+	 * {@link ItemBlock#onItemUse(ItemStack, EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)}.
+	 * <p>
 	 * If player ray trace block position can not is not <tt>replaceable</tt>,
-	 * the position will offset by <code>facing</code>.
-	 * This method include following actions:
-	 * <li>
-	 * Check player can be edit and can be replaced, if <code>false</code> is
-	 * return, the remain action will be canceled.
-	 * <li>
-	 * Set block state into world, if <code>false</code> is return, the remain
-	 * action will be canceled.
-	 * <li>
-	 * Reload TileEntity NBT from ItemStack, and display placed block sound.
+	 * the position will offset by <code>facing</code>. This method include
+	 * following actions:
+	 * <li>Check player can be edit and can be replaced, if <code>false</code>
+	 * is return, the remain action will be canceled.
+	 * <li>Set block state into world, if <code>false</code> is return, the
+	 * remain action will be canceled.
+	 * <li>Reload TileEntity NBT from ItemStack, and display placed block sound.
 	 * </li>
+	 * 
 	 * @param world the world.
 	 * @param pos the position try to place first, usually is player ray trace
 	 *            position, if block is not <tt>replaceable</tt> will try to
@@ -124,13 +125,12 @@ public final class Worlds
 	 * @param player the player.
 	 * @param stack the used item stack, not force to ItemBlock.
 	 * @param placedState the state try to placing.
-	 * @param hasTile <code>true</code> will enable tile NBT replacing after block
-	 *                added to world.
-	 * @return <code>FAIL</code> if check failed, <code>PASS</code> if action is not
-	 *         finished, and <code>SUCCESS</code> if action is finished.
+	 * @param hasTile <code>true</code> will enable tile NBT replacing after
+	 *            block added to world.
+	 * @return <code>FAIL</code> if check failed, <code>PASS</code> if action is
+	 *         not finished, and <code>SUCCESS</code> if action is finished.
 	 */
-	public static EnumActionResult checkAndPlaceBlockAt(World world, BlockPos pos, @Nonnull EnumFacing facing, @Nonnull EntityPlayer player, ItemStack stack,
-			@Nonnull IBlockState placedState, boolean hasTile)
+	public static EnumActionResult checkAndPlaceBlockAt(World world, BlockPos pos, @Nonnull EnumFacing facing, @Nonnull EntityPlayer player, ItemStack stack, @Nonnull IBlockState placedState, boolean hasTile)
 	{
 		IBlockState state1 = world.getBlockState(pos);
 		if (!state1.getBlock().isReplaceable(world, pos))
@@ -138,8 +138,7 @@ public final class Worlds
 			state1 = world.getBlockState(pos = pos.offset(facing));
 		}
 		
-		if (player.canPlayerEdit(pos, facing, stack) &&
-				placedState.getBlock().canReplace(world, pos, facing, stack))
+		if (player.canPlayerEdit(pos, facing, stack) && placedState.getBlock().canReplace(world, pos, facing, stack))
 		{
 			if (!world.setBlockState(pos, placedState)) return EnumActionResult.PASS;
 			
@@ -160,31 +159,31 @@ public final class Worlds
 	}
 	
 	/**
-	 * Try break block without player damage.<p>
-	 * This method include following actions:<li>
-	 * Remove block by set block to air (For player damaged block, called
-	 * {@link net.minecraft.block.Block#removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)} instead),
-	 * and called <code>breakBlock</code> method.
-	 * <li>
-	 * Send a packet to client side and take broken particle rendering.
-	 * <li>
-	 * If <tt>harestBlock</tt> is enabled, called <code>dropBlockAsItem</code>
-	 * method from harvested block.
-	 * </li>
+	 * Try break block without player damage.
+	 * <p>
+	 * This method include following actions:
+	 * <li>Remove block by set block to air (For player damaged block, called
+	 * {@link Block#removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)}
+	 * instead), and called <code>breakBlock</code> method.
+	 * <li>Send a packet to client side and take broken particle rendering.
+	 * <li>If <tt>harestBlock</tt> is enabled, called
+	 * <code>dropBlockAsItem</code> method from harvested block.</li>
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param harvestBlock
-	 * @see net.minecraft.block.Block#breakBlock(World, BlockPos, IBlockState)
+	 * @see Block#breakBlock(World, BlockPos, IBlockState)
 	 */
 	public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 	{
-		if (!world.isRemote) //This method have not effect in client world, it will send a packet to client.
+		if (!world.isRemote) // This method have not effect in client world, it
+		// will send a packet to client.
 		{
 			if (!world.isAreaLoaded(pos, 64))
 			{
 				world.setBlockToAir(pos);
 			}
-			if(isAir(world, pos)) return;
+			if (isAir(world, pos)) return;
 			IBlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
 			block.breakBlock(world, pos, state);
@@ -219,7 +218,9 @@ public final class Worlds
 	}
 	
 	/**
-	 * Fixed 6 direction side of facing, for change to another face when that face is not exposed.
+	 * Fixed 6 direction side of facing, for change to another face when that
+	 * face is not exposed.
+	 * 
 	 * @param side the side of hitting.
 	 * @param hitX the hit x coord.
 	 * @param hitY the hit y coord.
@@ -231,46 +232,44 @@ public final class Worlds
 		float u, v;
 		switch (side)
 		{
-		case 0 :
-		case 1 :
+		case 0:
+		case 1:
 			u = hitX;
 			v = hitZ;
 			break;
-		case 2 :
-		case 3 :
+		case 2:
+		case 3:
 			u = hitX;
 			v = hitY;
 			break;
-		case 4 :
-		case 5 :
+		case 4:
+		case 5:
 			u = hitZ;
 			v = hitY;
 			break;
-		default :
+		default:
 			u = 0.5F;
 			v = 0.5F;
 			break;
 		}
 		int id;
 		boolean b1 = u >= 0.25F, b2 = v >= 0.25F, b3 = u <= 0.75F, b4 = v <= 0.75F;
-		return b1 && b2 && b3 && b4 ? side :
-			(id = (b1 && b3 ? (!b4 ? 1 : 0) : (b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
-					Direction.OPPISITE[side] : ROTATE_FIX[side >> 1][id];
+		return b1 && b2 && b3 && b4 ? side : (id = (b1 && b3 ? (!b4 ? 1 : 0) : (b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ? Direction.OPPISITE[side] : ROTATE_FIX[side >> 1][id];
 	}
 	
 	/**
 	 * Spawn dropping item in world.
+	 * 
 	 * @param world the world.
-	 * @param pos the position to spawn dropping item, and give a random offset to set the dropping
-	 *            item location.
+	 * @param pos the position to spawn dropping item, and give a random offset
+	 *            to set the dropping item location.
 	 * @param drop the dropping item.
 	 */
 	public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)
 	{
-		if(world.isRemote ||
-				//Debug world can drop item will crash the game...
-				world.getWorldType() == WorldType.DEBUG_WORLD ||
-				drop == null)
+		if (world.isRemote ||
+		// Debug world can drop item will crash the game...
+				world.getWorldType() == WorldType.DEBUG_WORLD || drop == null)
 			return;
 		float f = 0.7F;
 		double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
@@ -282,20 +281,21 @@ public final class Worlds
 	}
 	
 	/**
-	 * Spawn dropping item in world.<p>
+	 * Spawn dropping item in world.
+	 * <p>
 	 * The item will move by a catapult.
+	 * 
 	 * @param world the world.
-	 * @param pos the position to spawn dropping item, and give a random offset to set the dropping
-	 *            item location.
+	 * @param pos the position to spawn dropping item, and give a random offset
+	 *            to set the dropping item location.
 	 * @param direction the direction which will give a catapult.
 	 * @param drop the dropping item.
 	 */
 	public static void spawnDropInWorld(World world, BlockPos pos, Direction direction, ItemStack drop)
 	{
-		if(world.isRemote ||
-				//Debug world can drop item will crash the game...
-				world.getWorldType() == WorldType.DEBUG_WORLD ||
-				drop == null)
+		if (world.isRemote ||
+		// Debug world can drop item will crash the game...
+				world.getWorldType() == WorldType.DEBUG_WORLD || drop == null)
 			return;
 		float f = 0.7F;
 		double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.1D + (direction.x + 1.0F) / 2.0F;
@@ -310,21 +310,23 @@ public final class Worlds
 	}
 	
 	/**
-	 * Spawn a list of items in the world.<p>
+	 * Spawn a list of items in the world.
+	 * <p>
 	 * It usually called when block is broke.
+	 * 
 	 * @param world the world.
 	 * @param pos the spawn position.
 	 * @param drops the drops item stacks.
 	 */
 	public static void spawnDropsInWorld(World world, BlockPos pos, @Nullable List<ItemStack> drops)
 	{
-		if(world.isRemote ||
-				world.getWorldType() == WorldType.DEBUG_WORLD ||
-				//Debug world can drop item will crash the game...
-				drops == null) return;
-		for(ItemStack stack : drops)
+		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_WORLD ||
+		// Debug world can drop item will crash the game...
+				drops == null)
+			return;
+		for (ItemStack stack : drops)
 		{
-			if(stack == null)
+			if (stack == null)
 			{
 				continue;
 			}
@@ -353,14 +355,14 @@ public final class Worlds
 	
 	public static void spawnDropInWorld(EntityPlayer player, @Nullable ItemStack drop)
 	{
-		if(drop == null || drop.stackSize == 0 || player.world.isRemote) return;
+		if (drop == null || drop.stackSize == 0 || player.world.isRemote) return;
 		player.dropItem(drop, false);
 	}
 	
 	public static void spawnDropsInWorldByPlayerOpeningContainer(EntityPlayer player, IInventory inventory)
 	{
-		if(player.world.isRemote) return;
-		for(int i = 0; i < inventory.getSizeInventory(); ++i)
+		if (player.world.isRemote) return;
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
 			spawnDropInWorld(player, inventory.removeStackFromSlot(i));
 		}
@@ -368,6 +370,7 @@ public final class Worlds
 	
 	/**
 	 * Check can block stay and fall block.
+	 * 
 	 * @param world the world.
 	 * @param pos the checking position.
 	 * @return return <tt>true</tt> when falling is matched and happened.
@@ -376,20 +379,19 @@ public final class Worlds
 	{
 		if (world.isRemote) return false;
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock() instanceof ISmartFallableBlock ?
-				!((ISmartFallableBlock) state.getBlock()).canFallingBlockStay(world, pos, state.getActualState(world, pos)) :
-					EntityFallingBlockExtended.canFallAt(world, pos, state))
-			return fallBlock(world, pos, state);
+		if (state.getBlock() instanceof ISmartFallableBlock ? !((ISmartFallableBlock) state.getBlock()).canFallingBlockStay(world, pos, state.getActualState(world, pos)) : EntityFallingBlockExtended.canFallAt(world, pos, state)) return fallBlock(world, pos, state);
 		return false;
 	}
 	
 	/**
 	 * Fall block with starting at located position.
+	 * 
 	 * @param world the falling block generated world.
 	 * @param pos the located position.
 	 * @param state the block state.
-	 * @return return <tt>true</tt> when falling action is success happen,
-	 * or the side is client or falling block not generate successfully otherwise.
+	 * @return return <tt>true</tt> when falling action is success happen, or
+	 *         the side is client or falling block not generate successfully
+	 *         otherwise.
 	 * @see Worlds#fallBlock(World, BlockPos, BlockPos, IBlockState)
 	 */
 	public static boolean fallBlock(World world, BlockPos pos, IBlockState state)
@@ -398,21 +400,28 @@ public final class Worlds
 	}
 	
 	/**
-	 * Generate a falling block at drop position, and the source is from start position,
-	 * a helper method to create falling block (such behavior like vanilla sand).<p>
-	 * The source block will be removed after falling action is started, and a new
-	 * {@link nebula.common.entity.EntityFallingBlockExtended} will be spawn in the world if
-	 * option of falling block instantly is disabled and the chunk of handling falling action is loaded,
-	 * or try to falling instantly.<p>
-	 * If the block is instance of {@link nebula.common.block.ISmartFallableBlock}.
-	 * The method will be called after entity spawning.<p>
+	 * Generate a falling block at drop position, and the source is from start
+	 * position, a helper method to create falling block (such behavior like
+	 * vanilla sand).
+	 * <p>
+	 * The source block will be removed after falling action is started, and a
+	 * new {@link nebula.common.entity.EntityFallingBlockExtended} will be spawn
+	 * in the world if option of falling block instantly is disabled and the
+	 * chunk of handling falling action is loaded, or try to falling instantly.
+	 * <p>
+	 * If the block is instance of
+	 * {@link nebula.common.block.ISmartFallableBlock}. The method will be
+	 * called after entity spawning.
+	 * <p>
 	 * 
 	 * @param world the world.
 	 * @param pos the block at this position will be remove to air.
-	 * @param dropPos the falling entity block starting position, it usually same to start position.
+	 * @param dropPos the falling entity block starting position, it usually
+	 *            same to start position.
 	 * @param state the falling block state.
-	 * @return return <tt>true</tt> when falling action is success happen,
-	 * or the side is client or falling block not generate successfully otherwise.
+	 * @return return <tt>true</tt> when falling action is success happen, or
+	 *         the side is client or falling block not generate successfully
+	 *         otherwise.
 	 * @see net.minecraft.block.BlockFalling
 	 * @see nebula.common.block.ISmartFallableBlock
 	 * @see nebula.common.entity.EntityFallingBlockExtended
@@ -471,8 +480,10 @@ public final class Worlds
 	
 	/**
 	 * Get world from dimension id.
+	 * 
 	 * @param dimID the dimension id of world.
-	 * @return the current world with dimension id, or <tt>null</tt> if world not found.
+	 * @return the current world with dimension id, or <tt>null</tt> if world
+	 *         not found.
 	 */
 	public static @Nullable World world(int dimID)
 	{
@@ -481,6 +492,7 @@ public final class Worlds
 	
 	/**
 	 * Calculate the square of distance of a object to position.
+	 * 
 	 * @param object the object in world.
 	 * @param pos the position.
 	 * @return the distance square.
@@ -527,21 +539,14 @@ public final class Worlds
 	
 	public static boolean isBlockNearby(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 	{
-		return
-				isBlock(world, pos.up(), block, meta, ignoreUnloadChunk)   ||
-				isBlock(world, pos.down(), block, meta, ignoreUnloadChunk) ||
-				isBlock(world, pos.east(), block, meta, ignoreUnloadChunk) ||
-				isBlock(world, pos.west(), block, meta, ignoreUnloadChunk) ||
-				isBlock(world, pos.north(), block, meta, ignoreUnloadChunk)||
-				isBlock(world, pos.south(), block, meta, ignoreUnloadChunk);
+		return isBlock(world, pos.up(), block, meta, ignoreUnloadChunk) || isBlock(world, pos.down(), block, meta, ignoreUnloadChunk) || isBlock(world, pos.east(), block, meta, ignoreUnloadChunk) || isBlock(world, pos.west(), block, meta, ignoreUnloadChunk)
+				|| isBlock(world, pos.north(), block, meta, ignoreUnloadChunk) || isBlock(world, pos.south(), block, meta, ignoreUnloadChunk);
 	}
 	
 	public static boolean isBlock(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 	{
 		IBlockState state;
-		return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 0)) &&
-				(state = world.getBlockState(pos)).getBlock() == block &&
-				(meta < 0 || state.getBlock().getMetaFromState(state) == meta);
+		return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 0)) && (state = world.getBlockState(pos)).getBlock() == block && (meta < 0 || state.getBlock().getMetaFromState(state) == meta);
 	}
 	
 	public static boolean isAir(IBlockAccess world, BlockPos pos)
@@ -552,24 +557,13 @@ public final class Worlds
 	
 	public static boolean isAirNearby(World world, BlockPos pos, boolean ignoreUnloadChunk)
 	{
-		return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 1)) && (
-				isAir(world, pos.up())   ||
-				isAir(world, pos.down()) ||
-				isAir(world, pos.west()) ||
-				isAir(world, pos.east()) ||
-				isAir(world, pos.north())||
-				isAir(world, pos.south()));
+		return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 1)) && (isAir(world, pos.up()) || isAir(world, pos.down()) || isAir(world, pos.west()) || isAir(world, pos.east()) || isAir(world, pos.north()) || isAir(world, pos.south()));
 	}
 	
 	public static boolean isNotOpaqueNearby(World world, BlockPos pos)
 	{
-		return !world.isAreaLoaded(pos, 1) || !(
-				world.isSideSolid(pos.up(),    EnumFacing.DOWN) &&
-				world.isSideSolid(pos.down(),  EnumFacing.UP)   &&
-				world.isSideSolid(pos.west(),  EnumFacing.EAST) &&
-				world.isSideSolid(pos.east(),  EnumFacing.WEST) &&
-				world.isSideSolid(pos.north(), EnumFacing.SOUTH)&&
-				world.isSideSolid(pos.south(), EnumFacing.NORTH));
+		return !world.isAreaLoaded(pos, 1) || !(world.isSideSolid(pos.up(), EnumFacing.DOWN) && world.isSideSolid(pos.down(), EnumFacing.UP) && world.isSideSolid(pos.west(), EnumFacing.EAST) && world.isSideSolid(pos.east(), EnumFacing.WEST) && world.isSideSolid(pos.north(), EnumFacing.SOUTH)
+				&& world.isSideSolid(pos.south(), EnumFacing.NORTH));
 	}
 	
 	public static int getBlockMeta(World world, BlockPos pos)
@@ -590,13 +584,8 @@ public final class Worlds
 	
 	public static boolean isCatchingRain(World world, BlockPos pos, boolean checkNeayby)
 	{
-		return world.isRaining() ?
-				(world.canBlockSeeSky(pos.up()) && CommonOverride.isRainingAtBiome(world.getBiome(pos), world, pos)) ||
-				(checkNeayby && (
-						world.canBlockSeeSky(pos.north()) ||
-						world.canBlockSeeSky(pos.south()) ||
-						world.canBlockSeeSky(pos.east()) ||
-						world.canBlockSeeSky(pos.west()))) : false;
+		return world.isRaining() ? (world.canBlockSeeSky(pos.up()) && CommonOverride.isRainingAtBiome(world.getBiome(pos), world, pos)) || (checkNeayby && (world.canBlockSeeSky(pos.north()) || world.canBlockSeeSky(pos.south()) || world.canBlockSeeSky(pos.east()) || world.canBlockSeeSky(pos.west())))
+				: false;
 	}
 	
 	public static TileEntity getTileEntity(IBlockAccess world, BlockPos pos, boolean update)
@@ -629,14 +618,14 @@ public final class Worlds
 	
 	public static TileEntity setTileEntity(World world, BlockPos pos, TileEntity tile, boolean update)
 	{
-		if(update)
+		if (update)
 		{
 			world.setTileEntity(pos, tile);
 		}
 		else
 		{
 			Chunk chunk = world.getChunkFromBlockCoords(pos);
-			if(chunk != null)
+			if (chunk != null)
 			{
 				world.addTileEntity(tile);
 				chunk.addTileEntity(pos, tile);
@@ -648,18 +637,10 @@ public final class Worlds
 	
 	public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
 	{
-		if (aabb.maxX < post[0] || aabb.minX > post[0] ||
-				aabb.maxY < post[1] || aabb.minY > post[1] ||
-				aabb.maxZ < post[2] || aabb.minZ > post[2])
+		if (aabb.maxX < post[0] || aabb.minX > post[0] || aabb.maxY < post[1] || aabb.minY > post[1] || aabb.maxZ < post[2] || aabb.minZ > post[2])
 			return null;
 		else
-			return aabb.maxY < pre[1] ? Direction.U :
-				aabb.minY > pre[1] ? Direction.D :
-					aabb.maxX < pre[0] ? Direction.E :
-						aabb.minX > pre[0] ? Direction.W :
-							aabb.maxZ < pre[2] ? Direction.S :
-								aabb.minZ > pre[2] ? Direction.N :
-									Direction.Q;
+			return aabb.maxY < pre[1] ? Direction.U : aabb.minY > pre[1] ? Direction.D : aabb.maxX < pre[0] ? Direction.E : aabb.minX > pre[0] ? Direction.W : aabb.maxZ < pre[2] ? Direction.S : aabb.minZ > pre[2] ? Direction.N : Direction.Q;
 	}
 	
 	public static RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean useLiquids)
@@ -670,8 +651,8 @@ public final class Worlds
 		double d1 = entity.posY + entity.getEyeHeight();
 		double d2 = entity.posZ;
 		Vec3d vec3d = new Vec3d(d0, d1, d2);
-		float f2 = MathHelper.cos(-f1 * 0.017453292F - (float)Math.PI);
-		float f3 = MathHelper.sin(-f1 * 0.017453292F - (float)Math.PI);
+		float f2 = MathHelper.cos(-f1 * 0.017453292F - (float) Math.PI);
+		float f3 = MathHelper.sin(-f1 * 0.017453292F - (float) Math.PI);
 		float f4 = -MathHelper.cos(-f * 0.017453292F);
 		float f5 = MathHelper.sin(-f * 0.017453292F);
 		float f6 = f3 * f4;
@@ -689,6 +670,7 @@ public final class Worlds
 	
 	/**
 	 * Return <code>true</code> if redstone is checking the power for update.
+	 * 
 	 * @return <code>true</code> if redstone is checking the power for update,
 	 *         and <code>false</code> for otherwise.
 	 */
@@ -699,12 +681,15 @@ public final class Worlds
 	
 	/**
 	 * Check is the specific chunk is loaded.
+	 * 
 	 * @param world the world.
 	 * @param x the chunk x coord.
 	 * @param z the chunk z coord.
-	 * @param allowEmpty if it is <code>true</code>, the result will be <code>true</code>
-	 *                   if the world does not synch the specific chunk.
-	 * @return <code>true</code> if chunk is loaded or <code>false</code> for otherwise.
+	 * @param allowEmpty if it is <code>true</code>, the result will be
+	 *            <code>true</code> if the world does not synch the specific
+	 *            chunk.
+	 * @return <code>true</code> if chunk is loaded or <code>false</code> for
+	 *         otherwise.
 	 */
 	public static boolean isChunkLoaded(World world, int x, int z, boolean allowEmpty)
 	{
@@ -724,6 +709,7 @@ public final class Worlds
 	
 	/**
 	 * Spawn a particle with position gave a random offset.
+	 * 
 	 * @param world the world.
 	 * @param types the type of particle.
 	 * @param xCoord the particle x coordinate.
@@ -735,19 +721,15 @@ public final class Worlds
 	 * @param randScale the random coordinate offset scale.
 	 * @param datas the particle custom data.
 	 */
-	public static void spawnParticleWithRandomOffset(World world, EnumParticleTypes types, double xCoord,
-			double yCoord, double zCoord, double motionX, double motionY, double motionZ, double randScale, int...datas)
+	public static void spawnParticleWithRandomOffset(World world, EnumParticleTypes types, double xCoord, double yCoord, double zCoord, double motionX, double motionY, double motionZ, double randScale, int...datas)
 	{
 		Random random = L.random();
-		world.spawnParticle(types,
-				xCoord + (random.nextFloat() - random.nextFloat()) * randScale,
-				yCoord + (random.nextFloat() - random.nextFloat()) * randScale,
-				zCoord + (random.nextFloat() - random.nextFloat()) * randScale,
-				motionX, motionY, motionZ, datas);
+		world.spawnParticle(types, xCoord + (random.nextFloat() - random.nextFloat()) * randScale, yCoord + (random.nextFloat() - random.nextFloat()) * randScale, zCoord + (random.nextFloat() - random.nextFloat()) * randScale, motionX, motionY, motionZ, datas);
 	}
 	
 	/**
 	 * Check if item can drop at position.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param side
@@ -756,24 +738,25 @@ public final class Worlds
 	public static boolean isItemDropable(World world, BlockPos pos, @Nullable Direction side)
 	{
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock().isAir(state, world, pos))
-			return true;
-		return state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase ||
-				(!state.isFullCube() &&
-						(side == null || !state.isSideSolid(world, pos, side.of())) &&
-						state.getCollisionBoundingBox(world, pos) == Block.NULL_AABB);
+		if (state.getBlock().isAir(state, world, pos)) return true;
+		return state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase || (!state.isFullCube() && (side == null || !state.isSideSolid(world, pos, side.of())) && state.getCollisionBoundingBox(world, pos) == Block.NULL_AABB);
 	}
 	
 	/**
-	 * Check to <tt>match</tt> a specific block state or tile entity from source block position and
-	 * check neighbour of matched block position and return true if enough block states are matched.
+	 * Check to <tt>match</tt> a specific block state or tile entity from source
+	 * block position and check neighbour of matched block position and return
+	 * true if enough block states are matched.
+	 * 
 	 * @param world the world.
 	 * @param pos the position to start check.
-	 * @param checkItSelf should this position be checked first or start from its neighbous first and
-	 *                    will ignore main position.
-	 * @param count how many block states matches can finished the checking task.
-	 * @param predicate the predictor to predicate if block state can be matched.
-	 * @return <code>true</code> if enough block states connect to source block position in a line matched.
+	 * @param checkItSelf should this position be checked first or start from
+	 *            its neighbous first and will ignore main position.
+	 * @param count how many block states matches can finished the checking
+	 *            task.
+	 * @param predicate the predictor to predicate if block state can be
+	 *            matched.
+	 * @return <code>true</code> if enough block states connect to source block
+	 *         position in a line matched.
 	 */
 	public static boolean checkForMatch(World world, BlockPos pos, boolean checkItSelf, int count, Predicate<ICoord> predicate)
 	{
@@ -794,7 +777,8 @@ public final class Worlds
 		list.addAll(unchecked);
 		int size = 0;
 		BlockPos pos2;
-		final int maxCheck = MathHelper.log2DeBruijn(count) * 25 + count; /* Ticking required. */
+		final int maxCheck = MathHelper.log2DeBruijn(count) * 25
+				+ count; /* Ticking required. */
 		while (!unchecked.isEmpty() && list.size() <= maxCheck)
 		{
 			BlockPos pos1 = unchecked.removeFirst();
@@ -813,9 +797,10 @@ public final class Worlds
 	}
 	
 	/**
-	 * Checking task, to <tt>match</tt> a specific block state or tile entity from source block position
-	 * and check neighbour of matched block position and return true if minimum first matched block state
-	 * found.
+	 * Checking task, to <tt>match</tt> a specific block state or tile entity
+	 * from source block position and check neighbour of matched block position
+	 * and return true if minimum first matched block state found.
+	 * 
 	 * @see #checkForMatch(World, BlockPos, boolean, int, Predicate)
 	 */
 	public static int checkForMinDistance(World world, BlockPos pos, boolean checkItSelf, int max, Predicate<ICoord> predicate)
@@ -848,7 +833,8 @@ public final class Worlds
 						list.add(pos2);
 					}
 			}
-			else return Maths.lp1Distance(pos, pos1);
+			else
+				return Maths.lp1Distance(pos, pos1);
 		}
 		return Integer.MAX_VALUE;
 	}

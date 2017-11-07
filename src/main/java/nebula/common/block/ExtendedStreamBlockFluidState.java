@@ -26,9 +26,7 @@ public class ExtendedStreamBlockFluidState extends ExtendedBlockState
 {
 	static final class HidingFluidState extends ExtendedBlockState.ExtendedStateImplementation
 	{
-		protected HidingFluidState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties,
-				ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties,
-				ImmutableTable<IProperty<?>, Comparable<?>, IBlockState> table)
+		protected HidingFluidState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties, ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties, ImmutableTable<IProperty<?>, Comparable<?>, IBlockState> table)
 		{
 			super(block, properties, unlistedProperties, table);
 		}
@@ -64,8 +62,7 @@ public class ExtendedStreamBlockFluidState extends ExtendedBlockState
 	}
 	
 	@Override
-	protected StateImplementation createState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties,
-			ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties)
+	protected StateImplementation createState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties, ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties)
 	{
 		return new HidingFluidState(block, properties, unlistedProperties, null);
 	}

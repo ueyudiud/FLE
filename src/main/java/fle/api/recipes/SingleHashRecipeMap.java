@@ -13,16 +13,16 @@ import nebula.base.INode;
 import nebula.base.Node;
 
 /**
- * A recipe map template, use hash to
- * save and find recipe.
+ * A recipe map template, use hash to save and find recipe.
+ * 
  * @author ueyudiud
  * @see fle.api.recipes.IRecipeMap
  * @see Object#hashCode()
  */
 public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H>
 {
-	private final Map<Integer, INode<R>> entries = new HashMap<>();
-	private final List<R> recipes = new ArrayList<>();
+	private final Map<Integer, INode<R>>	entries	= new HashMap<>();
+	private final List<R>					recipes	= new ArrayList<>();
 	
 	protected final String name;
 	
@@ -57,7 +57,7 @@ public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H
 		}
 		else
 		{
-			this.entries.put(hash, Node.<R>first(recipe));
+			this.entries.put(hash, Node.<R> first(recipe));
 		}
 		this.recipes.add(recipe);
 		return true;
@@ -74,7 +74,7 @@ public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H
 			if (this.entries.containsKey(hash))
 			{
 				INode<R> node = this.entries.get(hash);
-				INode<R> r = node.find(recipe->match(recipe, handler));
+				INode<R> r = node.find(recipe -> match(recipe, handler));
 				if (r != null)
 				{
 					return getOutput(r.value());

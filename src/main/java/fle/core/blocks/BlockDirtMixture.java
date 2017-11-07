@@ -30,11 +30,8 @@ public class BlockDirtMixture extends BlockSingleTE
 {
 	public static boolean checkAndSetBlock(World world, BlockPos pos)
 	{
-		if (Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, false) &&
-				Worlds.isSideSolid(world, pos.north(), EnumFacing.SOUTH, false) &&
-				Worlds.isSideSolid(world, pos.south(), EnumFacing.NORTH, false) &&
-				Worlds.isSideSolid(world, pos.east(), EnumFacing.WEST, false) &&
-				Worlds.isSideSolid(world, pos.west(), EnumFacing.EAST, false))
+		if (Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, false) && Worlds.isSideSolid(world, pos.north(), EnumFacing.SOUTH, false) && Worlds.isSideSolid(world, pos.south(), EnumFacing.NORTH, false) && Worlds.isSideSolid(world, pos.east(), EnumFacing.WEST, false)
+				&& Worlds.isSideSolid(world, pos.west(), EnumFacing.EAST, false))
 		{
 			world.setBlockState(pos, EnumBlock.dirt_mixture.apply());
 			return true;

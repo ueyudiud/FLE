@@ -34,7 +34,7 @@ public class ClientLoader extends CommonLoader
 	public void preload()
 	{
 		super.preload();
-		//Register client side handler.
+		// Register client side handler.
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		
 		NebulaTextureHandler.addIconLoader(new MaterialTextureLoader());
@@ -42,19 +42,17 @@ public class ClientLoader extends CommonLoader
 		
 		/** For uses this font map provided all Greek character. */
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
-		//Register model loaders, state mappers and item model selectors.
+		// Register model loaders, state mappers and item model selectors.
 		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuitplate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
 		
 		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "models/block/fence_base"), new ResourceLocation(FarCore.ID, "models/block1/fence.json"), NebulaModelDeserializer.BLOCK);
 		
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material.sub"), stack ->
-		"material:" + ItemMulti.getMaterial(stack).name + "." + ItemMulti.getSubMeta(stack));
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material.sub"), stack -> "material:" + ItemMulti.getMaterial(stack).name + "." + ItemMulti.getSubMeta(stack));
 		
-		for(MatCondition condition : MatCondition.register)
+		for (MatCondition condition : MatCondition.register)
 		{
-			NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "group/" + condition.name), () ->
-			{
+			NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "group/" + condition.name), () -> {
 				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 				for (Mat material : Mat.filt(condition))
 				{

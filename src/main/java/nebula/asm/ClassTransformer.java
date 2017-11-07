@@ -21,6 +21,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
 
 /**
  * The class transformer.
+ * 
  * @author ueyudiud
  */
 public class ClassTransformer implements IClassTransformer
@@ -37,16 +38,18 @@ public class ClassTransformer implements IClassTransformer
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		if (transformedName.startsWith("com.google."))
-			return basicClass;//Gson uses do not modify.
+		if (transformedName.startsWith("com.google.")) return basicClass;// Gson
+																			// uses
+																			// do
+																			// not
+																			// modify.
 		NebulaASMLogHelper.outputInit();
 		if (transformedName.startsWith("net.minecraft."))
 		{
 			NebulaASMLogHelper.keyOutputStream.println(name + "=" + transformedName);
 		}
 		OpInformation information;
-		if ((information = informations.remove(transformedName)) != null)
-			return modifyClass(transformedName, information, basicClass);
+		if ((information = informations.remove(transformedName)) != null) return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
 	
@@ -70,7 +73,7 @@ public class ClassTransformer implements IClassTransformer
 				if (information.modifies.containsKey(name))
 				{
 					List<OpLabel> list = information.modifies.remove(name);
-					if (list == ImmutableList.<OpLabel>of())
+					if (list == ImmutableList.<OpLabel> of())
 					{
 						nodes.remove();
 						NebulaASMLogHelper.LOG.debug("Removed method {}.", name);
@@ -100,7 +103,7 @@ public class ClassTransformer implements IClassTransformer
 			NebulaASMLogHelper.LOG.info("End modify class {}.", clazzName);
 			return writer.toByteArray();
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			NebulaASMLogHelper.LOG.error("Fail to modify class.", exception);
 			return basicClass;
@@ -111,11 +114,12 @@ public class ClassTransformer implements IClassTransformer
 	{
 		list = new ArrayList<>(list);
 		OpLabel info = null;
-		if(!list.isEmpty())
+		if (!list.isEmpty())
 		{
 			info = list.get(0);
 		}
-		else return false;
+		else
+			return false;
 		for (int idx = 0; (idx < instructions.size() && !list.isEmpty()); ++idx)
 		{
 			this.numInsertions = 0;
@@ -123,7 +127,9 @@ public class ClassTransformer implements IClassTransformer
 			{
 				if (!info.matchNode(instructions.get(idx))) break;
 				int off = info.performAnchorOperation(instructions, idx, this.numInsertions);
-				if (info.off < 0)//If offset is negative, will return to last node to check (For it may modified before)
+				if (info.off < 0)// If offset is negative, will return to last
+									// node to check (For it may modified
+									// before)
 				{
 					idx += off;
 				}

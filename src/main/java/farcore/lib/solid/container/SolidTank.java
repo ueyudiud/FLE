@@ -14,8 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 {
-	protected int capacity;
-	protected SolidStack stack;
+	protected int			capacity;
+	protected SolidStack	stack;
 	
 	public SolidTank(int capacity)
 	{
@@ -39,6 +39,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 	
 	/**
 	 * Match stack can fill into tank, use for child type implementation.
+	 * 
 	 * @param stack
 	 * @return
 	 */
@@ -49,6 +50,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 	
 	/**
 	 * Match can stack drain from tank, use for child type implementation.
+	 * 
 	 * @return
 	 */
 	public boolean canDrain()
@@ -57,11 +59,13 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 	}
 	
 	/**
-	 * Take <tt>insert</tt> action, means stack will be filled only source stack can fully
-	 * insert into tank.
+	 * Take <tt>insert</tt> action, means stack will be filled only source stack
+	 * can fully insert into tank.
+	 * 
 	 * @param stack the source stack.
-	 * @param simulate do stack in tank <i>not</i> changed in <tt>insert</tt> action, if argument is <tt>true</tt>,
-	 * the tank will only give similate result.
+	 * @param simulate do stack in tank <i>not</i> changed in <tt>insert</tt>
+	 *            action, if argument is <tt>true</tt>, the tank will only give
+	 *            similate result.
 	 * @return return <tt>true</tt> if stack fully insert into tank.
 	 * @see #fill(SolidStack, boolean)
 	 */
@@ -70,19 +74,21 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 		if (stack == null) return true;
 		if (fill(stack, false) == stack.amount)
 		{
-			if (!simulate)
-				fill(stack, true);
+			if (!simulate) fill(stack, true);
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * Take <tt>fill</tt> action, means stack will be filled if source stack can fill into
-	 * tank if tank is empty or solid of stack in tank equals to solid of stack in fill source.
+	 * Take <tt>fill</tt> action, means stack will be filled if source stack can
+	 * fill into tank if tank is empty or solid of stack in tank equals to solid
+	 * of stack in fill source.
+	 * 
 	 * @param stack the source stack, will not changed in this method.
-	 * @param doFill do stack in tank changed in <tt>fill</tt> action, if argument is <tt>false</tt>,
-	 * the tank will only give simulate result.
+	 * @param doFill do stack in tank changed in <tt>fill</tt> action, if
+	 *            argument is <tt>false</tt>, the tank will only give simulate
+	 *            result.
 	 * @return the amount fill into tank.
 	 * @see #insertSolid(SolidStack, boolean)
 	 * @see farcore.lib.solid.SolidStack#isSoildEqual(SolidStack)
@@ -108,7 +114,8 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 			}
 			return i;
 		}
-		else return 0;
+		else
+			return 0;
 	}
 	
 	public SolidStack drain(int maxAmount, boolean doDrain)

@@ -17,6 +17,7 @@ public class PacketBreakBlock extends PacketBlockCoord
 	public PacketBreakBlock()
 	{
 	}
+	
 	public PacketBreakBlock(World world, BlockPos pos)
 	{
 		super(world, pos);
@@ -27,12 +28,12 @@ public class PacketBreakBlock extends PacketBlockCoord
 	public IPacket process(Network network)
 	{
 		World world = world();
-		if(world != null)
+		if (world != null)
 		{
 			IBlockState state = world.getBlockState(this.pos);
 			state.getBlock().breakBlock(world, this.pos, state);
 			world.setBlockToAir(this.pos);
-			if(world.isAreaLoaded(this.pos, 64))
+			if (world.isAreaLoaded(this.pos, 64))
 			{
 				Minecraft.getMinecraft().effectRenderer.addBlockDestroyEffects(this.pos, state);
 			}

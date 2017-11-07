@@ -13,6 +13,7 @@ public class Node<T> implements INode<T>
 {
 	/**
 	 * Build the first node of nodes.
+	 * 
 	 * @param target
 	 * @return
 	 */
@@ -25,8 +26,10 @@ public class Node<T> implements INode<T>
 	{
 		switch (ts.length)
 		{
-		case 0 : return null;
-		case 1 : return new Node<>(ts[0]);
+		case 0:
+			return null;
+		case 1:
+			return new Node<>(ts[0]);
 		default:
 			Node<T> result = new Node<>(ts[0]);
 			Node<T> n1 = result;
@@ -43,8 +46,10 @@ public class Node<T> implements INode<T>
 	{
 		switch (list.size())
 		{
-		case 0 : return null;
-		case 1 : return new Node<>(list.get(0));
+		case 0:
+			return null;
+		case 1:
+			return new Node<>(list.get(0));
 		default:
 			Node<T> result = new Node<>(list.get(0));
 			Node<T> n1 = result;
@@ -58,16 +63,26 @@ public class Node<T> implements INode<T>
 	}
 	
 	/**
-	 * Create a new node chain.<p>
+	 * Create a new node chain.
+	 * <p>
 	 * Return the first node of node chain.
+	 * 
 	 * @param iterable the object to provide iterator.
 	 * @return the first node.
 	 * @see #chain(Iterator)
 	 */
 	public static <T> Node<T> chain(Iterable<T> iterable)
 	{
-		if (iterable instanceof List &&
-				!(iterable instanceof LinkedList))//The iterator for linked list is faster than index positioned.
+		if (iterable instanceof List && !(iterable instanceof LinkedList))// The
+																			// iterator
+																			// for
+																			// linked
+																			// list
+																			// is
+																			// faster
+																			// than
+																			// index
+																			// positioned.
 		{
 			return chain((List<T>) iterable);
 		}
@@ -78,8 +93,10 @@ public class Node<T> implements INode<T>
 	}
 	
 	/**
-	 * Create a new node chain.<p>
+	 * Create a new node chain.
+	 * <p>
 	 * Return the first node of node chain.
+	 * 
 	 * @param iterator the iterator to provider node chain.
 	 * @return the first node.
 	 */
@@ -95,9 +112,9 @@ public class Node<T> implements INode<T>
 		return result;
 	}
 	
-	private T target;
-	private Node<T> next;
-	private Node<T> last;
+	private T		target;
+	private Node<T>	next;
+	private Node<T>	last;
 	
 	Node(T target)
 	{
@@ -125,7 +142,7 @@ public class Node<T> implements INode<T>
 	@Override
 	public void addLast(T target)
 	{
-		if(this.last != null)
+		if (this.last != null)
 		{
 			this.last.addLast(target);
 		}
@@ -139,7 +156,7 @@ public class Node<T> implements INode<T>
 	@Override
 	public void addNext(T target)
 	{
-		if(this.next != null)
+		if (this.next != null)
 		{
 			this.next.addNext(target);
 		}
@@ -156,7 +173,7 @@ public class Node<T> implements INode<T>
 		Node<T> node = this.next;
 		this.next = new Node<>(target);
 		this.next.last = this;
-		if(node != null)
+		if (node != null)
 		{
 			node.last = this.next;
 			this.next.next = node;
@@ -169,21 +186,22 @@ public class Node<T> implements INode<T>
 		Node<T> node = this.last;
 		this.last = new Node<>(target);
 		this.last.next = this;
-		if(node != null)
+		if (node != null)
 		{
 			node.next = this.last;
 			this.last.last = node;
-		};
+		}
+		;
 	}
 	
 	@Override
 	public T remove()
 	{
-		if(this.last != null)
+		if (this.last != null)
 		{
 			this.last.next = this.next;
 		}
-		if(this.next != null)
+		if (this.next != null)
 		{
 			this.next.last = this.last;
 		}
@@ -194,8 +212,7 @@ public class Node<T> implements INode<T>
 	@Override
 	public INode<T> cutNext()
 	{
-		if (this.next == null)
-			return null;
+		if (this.next == null) return null;
 		this.next.last = null;
 		INode<T> result = this.next;
 		this.next = null;
@@ -205,8 +222,7 @@ public class Node<T> implements INode<T>
 	@Override
 	public INode<T> cutLast()
 	{
-		if (this.last == null)
-			return null;
+		if (this.last == null) return null;
 		this.last.next = null;
 		INode<T> result = this.last;
 		this.last = null;
@@ -253,21 +269,14 @@ public class Node<T> implements INode<T>
 		node1 = this, node2 = node;
 		while (node1.hasLast() || node2.hasLast())
 		{
-			if (node1.hasLast() != node2.hasLast() ||
-					!L.equal(
-							(node1 = node1.last()).value(),
-							(node2 = node2.last()).value()))
-				return false;
+			if (node1.hasLast() != node2.hasLast() || !L.equal((node1 = node1.last()).value(), (node2 = node2.last()).value())) return false;
 		}
 		
-		node1 = this; node2 = node;
+		node1 = this;
+		node2 = node;
 		while (node1.hasNext() || node2.hasNext())
 		{
-			if (node1.hasNext() != node2.hasNext() ||
-					!L.equal(
-							(node1 = node1.next()).value(),
-							(node2 = node2.next()).value()))
-				return false;
+			if (node1.hasNext() != node2.hasNext() || !L.equal((node1 = node1.next()).value(), (node2 = node2.next()).value())) return false;
 		}
 		
 		return true;

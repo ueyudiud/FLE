@@ -46,8 +46,7 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
-			Direction side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return EnumActionResult.PASS;
 	}
@@ -65,8 +64,7 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-			Direction side, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
@@ -79,8 +77,8 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 	}
 	
 	/**
-	 * Only for out dated ore property wrapper, not
-	 * suggested use in mod.
+	 * Only for out dated ore property wrapper, not suggested use in mod.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
@@ -96,8 +94,7 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 		}
 		
 		@Override
-		public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
-				Direction side, float hitX, float hitY, float hitZ)
+		public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, Direction side, float hitX, float hitY, float hitZ)
 		{
 			return this.oreProperty.onBlockActivated(ore, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
 		}
@@ -127,8 +124,7 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 		}
 		
 		@Override
-		public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-				Direction side, float hitX, float hitY, float hitZ)
+		public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side, float hitX, float hitY, float hitZ)
 		{
 			return this.oreProperty.onToolClick(player, tool, stack, ore, side, hitX, hitY, hitZ);
 		}

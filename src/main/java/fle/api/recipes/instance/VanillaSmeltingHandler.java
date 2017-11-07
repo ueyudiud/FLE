@@ -41,8 +41,7 @@ public class VanillaSmeltingHandler implements IRecipeMap<Entry<ItemStack, ItemS
 	@Override
 	public boolean addRecipe(Entry<ItemStack, ItemStack> recipe)
 	{
-		if (FurnaceRecipes.instance().getSmeltingResult(recipe.getKey()) != null)
-			return false;
+		if (FurnaceRecipes.instance().getSmeltingResult(recipe.getKey()) != null) return false;
 		FurnaceRecipes.instance().addSmeltingRecipe(recipe.getKey(), recipe.getValue(), 0.0F);
 		return true;
 	}
@@ -70,9 +69,9 @@ public class VanillaSmeltingHandler implements IRecipeMap<Entry<ItemStack, ItemS
 	{
 		Set<ItemStack> set = new HashSet<>();
 		Map<ItemStack, ItemStack> recipes = FurnaceRecipes.instance().getSmeltingList();
-		recipes.forEach((s1, s2)-> {
+		recipes.forEach((s1, s2) -> {
 			if (OreDictionary.itemMatches(s1, handler, false)) set.add(s1);
 		});
-		set.forEach(s->recipes.remove(s));
+		set.forEach(s -> recipes.remove(s));
 	}
 }

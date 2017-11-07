@@ -15,6 +15,7 @@ public class PacketKey extends PacketAbstract
 	public PacketKey()
 	{
 	}
+	
 	public PacketKey(long value)
 	{
 		this.values = value;

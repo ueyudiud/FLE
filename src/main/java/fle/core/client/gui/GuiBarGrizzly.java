@@ -66,8 +66,7 @@ public class GuiBarGrizzly extends GuiContainerBase
 		super.updateScreen();
 		if (((ContainerBarGrizzly) this.container).getProgress() > 0 && L.nextInt(4) == 0)
 		{
-			this.mc.getSoundHandler().playSound(
-					PositionedSoundRecord.getMusicRecord(SoundEvents.BLOCK_WATER_AMBIENT));
+			this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMusicRecord(SoundEvents.BLOCK_WATER_AMBIENT));
 		}
 	}
 	

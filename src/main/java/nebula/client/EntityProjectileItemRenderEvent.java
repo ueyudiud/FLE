@@ -15,8 +15,8 @@ import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 @HasResult
 public class EntityProjectileItemRenderEvent extends RenderEvent
 {
-	private float partialTicks;
-	private EntityProjectileItem projectileItem;
+	private float					partialTicks;
+	private EntityProjectileItem	projectileItem;
 	
 	public EntityProjectileItemRenderEvent(EntityProjectileItem item, RenderManager manager, float partialTicks)
 	{

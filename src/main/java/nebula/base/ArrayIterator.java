@@ -8,13 +8,14 @@ import java.util.ListIterator;
 
 public class ArrayIterator<E> implements ListIterator<E>
 {
-	private final E[] list;
-	private int pos = 0;
+	private final E[]	list;
+	private int			pos	= 0;
 	
 	public ArrayIterator()
 	{
 		this(null);
 	}
+	
 	public ArrayIterator(E[] list)
 	{
 		this.list = list;

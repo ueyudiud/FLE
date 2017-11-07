@@ -74,6 +74,6 @@ public class VanillaCraftingHandler implements IRecipeMap<IRecipe, IRecipe, Entr
 	@Override
 	public void removeRecipeByHandler(Entry<InventoryCrafting, World> handler)
 	{
-		CraftingManager.getInstance().getRecipeList().removeIf(r->r.matches(handler.getKey(), handler.getValue()));
+		CraftingManager.getInstance().getRecipeList().removeIf(r -> r.matches(handler.getKey(), handler.getValue()));
 	}
 }

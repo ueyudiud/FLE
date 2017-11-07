@@ -32,15 +32,13 @@ public class PlantBristlegrass extends PlantStatic
 	}
 	
 	@Override
-	public boolean canHarvestBlock(BlockPlant block, IBlockState state, IBlockAccess world, BlockPos pos,
-			EntityPlayer player)
+	public boolean canHarvestBlock(BlockPlant block, IBlockState state, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return Players.matchCurrentToolType(player, EnumToolTypes.SICKLE, EnumToolTypes.HOE);
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(BlockPlant block, IBlockState state, BlockPos pos, IBlockAccess world,
-			TileEntity tile, int fortune, boolean silkTouch)
+	public List<ItemStack> getDrops(BlockPlant block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		List<ItemStack> list = new ArrayList<>();
 		Random rand = world instanceof World ? ((World) world).rand : L.random();

@@ -11,20 +11,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * For item tool tip,
- * auto transfer unlocalized string to localized string.
+ * For item tool tip, auto transfer unlocalized string to localized string.
+ * 
  * @author ueyudiud
  *
  */
 public class UnlocalizedList
 {
-	List<String> list;
-	List<String> postList = new ArrayList<>();
+	List<String>	list;
+	List<String>	postList	= new ArrayList<>();
 	
 	public UnlocalizedList()
 	{
 		this(new ArrayList<>());
 	}
+	
 	public UnlocalizedList(List<String> list)
 	{
 		this.list = list;
@@ -43,7 +44,7 @@ public class UnlocalizedList
 	public void addNotNull(String arg, Object...translation)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
-		if(val != null)
+		if (val != null)
 		{
 			this.list.add(val);
 		}
@@ -52,15 +53,16 @@ public class UnlocalizedList
 	public void addPostNotNull(String arg, Object...translation)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
-		if(val != null)
+		if (val != null)
 		{
 			this.postList.add(val);
 		}
 	}
 	
 	/**
-	 * For add tooltip for displaying. It can put
-	 * more than one line for localized translation.<p>
+	 * For add tooltip for displaying. It can put more than one line for
+	 * localized translation.
+	 * <p>
 	 * For example:<br>
 	 * <tt>a.tooltip=XY</tt><br>
 	 * will display<br>
@@ -69,19 +71,20 @@ public class UnlocalizedList
 	 * a.tooltip.2=Y</tt><br>
 	 * will display<br>
 	 * <tt>X<br>Y</tt>
+	 * 
 	 * @param arg
 	 */
 	public void addToolTip(String arg)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg);
-		if(val != null)
+		if (val != null)
 		{
 			this.postList.add(val);
 		}
 		else
 		{
 			int i = 1;
-			while((val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg + "." + i++)) != null)
+			while ((val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg + "." + i++)) != null)
 			{
 				this.postList.add(val);
 			}

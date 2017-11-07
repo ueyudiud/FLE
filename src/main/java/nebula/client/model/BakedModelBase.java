@@ -28,8 +28,8 @@ public interface BakedModelBase extends IBakedModel
 	}
 	
 	/**
-	 * For a model this property is to determine should switch light
-	 * on during rendering model in GUI.
+	 * For a model this property is to determine should switch light on during
+	 * rendering model in GUI.
 	 */
 	@Override
 	default boolean isGui3d()

@@ -8,18 +8,21 @@ public interface IMatrixInventory extends IBasicInventory
 {
 	/**
 	 * Return the width of inventory slot matrix.
+	 * 
 	 * @return
 	 */
 	int getWidth();
-
+	
 	/**
 	 * Return the height of inventory slot matrix.
+	 * 
 	 * @return
 	 */
 	int getHeight();
 	
 	/**
 	 * Return the stack in inventory slot with coordinate.
+	 * 
 	 * @param x
 	 * @param y
 	 * @return
@@ -29,6 +32,7 @@ public interface IMatrixInventory extends IBasicInventory
 	
 	/**
 	 * Put stack into slot with selected coordinate.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param stack

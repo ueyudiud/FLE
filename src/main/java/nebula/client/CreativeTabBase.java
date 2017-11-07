@@ -14,14 +14,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 {
-	private final String localName;
-	private final Applicable<ItemStack> appliable;
-	private ItemStack stack;
+	private final String				localName;
+	private final Applicable<ItemStack>	appliable;
+	private ItemStack					stack;
 	
 	public CreativeTabBase(String lable, String localName, ItemStack stack)
 	{
 		this(lable, localName, Applicable.to(stack));
 	}
+	
 	public CreativeTabBase(String lable, String localName, Applicable<ItemStack> appliable)
 	{
 		super(lable);
@@ -54,10 +55,10 @@ public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 	@SideOnly(Side.CLIENT)
 	public final ItemStack getIconItemStack()
 	{
-		if(this.stack == null)
+		if (this.stack == null)
 		{
 			this.stack = ItemStack.copyItemStack(this.appliable.apply());
-			if(this.stack == null)
+			if (this.stack == null)
 			{
 				this.stack = new ItemStack(Blocks.FIRE);
 				Log.error("The creative tab is missing a stack for display, use fire instead.");

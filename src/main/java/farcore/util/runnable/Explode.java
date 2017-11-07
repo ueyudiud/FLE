@@ -20,44 +20,42 @@ public class Explode implements Runnable
 {
 	public static enum ExplosionType
 	{
-		STANDARD,
-		FLAMING,
-		NUKE;
+		STANDARD, FLAMING, NUKE;
 	}
 	
 	/** whether or not the explosion sets fire to blocks around it */
-	private final ExplosionType type;
+	private final ExplosionType				type;
 	/** whether or not this explosion spawns smoke particles */
-	private final boolean isSmoking;
-	private final Random explosionRNG;
-	private final World world;
-	private final double explosionX;
-	private final double explosionY;
-	private final double explosionZ;
-	private final Entity exploder;
-	private final float explosionSize;
-	private final List<BlockPos> affectedBlockPositions;
-	private final Map<EntityPlayer, Vec3d> playerKnockbackMap;
-	private final Vec3d position;
-
+	private final boolean					isSmoking;
+	private final Random					explosionRNG;
+	private final World						world;
+	private final double					explosionX;
+	private final double					explosionY;
+	private final double					explosionZ;
+	private final Entity					exploder;
+	private final float						explosionSize;
+	private final List<BlockPos>			affectedBlockPositions;
+	private final Map<EntityPlayer, Vec3d>	playerKnockbackMap;
+	private final Vec3d						position;
+	
 	@SideOnly(Side.CLIENT)
 	public Explode(World worldIn, Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)
 	{
 		this(worldIn, entityIn, x, y, z, size, ExplosionType.STANDARD, true, affectedPositions);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public Explode(World worldIn, Entity entityIn, double x, double y, double z, float size, ExplosionType type, boolean smoking, List<BlockPos> affectedPositions)
 	{
 		this(worldIn, entityIn, x, y, z, size, type, smoking);
 		affectedBlockPositions.addAll(affectedPositions);
 	}
-
+	
 	public Explode(World worldIn, Entity entityIn, double x, double y, double z, float size, ExplosionType type, boolean smoking)
 	{
 		explosionRNG = new Random();
-		affectedBlockPositions = Lists.<BlockPos>newArrayList();
-		playerKnockbackMap = Maps.<EntityPlayer, Vec3d>newHashMap();
+		affectedBlockPositions = Lists.<BlockPos> newArrayList();
+		playerKnockbackMap = Maps.<EntityPlayer, Vec3d> newHashMap();
 		world = worldIn;
 		exploder = entityIn;
 		explosionSize = size;

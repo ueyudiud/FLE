@@ -5,6 +5,7 @@ package nebula.common.util;
 
 /**
  * The no client only chat formatting.
+ * 
  * @author ueyudiud
  */
 public enum EnumChatFormatting
@@ -32,9 +33,9 @@ public enum EnumChatFormatting
 	ITALIC('o', true),
 	RESET('r');
 	
-	private final char controlCode;
-	private final boolean isNotColor;
-	private final String opcodeName;
+	private final char		controlCode;
+	private final boolean	isNotColor;
+	private final String	opcodeName;
 	
 	EnumChatFormatting(char controlCode)
 	{

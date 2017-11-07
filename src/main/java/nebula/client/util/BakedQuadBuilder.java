@@ -24,12 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class BakedQuadBuilder
 {
-	private final VertexFormat format;
-	private final IModelModifier modifier;
-	private final Consumer<BakedQuad> consumer;
-	private UnpackedBakedQuad.Builder builder;
-	private TextureAtlasSprite icon;
-	private float px, py, pz, nx, ny, nz, tu, tv, cr, cg, cb, ca;
+	private final VertexFormat			format;
+	private final IModelModifier		modifier;
+	private final Consumer<BakedQuad>	consumer;
+	private UnpackedBakedQuad.Builder	builder;
+	private TextureAtlasSprite			icon;
+	private float						px, py, pz, nx, ny, nz, tu, tv, cr, cg, cb, ca;
 	
 	private boolean textureScaleFlag = true;
 	
@@ -164,20 +164,28 @@ public class BakedQuadBuilder
 	
 	private void put()
 	{
-		for(int e = 0; e < this.format.getElementCount(); e++)
+		for (int e = 0; e < this.format.getElementCount(); e++)
 		{
-			switch(this.format.getElement(e).getUsage())
+			switch (this.format.getElement(e).getUsage())
 			{
-			case POSITION : this.builder.put(e, this.px, this.py, this.pz); break;
-			case UV :
-				if(this.format.getElement(e).getIndex() == 0)
+			case POSITION:
+				this.builder.put(e, this.px, this.py, this.pz);
+				break;
+			case UV:
+				if (this.format.getElement(e).getIndex() == 0)
 					this.builder.put(e, this.tu, this.tv, 0, 1);
 				else
 					this.builder.put(e);
 				break;
-			case NORMAL : this.builder.put(e, this.nx, this.ny, this.nz); break;
-			case COLOR : this.builder.put(e, this.cr, this.cg, this.cb, this.ca); break;
-			default: this.builder.put(e); break;
+			case NORMAL:
+				this.builder.put(e, this.nx, this.ny, this.nz);
+				break;
+			case COLOR:
+				this.builder.put(e, this.cr, this.cg, this.cb, this.ca);
+				break;
+			default:
+				this.builder.put(e);
+				break;
 			}
 		}
 	}

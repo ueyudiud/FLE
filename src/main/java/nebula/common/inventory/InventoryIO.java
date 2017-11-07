@@ -13,6 +13,7 @@ import net.minecraft.util.ActionResult;
 
 /**
  * TODO
+ * 
  * @author ueyudiud
  */
 public class InventoryIO extends InventorySimple implements IItemHandlerIO
@@ -58,8 +59,7 @@ public class InventoryIO extends InventorySimple implements IItemHandlerIO
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onPlayerTryUseIO(ItemStack current, EntityPlayer player, Direction side, float x,
-			float y, float z, boolean isActiveHeld)
+	public ActionResult<ItemStack> onPlayerTryUseIO(ItemStack current, EntityPlayer player, Direction side, float x, float y, float z, boolean isActiveHeld)
 	{
 		// TODO Auto-generated method stub
 		return null;

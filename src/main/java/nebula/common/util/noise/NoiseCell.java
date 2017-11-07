@@ -9,17 +9,18 @@ import nebula.common.util.Maths;
 
 public class NoiseCell extends NoiseBase
 {
-	private final double coe;
-	private byte disType;
-	private double persistence;
-	private double size;
-	private int length;
-	private double[] cache = new double[4];
+	private final double	coe;
+	private byte			disType;
+	private double			persistence;
+	private double			size;
+	private int				length;
+	private double[]		cache	= new double[4];
 	
 	public NoiseCell(Random rand, int disType, int length, double size, double persistence)
 	{
 		this(rand.nextLong(), disType, length, size, persistence);
 	}
+	
 	public NoiseCell(long seed, int disType, int length, double size, double persistence)
 	{
 		super(seed);
@@ -28,11 +29,11 @@ public class NoiseCell extends NoiseBase
 		this.size = size;
 		this.persistence = persistence;
 		double coe = 0;
-		for(int i = -length; i <= length; ++i)
+		for (int i = -length; i <= length; ++i)
 		{
-			for(int j = -length; j <= length; ++j)
+			for (int j = -length; j <= length; ++j)
 			{
-				for(int k = -length; k <= length; ++k)
+				for (int k = -length; k <= length; ++k)
 				{
 					coe += 1D / (1D + persistence * distance(i, j, k));
 				}
@@ -42,16 +43,15 @@ public class NoiseCell extends NoiseBase
 	}
 	
 	@Override
-	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale,
-			double yScale, double zScale)
+	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale, double yScale, double zScale)
 	{
 		array = getOrCreate(array, u, v, w, false);
 		int c = 0;
-		for(int k = 0; k < u; ++k)
+		for (int k = 0; k < u; ++k)
 		{
-			for(int j = 0; j < v; ++j)
+			for (int j = 0; j < v; ++j)
 			{
-				for(int i = 0; i < w; ++i)
+				for (int i = 0; i < w; ++i)
 				{
 					array[c++] = noise(x + xScale * k, y + yScale * j, z + zScale * i);
 				}
@@ -70,11 +70,11 @@ public class NoiseCell extends NoiseBase
 		double v1 = Maths.mod(x, this.size) / this.size;
 		double v2 = Maths.mod(y, this.size) / this.size;
 		double v3 = Maths.mod(z, this.size) / this.size;
-		for(int i = - this.length + 1; i <= this.length; ++i)
+		for (int i = -this.length + 1; i <= this.length; ++i)
 		{
-			for(int j = - this.length + 1; j <= this.length; ++j)
+			for (int j = -this.length + 1; j <= this.length; ++j)
 			{
-				for(int k = - this.length + 1; k <= this.length; ++k)
+				for (int k = -this.length + 1; k <= this.length; ++k)
 				{
 					double[] l = nextCell(x1 + i, y1 + j, z1 + k);
 					val += l[3] / (1.0 + this.persistence * distance(v1, v2, v3, i + l[0], j + l[1], k + l[2]));
@@ -103,11 +103,16 @@ public class NoiseCell extends NoiseBase
 	{
 		switch (this.disType)
 		{
-		case 0 : return Math.abs(a) + Math.abs(b) + Math.abs(c);
-		case 1 : return Math.sqrt(a * a + b * b + c * c);
-		case 2 : return a * a + b * b + c * c;
-		case 3 : return Math.cbrt(Math.abs(a * a * a) + Math.abs(b * b * b) + Math.abs(c * c * c));
-		default: return 0;
+		case 0:
+			return Math.abs(a) + Math.abs(b) + Math.abs(c);
+		case 1:
+			return Math.sqrt(a * a + b * b + c * c);
+		case 2:
+			return a * a + b * b + c * c;
+		case 3:
+			return Math.cbrt(Math.abs(a * a * a) + Math.abs(b * b * b) + Math.abs(c * c * c));
+		default:
+			return 0;
 		}
 	}
 	
@@ -115,8 +120,9 @@ public class NoiseCell extends NoiseBase
 	{
 		n ^= (n >> 13);
 		n = (n * (n * n * 60493 + 19990303) + 1376312589 + this.seed) & 0x7FFFFFFF;
-		return (double)n / (double) 0x7FFFFFFFL;
+		return (double) n / (double) 0x7FFFFFFFL;
 	}
+	
 	private double next(long x, long y, long z, long t)
 	{
 		x ^= (x >> 12);

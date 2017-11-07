@@ -27,12 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockSlab extends BlockBase
 {
-	private static final AxisAlignedBB AABB_DOWN  = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.5D, 1D);
-	private static final AxisAlignedBB AABB_UP    = new AxisAlignedBB(0D, 0.5D, 0D, 1D, 1D, 1D);
-	private static final AxisAlignedBB AABB_NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, 0.5D);
-	private static final AxisAlignedBB AABB_SOUTH = new AxisAlignedBB(0D, 0D, 0.5D, 1D, 1D, 1D);
-	private static final AxisAlignedBB AABB_WEST  = new AxisAlignedBB(0D, 0D, 0D, 0.5D, 1D, 1D);
-	private static final AxisAlignedBB AABB_EAST  = new AxisAlignedBB(0.5D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB	AABB_DOWN	= new AxisAlignedBB(0D, 0D, 0D, 1D, 0.5D, 1D);
+	private static final AxisAlignedBB	AABB_UP		= new AxisAlignedBB(0D, 0.5D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB	AABB_NORTH	= new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, 0.5D);
+	private static final AxisAlignedBB	AABB_SOUTH	= new AxisAlignedBB(0D, 0D, 0.5D, 1D, 1D, 1D);
+	private static final AxisAlignedBB	AABB_WEST	= new AxisAlignedBB(0D, 0D, 0D, 0.5D, 1D, 1D);
+	private static final AxisAlignedBB	AABB_EAST	= new AxisAlignedBB(0.5D, 0D, 0D, 1D, 1D, 1D);
 	
 	public BlockSlab(String name, Material materialIn)
 	{
@@ -40,18 +40,21 @@ public abstract class BlockSlab extends BlockBase
 		this.lightOpacity = -1;
 		this.useNeighborBrightness = true;
 	}
+	
 	public BlockSlab(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(name, blockMaterialIn, blockMapColorIn);
 		this.lightOpacity = -1;
 		this.useNeighborBrightness = true;
 	}
+	
 	public BlockSlab(String modid, String name, Material materialIn)
 	{
 		super(modid, name, materialIn);
 		this.lightOpacity = -1;
 		this.useNeighborBrightness = true;
 	}
+	
 	public BlockSlab(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
@@ -85,7 +88,7 @@ public abstract class BlockSlab extends BlockBase
 	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
-		//The slab needn't provider much more translation for each block state.
+		// The slab needn't provider much more translation for each block state.
 		return getUnlocalizedName() + "@" + (EnumSlabState.values()[metadata].fullCube ? "d" : "s");
 	}
 	
@@ -102,12 +105,9 @@ public abstract class BlockSlab extends BlockBase
 	}
 	
 	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(EnumSlabState.PROPERTY,
-				placer.isSneaking() ? (hitY > .5F ? EnumSlabState.UP : EnumSlabState.DOWN) :
-					EnumSlabState.values()[facing.getOpposite().ordinal()]);
+		return getDefaultState().withProperty(EnumSlabState.PROPERTY, placer.isSneaking() ? (hitY > .5F ? EnumSlabState.UP : EnumSlabState.DOWN) : EnumSlabState.values()[facing.getOpposite().ordinal()]);
 	}
 	
 	@Override
@@ -133,8 +133,7 @@ public abstract class BlockSlab extends BlockBase
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) ||
-				blockState.getValue(EnumSlabState.PROPERTY).ordinal() == side.ordinal();
+		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) || blockState.getValue(EnumSlabState.PROPERTY).ordinal() == side.ordinal();
 	}
 	
 	@Override
@@ -155,13 +154,20 @@ public abstract class BlockSlab extends BlockBase
 	{
 		switch (state.getValue(EnumSlabState.PROPERTY))
 		{
-		case DOWN  : return AABB_DOWN;
-		case UP    : return AABB_UP;
-		case SOUTH : return AABB_NORTH;
-		case NORTH : return AABB_SOUTH;
-		case WEST  : return AABB_WEST;
-		case EAST  : return AABB_EAST;
-		default : return FULL_BLOCK_AABB;
+		case DOWN:
+			return AABB_DOWN;
+		case UP:
+			return AABB_UP;
+		case SOUTH:
+			return AABB_NORTH;
+		case NORTH:
+			return AABB_SOUTH;
+		case WEST:
+			return AABB_WEST;
+		case EAST:
+			return AABB_EAST;
+		default:
+			return FULL_BLOCK_AABB;
 		}
 	}
 	
@@ -186,8 +192,7 @@ public abstract class BlockSlab extends BlockBase
 	@Override
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return this.lightOpacity != -1 ? (isOpaqueCube(state) ? this.lightOpacity : Math.min(this.lightOpacity, 3)) :
-			(isOpaqueCube(state) ? 255 : 3);
+		return this.lightOpacity != -1 ? (isOpaqueCube(state) ? this.lightOpacity : Math.min(this.lightOpacity, 3)) : (isOpaqueCube(state) ? 255 : 3);
 	}
 	
 	@Override
@@ -219,7 +224,7 @@ public abstract class BlockSlab extends BlockBase
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
 		EnumSlabState state = world.getBlockState(pos).getValue(EnumSlabState.PROPERTY);
-		if(state != EnumSlabState.rotationState[axis.ordinal()][state.ordinal()])
+		if (state != EnumSlabState.rotationState[axis.ordinal()][state.ordinal()])
 		{
 			Worlds.switchProp(world, pos, EnumSlabState.PROPERTY, EnumSlabState.rotationState[axis.ordinal()][state.ordinal()], 3);
 			return true;
@@ -235,8 +240,7 @@ public abstract class BlockSlab extends BlockBase
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
-			boolean advanced)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
 		tooltip.add("info.slab.place");

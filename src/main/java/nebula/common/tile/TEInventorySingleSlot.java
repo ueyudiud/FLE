@@ -23,11 +23,10 @@ import net.minecraftforge.common.util.Constants.NBT;
 /**
  * @author ueyudiud
  */
-public class TEInventorySingleSlot extends TESynchronization
-implements IBasicInventory, IInventory, ITB_BreakBlock
+public class TEInventorySingleSlot extends TESynchronization implements IBasicInventory, IInventory, ITB_BreakBlock
 {
-	protected String customName;
-	protected ItemStack stack;
+	protected String	customName;
+	protected ItemStack	stack;
 	
 	protected void onInventoryChanged()
 	{
@@ -72,7 +71,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return hasCustomName() ? new TextComponentString(this.customName) :  new TextComponentTranslation(getName());
+		return hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation(getName());
 	}
 	
 	@Override
@@ -121,7 +120,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ItemStack[] toArray()
 	{
-		return new ItemStack[]{this.stack.copy()};
+		return new ItemStack[] { this.stack.copy() };
 	}
 	
 	@Override

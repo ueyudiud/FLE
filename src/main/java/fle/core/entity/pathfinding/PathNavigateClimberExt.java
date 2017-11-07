@@ -23,8 +23,8 @@ public class PathNavigateClimberExt extends PathNavigateClimber
 	protected PathFinder getPathFinder()
 	{
 		this.nodeProcessor = new NodeProcessorBlockBreakable();
-		//		this.nodeProcessor.setCanEnterDoors(true);
+		// this.nodeProcessor.setCanEnterDoors(true);
 		return new PathFinder(this.nodeProcessor);
-		//		return super.getPathFinder();
+		// return super.getPathFinder();
 	}
 }

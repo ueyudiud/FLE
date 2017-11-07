@@ -65,9 +65,9 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		IBlockState state1;
 		BlockPos pos1 = pos.down();
 		state1 = world.getBlockState(pos1);
-		if(state1.getBlock().isAir(state1, world, pos1))
+		if (state1.getBlock().isAir(state1, world, pos1))
 			return true;
-		else if(state1.getBlock() instanceof IHitByFallenBehaviorBlock)
+		else if (state1.getBlock() instanceof IHitByFallenBehaviorBlock)
 		{
 			IHitByFallenBehaviorBlock block = (IHitByFallenBehaviorBlock) state1.getBlock();
 			return block.isPermeatableBy(world, pos1, state1, state);
@@ -76,8 +76,10 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		{
 			return !state1.isFullBlock();
 		}
-		else return state1.getMaterial().isReplaceable();
+		else
+			return state1.getMaterial().isReplaceable();
 	}
+	
 	protected static @Nullable IntegerMap<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
 	{
 		IntegerMap<EnumFacing> result = new IntegerMap<>(6);
@@ -88,8 +90,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 			if (state1.getBlock().isAir(state1, world, pos2) || state1.getBlock().isReplaceable(world, pos2))
 			{
 				int height = calculateHeight(world, pos2.down(), state);
-				if (height < 16)
-					result.put(facing, height);
+				if (height < 16) result.put(facing, height);
 			}
 		}
 		return result;
@@ -105,17 +106,19 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 			{
 				return state2.getValue(LAYER) - 16;
 			}
-			else return BlockSoil.canFallBelow(world, pos, state) ? -16 : 0;
+			else
+				return BlockSoil.canFallBelow(world, pos, state) ? -16 : 0;
 		}
 		else if (state2.getBlock() == state.getBlock())
 		{
 			return state2.getValue(LAYER);
 		}
-		else return 16;
+		else
+			return 16;
 	}
 	
-	public static final int MAX_HEIGHT = 16;
-	public static final IProperty<Integer> LAYER = Properties.create("layer", 1, MAX_HEIGHT);
+	public static final int					MAX_HEIGHT	= 16;
+	public static final IProperty<Integer>	LAYER		= Properties.create("layer", 1, MAX_HEIGHT);
 	
 	public BlockSand(String modid, String name, Mat mat, PropertyBlockable sand)
 	{
@@ -193,8 +196,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			EnumFacing facing, ItemStack stack)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
@@ -223,7 +225,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 			if (!map.isEmpty())
 			{
 				final int j = state.getValue(LAYER) - 4;
-				map.transformAll(i->i < j ? j - i : 0);
+				map.transformAll(i -> i < j ? j - i : 0);
 				if (map.getSum() > 0)
 				{
 					EnumFacing facing = Selector.of(map).next(rand);
@@ -252,7 +254,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 				int t = state.getValue(LAYER) + state1.getValue(LAYER);
 				int r = t / 2;
 				world.setBlockState(pos, state1.withProperty(LAYER, r));
-				world.setBlockState(source, state1.withProperty(LAYER, t-r));
+				world.setBlockState(source, state1.withProperty(LAYER, t - r));
 				return true;
 			}
 		}
@@ -332,11 +334,9 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			boolean willHarvest)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
-		if (player.isCreative())
-			return super.removedByPlayer(state, world, pos, player, willHarvest);
+		if (player.isCreative()) return super.removedByPlayer(state, world, pos, player, willHarvest);
 		int l = state.getValue(LAYER);
 		if (l > 1)
 		{
@@ -351,8 +351,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile));
 	}
@@ -456,22 +455,20 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
-	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
-			IPlantable plantable)
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
 	{
-		if  (isFullBlock(state))
+		if (isFullBlock(state))
 		{
 			if (direction == EnumFacing.UP)
 			{
 				switch (plantable.getPlantType(world, pos.up()))
 				{
-				case Desert : return true;
-				case Beach : return
-						world.getBlockState(pos.east()).getMaterial() == Materials.WATER ||
-						world.getBlockState(pos.west()).getMaterial() == Materials.WATER ||
-						world.getBlockState(pos.north()).getMaterial() == Materials.WATER ||
-						world.getBlockState(pos.south()).getMaterial() == Materials.WATER;
-				default : break;
+				case Desert:
+					return true;
+				case Beach:
+					return world.getBlockState(pos.east()).getMaterial() == Materials.WATER || world.getBlockState(pos.west()).getMaterial() == Materials.WATER || world.getBlockState(pos.north()).getMaterial() == Materials.WATER || world.getBlockState(pos.south()).getMaterial() == Materials.WATER;
+				default:
+					break;
 				}
 			}
 		}

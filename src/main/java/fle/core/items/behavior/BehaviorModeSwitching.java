@@ -22,8 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BehaviorModeSwitching extends BehaviorBase
 {
-	private String key;
-	private String[] modes;
+	private String		key;
+	private String[]	modes;
 	
 	public BehaviorModeSwitching(String key, String...modes)
 	{

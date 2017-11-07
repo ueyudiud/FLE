@@ -14,9 +14,9 @@ import net.minecraft.world.World;
 public abstract class TreeGenHuge extends TreeGenAbstract
 {
 	/** The base height of the tree */
-	protected int baseHeight;
+	protected int	baseHeight;
 	/** The random height of the tree */
-	protected int randHeight;
+	protected int	randHeight;
 	
 	public TreeGenHuge(ITree tree, float generateCoreLeavesChance)
 	{
@@ -33,8 +33,8 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 	{
 		if (y >= 1 && y + height + 1 <= 256)
 		{
-			if(!checkLogGrow(world, x, y, z, 1, 0, 1, false)) return false;
-			if(!checkLogGrow(world, x, y + 1, z, 2, height, 2, true)) return false;
+			if (!checkLogGrow(world, x, y, z, 1, 0, 1, false)) return false;
+			if (!checkLogGrow(world, x, y + 1, z, 2, height, 2, true)) return false;
 			return true;
 		}
 		else

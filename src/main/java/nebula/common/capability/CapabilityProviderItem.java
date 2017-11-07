@@ -31,9 +31,7 @@ public class CapabilityProviderItem implements ICapabilityProvider
 	
 	private static <T> Class<T> getType(IStorage<T> storage)
 	{
-		return (Class<T>)
-				TypeToken.of(((ParameterizedType) TypeToken.of(storage.getClass()).getSupertype(IStorage.class).getType())
-						.getActualTypeArguments()[0]).getRawType();
+		return (Class<T>) TypeToken.of(((ParameterizedType) TypeToken.of(storage.getClass()).getSupertype(IStorage.class).getType()).getActualTypeArguments()[0]).getRawType();
 	}
 	
 	@Override

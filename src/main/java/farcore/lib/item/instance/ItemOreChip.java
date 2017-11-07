@@ -34,7 +34,7 @@ public class ItemOreChip extends ItemMulti
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
@@ -73,7 +73,7 @@ public class ItemOreChip extends ItemMulti
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			subItems.add(createOreChip(1, material, M.stone));
 		}

@@ -30,6 +30,6 @@ public class EntityRender
 		RenderingRegistry.registerEntityRenderingHandler(EntityFLESkeleton.class, RenderFLESkeleton::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFLESpider.class, RenderFLESpider::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFLECreeper.class, RenderFLECreeper::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityFLESlime.class, manager->new RenderSlime(manager, new ModelSlime(16), 0.25F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFLESlime.class, manager -> new RenderSlime(manager, new ModelSlime(16), 0.25F));
 	}
 }

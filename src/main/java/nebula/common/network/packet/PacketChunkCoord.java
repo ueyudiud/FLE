@@ -10,13 +10,14 @@ import net.minecraft.world.World;
 
 public abstract class PacketChunkCoord extends PacketWorld
 {
-	protected int x;
-	protected int z;
+	protected int	x;
+	protected int	z;
 	
 	public PacketChunkCoord()
 	{
 		
 	}
+	
 	public PacketChunkCoord(World world, int x, int z)
 	{
 		super(world);

@@ -42,8 +42,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TreeLacquer extends Tree
 {
-	final static IProperty<Integer> COLLECTING = Properties.create("collecting", 0, 7);
-	final static IProperty<Direction> COL_FACING = Misc.PROP_DIRECTION_HORIZONTALS;
+	final static IProperty<Integer>		COLLECTING	= Properties.create("collecting", 0, 7);
+	final static IProperty<Direction>	COL_FACING	= Misc.PROP_DIRECTION_HORIZONTALS;
 	
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.05F, false);
 	
@@ -100,26 +100,26 @@ public class TreeLacquer extends Tree
 			int c, c1;
 			switch (c1 = c = state.getValue(COLLECTING))
 			{
-			case 0 : return;
-			case 1 :
-			case 2 :
-			case 3 :
+			case 0:
+				return;
+			case 1:
+			case 2:
+			case 3:
 			{
 				c++;
 				tryFillLacquer(world, pos, state);
 			}
-			break;
-			case 4 :
-			case 5 :
-			case 6 :
+				break;
+			case 4:
+			case 5:
+			case 6:
 				if (rand.nextInt(3) == 0)
 				{
 					c++;
 				}
 				break;
-			case 7 :
-				if (rand.nextInt(8) == 0)
-					c = 0;
+			case 7:
+				if (rand.nextInt(8) == 0) c = 0;
 			}
 			if (c != c1)
 			{
@@ -141,8 +141,7 @@ public class TreeLacquer extends Tree
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
+	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		if (!isArt)
 		{
@@ -162,24 +161,19 @@ public class TreeLacquer extends Tree
 	@Override
 	public int getLogMeta(IBlockState state, boolean isArt)
 	{
-		return isArt ? super.getLogMeta(state, isArt) :
-			state.getValue(COL_FACING).horizontalOrdinal << 5 | state.getValue(COLLECTING) << 2 | state.getValue(BlockLog.LOG_AXIS).ordinal();
+		return isArt ? super.getLogMeta(state, isArt) : state.getValue(COL_FACING).horizontalOrdinal << 5 | state.getValue(COLLECTING) << 2 | state.getValue(BlockLog.LOG_AXIS).ordinal();
 	}
 	
 	@Override
 	public IBlockState getLogState(Block block, int meta, boolean isArt)
 	{
-		return isArt ? super.getLogState(block, meta, isArt) :
-			block.getDefaultState()
-			.withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta & 0x3])
-			.withProperty(COLLECTING, (meta >> 2) & 0x7)
-			.withProperty(COL_FACING, Direction.DIRECTIONS_2D[(meta >> 5) & 0x3]);
+		return isArt ? super.getLogState(block, meta, isArt) : block.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta & 0x3]).withProperty(COLLECTING, (meta >> 2) & 0x7).withProperty(COL_FACING, Direction.DIRECTIONS_2D[(meta >> 5) & 0x3]);
 	}
 	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null)
+		if (info != null)
 		{
 			this.generator1.setTreeLogShape(6 + info.height / 4, 2 + info.height / 3);
 		}

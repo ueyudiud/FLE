@@ -15,54 +15,54 @@ import fargen.core.util.ClimaticZone;
 
 public class FarGenBiomes
 {
-	//Base biomes.
-	public static BiomeBase ocean_t;
-	public static BiomeBase ocean_t_deep;
-	public static BiomeBase ocean_st;
-	public static BiomeBase ocean_st_deep;
-	public static BiomeBase ocean_te;
-	public static BiomeBase ocean_te_deep;
-	public static BiomeBase ocean_sf;
-	public static BiomeBase ocean_sf_deep;
-	public static BiomeBase ocean_f;
-	public static BiomeBase ocean_f_deep;
-	public static BiomeBase savanna;
-	public static BiomeBase shrubland;
-	public static BiomeBase rockland;
-	public static BiomeBase grassland;
-	public static BiomeBase meadow;
-	public static BiomeBase tundra;
-	public static BiomeBase frozen_tundra;
-	public static BiomeBase tropical_desert;
-	public static BiomeBase temperate_desert;
-	public static BiomeBase rocky_desert;
-	public static BiomeBase tropical_monsoon_forest;
-	public static BiomeBase tropical_thorny_forest;
-	public static BiomeBase subtropical_broadleaf_forest;
-	public static BiomeBase subtropical_coniferous_forest;
-	public static BiomeBase sclerophyll_forest;
-	public static BiomeBase temperate_broadleaf_forest;
-	public static BiomeBase temperate_mixed_forest;
-	public static BiomeBase boreal_forest;
-	public static BiomeBase mangrove;
-	public static BiomeBase swamp;
-	public static BiomeBase gigafteral_forest;
-	public static BiomeBase tropical_rainforest;
-	public static BiomeBase temperate_rainforest;
-	public static BiomeBase gigafungal_forest;
-	public static BiomeBase sequoia_forest;
-	public static BiomeBase glacispical_land;
-	//Extended biomes
+	// Base biomes.
+	public static BiomeBase	ocean_t;
+	public static BiomeBase	ocean_t_deep;
+	public static BiomeBase	ocean_st;
+	public static BiomeBase	ocean_st_deep;
+	public static BiomeBase	ocean_te;
+	public static BiomeBase	ocean_te_deep;
+	public static BiomeBase	ocean_sf;
+	public static BiomeBase	ocean_sf_deep;
+	public static BiomeBase	ocean_f;
+	public static BiomeBase	ocean_f_deep;
+	public static BiomeBase	savanna;
+	public static BiomeBase	shrubland;
+	public static BiomeBase	rockland;
+	public static BiomeBase	grassland;
+	public static BiomeBase	meadow;
+	public static BiomeBase	tundra;
+	public static BiomeBase	frozen_tundra;
+	public static BiomeBase	tropical_desert;
+	public static BiomeBase	temperate_desert;
+	public static BiomeBase	rocky_desert;
+	public static BiomeBase	tropical_monsoon_forest;
+	public static BiomeBase	tropical_thorny_forest;
+	public static BiomeBase	subtropical_broadleaf_forest;
+	public static BiomeBase	subtropical_coniferous_forest;
+	public static BiomeBase	sclerophyll_forest;
+	public static BiomeBase	temperate_broadleaf_forest;
+	public static BiomeBase	temperate_mixed_forest;
+	public static BiomeBase	boreal_forest;
+	public static BiomeBase	mangrove;
+	public static BiomeBase	swamp;
+	public static BiomeBase	gigafteral_forest;
+	public static BiomeBase	tropical_rainforest;
+	public static BiomeBase	temperate_rainforest;
+	public static BiomeBase	gigafungal_forest;
+	public static BiomeBase	sequoia_forest;
+	public static BiomeBase	glacispical_land;
+	// Extended biomes
 	public static BiomeBase mushroom_island;
-	//Technical biomes
-	public static BiomeBase tropical_desert_edge;
-	public static BiomeBase temperate_desert_edge;
-	public static BiomeBase rocky_desert_edge;
+	// Technical biomes
+	public static BiomeBase	tropical_desert_edge;
+	public static BiomeBase	temperate_desert_edge;
+	public static BiomeBase	rocky_desert_edge;
 	
-	public static BiomeBase[] beach;
-	public static BiomeBase[] river;
+	public static BiomeBase[]	beach;
+	public static BiomeBase[]	river;
 	
-	//Void world biomes
+	// Void world biomes
 	public static BiomeBase v_void;
 	
 	public static void init()
@@ -117,9 +117,9 @@ public class FarGenBiomes
 		mushroom_island = new BiomeBase(101, newProperties("mushroom_island").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(generator1));
 		river = new BiomeBase[ClimaticZone.values().length];
 		beach = new BiomeBase[ClimaticZone.values().length];
-		for(ClimaticZone zone : ClimaticZone.values())
+		for (ClimaticZone zone : ClimaticZone.values())
 		{
-			if(zone.category1 == EnumTempCategory.OCEAN)
+			if (zone.category1 == EnumTempCategory.OCEAN)
 			{
 				continue;
 			}

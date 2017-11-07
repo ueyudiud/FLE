@@ -17,20 +17,22 @@ import nebula.common.network.PacketBufferExt;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * The ClientToServer packet.<p>
- * The custom coding sending packet from player opening
- * container.
+ * The ClientToServer packet.
+ * <p>
+ * The custom coding sending packet from player opening container.
+ * 
  * @author ueyudiud
  */
 public class PacketGuiSyncData extends PacketAbstract
 {
 	@Nullable
-	Encoder encoder;
-	byte[] data;
+	Encoder	encoder;
+	byte[]	data;
 	
 	public PacketGuiSyncData()
 	{
 	}
+	
 	public PacketGuiSyncData(@Nonnull Encoder encoder)
 	{
 		this.encoder = encoder;

@@ -35,9 +35,9 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public class ModelPartFromModel implements INebulaModelPart
 {
-	final IModel model;
+	final IModel				model;
 	@Nullable
-	final BlockStateContainer container;
+	final BlockStateContainer	container;
 	
 	public ModelPartFromModel(IModel model, @Nullable BlockStateContainer container)
 	{
@@ -64,11 +64,10 @@ public class ModelPartFromModel implements INebulaModelPart
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		Optional<TRSRTransformation> optional = Optional.fromNullable(transformation);
-		return new BakedModelPartFromModel(this.model.bake(any->optional, format, bakedTextureGetter::apply), this.container);
+		return new BakedModelPartFromModel(this.model.bake(any -> optional, format, bakedTextureGetter::apply), this.container);
 	}
 	
 	@Override
@@ -83,8 +82,8 @@ public class ModelPartFromModel implements INebulaModelPart
 	
 	private static class BakedModelPartFromModel implements INebulaBakedModelPart
 	{
-		private final IBakedModel model;
-		private final BlockStateContainer container;
+		private final IBakedModel			model;
+		private final BlockStateContainer	container;
 		
 		BakedModelPartFromModel(IBakedModel model, BlockStateContainer container)
 		{
@@ -121,7 +120,8 @@ public class ModelPartFromModel implements INebulaModelPart
 				{
 					state = state.withProperty(property, L.castAny(optional.get()));
 				}
-				else throw new InternalError();
+				else
+					throw new InternalError();
 			}
 			return state;
 		}

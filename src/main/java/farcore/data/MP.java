@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import static nebula.base.IPropertyMap.IProperty.to;
@@ -21,29 +20,30 @@ import nebula.base.IPropertyMap.IProperty;
 
 /**
  * Material properties.
+ * 
  * @author ueyudiud
  */
 public class MP
 {
-	public static final String fire_encouragement = "fire_encouragement";
-	public static final String flammability = "flammability";
-	public static final String light_value = "light_value";
-	public static final String light_opacity = "light_opacity";
-	public static final String fire_spread_speed = "fire_spread_speed";
-	public static final String fallen_damage_deduction = "fallen_damage_deduction";
-	public static final String tool_attackspeed = "tool_attackspeed";
+	public static final String	fire_encouragement		= "fire_encouragement";
+	public static final String	flammability			= "flammability";
+	public static final String	light_value				= "light_value";
+	public static final String	light_opacity			= "light_opacity";
+	public static final String	fire_spread_speed		= "fire_spread_speed";
+	public static final String	fallen_damage_deduction	= "fallen_damage_deduction";
+	public static final String	tool_attackspeed		= "tool_attackspeed";
 	
-	public static final IProperty<PropertyBasic> property_basic = PropertyBasic::new;
-	public static final IProperty<PropertyTool> property_tool = to();
-	public static final IProperty<MetalBlockBehavior> property_metal_block = to();
-	public static final IProperty<PropertyOre> property_ore = to();
-	public static final IProperty<PropertyWood> property_wood = to();
-	public static final IProperty<Tree> property_tree = ()-> Tree.VOID;
-	public static final IProperty<PropertyBlockable> property_soil = to();
-	public static final IProperty<PropertyBlockable> property_sand = to();
-	public static final IProperty<RockBehavior> property_rock = to();
-	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
-	public static final IProperty<IPlant> property_plant = to();
-	public static final IProperty<PropertyEdible> property_edible = to();
-	public static final IProperty<PropertyBlockable> property_brick = to();
+	public static final IProperty<PropertyBasic>		property_basic			= PropertyBasic::new;
+	public static final IProperty<PropertyTool>			property_tool			= to();
+	public static final IProperty<MetalBlockBehavior>	property_metal_block	= to();
+	public static final IProperty<PropertyOre>			property_ore			= to();
+	public static final IProperty<PropertyWood>			property_wood			= to();
+	public static final IProperty<Tree>					property_tree			= () -> Tree.VOID;
+	public static final IProperty<PropertyBlockable>	property_soil			= to();
+	public static final IProperty<PropertyBlockable>	property_sand			= to();
+	public static final IProperty<RockBehavior>			property_rock			= to();
+	public static final IProperty<ICrop>				property_crop			= () -> ICrop.VOID;
+	public static final IProperty<IPlant>				property_plant			= to();
+	public static final IProperty<PropertyEdible>		property_edible			= to();
+	public static final IProperty<PropertyBlockable>	property_brick			= to();
 }

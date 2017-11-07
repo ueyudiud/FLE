@@ -32,10 +32,13 @@ public class EntityFLESpider extends EntitySpider implements IEntityDamageEffect
 	{
 		switch (type)
 		{
-		case SMASH : return 1.1F;
-		default :
-		case CUT : return 1.0F;
-		case PUNCTURE : return 1.1F;
+		case SMASH:
+			return 1.1F;
+		default:
+		case CUT:
+			return 1.0F;
+		case PUNCTURE:
+			return 1.1F;
 		}
 	}
 }

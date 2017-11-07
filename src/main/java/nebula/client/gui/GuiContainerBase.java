@@ -43,14 +43,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class GuiContainerBase extends GuiContainer
 {
-	private ResourceLocation location;
-	protected Slot lastClickSlot;
-	protected ContainerBase container;
+	private ResourceLocation	location;
+	protected Slot				lastClickSlot;
+	protected ContainerBase		container;
 	
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location)
 	{
 		this(inventorySlotsIn, location, 176, 166);
 	}
+	
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location, int width, int height)
 	{
 		super(inventorySlotsIn);
@@ -63,9 +64,11 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Send GUI action to both client and server side container.
+	 * 
 	 * @param type the type of action.
 	 * @param code the action code.
-	 * @param processOnClient if it is <code>true</code>, the action will also handle on client.
+	 * @param processOnClient if it is <code>true</code>, the action will also
+	 *            handle on client.
 	 * @see nebula.common.gui.IGuiActionListener
 	 */
 	protected void sendGuiData(int type, long code, boolean processOnClient)
@@ -81,7 +84,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		String name = getTitleName();
-		if(name != null)
+		if (name != null)
 		{
 			this.fontRendererObj.drawString(name, (this.xSize - this.fontRendererObj.getStringWidth(name)) / 2, 6, 0x404040);
 		}
@@ -101,7 +104,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected void drawOtherSlots()
 	{
 		this.zLevel = 200F;
-		for(FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
+		for (FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			slot.renderSlot(this);
 		}
@@ -124,10 +127,13 @@ public abstract class GuiContainerBase extends GuiContainer
 	}
 	
 	/**
-	 * Check is key press down.
-	 * This method will be used only if {@link net.minecraft.client.gui.GuiScreen#allowUserInput} is enabled.<p>
-	 * The key checking is using for {@link #keyTyped(char, int)} method to use, checking
-	 * the key registered at {@link nebula.common.NebulaKeyHandler} is pressed down.
+	 * Check is key press down. This method will be used only if
+	 * {@link net.minecraft.client.gui.GuiScreen#allowUserInput} is enabled.
+	 * <p>
+	 * The key checking is using for {@link #keyTyped(char, int)} method to use,
+	 * checking the key registered at {@link nebula.common.NebulaKeyHandler} is
+	 * pressed down.
+	 * 
 	 * @param key the key register name.
 	 * @param keycode the typed keycode.
 	 * @see nebula.common.NebulaKeyHandler
@@ -146,12 +152,11 @@ public abstract class GuiContainerBase extends GuiContainer
 		{
 			FluidSlot slot = getFluidSlotAtPosition(mouseX, mouseY);
 			ItemStack stack = Minecraft.getMinecraft().player.inventory.getItemStack();
-			if(stack == null && isTouchingMode() && this.lastClickSlot != null &&
-					this.lastClickSlot.canTakeStack(Minecraft.getMinecraft().player))
+			if (stack == null && isTouchingMode() && this.lastClickSlot != null && this.lastClickSlot.canTakeStack(Minecraft.getMinecraft().player))
 			{
 				stack = this.lastClickSlot.getStack();
 			}
-			if(slot != null && (mouseButton == 0 || mouseButton == 1))
+			if (slot != null && (mouseButton == 0 || mouseButton == 1))
 			{
 				Nebula.network.sendToServer(new PacketFluidSlotClick((ContainerBase) this.inventorySlots, slot.slotNumber));
 				slot.onSlotClick(Minecraft.getMinecraft().player, stack);
@@ -160,9 +165,9 @@ public abstract class GuiContainerBase extends GuiContainer
 		this.lastClickSlot = null;
 		if (isTouchingMode())
 		{
-			for(Slot slot : this.inventorySlots.inventorySlots)
+			for (Slot slot : this.inventorySlots.inventorySlots)
 			{
-				if(isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
+				if (isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
 				{
 					this.lastClickSlot = slot;
 				}
@@ -172,10 +177,9 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected FluidSlot getFluidSlotAtPosition(int x, int y)
 	{
-		for(FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
+		for (FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
-			if(slot.isVisible() && isPointInRegion(slot.x, slot.y, slot.u, slot.v, x, y))
-				return slot;
+			if (slot.isVisible() && isPointInRegion(slot.x, slot.y, slot.u, slot.v, x, y)) return slot;
 		}
 		return null;
 	}
@@ -221,27 +225,28 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw fluid icon to GUI.
+	 * 
 	 * @param x the start x position.
 	 * @param y the start y position.
 	 * @param info the render tank information.
 	 * @param width the rendering width.
 	 * @param height the rendering height.
-	 * @param lay <tt>true</tt> for rendering fluid from left to right, and from down to up else.
+	 * @param lay <tt>true</tt> for rendering fluid from left to right, and from
+	 *            down to up else.
 	 */
 	public void drawFluid(int x, int y, FluidTankInfo info, int width, int height, boolean lay)
 	{
-		if(info.fluid == null) return;
+		if (info.fluid == null) return;
 		if (info.fluid.amount > 0)
 		{
-			TextureAtlasSprite fluidIcon =
-					this.mc.getTextureMapBlocks().getAtlasSprite(info.fluid.getFluid().getStill(info.fluid).toString());
+			TextureAtlasSprite fluidIcon = this.mc.getTextureMapBlocks().getAtlasSprite(info.fluid.getFluid().getStill(info.fluid).toString());
 			if (fluidIcon != null)
 			{
 				bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				int color = info.fluid.getFluid().getColor(info.fluid);
-				if(lay)
+				if (lay)
 				{
-					drawRepeated(fluidIcon, this.guiLeft + x, this.guiTop + y, (double) (info.fluid.amount * width) / (double)info.capacity, height, this.zLevel, color);
+					drawRepeated(fluidIcon, this.guiLeft + x, this.guiTop + y, (double) (info.fluid.amount * width) / (double) info.capacity, height, this.zLevel, color);
 				}
 				else
 				{
@@ -255,6 +260,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw repeated icon to GUI.
+	 * 
 	 * @param icon the rendering icon.
 	 * @param x the start x position.
 	 * @param y the start y position.
@@ -286,10 +292,10 @@ public abstract class GuiContainerBase extends GuiContainer
 				double quadWidth = Math.min(16D, (width + x) - cx);
 				double maxX = cx + quadWidth;
 				double maxU = icon.getMinU() + iconWidthStep * quadWidth;
-				buffer.pos(cx,   maxY, z).tex(icon.getMinU(), maxV          ).endVertex();
-				buffer.pos(maxX, maxY, z).tex(maxU,           maxV          ).endVertex();
-				buffer.pos(maxX, cy,   z).tex(maxU,           icon.getMinV()).endVertex();
-				buffer.pos(cx,   cy,   z).tex(icon.getMinU(), icon.getMinV()).endVertex();
+				buffer.pos(cx, maxY, z).tex(icon.getMinU(), maxV).endVertex();
+				buffer.pos(maxX, maxY, z).tex(maxU, maxV).endVertex();
+				buffer.pos(maxX, cy, z).tex(maxU, icon.getMinV()).endVertex();
+				buffer.pos(cx, cy, z).tex(icon.getMinU(), icon.getMinV()).endVertex();
 			}
 		}
 		tessellator.draw();
@@ -298,6 +304,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw item stack to GUI.
+	 * 
 	 * @param stack the rendered stack.
 	 * @param x the start x position.
 	 * @param y the start y position.
@@ -324,6 +331,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw a progress bar from up to down.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param u
@@ -346,6 +354,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw a progress bar from down to up.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param u
@@ -368,6 +377,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw a progress bar from left to right.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param u
@@ -390,6 +400,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw a progress bar from right to left.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param u
@@ -412,6 +423,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw tool tip only if mouse hovered on specific area.
+	 * 
 	 * @param mouseX the mouse x position.
 	 * @param mouseY the mouse y position.
 	 * @param tooltip the tool tip.
@@ -430,6 +442,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	/**
 	 * Draw tool tip.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param tooltip
@@ -452,7 +465,7 @@ public abstract class GuiContainerBase extends GuiContainer
 			
 			while (iterator.hasNext())
 			{
-				String s = (String)iterator.next();
+				String s = (String) iterator.next();
 				int l = this.fontRendererObj.getStringWidth(s);
 				
 				if (l > k)

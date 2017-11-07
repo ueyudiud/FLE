@@ -71,8 +71,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	
 	public static GeneticMaterial getDNAFromStack(ItemStack stack)
 	{
-		return !stack.hasTagCompound() ? null :
-			GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
+		return !stack.hasTagCompound() ? null : GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
 	}
 	
 	public ItemSeed()
@@ -83,20 +82,18 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material.contain(SubTags.CROP))
+		if (material.contain(SubTags.CROP))
 		{
 			IBlockState state = worldIn.getBlockState(pos);
-			if(!state.getBlock().isReplaceable(worldIn, pos))
+			if (!state.getBlock().isReplaceable(worldIn, pos))
 			{
 				pos = pos.offset(facing);
 			}
-			if(!playerIn.canPlayerEdit(pos, facing, stack))
-				return EnumActionResult.FAIL;
-			if(tryPlantSeed(material, stack, worldIn, pos))
+			if (!playerIn.canPlayerEdit(pos, facing, stack)) return EnumActionResult.FAIL;
+			if (tryPlantSeed(material, stack, worldIn, pos))
 			{
 				--stack.stackSize;
 			}
@@ -109,10 +106,10 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ICrop crop = material.getProperty(MP.property_crop);
-			assert(crop != null);
+			assert (crop != null);
 			ItemStack stack = applySeed(1, material, crop.createNativeGeneticMaterial());
 			subItems.add(stack);
 		}
@@ -120,8 +117,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		GeneticMaterial geneticMaterial = getDNAFromStack(stack);
 		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(geneticMaterial));
@@ -198,10 +194,9 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
-		if(isEdible(itemStackIn, playerIn))
+		if (isEdible(itemStackIn, playerIn))
 		{
 			playerIn.setActiveHand(hand);
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -214,11 +209,11 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	{
 		try
 		{
-			if(entityLiving instanceof EntityPlayer)
+			if (entityLiving instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entityLiving;
 				player.getFoodStats().addStats(null, stack);
-				worldIn.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+				worldIn.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 				stack = onEat(stack, player);
 				return stack;
 			}
@@ -234,7 +229,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
 		PropertyEdible property = getMaterialFromItem(stack).getProperty(MP.property_edible);
-		if(property != null)
+		if (property != null)
 		{
 			stack = property.onEat(stack, player);
 		}

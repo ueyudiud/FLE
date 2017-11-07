@@ -5,15 +5,15 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class KnowledgeAbstract implements IKnowledge
 {
-	private final String name;
-	protected final int id;
-
+	private final String	name;
+	protected final int		id;
+	
 	protected KnowledgeAbstract(String name)
 	{
 		this.name = name;
 		id = REGISTER.register(name, this);
 	}
-
+	
 	@Override
 	public String getRegisteredName()
 	{
@@ -24,8 +24,7 @@ public class KnowledgeAbstract implements IKnowledge
 	public boolean access(EntityPlayer player)
 	{
 		NBTTagCompound tag = player.getEntityData();
-		if(tag.hasKey("knowledge"))
-			return tag.getCompoundTag("knowledge").getBoolean(name);
+		if (tag.hasKey("knowledge")) return tag.getCompoundTag("knowledge").getBoolean(name);
 		return false;
 	}
 	
@@ -33,7 +32,7 @@ public class KnowledgeAbstract implements IKnowledge
 	public void unlock(EntityPlayer player)
 	{
 		NBTTagCompound tag = player.getEntityData();
-		if(!tag.hasKey("knowledge"))
+		if (!tag.hasKey("knowledge"))
 		{
 			tag.setTag("knowledge", tag);
 		}
@@ -44,7 +43,7 @@ public class KnowledgeAbstract implements IKnowledge
 	public void reset(EntityPlayer player)
 	{
 		NBTTagCompound tag = player.getEntityData();
-		if(tag.hasKey("knowledge"))
+		if (tag.hasKey("knowledge"))
 		{
 			tag.getCompoundTag("knowledge").setBoolean(name, false);
 		}

@@ -53,7 +53,7 @@ public class ToolChisel extends Tool
 		EnumToolType type1;
 		switch (NBTs.getIntOrDefault(ItemStacks.getOrSetupNBT(stack, false), "mode", 0))
 		{
-		case 0 :
+		case 0:
 			type1 = EnumToolTypes.CHISEL_CARVE;
 			break;
 		default:

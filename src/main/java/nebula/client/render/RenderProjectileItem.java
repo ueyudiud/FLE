@@ -39,8 +39,8 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 		}
 	}
 	
-	private Minecraft minecraft = Minecraft.getMinecraft();
-	private RenderItem render;
+	private Minecraft	minecraft	= Minecraft.getMinecraft();
+	private RenderItem	render;
 	
 	protected RenderProjectileItem(RenderManager renderManager)
 	{
@@ -52,7 +52,7 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 	public void doRender(EntityProjectileItem entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		ItemStack stack = entity.currentItem;
-		if(stack != null)
+		if (stack != null)
 		{
 			bindEntityTexture(entity);
 			
@@ -65,9 +65,10 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 			
 			MinecraftForge.EVENT_BUS.post(event);
 			
-			if(event.getResult() == Result.DEFAULT)
+			if (event.getResult() == Result.DEFAULT)
 			{
-				//The rotation use only in item state, the custom render should initialized rotation.
+				// The rotation use only in item state, the custom render should
+				// initialized rotation.
 				GL11.glRotatef(event.yaw(), 0, 1, 0);
 				EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, stack.copy());
 				item.getEntityItem().stackSize = 1;

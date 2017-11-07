@@ -11,6 +11,6 @@ public interface ITreeGenerator
 	{
 		return generateTreeAt(world, pos.getX(), pos.getY(), pos.getZ(), random, info);
 	}
-
+	
 	boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
 }

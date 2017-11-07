@@ -13,22 +13,24 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 /**
- * The simulated crop access, use to predicate could
- * crop plant at specific position.
+ * The simulated crop access, use to predicate could crop plant at specific
+ * position.
+ * 
  * @author ueyudiud
  */
 public class CropAccessSimulated implements ICropAccess
 {
-	World world;
-	BlockPos pos;
-	ICrop crop;
-	GeneticMaterial dna;
-	boolean isWild;
+	World			world;
+	BlockPos		pos;
+	ICrop			crop;
+	GeneticMaterial	dna;
+	boolean			isWild;
 	
 	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna)
 	{
 		this(world, pos, crop, dna, false);
 	}
+	
 	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna, boolean isWild)
 	{
 		this.world = world;
@@ -115,7 +117,15 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public float temp()
 	{
-		return ThermalNet.getEnvironmentTemperature(this.world, this.pos);//No use near-by temperature for it change so quickly.
+		return ThermalNet.getEnvironmentTemperature(this.world, this.pos);// No
+																			// use
+																			// near-by
+																			// temperature
+																			// for
+																			// it
+																			// change
+																			// so
+																			// quickly.
 	}
 	
 	@Override

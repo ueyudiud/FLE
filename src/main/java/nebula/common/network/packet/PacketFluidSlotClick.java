@@ -17,6 +17,7 @@ public class PacketFluidSlotClick extends PacketGui
 	public PacketFluidSlotClick()
 	{
 	}
+	
 	public PacketFluidSlotClick(ContainerBase container, int id)
 	{
 		super(container);
@@ -41,7 +42,7 @@ public class PacketFluidSlotClick extends PacketGui
 	public IPacket process(Network network)
 	{
 		ContainerBase container = container();
-		if(container != null)
+		if (container != null)
 		{
 			container.getFluidSlots().get(this.clickID).onSlotClick(getPlayer(), getPlayer().inventory.getItemStack());
 		}

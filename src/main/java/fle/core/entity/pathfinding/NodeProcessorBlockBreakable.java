@@ -38,9 +38,11 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 	}
 	
 	/**
-	 * This method is called when all nodes have been processed and PathEntity is created.
-	 * {@link net.minecraft.world.pathfinder.WalkNodeProcessor WalkNodeProcessor} uses this to change its field {@link
-	 * net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater avoidsWater}
+	 * This method is called when all nodes have been processed and PathEntity
+	 * is created. {@link net.minecraft.world.pathfinder.WalkNodeProcessor
+	 * WalkNodeProcessor} uses this to change its field
+	 * {@link net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater
+	 * avoidsWater}
 	 */
 	@Override
 	public void postProcess()
@@ -56,13 +58,13 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 		
 		if (getCanSwim() && this.entity.isInWater())
 		{
-			i = (int)this.entity.getEntityBoundingBox().minY;
+			i = (int) this.entity.getEntityBoundingBox().minY;
 			int x = MathHelper.floor(this.entity.posX);
 			int z = MathHelper.floor(this.entity.posZ);
 			BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, i, z);
 			
-			for (Material material = this.blockaccess.getBlockState(pos).getMaterial(); material == Material.WATER;
-					pos.setPos(x, ++i, z), material = this.blockaccess.getBlockState(pos).getMaterial());
+			for (Material material = this.blockaccess.getBlockState(pos).getMaterial(); material == Material.WATER; pos.setPos(x, ++i, z), material = this.blockaccess.getBlockState(pos).getMaterial())
+				;
 		}
 		else if (this.entity.onGround)
 		{
@@ -72,9 +74,8 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 		{
 			BlockPos pos = new BlockPos(this.entity);
 			
-			for (IBlockState state = this.blockaccess.getBlockState(pos);
-					(state.getBlock().isAir(state, this.blockaccess, pos) || state.getBlock().isPassable(this.blockaccess, pos)) && pos.getY() > 0;
-					state = this.blockaccess.getBlockState(pos = pos.down()));
+			for (IBlockState state = this.blockaccess.getBlockState(pos); (state.getBlock().isAir(state, this.blockaccess, pos) || state.getBlock().isPassable(this.blockaccess, pos)) && pos.getY() > 0; state = this.blockaccess.getBlockState(pos = pos.down()))
+				;
 			
 			i = pos.up().getY();
 		}
@@ -84,11 +85,8 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 		
 		if (this.entity.getPathPriority(type) < 0.0F)
 		{
-			Set<BlockPos> set = ImmutableSet.of(
-					new BlockPos(this.entity.getEntityBoundingBox().minX, i, this.entity.getEntityBoundingBox().minZ),
-					new BlockPos(this.entity.getEntityBoundingBox().minX, i, this.entity.getEntityBoundingBox().maxZ),
-					new BlockPos(this.entity.getEntityBoundingBox().maxX, i, this.entity.getEntityBoundingBox().minZ),
-					new BlockPos(this.entity.getEntityBoundingBox().maxX, i, this.entity.getEntityBoundingBox().maxZ));
+			Set<BlockPos> set = ImmutableSet.of(new BlockPos(this.entity.getEntityBoundingBox().minX, i, this.entity.getEntityBoundingBox().minZ), new BlockPos(this.entity.getEntityBoundingBox().minX, i, this.entity.getEntityBoundingBox().maxZ),
+					new BlockPos(this.entity.getEntityBoundingBox().maxX, i, this.entity.getEntityBoundingBox().minZ), new BlockPos(this.entity.getEntityBoundingBox().maxX, i, this.entity.getEntityBoundingBox().maxZ));
 			
 			for (BlockPos pos2 : set)
 			{
@@ -312,7 +310,7 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 	@Override
 	public PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)
 	{
-		EnumSet<PathNodeType> enumset = EnumSet.<PathNodeType>noneOf(PathNodeType.class);
+		EnumSet<PathNodeType> enumset = EnumSet.<PathNodeType> noneOf(PathNodeType.class);
 		PathNodeType pathnodetype = PathNodeType.BLOCKED;
 		double d0 = entitylivingIn.width / 2.0D;
 		BlockPos blockpos = new BlockPos(entitylivingIn);
@@ -452,8 +450,7 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 		if (block.isAir(state, world, pos)) return PathNodeType.OPEN;
-		if (!(block != Blocks.TRAPDOOR && block != Blocks.IRON_TRAPDOOR && block != Blocks.WATERLILY))
-			return PathNodeType.TRAPDOOR;
+		if (!(block != Blocks.TRAPDOOR && block != Blocks.IRON_TRAPDOOR && block != Blocks.WATERLILY)) return PathNodeType.TRAPDOOR;
 		Material material = state.getMaterial();
 		if (block instanceof BlockDoor)
 		{
@@ -461,20 +458,15 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 				return PathNodeType.DOOR_OPEN;
 			else if (material == Material.WOOD)
 				return PathNodeType.DOOR_WOOD_CLOSED;
-			else return PathNodeType.DOOR_IRON_CLOSED;
+			else
+				return PathNodeType.DOOR_IRON_CLOSED;
 		}
-		if (block instanceof BlockRailBase)
-			return PathNodeType.RAIL;
-		if (material == Material.FIRE)
-			return PathNodeType.DAMAGE_FIRE;
-		if (material == Material.CACTUS)
-			return PathNodeType.DAMAGE_CACTUS;
-		if (material == Material.WATER)
-			return PathNodeType.WATER;
-		if (material == Material.LAVA)
-			return PathNodeType.LAVA;
-		if (!(block instanceof BlockFence) && !(block instanceof BlockWall) && (!(block instanceof BlockFenceGate) || state.getValue(BlockFenceGate.OPEN).booleanValue()))
-			return PathNodeType.FENCE;
+		if (block instanceof BlockRailBase) return PathNodeType.RAIL;
+		if (material == Material.FIRE) return PathNodeType.DAMAGE_FIRE;
+		if (material == Material.CACTUS) return PathNodeType.DAMAGE_CACTUS;
+		if (material == Material.WATER) return PathNodeType.WATER;
+		if (material == Material.LAVA) return PathNodeType.LAVA;
+		if (!(block instanceof BlockFence) && !(block instanceof BlockWall) && (!(block instanceof BlockFenceGate) || state.getValue(BlockFenceGate.OPEN).booleanValue())) return PathNodeType.FENCE;
 		return block.isPassable(world, pos) ? PathNodeType.OPEN : PathNodeType.BLOCKED;
 	}
 }

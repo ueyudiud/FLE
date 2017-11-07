@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 
 /**
  * The override water block with limited water amount.
+ * 
  * @author ueyudiud
  */
 public class BlockWater extends BlockStreamFluid
@@ -46,8 +47,7 @@ public class BlockWater extends BlockStreamFluid
 				{
 					float det;
 					Block block = worldIn.getBlockState(pos.up()).getBlock();
-					if(block != this && block != EnumBlock.ice.block &&
-							(det = V.WATER_FREEZE_POINT_F - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
+					if (block != this && block != EnumBlock.ice.block && (det = V.WATER_FREEZE_POINT_F - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
 					{
 						int chance = 5 / (int) (det / 3F + 1F);
 						if (chance < 10 && L.nextInt(chance, random) == 0)
@@ -87,14 +87,14 @@ public class BlockWater extends BlockStreamFluid
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
 		super.fillWithRain(worldIn, pos);
-		if(worldIn.provider.isSurfaceWorld() && worldIn.canSeeSky(pos))
+		if (worldIn.provider.isSurfaceWorld() && worldIn.canSeeSky(pos))
 		{
 			int level = getFluidLevel(worldIn, pos);
-			if(level < this.quantaPerBlock - 1)
+			if (level < this.quantaPerBlock - 1)
 			{
 				IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
 				float rainstrength = properties.getRainstrength(worldIn, pos);
-				if(worldIn.rand.nextInt((int) (32F / (rainstrength + 1E-2F))) == 0)
+				if (worldIn.rand.nextInt((int) (32F / (rainstrength + 1E-2F))) == 0)
 				{
 					setFluidLevel(worldIn, pos, level + 1, true);
 				}

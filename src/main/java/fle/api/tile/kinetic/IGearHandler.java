@@ -15,7 +15,8 @@ import net.minecraft.util.EnumFacing.Axis;
  */
 public interface IGearHandler extends IKineticHandler
 {
-	@Nullable Axis getGearAxis(Direction direction);
+	@Nullable
+	Axis getGearAxis(Direction direction);
 	
 	float getGearSize(Direction direction);
 	

@@ -13,14 +13,18 @@ import net.minecraft.util.math.Vec3i;
  */
 public final class Maths
 {
-	private Maths() {}
+	private Maths()
+	{
+	}
 	
 	/**
-	 * Returns the largest {@code int} value is less
-	 * than or equal to the argument.
+	 * Returns the largest {@code int} value is less than or equal to the
+	 * argument.
+	 * 
 	 * @param f a {@code float} value.
 	 * @return a floor {@code int} value.
-	 * @throws NumberFormatException if argument is illegal, too big or too small in integer range.
+	 * @throws NumberFormatException if argument is illegal, too big or too
+	 *             small in integer range.
 	 */
 	public static int floori(float f) throws NumberFormatException
 	{
@@ -37,19 +41,21 @@ public final class Maths
 		{
 			e -= 23;
 			int x = 0x00800000 | (v & 0x007fffff);
-			if (e > 0) x <<= e; else if (e < 0) x >>= -e;
-			return (v & 0x80000000) == 0 ? x :
-				(v & (1 << e) - 1) == 0 ? -x :
-					-x-1;
+			if (e > 0)
+				x <<= e;
+			else if (e < 0) x >>= -e;
+			return (v & 0x80000000) == 0 ? x : (v & (1 << e) - 1) == 0 ? -x : -x - 1;
 		}
 	}
 	
 	/**
-	 * Returns the largest {@code long} value is less
-	 * than or equal to the argument.
+	 * Returns the largest {@code long} value is less than or equal to the
+	 * argument.
+	 * 
 	 * @param f a {@code float} value.
 	 * @return a floor {@code long} value.
-	 * @throws NumberFormatException if argument is illegal, too big or too small in long range.
+	 * @throws NumberFormatException if argument is illegal, too big or too
+	 *             small in long range.
 	 */
 	public static long floorl(float f)
 	{
@@ -66,10 +72,10 @@ public final class Maths
 		{
 			e -= 23;
 			long x = 0x00800000 | (v & 0x007fffff);
-			if (e > 0) x <<= e; else if (e < 0) x >>= -e;
-			return (v & 0x80000000) == 0 ? x :
-				(v & (1 << e) - 1) == 0 ? -x :
-					-x-1;
+			if (e > 0)
+				x <<= e;
+			else if (e < 0) x >>= -e;
+			return (v & 0x80000000) == 0 ? x : (v & (1 << e) - 1) == 0 ? -x : -x - 1;
 		}
 	}
 	
@@ -79,18 +85,18 @@ public final class Maths
 		double t = 0D;
 		double[][] ret = new double[size1][size1];
 		double s2 = sigma * sigma;
-		for(int i = 0; i < size1; ++i)
+		for (int i = 0; i < size1; ++i)
 		{
-			for(int j = 0; j < size1; ++j)
+			for (int j = 0; j < size1; ++j)
 			{
 				int i1 = i - size - 1;
 				int j1 = j - size - 1;
-				t += (ret[i][j] = Math.exp(- (i1 * i1 + j1 * j1) / (2 * s2)));
+				t += (ret[i][j] = Math.exp(-(i1 * i1 + j1 * j1) / (2 * s2)));
 			}
 		}
-		for(int i = 0; i < size1; ++i)
+		for (int i = 0; i < size1; ++i)
 		{
-			for(int j = 0; j < size1; ++j)
+			for (int j = 0; j < size1; ++j)
 			{
 				ret[i][j] /= t;
 			}
@@ -104,18 +110,18 @@ public final class Maths
 		float t = 0F;
 		float[][] ret = new float[size1][size1];
 		double s2 = sigma * sigma;
-		for(int i = 0; i < size1; ++i)
+		for (int i = 0; i < size1; ++i)
 		{
-			for(int j = 0; j < size1; ++j)
+			for (int j = 0; j < size1; ++j)
 			{
 				int i1 = i - size - 1;
 				int j1 = j - size - 1;
-				t += (ret[i][j] = (float) Math.exp(- (i1 * i1 + j1 * j1) / (2 * s2)));
+				t += (ret[i][j] = (float) Math.exp(-(i1 * i1 + j1 * j1) / (2 * s2)));
 			}
 		}
-		for(int i = 0; i < size1; ++i)
+		for (int i = 0; i < size1; ++i)
 		{
-			for(int j = 0; j < size1; ++j)
+			for (int j = 0; j < size1; ++j)
 			{
 				ret[i][j] /= t;
 			}
@@ -124,8 +130,10 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the {@code double} arguments.<p>
+	 * Returns the floor modulus of the {@code double} arguments.
+	 * <p>
 	 * The value of result will always be positive.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code double} value.
@@ -137,8 +145,10 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the {@code float} arguments.<p>
+	 * Returns the floor modulus of the {@code float} arguments.
+	 * <p>
 	 * The value of result will always be positive.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code float} value.
@@ -150,8 +160,10 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the <code>int</code> arguments.<p>
+	 * Returns the floor modulus of the <code>int</code> arguments.
+	 * <p>
 	 * The value of result will always be non-negative.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code int} value.
@@ -163,8 +175,10 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the <code>long</code> arguments.<p>
+	 * Returns the floor modulus of the <code>long</code> arguments.
+	 * <p>
 	 * The value of result will always be non-negative.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code long} value.
@@ -178,14 +192,16 @@ public final class Maths
 	public static float sum(float...floats)
 	{
 		float ret = 0;
-		for (float f : floats) ret += f;
+		for (float f : floats)
+			ret += f;
 		return ret;
 	}
 	
 	public static double sum(double...doubles)
 	{
 		double ret = 0;
-		for (double d : doubles) ret += d;
+		for (double d : doubles)
+			ret += d;
 		return ret;
 	}
 	
@@ -200,8 +216,9 @@ public final class Maths
 	}
 	
 	/**
-	 * Take linear interpolation between two {@code float} value, and
-	 * use a value to measure the point.
+	 * Take linear interpolation between two {@code float} value, and use a
+	 * value to measure the point.
+	 * 
 	 * @param a the first value.
 	 * @param b the second value.
 	 * @param x a {@code float} value which is predicated between 0.0 to 1.0.
@@ -213,8 +230,9 @@ public final class Maths
 	}
 	
 	/**
-	 * Take linear interpolation between two {@code double} value, and
-	 * use a value to measure the point.
+	 * Take linear interpolation between two {@code double} value, and use a
+	 * value to measure the point.
+	 * 
 	 * @param a the first value.
 	 * @param b the second value.
 	 * @param x a {@code double} value which is predicated between 0.0 to 1.0.
@@ -233,6 +251,7 @@ public final class Maths
 	
 	/**
 	 * Get the GCD of two {@code int} value.
+	 * 
 	 * @param a
 	 * @param b
 	 * @return GCD
@@ -259,12 +278,15 @@ public final class Maths
 	{
 		switch (is.length)
 		{
-		case 0 : return 1;
-		case 1 : return is[0];
-		case 2 : return gcd(is[0], is[1]);
+		case 0:
+			return 1;
+		case 1:
+			return is[0];
+		case 2:
+			return gcd(is[0], is[1]);
 		default:
 			int a = is[0];
-			for(int i = 1; i < is.length; ++i)
+			for (int i = 1; i < is.length; ++i)
 			{
 				a = gcd(a, is[i]);
 			}
@@ -300,19 +322,20 @@ public final class Maths
 	}
 	
 	/**
-	 * Return the inverse hyperbolic sine of a <code>double</code> value.<p>
+	 * Return the inverse hyperbolic sine of a <code>double</code> value.
+	 * <p>
 	 * The result is equal to <code>ln(d+sqrt(d*d+1))</code>.
+	 * 
 	 * @param d a value.
 	 * @return the area of hyperbolic sine value.
 	 */
 	public static double asinh(double d)
 	{
-		return Math.log(d+Math.sqrt(d*d+1));
+		return Math.log(d + Math.sqrt(d * d + 1));
 	}
 	
 	public static int lp1Distance(Vec3i v1, Vec3i v2)
 	{
-		return v1 == v2 ? 0 :
-			Math.abs(v1.getX() - v2.getX()) + Math.abs(v1.getY() - v2.getY()) + Math.abs(v1.getZ() - v2.getZ());
+		return v1 == v2 ? 0 : Math.abs(v1.getX() - v2.getX()) + Math.abs(v1.getY() - v2.getY()) + Math.abs(v1.getZ() - v2.getZ());
 	}
 }

@@ -34,13 +34,13 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 	{
 		super(name);
 	}
+	
 	protected ItemSubEdible(String modid, String name)
 	{
 		super(modid, name);
 	}
 	
-	public void addSubItem(int id, String name, String localName, @Nullable IFoodStat stat,
-			IBehavior... behaviors)
+	public void addSubItem(int id, String name, String localName, @Nullable IFoodStat stat, IBehavior...behaviors)
 	{
 		super.addSubItem(id, name, localName, behaviors);
 		if (stat == null)
@@ -51,13 +51,12 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		ActionResult<ItemStack> result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
-		if(result.getType() != EnumActionResult.PASS) return result;
+		if (result.getType() != EnumActionResult.PASS) return result;
 		itemStackIn = result.getResult();
-		if(isEdible(itemStackIn, playerIn))
+		if (isEdible(itemStackIn, playerIn))
 		{
 			playerIn.setActiveHand(hand);
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -70,13 +69,13 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 	{
 		try
 		{
-			if(entityLiving instanceof EntityPlayer)
+			if (entityLiving instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entityLiving;
 				player.getFoodStats().addStats(null, stack);
-				if(!isDrink(stack))
+				if (!isDrink(stack))
 				{
-					worldIn.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+					worldIn.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 				}
 				stack = onEat(stack, player);
 				return stack;
@@ -110,7 +109,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		}
 		catch (Exception exception)
 		{
-			return new float[]{0, 0, 0, 0, 0, 0};
+			return new float[] { 0, 0, 0, 0, 0, 0 };
 		}
 	}
 	
@@ -222,22 +221,21 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
-		if(playerIn.capabilities.isCreativeMode)
+		if (playerIn.capabilities.isCreativeMode)
 		{
 			IFoodStat stat = this.foodstats.getOrDefault(getBaseDamage(stack), IFoodStat.NO_EATABLE);
 			if (stat == IFoodStat.NO_EATABLE) return;
-			if(unlocalizedList.isSneakDown())
+			if (unlocalizedList.isSneakDown())
 			{
 				unlocalizedList.add("info.food.label");
 				try
 				{
 					unlocalizedList.add("info.food.display", FORMAT_1.format(stat.getFoodAmount(stack)), FORMAT_1.format(stat.getSaturation(stack)), FORMAT_1.format(stat.getDrinkAmount(stack)));
 				}
-				catch(Exception exception)
+				catch (Exception exception)
 				{
 					;
 				}

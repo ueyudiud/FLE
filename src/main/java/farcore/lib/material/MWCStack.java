@@ -70,8 +70,7 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 	
 	public boolean same(MWCStack stack)
 	{
-		return stack.element == this.element &&
-				stack.condition == this.condition;
+		return stack.element == this.element && stack.condition == this.condition;
 	}
 	
 	@Override
@@ -83,18 +82,13 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj == this ? true :
-			!(obj instanceof MWCStack) ? false :
-				((MWCStack) obj).element == this.element &&
-				((MWCStack) obj).size == this.size &&
-				((MWCStack) obj).condition == this.condition;
+		return obj == this ? true : !(obj instanceof MWCStack) ? false : ((MWCStack) obj).element == this.element && ((MWCStack) obj).size == this.size && ((MWCStack) obj).condition == this.condition;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return new StringBuilder().append('(').append(this.element)
-				.append('[').append(this.condition).append("])x").append(this.size).toString();
+		return new StringBuilder().append('(').append(this.element).append('[').append(this.condition).append("])x").append(this.size).toString();
 	}
 	
 	@Override
@@ -102,7 +96,6 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 	{
 		return new MWCStack(this.element, this.condition, this.size);
 	}
-	
 	
 	@Override
 	public final MWCStack readFromNBT(NBTTagCompound nbt)
@@ -127,7 +120,6 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 			}
 		}
 	}
-	
 	
 	@Override
 	public final void writeToNBT(MWCStack target, NBTTagCompound nbt)

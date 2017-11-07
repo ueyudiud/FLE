@@ -32,8 +32,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Base item type provider by Nebula.<p>
+ * Base item type provider by Nebula.
+ * <p>
  * Contains some useful method for application.
+ * 
  * @author ueyudiud
  */
 public class ItemBase extends Item implements IRegisteredNameable, IRenderRegister
@@ -41,13 +43,13 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	private static List<ItemBase> list = new ArrayList<>();
 	
 	/**
-	 * Called when all others object(fluids, blocks, configurations, materials, etc)
-	 * are already initialized.
+	 * Called when all others object(fluids, blocks, configurations, materials,
+	 * etc) are already initialized.
 	 */
 	public static void post()
 	{
 		Log.info("Reloading items...");
-		for(ItemBase item : list)
+		for (ItemBase item : list)
 		{
 			item.postInitalizedItems();
 		}
@@ -55,23 +57,24 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		list = null;
 	}
 	
-	protected final String modid;
-	protected String localized;
-	protected String unlocalized;
-	protected String unlocalizedTooltip;
+	protected final String	modid;
+	protected String		localized;
+	protected String		unlocalized;
+	protected String		unlocalizedTooltip;
 	
 	protected ItemBase(String name)
 	{
 		this(Game.getActiveModID(), name);
 	}
+	
 	protected ItemBase(String modid, String name)
 	{
 		this(modid, name, null, null);
 	}
+	
 	protected ItemBase(String modid, String name, String unlocalizedTooltip, String localTooltip)
 	{
-		if (list == null)
-			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
+		if (list == null) throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		this.modid = modid;
 		this.unlocalized = modid + "." + name;
 		if (unlocalizedTooltip != null)
@@ -94,7 +97,8 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	}
 	
 	/**
-	 * Called when item are all already initialized.<p>
+	 * Called when item are all already initialized.
+	 * <p>
 	 * For get some extra data which requires lazy loading.
 	 */
 	public void postInitalizedItems()
@@ -124,9 +128,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return this.hasSubtypes ?
-				getUnlocalizedName() + "@" + getDamage(stack) :
-					getUnlocalizedName();
+		return this.hasSubtypes ? getUnlocalizedName() + "@" + getDamage(stack) : getUnlocalizedName();
 	}
 	
 	protected String getTranslateName(ItemStack stack)
@@ -161,28 +163,31 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		super.addInformation(stack, playerIn, tooltip, advanced);
 		UnlocalizedList list = new UnlocalizedList(tooltip);
 		addInformation(stack, playerIn, list, advanced);
-		list.list();//Build list.
+		list.list();// Build list.
 	}
 	
 	/**
 	 * Get stack information when ItemStack tip rendering on HUD.
+	 * 
 	 * @param stack the item stack.
-	 * @param unlocalizedList added information to here, this list provide some helper method to localize tips.
-	 * @param advanced <tt>true</tt> means information will be displayed in more information mode. (F3+H to switch mode).
+	 * @param unlocalizedList added information to here, this list provide some
+	 *            helper method to localize tips.
+	 * @param advanced <tt>true</tt> means information will be displayed in more
+	 *            information mode. (F3+H to switch mode).
 	 */
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
-		if(this.unlocalizedTooltip != null)
+		if (this.unlocalizedTooltip != null)
 		{
 			unlocalizedList.addToolTip(this.unlocalizedTooltip);
 		}
 	}
 	
 	/**
-	 * The offset meta given by item NBT. Use to divide
-	 * the sub item of each material.
+	 * The offset meta given by item NBT. Use to divide the sub item of each
+	 * material.
+	 * 
 	 * @param stack the stack.
 	 * @return the offset meta of stack.
 	 */
@@ -193,6 +198,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	
 	/**
 	 * Get base meta given by meta from item stack.
+	 * 
 	 * @param stack
 	 * @return
 	 * @see net.minecraft.item.Item#getDamage(ItemStack)
@@ -203,8 +209,8 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	}
 	
 	/**
-	 * Get real damage of item stack, which is combined
-	 * offset meta and base meta.
+	 * Get real damage of item stack, which is combined offset meta and base
+	 * meta.
 	 */
 	@Override
 	public int getDamage(ItemStack stack)
@@ -213,8 +219,9 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	}
 	
 	/**
-	 * Get nebula overridden font render to render item name and tooltips,
-	 * which contains custom letter rendering.
+	 * Get nebula overridden font render to render item name and tooltips, which
+	 * contains custom letter rendering.
+	 * 
 	 * @return
 	 * @see nebula.client.util.Client#getFontRender()
 	 */
@@ -227,9 +234,9 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	
 	class CapabilityProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
 	{
-		ItemStack stack;
-		ICapabilityProvider provider;
-		NBTTagCompound nbt;
+		ItemStack			stack;
+		ICapabilityProvider	provider;
+		NBTTagCompound		nbt;
 		
 		CapabilityProvider(ItemStack stack)
 		{
@@ -290,10 +297,14 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	}
 	
 	/**
-	 * The ** forge, the meta data is initialized after capabilities initialized! These
-	 * cause I can only make provider with lazy loading.<p>
-	 * The item capability to provide a holder to contain extra data during the life of ItemStack,
-	 * and it needed to be initialize BEFORE item stack being used.<p>
+	 * The ** forge, the meta data is initialized after capabilities
+	 * initialized! These cause I can only make provider with lazy loading.
+	 * <p>
+	 * The item capability to provide a holder to contain extra data during the
+	 * life of ItemStack, and it needed to be initialize BEFORE item stack being
+	 * used.
+	 * <p>
+	 * 
 	 * @see net.minecraftforge.common.capabilities.ICapabilityProvider
 	 * @see net.minecraft.item.Item#initCapabilities(ItemStack, NBTTagCompound)
 	 */

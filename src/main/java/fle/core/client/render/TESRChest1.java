@@ -22,10 +22,7 @@ public class TESRChest1 extends TESRChest<TEChest1> implements IIconLoader
 	
 	public TESRChest1()
 	{
-		super(
-				1.0F / 16.0F, 0.0F / 16.0F, 2.0F / 16.0F,
-				6.0F / 16.0F,
-				15.0F / 16.0F, 10.0F / 16.0F, 14.0F / 16.0F);
+		super(1.0F / 16.0F, 0.0F / 16.0F, 2.0F / 16.0F, 6.0F / 16.0F, 15.0F / 16.0F, 10.0F / 16.0F, 14.0F / 16.0F);
 		NebulaTextureHandler.addIconLoader(this);
 	}
 	
@@ -52,14 +49,7 @@ public class TESRChest1 extends TESRChest<TEChest1> implements IIconLoader
 	protected void renderChestBody(TEChest1 te)
 	{
 		int type = te.getChestType().ordinal();
-		TextureAtlasSprite[] sprites = {
-				this.icons[type][0],
-				this.icons[type][6],
-				this.icons[type][2],
-				this.icons[type][5],
-				this.icons[type][3],
-				this.icons[type][4]
-		};
+		TextureAtlasSprite[] sprites = { this.icons[type][0], this.icons[type][6], this.icons[type][2], this.icons[type][5], this.icons[type][3], this.icons[type][4] };
 		renderCube(this.minX, this.minY, this.minZ, this.maxX, this.midY, this.maxZ, sprites);
 	}
 	
@@ -67,14 +57,7 @@ public class TESRChest1 extends TESRChest<TEChest1> implements IIconLoader
 	protected void renderChestTop(TEChest1 te)
 	{
 		int type = te.getChestType().ordinal();
-		TextureAtlasSprite[] sprites = {
-				this.icons[type][7],
-				this.icons[type][1],
-				this.icons[type][2],
-				this.icons[type][5],
-				this.icons[type][3],
-				this.icons[type][4]
-		};
+		TextureAtlasSprite[] sprites = { this.icons[type][7], this.icons[type][1], this.icons[type][2], this.icons[type][5], this.icons[type][3], this.icons[type][4] };
 		renderCube(this.minX, this.midY, this.minZ, this.maxX, this.maxY, this.maxZ, sprites);
 	}
 }

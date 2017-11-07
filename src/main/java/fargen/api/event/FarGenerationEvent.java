@@ -13,22 +13,24 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * The generation events, post in {@link net.minecraftforge.common.MinecraftForge#TERRAIN_GEN_BUS}.<p>
+ * The generation events, post in
+ * {@link net.minecraftforge.common.MinecraftForge#TERRAIN_GEN_BUS}.
+ * <p>
  * 
- * This event is cancelable, the generation will be prevent if event is canceled.
+ * This event is cancelable, the generation will be prevent if event is
+ * canceled.
+ * 
  * @author ueyudiud
  */
 @Cancelable
 public class FarGenerationEvent extends Event
 {
-	public static final SubTag
-	TREE = getNewSubTag("TREE_GEN"),
-	WILD_CROP = getNewSubTag("WILD_CROP_GEN");
+	public static final SubTag TREE = getNewSubTag("TREE_GEN"), WILD_CROP = getNewSubTag("WILD_CROP_GEN");
 	
-	public final SubTag tag;
-	public final World world;
-	public final int chunkX, chunkZ;
-	public final IChunkGenerator generator;
+	public final SubTag				tag;
+	public final World				world;
+	public final int				chunkX, chunkZ;
+	public final IChunkGenerator	generator;
 	
 	public FarGenerationEvent(SubTag tag, World world, int chunkX, int chunkZ, IChunkGenerator generator)
 	{

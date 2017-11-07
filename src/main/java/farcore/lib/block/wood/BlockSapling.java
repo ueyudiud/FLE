@@ -49,7 +49,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	{
 		super.postInitalizedBlocks();
 		OreDict.registerValid("treeSapling", this);
-		for(Mat material : Mat.filt(SubTags.TREE))
+		for (Mat material : Mat.filt(SubTags.TREE))
 		{
 			LanguageManager.registerLocal(getTranslateNameForItemStack(material.id), material.localName + " Sapling");
 		}
@@ -90,8 +90,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return new ArrayList<>();
 	}
@@ -100,7 +99,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(Mat material : Mat.filt(SubTags.TREE))
+		for (Mat material : Mat.filt(SubTags.TREE))
 		{
 			list.add(new ItemStack(item, 1, material.id));
 		}
@@ -110,8 +109,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
 		IBlockState state;
-		return (state = worldIn.getBlockState(pos.down())).getBlock()
-				.canSustainPlant(state, worldIn, pos, EnumFacing.UP, this);
+		return (state = worldIn.getBlockState(pos.down())).getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this);
 	}
 	
 	@Override

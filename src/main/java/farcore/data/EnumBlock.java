@@ -13,24 +13,23 @@ import net.minecraft.init.Blocks;
 
 /**
  * To get block which is added by non-multi-generated.
+ * 
  * @author ueyudiud
  *
  */
 public enum EnumBlock
 {
-	//Far Core
+	// Far Core
 	crop,
 	sapling,
 	water,
 	/**
 	 * State applier arguments:
-	 * <li>
-	 * level (optional, <tt>int</tt>) - The fire burning hardness.
-	 * <li>
-	 * spread (optional, <tt>boolean</tt>) - Should fire spread to nearby blocks.
-	 * <li>
-	 * smolder (optional, <tt>boolean</tt>) - Is fire in <tt>smolder</tt> state.
-	 * </li>
+	 * <li>level (optional, <tt>int</tt>) - The fire burning hardness.
+	 * <li>spread (optional, <tt>boolean</tt>) - Should fire spread to nearby
+	 * blocks.
+	 * <li>smolder (optional, <tt>boolean</tt>) - Is fire in <tt>smolder</tt>
+	 * state.</li>
 	 */
 	fire,
 	ice,
@@ -39,7 +38,7 @@ public enum EnumBlock
 	circuit,
 	metalblock,
 	vine,
-	//FLE
+	// FLE
 	dirt_mixture;
 	
 	static
@@ -48,8 +47,8 @@ public enum EnumBlock
 		fire.block = Blocks.FIRE;
 	}
 	
-	public Block block;
-	public Function<Object[], IBlockState> stateApplier;
+	public Block							block;
+	public Function<Object[], IBlockState>	stateApplier;
 	
 	public void set(Block block)
 	{
@@ -58,6 +57,7 @@ public enum EnumBlock
 	
 	/**
 	 * Create a new block state, return null if argument is invalid.
+	 * 
 	 * @param objects
 	 * @return
 	 */

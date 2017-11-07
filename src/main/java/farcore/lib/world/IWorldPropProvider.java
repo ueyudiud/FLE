@@ -10,9 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * The world property provider,
- * use to get temperature, humidity, etc properties
+ * The world property provider, use to get temperature, humidity, etc properties
  * for world.
+ * 
  * @author ueyudiud
  * @see farcore.lib.world.WorldPropHandler
  */
@@ -39,6 +39,7 @@ public interface IWorldPropProvider
 	
 	/**
 	 * Get temperature of local place.
+	 * 
 	 * @param world the world.
 	 * @param pos the position.
 	 * @return
@@ -51,8 +52,8 @@ public interface IWorldPropProvider
 	}
 	
 	/**
-	 * Get average temperature in a cycle of
-	 * weather changing.
+	 * Get average temperature in a cycle of weather changing.
+	 * 
 	 * @param world the world.
 	 * @param pos the position.
 	 * @return
@@ -71,16 +72,16 @@ public interface IWorldPropProvider
 	float getSkylight(World world);
 	
 	/**
-	 * Each world might have a main fluid block, such
-	 * as water in overworld, lava in hell, etc. This
-	 * method is to get the main fluid of this world.
+	 * Each world might have a main fluid block, such as water in overworld,
+	 * lava in hell, etc. This method is to get the main fluid of this world.
+	 * 
 	 * @return
 	 */
 	Block getMainFluidBlock();
 	
 	/**
-	 * The fluid block should freeze at position in
-	 * this world type.
+	 * The fluid block should freeze at position in this world type.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @return

@@ -30,10 +30,10 @@ import net.minecraft.world.World;
  */
 public class BlockWindow1 extends BlockBase
 {
-	public static final Judgable<ISubTagContainer> MATERIAL_FILTER = Judgable.or(SubTags.WOOD, SubTags.ROCK);
-	public static final PropertyMaterial FRAME = PropertyMaterial.create("frame", MATERIAL_FILTER);
-	public static final IProperty<EnumFacing> FACING = Misc.PROP_FACING_HORIZONTALS;
-	public static final IProperty<Boolean> OPEN = Properties.create("open");
+	public static final Judgable<ISubTagContainer>	MATERIAL_FILTER	= Judgable.or(SubTags.WOOD, SubTags.ROCK);
+	public static final PropertyMaterial			FRAME			= PropertyMaterial.create("frame", MATERIAL_FILTER);
+	public static final IProperty<EnumFacing>		FACING			= Misc.PROP_FACING_HORIZONTALS;
+	public static final IProperty<Boolean>			OPEN			= Properties.create("open");
 	
 	public BlockWindow1(Material materialIn)
 	{
@@ -56,8 +56,7 @@ public class BlockWindow1 extends BlockBase
 	public Material getMaterial(IBlockState state)
 	{
 		Mat material = state.getValue(FRAME);
-		return material.contain(SubTags.WOOD) ? Materials.WOOD : material.contain(SubTags.ROCK) ?
-				Materials.ROCK : Materials.GLASS;
+		return material.contain(SubTags.WOOD) ? Materials.WOOD : material.contain(SubTags.ROCK) ? Materials.ROCK : Materials.GLASS;
 	}
 	
 	@Override

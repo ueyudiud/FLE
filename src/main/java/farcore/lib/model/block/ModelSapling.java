@@ -46,6 +46,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Will be removed soon, use FlexibleModel instead.
+ * 
  * @author ueyudiud
  */
 @Deprecated
@@ -54,8 +55,8 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 {
 	instance;
 	
-	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
-	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
+	private static final ResourceLocation		PARENT_LOCATION	= new ResourceLocation(FarCore.ID, "block/sapling");
+	private static final ModelResourceLocation	MODEL_LOCATION	= new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
 	
 	public static final Map<String, TextureAtlasSprite> ICON_MAP = new HashMap();
 	
@@ -83,8 +84,7 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 		if (modelLocation == MODEL_LOCATION) return this;
 		String path = modelLocation.getResourcePath();
 		String[] strings = path.split("/");
-		if (strings.length != 3)
-			throw new RuntimeException("Invalid model location : " + path);
+		if (strings.length != 3) throw new RuntimeException("Invalid model location : " + path);
 		ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
 		return ModelHelper.makeItemModel(location);
 	}
@@ -105,8 +105,7 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	}
 	
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		ICON_MAP.clear();
 		IModel model = ModelLoaderRegistry.getModelOrMissing(PARENT_LOCATION);
@@ -179,7 +178,7 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 			if (tile != null)
 			{
 				TextureAtlasSprite icon = this.icons.get(tile.tree.getRegisteredName());
-				if(icon != null)
+				if (icon != null)
 				{
 					apply(oldList, newList, quad -> new BakedQuadRetextured(quad, icon));
 				}

@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 
 public class TreeGenClassic extends TreeGenAbstract
 {
-	protected int minHeight;
-	protected int randHeight;
+	protected int	minHeight;
+	protected int	randHeight;
 	
 	public TreeGenClassic(ITree tree, float generateCoreLeavesChance)
 	{
@@ -37,9 +37,7 @@ public class TreeGenClassic extends TreeGenAbstract
 	public boolean generateTreeAt(World world, int x, int y, int z, Random rand, TreeInfo info)
 	{
 		int l = this.minHeight + L.nextInt(this.randHeight, rand);
-		if(!checkLogGrow(world, x, y, z, 1, 0, 1, false) ||
-				!checkLogGrow(world, x, y + 1, z, 2, l, 2, true))
-			return false;
+		if (!checkLogGrow(world, x, y, z, 1, 0, 1, false) || !checkLogGrow(world, x, y + 1, z, 2, l, 2, true)) return false;
 		BlockPos pos;
 		IBlockState state = world.getBlockState(pos = new BlockPos(x, y - 1, z));
 		byte b0;

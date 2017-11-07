@@ -39,14 +39,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
-implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
+public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>> implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
-	private SolidTank tank1 = new SolidTank(1000);
-	public FluidTankN tank2 = new FluidTankN(4000);
-	private int buffer;
+	private SolidTank	tank1	= new SolidTank(1000);
+	public FluidTankN	tank2	= new FluidTankN(4000);
+	private int			buffer;
 	@SideOnly(Side.CLIENT)
-	private int angle;
+	private int			angle;
 	
 	public TEStoneMill()
 	{
@@ -118,8 +117,7 @@ implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, IT
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (tileGUICheck(hand))
 		{

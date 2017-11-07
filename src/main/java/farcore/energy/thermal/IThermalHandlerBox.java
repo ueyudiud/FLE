@@ -9,9 +9,9 @@ import nebula.common.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * The thermal handler box.
- * For a structure in local world, used by greenhouse, blast furnace nearby, etc.
- * For an area temperature control.
+ * The thermal handler box. For a structure in local world, used by greenhouse,
+ * blast furnace nearby, etc. For an area temperature control.
+ * 
  * @author ueyudiud
  *
  */
@@ -21,6 +21,7 @@ public interface IThermalHandlerBox extends IWorldSubContainer
 	
 	/**
 	 * Called when heat change.
+	 * 
 	 * @param source
 	 * @param target
 	 * @param sourceDir

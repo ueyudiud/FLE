@@ -16,40 +16,62 @@ import nebula.common.util.L;
 public interface Judgable<T> extends Predicate<T>
 {
 	/** The OTB function always return <tt>true</tt>. */
-	Judgable TRUE     = arg -> true;
+	Judgable	TRUE		= arg -> true;
 	/** The OTB function always return <tt>false</tt>. */
-	Judgable FALSE    = arg -> false;
+	Judgable	FALSE		= arg -> false;
 	/** The OTB function to check if input are NON-NULL. */
-	Judgable NOT_NULL = Objects::nonNull;
+	Judgable	NOT_NULL	= Objects::nonNull;
 	/** The OTB function to check if input are NULL. */
-	Judgable NULL     = Objects::isNull;
+	Judgable	NULL		= Objects::isNull;
 	
-	static <T> Judgable<T> fromPredicate(Predicate<? super T> predicate) { return predicate::test; }
+	static <T> Judgable<T> fromPredicate(Predicate<? super T> predicate)
+	{
+		return predicate::test;
+	}
 	
-	static <T> Judgable<T> or(Predicate<? super T>...checkers) { return t->A.or(checkers, j->j.test(t)); }
+	static <T> Judgable<T> or(Predicate<? super T>...checkers)
+	{
+		return t -> A.or(checkers, j -> j.test(t));
+	}
 	
-	static <T> Judgable<T> and(Predicate<? super T>...checkers) { return t->A.and(checkers, j->j.test(t)); }
+	static <T> Judgable<T> and(Predicate<? super T>...checkers)
+	{
+		return t -> A.and(checkers, j -> j.test(t));
+	}
 	
-	static <R, T extends R> Judgable<R> matchAndCast(Predicate<? super T> predicate, Class<T> cast) { return r->cast.isInstance(r) ? predicate.test((T) r) : false; }
+	static <R, T extends R> Judgable<R> matchAndCast(Predicate<? super T> predicate, Class<T> cast)
+	{
+		return r -> cast.isInstance(r) ? predicate.test((T) r) : false;
+	}
 	
 	/**
 	 * Uses for modifiable collection checker.
+	 * 
 	 * @param collection
 	 * @return
 	 */
 	static <T> Judgable<T> or(Collection<? extends Predicate<? super T>> collection)
 	{
-		return target -> { for(Predicate<? super T> checker : collection) if(checker.test(target)) return true; return false; };
+		return target -> {
+			for (Predicate<? super T> checker : collection)
+				if (checker.test(target)) return true;
+			return false;
+		};
 	}
 	
 	/**
 	 * Uses for modifiable collection checker.
+	 * 
 	 * @param collection
 	 * @return
 	 */
 	static <T> Judgable<T> and(Collection<? extends Predicate<? super T>> collection)
 	{
-		return target -> { for(Predicate<? super T> checker : collection) if(!checker.test(target)) return false; return true; };
+		return target -> {
+			for (Predicate<? super T> checker : collection)
+				if (!checker.test(target)) return false;
+			return true;
+		};
 	}
 	
 	@Override
@@ -92,7 +114,7 @@ public interface Judgable<T> extends Predicate<T>
 	{
 		private final Judgable<O>[] checks;
 		
-		public Nor(Judgable<O>... checks)
+		public Nor(Judgable<O>...checks)
 		{
 			this.checks = checks;
 		}
@@ -101,8 +123,7 @@ public interface Judgable<T> extends Predicate<T>
 		public boolean isTrue(O target)
 		{
 			for (Judgable<O> tCondition : this.checks)
-				if (tCondition.isTrue(target))
-					return false;
+				if (tCondition.isTrue(target)) return false;
 			return true;
 		}
 		
@@ -121,10 +142,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true :
-				(obj == null || this == null) ? false :
-					(!(obj instanceof Nor)) ? false :
-						Arrays.equals(checks, ((Nor) obj).checks);
+			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Nor)) ? false : Arrays.equals(checks, ((Nor) obj).checks);
 		}
 	}
 	
@@ -132,7 +150,7 @@ public interface Judgable<T> extends Predicate<T>
 	{
 		private final Judgable<O>[] checks;
 		
-		public Nand(Judgable<O>... checks)
+		public Nand(Judgable<O>...checks)
 		{
 			this.checks = checks;
 		}
@@ -141,8 +159,7 @@ public interface Judgable<T> extends Predicate<T>
 		public boolean isTrue(O target)
 		{
 			for (Judgable<O> tCondition : this.checks)
-				if (!tCondition.isTrue(target))
-					return true;
+				if (!tCondition.isTrue(target)) return true;
 			return false;
 		}
 		
@@ -161,17 +178,14 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true :
-				(obj == null || this == null) ? false :
-					(!(obj instanceof Nand)) ? false :
-						Arrays.equals(checks, ((Nand) obj).checks);
+			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Nand)) ? false : Arrays.equals(checks, ((Nand) obj).checks);
 		}
 	}
 	
 	class Xor<O> implements Judgable<O>
 	{
-		private final Judgable<O> check1;
-		private final Judgable<O> check2;
+		private final Judgable<O>	check1;
+		private final Judgable<O>	check2;
 		
 		public Xor(Judgable<O> check1, Judgable<O> check2)
 		{
@@ -200,18 +214,14 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true :
-				(obj == null || this == null) ? false :
-					(!(obj instanceof Xor)) ? false :
-						(L.equal(((Xor) obj).check1, check1) && L.equal(((Xor) obj).check2, check2)) ||
-						(L.equal(((Xor) obj).check1, check2) && L.equal(((Xor) obj).check2, check1));
+			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Xor)) ? false : (L.equal(((Xor) obj).check1, check1) && L.equal(((Xor) obj).check2, check2)) || (L.equal(((Xor) obj).check1, check2) && L.equal(((Xor) obj).check2, check1));
 		}
 	}
 	
 	class Equal<O> implements Judgable<O>
 	{
-		private final Judgable<O> check1;
-		private final Judgable<O> check2;
+		private final Judgable<O>	check1;
+		private final Judgable<O>	check2;
 		
 		public Equal(Judgable<O> check1, Judgable<O> check2)
 		{
@@ -240,11 +250,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true :
-				(obj == null || this == null) ? false :
-					(!(obj instanceof Equal)) ? false :
-						(L.equal(((Equal) obj).check1, check1) && L.equal(((Equal) obj).check2, check2)) ||
-						(L.equal(((Equal) obj).check1, check2) && L.equal(((Equal) obj).check2, check1));
+			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Equal)) ? false : (L.equal(((Equal) obj).check1, check1) && L.equal(((Equal) obj).check2, check2)) || (L.equal(((Equal) obj).check1, check2) && L.equal(((Equal) obj).check2, check1));
 		}
 	}
 }

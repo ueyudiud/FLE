@@ -25,19 +25,19 @@ public class SingleInputMatch
 	/**
 	 * The input stack.
 	 */
-	protected AbstractStack input;
+	protected AbstractStack									input;
 	/**
 	 * The effect on output.
 	 */
-	protected @Nullable BiConsumer<ItemStack, ItemStack> consumer;
+	protected @Nullable BiConsumer<ItemStack, ItemStack>	consumer;
 	/**
 	 * The result of input.
 	 */
-	protected @Nullable Function<ItemStack, ItemStack> result;
+	protected @Nullable Function<ItemStack, ItemStack>		result;
 	
 	public static SingleInputMatch toolUse(EnumToolType type, float use)
 	{
-		return new SingleInputMatch(type.stack(), stack-> {
+		return new SingleInputMatch(type.stack(), stack -> {
 			ItemStacks.damageTool(stack, use, null, type);
 			return stack.stackSize <= 0 ? null : stack;
 		});
@@ -47,10 +47,12 @@ public class SingleInputMatch
 	{
 		this(input, null);
 	}
+	
 	public SingleInputMatch(AbstractStack input, Function<ItemStack, ItemStack> result)
 	{
 		this(input, null, result);
 	}
+	
 	public SingleInputMatch(AbstractStack input, BiConsumer<ItemStack, ItemStack> consumer, Function<ItemStack, ItemStack> result)
 	{
 		this.input = input;
@@ -73,8 +75,8 @@ public class SingleInputMatch
 	
 	public Function<ItemStack, ItemStack> toOutputTransferFunction(final ItemStack output)
 	{
-		if (output == null || this.consumer == null) return Misc.<ItemStack, ItemStack>anyTo(output).andThen(ItemStacks.COPY_ITEMSTACK);
-		return input-> {
+		if (output == null || this.consumer == null) return Misc.<ItemStack, ItemStack> anyTo(output).andThen(ItemStacks.COPY_ITEMSTACK);
+		return input -> {
 			ItemStack result = output.copy();
 			this.consumer.accept(input, result);
 			return result;

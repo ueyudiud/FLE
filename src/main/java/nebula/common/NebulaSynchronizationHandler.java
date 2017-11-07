@@ -44,18 +44,18 @@ public class NebulaSynchronizationHandler
 	@SubscribeEvent
 	public void onServerTickingEnd(TickEvent.ServerTickEvent event)
 	{
-		if(event.phase == Phase.END)
+		if (event.phase == Phase.END)
 		{
-			for(Entry<Integer, Map<Integer, Map<ChunkPos, List<BlockPos>>>> entry : ImmutableList.copyOf(SYNC_NETWORK_MAP.entrySet()))
+			for (Entry<Integer, Map<Integer, Map<ChunkPos, List<BlockPos>>>> entry : ImmutableList.copyOf(SYNC_NETWORK_MAP.entrySet()))
 			{
 				int dim = entry.getKey();
 				World world = DimensionManager.getWorld(dim);
-				if(world != null)
+				if (world != null)
 				{
-					for(Entry<Integer, Map<ChunkPos, List<BlockPos>>> entry2 : entry.getValue().entrySet())
+					for (Entry<Integer, Map<ChunkPos, List<BlockPos>>> entry2 : entry.getValue().entrySet())
 					{
 						int mark = entry2.getKey();
-						for(Entry<ChunkPos, List<BlockPos>> entry3 : entry2.getValue().entrySet())
+						for (Entry<ChunkPos, List<BlockPos>> entry3 : entry2.getValue().entrySet())
 						{
 							int centerX = entry3.getKey().getXCenter();
 							int centerZ = entry3.getKey().getZCenter();

@@ -24,33 +24,33 @@ public class DataSerializers
 {
 	private static final Map<Class<? extends Enum>, DataSerializer<? extends Enum>> MAP = new HashMap<>();
 	
-	public static final DataSerializer<Boolean> BOOLEAN = net.minecraft.network.datasync.DataSerializers.BOOLEAN;
-	public static final DataSerializer<Byte> BYTE = net.minecraft.network.datasync.DataSerializers.BYTE;
-	public static final DataSerializer<Short> SHORT = new DataSerializer<Short>()
-	{
-		@Override
-		public void write(PacketBuffer buf, Short value)
-		{
-			buf.writeShort(value);
-		}
-		
-		@Override
-		public Short read(PacketBuffer buf)
-		{
-			return buf.readShort();
-		}
-		
-		@Override
-		public DataParameter<Short> createKey(int id)
-		{
-			return new DataParameter<>(id, this);
-		}
-	};
+	public static final DataSerializer<Boolean>	BOOLEAN	= net.minecraft.network.datasync.DataSerializers.BOOLEAN;
+	public static final DataSerializer<Byte>	BYTE	= net.minecraft.network.datasync.DataSerializers.BYTE;
+	public static final DataSerializer<Short>	SHORT	= new DataSerializer<Short>()
+														{
+															@Override
+															public void write(PacketBuffer buf, Short value)
+															{
+																buf.writeShort(value);
+															}
+															
+															@Override
+															public Short read(PacketBuffer buf)
+															{
+																return buf.readShort();
+															}
+															
+															@Override
+															public DataParameter<Short> createKey(int id)
+															{
+																return new DataParameter<>(id, this);
+															}
+														};
 	
-	public static final DataSerializer<Integer> VARINT = net.minecraft.network.datasync.DataSerializers.VARINT;
-	public static final DataSerializer<String> STRING = net.minecraft.network.datasync.DataSerializers.STRING;
-	public static final DataSerializer<BlockPos> BLOCK_POS = net.minecraft.network.datasync.DataSerializers.BLOCK_POS;
-	public static final DataSerializer<EnumFacing> FACING = net.minecraft.network.datasync.DataSerializers.FACING;
+	public static final DataSerializer<Integer>		VARINT		= net.minecraft.network.datasync.DataSerializers.VARINT;
+	public static final DataSerializer<String>		STRING		= net.minecraft.network.datasync.DataSerializers.STRING;
+	public static final DataSerializer<BlockPos>	BLOCK_POS	= net.minecraft.network.datasync.DataSerializers.BLOCK_POS;
+	public static final DataSerializer<EnumFacing>	FACING		= net.minecraft.network.datasync.DataSerializers.FACING;
 	
 	public static final DataSerializer<IBlockState> BLOCK_STATE = new DataSerializer<IBlockState>()
 	{

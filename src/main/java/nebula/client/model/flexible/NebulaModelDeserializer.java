@@ -53,7 +53,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		@Override
 		public FlexibleModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 		{
-			throw new JsonParseException("The general model are not available yet.");//XXX
+			throw new JsonParseException("The general model are not available yet.");// XXX
 		}
 	},
 	ITEM(Nebula.MODID, "item")
@@ -72,7 +72,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			}
 			else
 			{
-				elements = new JsonElement[]{ object.get("layer") };
+				elements = new JsonElement[] { object.get("layer") };
 			}
 			
 			Cache<Boolean> flag = new Cache<>(false);
@@ -80,7 +80,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			int[] poses = new int[elements.length];
 			List<Function<ItemStack, String>> datas = new ArrayList<>();
 			
-			A.executeAll(elements, (json1, i)-> {
+			A.executeAll(elements, (json1, i) -> {
 				ModelPartItemLayer layer = new ModelPartItemLayer();
 				layer.index = i;
 				if (json1.isJsonObject())
@@ -98,7 +98,8 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 							datas.add(function);
 						}
 					}
-					else poses[i] = -1;
+					else
+						poses[i] = -1;
 					if (object2.has("colorMultiplier"))
 					{
 						flag.set(true);
@@ -110,7 +111,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 					}
 					switch (Jsons.getOrDefault(object2, "type", "normal"))
 					{
-					case "flat" :
+					case "flat":
 						layer = new ModelPartItemLayerFlat(layer);
 						break;
 					case "convert":
@@ -130,12 +131,9 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 				parts.add(layer);
 			});
 			
-			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem,
-					deserializeOrDefault(object, context, ModelHelper.ITEM_STANDARD_TRANSFORMS),
-					parts.build(), false, true, false);
+			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem, deserializeOrDefault(object, context, ModelHelper.ITEM_STANDARD_TRANSFORMS), parts.build(), false, true, false);
 			
-			if (flag.get())
-				model.itemColors = functions;
+			if (flag.get()) model.itemColors = functions;
 			model.itemLoadingData = poses;
 			model.itemDataGen = L.cast(datas, Function.class);
 			
@@ -153,8 +151,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			Cache<Boolean> flag2 = new Cache<>(false);
 			Function<ItemStack, String>[] func1 = new Function[array.size()];
 			Function<IBlockState, String>[] func2 = new Function[array.size()];
-			List<INebulaModelPart> parts = Jsons.getAsList(array, (i, j)->
-			{
+			List<INebulaModelPart> parts = Jsons.getAsList(array, (i, j) -> {
 				INebulaModelPart part = deserialize(j, context);
 				if (j.isJsonObject())
 				{
@@ -164,19 +161,20 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 						flag1.set(true);
 						func1[i] = context.deserialize(obj.get("itemmeta"), SubmetaLoader.ItemSubmetaGetter.class);
 					}
-					else func1[i] = (Function<ItemStack, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+					else
+						func1[i] = (Function<ItemStack, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
 					if (obj.has("blockmeta"))
 					{
 						flag2.set(true);
 						func2[i] = context.deserialize(obj.get("blockmeta"), SubmetaLoader.BlockSubmetaGetter.class);
 					}
-					else func2[i] = (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+					else
+						func2[i] = (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
 				}
 				return part;
 			});
-			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem,
-					deserializeOrDefault(object, context, ModelHelper.BLOCK_STANDARD_TRANSFORMS),
-					parts, Jsons.getOrDefault(object, "gui3D", true), Jsons.getOrDefault(object, "smooth_lighting", true), Jsons.getOrDefault(object, "builtIn", false));
+			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem, deserializeOrDefault(object, context, ModelHelper.BLOCK_STANDARD_TRANSFORMS), parts, Jsons.getOrDefault(object, "gui3D", true), Jsons.getOrDefault(object, "smooth_lighting", true),
+					Jsons.getOrDefault(object, "builtIn", false));
 			if (flag1.get())
 			{
 				model.itemDataGen = func1;
@@ -201,8 +199,8 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 	},
 	VANILLA("minecraft", "generated")
 	{
-		private final Object instance;
-		private final Method loadModel;
+		private final Object	instance;
+		private final Method	loadModel;
 		
 		{
 			try
@@ -236,12 +234,10 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		Map<TransformType, TRSRTransformation> map = new EnumMap<>(TransformType.class);
 	}
 	
-	static final JsonDeserializerGateway<INebulaModelPart> BLOCK_MODEL_PART_DESERIALIZERS =
-			new JsonDeserializerGateway<INebulaModelPart>("type", ModelPartVerticalCube.LOADER)
+	static final JsonDeserializerGateway<INebulaModelPart> BLOCK_MODEL_PART_DESERIALIZERS = new JsonDeserializerGateway<INebulaModelPart>("type", ModelPartVerticalCube.LOADER)
 	{
 		@Override
-		public INebulaModelPart deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-				throws JsonParseException
+		public INebulaModelPart deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 		{
 			if (json.isJsonObject())
 			{
@@ -255,10 +251,10 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			}
 			else if (json.isJsonPrimitive())
 				return NebulaModelLoader.getModelPart(json.getAsString());
-			else throw new JsonParseException("Unknown model part, got: " + json);
+			else
+				throw new JsonParseException("Unknown model part, got: " + json);
 		}
-	}
-	.setThrowExceptionWhenNoMatched();
+	}.setThrowExceptionWhenNoMatched();
 	
 	public static INebulaModelPart deserialize(JsonElement json, JsonDeserializationContext context)
 	{
@@ -277,15 +273,14 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 	{
 		if (object.has("textures"))
 		{
-			return model.retexture(ImmutableMap.copyOf(Jsons.getAsMap(object.getAsJsonObject("textures"),
-					json->json.isJsonObject() ? json.toString() : json.getAsString())));
+			return model.retexture(ImmutableMap.copyOf(Jsons.getAsMap(object.getAsJsonObject("textures"), json -> json.isJsonObject() ? json.toString() : json.getAsString())));
 		}
 		return model;
 	}
 	
 	static
 	{
-		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("void", (j,t,c)->INebulaModelPart.VOID);
+		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("void", (j, t, c) -> INebulaModelPart.VOID);
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("nebula:cube", ModelPartVerticalCube.LOADER);
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("nebula:quad", ModelPartQuad.LOADER);
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("multi", ModelPartCol.LOADER);
@@ -296,12 +291,9 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer(key, deserializer);
 	}
 	
-	public static ImmutableMap<TransformType, TRSRTransformation> deserializeOrDefault(JsonObject object,
-			JsonDeserializationContext context, ImmutableMap<TransformType, TRSRTransformation> defaultTransformation)
+	public static ImmutableMap<TransformType, TRSRTransformation> deserializeOrDefault(JsonObject object, JsonDeserializationContext context, ImmutableMap<TransformType, TRSRTransformation> defaultTransformation)
 	{
-		return object.has("transform") ?
-				ImmutableMap.copyOf(context.<Transform>deserialize(object, Transform.class).map) :
-					defaultTransformation;
+		return object.has("transform") ? ImmutableMap.copyOf(context.<Transform> deserialize(object, Transform.class).map) : defaultTransformation;
 	}
 	
 	NebulaModelDeserializer(String modid, String path)
@@ -310,5 +302,8 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 	}
 	
 	/* Unused, override in each deserializer. */
-	public IModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) { return null; }
+	public IModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+	{
+		return null;
+	}
 }

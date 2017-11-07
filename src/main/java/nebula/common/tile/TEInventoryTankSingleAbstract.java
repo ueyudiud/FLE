@@ -15,8 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic
-implements IFluidHandlerIO, IFluidHandler
+public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic implements IFluidHandlerIO, IFluidHandler
 {
 	protected boolean syncTankState = true;
 	

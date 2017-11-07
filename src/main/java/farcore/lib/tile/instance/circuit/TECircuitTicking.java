@@ -8,18 +8,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitTicking extends TECircuitFrontBack
 {
-	private static final int Enabled = 0x5;
-	private static final int Actived = 0x6;
+	private static final int	Enabled	= 0x5;
+	private static final int	Actived	= 0x6;
 	
 	@Override
 	protected void updateBody()
 	{
 		super.updateBody();
-		if(is(Enabled))
+		if (is(Enabled))
 		{
-			if(this.updateDelay == 0)
+			if (this.updateDelay == 0)
 			{
-				if(this.power != 0)
+				if (this.power != 0)
 				{
 					setRedstonePower(0);
 					disable(Actived);
@@ -42,7 +42,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 	protected void updateCircuit()
 	{
 		boolean flag = getRedstonePower(Facing.BACK) != 0;
-		if(flag)
+		if (flag)
 		{
 			enable(Enabled);
 		}
@@ -57,7 +57,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		this.mode++;
-		if(this.mode == 16)
+		if (this.mode == 16)
 		{
 			this.mode = 0;
 		}
@@ -74,8 +74,6 @@ public class TECircuitTicking extends TECircuitFrontBack
 	@SideOnly(Side.CLIENT)
 	public int getChannelRedSignalHardness(int i)
 	{
-		return i == 0 ? is(Enabled) ? getRedstonePower(Facing.BACK) : 0 :
-			i == 1 ? this.power :
-				0;
+		return i == 0 ? is(Enabled) ? getRedstonePower(Facing.BACK) : 0 : i == 1 ? this.power : 0;
 	}
 }

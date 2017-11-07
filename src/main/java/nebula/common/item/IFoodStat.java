@@ -72,7 +72,8 @@ public interface IFoodStat
 		}
 	};
 	
-	@Nullable float[] getNutritionAmount(ItemStack stack);
+	@Nullable
+	float[] getNutritionAmount(ItemStack stack);
 	
 	float getFoodAmount(ItemStack stack);
 	
@@ -88,5 +89,6 @@ public interface IFoodStat
 	
 	int getEatDuration(ItemStack stack);
 	
-	@Nullable ItemStack onEat(ItemStack stack, EntityPlayer player);
+	@Nullable
+	ItemStack onEat(ItemStack stack, EntityPlayer player);
 }

@@ -30,11 +30,13 @@ public class BlockRockySimpleMachine extends BlockTE
 	{
 		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Hearth");
-		//		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Stone Grill");
+		// LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Stone
+		// Grill");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Ceramic Pot");
 		
 		LanguageManager.registerLocal("inventory.hearth", "Hearth");
-		//		LanguageManager.registerLocal("inventory.stone.grill", "Stone Grill");
+		// LanguageManager.registerLocal("inventory.stone.grill", "Stone
+		// Grill");
 		LanguageManager.registerLocal("inventory.ceramic.pot", "Ceramic Pot");
 	}
 	
@@ -42,7 +44,7 @@ public class BlockRockySimpleMachine extends BlockTE
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(0, "hearth", TEHearth.class);
-		//		register.register(1, "stone.grill", TELeverOilMill.class);
+		// register.register(1, "stone.grill", TELeverOilMill.class);
 		register.register(2, "ceramic_pot", TECeramicPot.class);
 		return true;
 	}

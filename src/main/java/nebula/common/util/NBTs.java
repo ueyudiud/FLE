@@ -34,11 +34,13 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public final class NBTs
 {
-	private NBTs() {}
+	private NBTs()
+	{
+	}
 	
 	public static void setString(NBTTagCompound nbt, String key, IRegisteredNameable nameable)
 	{
-		if(nameable != null)
+		if (nameable != null)
 		{
 			nbt.setString(key, nameable.getRegisteredName());
 		}
@@ -46,7 +48,7 @@ public final class NBTs
 	
 	public static void setCharArray(NBTTagCompound nbt, String key, char[] value)
 	{
-		if(value != null)
+		if (value != null)
 		{
 			nbt.setString(key, new String(value));
 		}
@@ -57,7 +59,7 @@ public final class NBTs
 		NBTTagList list = new NBTTagList();
 		if (ordered)
 		{
-			for(int i = 0; i < value.length; ++i)
+			for (int i = 0; i < value.length; ++i)
 			{
 				try
 				{
@@ -68,7 +70,7 @@ public final class NBTs
 					setNumber(compound, "idx", i);
 					list.appendTag(compound);
 				}
-				catch(Exception exception)
+				catch (Exception exception)
 				{
 					Log.catchingIfDebug(exception);
 				}
@@ -77,13 +79,13 @@ public final class NBTs
 		}
 		else
 		{
-			for(E element : value)
+			for (E element : value)
 			{
 				try
 				{
 					list.appendTag(writer.apply(element));
 				}
-				catch(Exception exception)
+				catch (Exception exception)
 				{
 					Log.catchingIfDebug(exception);
 				}
@@ -96,11 +98,12 @@ public final class NBTs
 	{
 		return getCompound(nbt, tag, true);
 	}
+	
 	public static NBTTagCompound getCompound(NBTTagCompound nbt, String tag, boolean create)
 	{
-		if(!nbt.hasKey(tag))
+		if (!nbt.hasKey(tag))
 		{
-			if(!create) return NBTTagCompoundEmpty.INSTANCE;
+			if (!create) return NBTTagCompoundEmpty.INSTANCE;
 			NBTTagCompound compound;
 			nbt.setTag(tag, compound = new NBTTagCompound());
 			return compound;
@@ -143,7 +146,7 @@ public final class NBTs
 	
 	public static void setNumber(NBTTagCompound nbt, String key, double number)
 	{
-		if((float) number == number)
+		if ((float) number == number)
 		{
 			nbt.setFloat(key, (float) number);
 		}
@@ -155,15 +158,15 @@ public final class NBTs
 	
 	public static void setNumber(NBTTagCompound nbt, String key, long number)
 	{
-		if(number <= Byte.MAX_VALUE)
+		if (number <= Byte.MAX_VALUE)
 		{
 			nbt.setByte(key, (byte) number);
 		}
-		else if(number <= Short.MAX_VALUE)
+		else if (number <= Short.MAX_VALUE)
 		{
 			nbt.setShort(key, (short) number);
 		}
-		else if(number <= Integer.MAX_VALUE)
+		else if (number <= Integer.MAX_VALUE)
 		{
 			nbt.setInteger(key, (int) number);
 		}
@@ -207,25 +210,25 @@ public final class NBTs
 	
 	public static void setItemStack(NBTTagCompound nbt, String key, ItemStack stack, boolean markEmpty)
 	{
-		if(stack != null)
+		if (stack != null)
 		{
 			nbt.setTag(key, stack.writeToNBT(new NBTTagCompound()));
 		}
-		else if(markEmpty)
+		else if (markEmpty)
 		{
-			nbt.setTag(key, new NBTTagCompound());//Mark for empty stack.
+			nbt.setTag(key, new NBTTagCompound());// Mark for empty stack.
 		}
 	}
 	
 	public static void setFluidStack(NBTTagCompound nbt, String key, FluidStack stack, boolean markEmpty)
 	{
-		if(stack != null)
+		if (stack != null)
 		{
 			nbt.setTag(key, stack.writeToNBT(new NBTTagCompound()));
 		}
-		else if(markEmpty)
+		else if (markEmpty)
 		{
-			nbt.setTag(key, new NBTTagCompound());//Mark for empty stack.
+			nbt.setTag(key, new NBTTagCompound());// Mark for empty stack.
 		}
 	}
 	
@@ -271,13 +274,12 @@ public final class NBTs
 	
 	public static long[] getLongArrayOrDefault(NBTTagCompound nbt, String key, long[] def)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_LONG);
-			if(def != null && def.length != list.tagCount())
-				return def;
+			if (def != null && def.length != list.tagCount()) return def;
 			long[] result = new long[list.tagCount()];
-			for(int i = 0; i < result.length; ++i)
+			for (int i = 0; i < result.length; ++i)
 			{
 				result[i] = ((NBTTagLong) list.get(i)).getLong();
 			}
@@ -288,7 +290,7 @@ public final class NBTs
 	
 	public static char[] getCharArrayOrDefault(NBTTagCompound nbt, String key, char[] def)
 	{
-		if(nbt.hasKey(key, NBT.TAG_STRING))
+		if (nbt.hasKey(key, NBT.TAG_STRING))
 		{
 			return nbt.getString(key).toCharArray();
 		}
@@ -297,13 +299,12 @@ public final class NBTs
 	
 	public static String[] getStringArrayOrDefault(NBTTagCompound nbt, String key, String[] def)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_STRING);
-			if(def != null && def.length != list.tagCount())
-				return def;
+			if (def != null && def.length != list.tagCount()) return def;
 			String[] result = new String[list.tagCount()];
-			for(int i = 0; i < result.length; ++i)
+			for (int i = 0; i < result.length; ++i)
 			{
 				result[i] = list.getStringTagAt(i);
 			}
@@ -366,15 +367,13 @@ public final class NBTs
 		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_COMPOUND);
-			if (list.tagCount() > container.length)
-				throw new IndexOutOfBoundsException();
+			if (list.tagCount() > container.length) throw new IndexOutOfBoundsException();
 			Arrays.fill(container, null);
 			for (int i = 0; i < list.tagCount(); ++i)
 			{
 				NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 				short id = nbt1.getShort("idx");
-				if (id >= container.length)
-					throw new IndexOutOfBoundsException();
+				if (id >= container.length) throw new IndexOutOfBoundsException();
 				try
 				{
 					container[id] = reader.readFromNBT(nbt1);
@@ -396,18 +395,17 @@ public final class NBTs
 	
 	public static <E, N extends NBTBase> List<E> getUnorderedListFromOrdered(NBTTagCompound nbt, String key, Function<N, E> reader)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = (NBTTagList) nbt.getTag(key);
 			ImmutableList.Builder<E> builder = ImmutableList.builder();
-			for(int i = 0; i < list.tagCount(); ++i)
+			for (int i = 0; i < list.tagCount(); ++i)
 			{
 				NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 				try
 				{
 					E e = reader.apply((N) nbt1.getTag("element"));
-					if (e != null)
-						builder.add(e);
+					if (e != null) builder.add(e);
 				}
 				catch (Exception exception)
 				{
@@ -421,14 +419,14 @@ public final class NBTs
 	
 	public static <E, N extends NBTBase> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<N, E> reader, boolean ordered)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = (NBTTagList) nbt.getTag(key);
 			E[] array;
 			if (ordered)
 			{
 				array = (E[]) Array.newInstance(elementClass, def.length);
-				for(int i = 0; i < list.tagCount(); ++i)
+				for (int i = 0; i < list.tagCount(); ++i)
 				{
 					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 					try
@@ -444,7 +442,7 @@ public final class NBTs
 			else
 			{
 				array = (E[]) Array.newInstance(elementClass, list.tagCount());
-				for(int i = 0; i < list.tagCount(); ++i)
+				for (int i = 0; i < list.tagCount(); ++i)
 				{
 					NBTBase nbt1 = list.get(i);
 					try
@@ -464,12 +462,12 @@ public final class NBTs
 	
 	public static <N extends NBTBase, E> void insertToList(NBTTagCompound nbt, String key, @Nullable E[] def, Function<N, E> reader, boolean ordered)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = (NBTTagList) nbt.getTag(key);
 			if (ordered)
 			{
-				for(int i = 0; i < list.tagCount(); ++i)
+				for (int i = 0; i < list.tagCount(); ++i)
 				{
 					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 					try
@@ -484,7 +482,7 @@ public final class NBTs
 			}
 			else
 			{
-				for(int i = 0; i < list.tagCount(); ++i)
+				for (int i = 0; i < list.tagCount(); ++i)
 				{
 					NBTBase nbt1 = list.get(i);
 					try
@@ -500,8 +498,7 @@ public final class NBTs
 		}
 	}
 	
-	public static <E, N extends NBTBase>
-	INBTReaderAndWritter<E[], NBTTagList> wrapAsUnorderedArrayWriterAndReader(INBTReaderAndWritter<E, N> rw)
+	public static <E, N extends NBTBase> INBTReaderAndWritter<E[], NBTTagList> wrapAsUnorderedArrayWriterAndReader(INBTReaderAndWritter<E, N> rw)
 	{
 		final Class<E> clazz = (Class<E>) rw.getTargetType();
 		return new INBTReaderAndWritter<E[], NBTTagList>()
@@ -521,7 +518,10 @@ public final class NBTs
 			public NBTTagList writeToNBT(E[] target)
 			{
 				NBTTagList list = new NBTTagList();
-				for (E element : target) { list.appendTag(rw.writeToNBT(element)); }
+				for (E element : target)
+				{
+					list.appendTag(rw.writeToNBT(element));
+				}
 				return list;
 			}
 		};

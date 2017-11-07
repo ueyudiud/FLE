@@ -20,6 +20,7 @@ public class NebulaTextureHandler implements IIconRegister
 	
 	/**
 	 * Register Icon Loader to list.
+	 * 
 	 * @param loader
 	 */
 	public static void addIconLoader(IIconLoader loader)
@@ -33,7 +34,7 @@ public class NebulaTextureHandler implements IIconRegister
 	public void onTexturesReoload(TextureStitchEvent.Pre event)
 	{
 		this.map = event.getMap();
-		for(IIconLoader loader : LIST)
+		for (IIconLoader loader : LIST)
 		{
 			loader.registerIcon(this);
 		}

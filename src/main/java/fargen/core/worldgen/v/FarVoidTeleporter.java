@@ -10,7 +10,7 @@ public class FarVoidTeleporter extends Teleporter
 	{
 		super(worldIn);
 	}
-
+	
 	@Override
 	public boolean makePortal(Entity entityIn)
 	{

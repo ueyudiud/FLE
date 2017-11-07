@@ -19,21 +19,20 @@ public class BehaviorTool extends BehaviorBase
 	{
 		this(EnumActionResult.PASS);
 	}
+	
 	public BehaviorTool(EnumActionResult useResult)
 	{
 		this.useResult = useResult;
 	}
-
+	
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
-			EntityLivingBase entity)
+	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity)
 	{
 		return true;
 	}
-
+	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		return useResult;
 	}

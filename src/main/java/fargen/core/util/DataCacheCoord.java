@@ -11,8 +11,8 @@ import nebula.base.function.BiIntToObjFunction;
  */
 public class DataCacheCoord<D> extends DataCache<D[]>
 {
-	private final byte len;
-	private final int off;
+	private final byte	len;
+	private final int	off;
 	
 	public DataCacheCoord(BiIntToObjFunction<D[]> function, int size)
 	{

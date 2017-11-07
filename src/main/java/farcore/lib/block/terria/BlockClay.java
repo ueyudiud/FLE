@@ -62,8 +62,7 @@ public class BlockClay extends BlockSoilLike
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
-			boolean silkTouch)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.clayball, 4 + RANDOM.nextInt(5)));
 	}

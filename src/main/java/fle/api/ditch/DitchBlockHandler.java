@@ -22,8 +22,8 @@ public final class DitchBlockHandler implements Judgable<Mat>
 	
 	public static final DitchBlockHandler HANDLER = new DitchBlockHandler();
 	
-	private static final List<DitchFactory> FACTORIES = new ArrayList();
-	public static DitchFactory rawFactory;
+	private static final List<DitchFactory>	FACTORIES	= new ArrayList();
+	public static DitchFactory				rawFactory;
 	
 	public static void addMaterial(Mat material)
 	{
@@ -46,8 +46,7 @@ public final class DitchBlockHandler implements Judgable<Mat>
 				if (select != null)
 				{
 					RuntimeException exception = new RuntimeException("The factory " + select + " and " + factory + " both want to handle material " + material.name + ".");
-					if (Nebula.debug)
-						throw exception;
+					if (Nebula.debug) throw exception;
 					Log.warn("Catching an exception during getting ditch factory.", exception);
 				}
 				select = factory;
@@ -60,7 +59,9 @@ public final class DitchBlockHandler implements Judgable<Mat>
 		return select == null ? null : select;
 	}
 	
-	DitchBlockHandler() {	}
+	DitchBlockHandler()
+	{
+	}
 	
 	@Override
 	public boolean isTrue(Mat target)

@@ -21,20 +21,20 @@ public class FLECompact implements ICompatible
 	{
 		switch (phase)
 		{
-		case "complete" :
-			FlamableRecipes.addFlameSource(coord-> {
+		case "complete":
+			FlamableRecipes.addFlameSource(coord -> {
 				IBlockState state = coord.getBlockState();
 				if (state.getBlock() instanceof BlockFire)
 				{
-					return state.getValue(BlockFire.STATE) * 30 + 400;//[400, 550]
+					return state.getValue(BlockFire.STATE) * 30 + 400;// [400,
+																		// 550]
 				}
 				if (state.getBlock() instanceof BlockFluidBase)
 				{
 					Fluid fluid = ((BlockFluidBase) state.getBlock()).getFluid();
 					if (fluid instanceof FluidBase)
 					{
-						if (((FluidBase) fluid).isBurning())
-							return fluid.getTemperature(coord.world(), coord.pos());
+						if (((FluidBase) fluid).isBurning()) return fluid.getTemperature(coord.world(), coord.pos());
 					}
 				}
 				return -1;

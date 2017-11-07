@@ -22,24 +22,24 @@ public class GMPredicate
 		for (int i = 0; i < 64; ++i)
 		{
 			final long i1 = 1L << i;
-			VALUES[i] = value->(value & i1) != 0;
+			VALUES[i] = value -> (value & i1) != 0;
 		}
 		for (int i = 0; i < 64; ++i)
 		{
 			final long i1 = 1L << i;
-			VALUES[i + 64] = value->(value & i1) == 0;
+			VALUES[i + 64] = value -> (value & i1) == 0;
 		}
 	}
 	
 	public static Judgable<GeneticMaterial> explicit(int type)
 	{
 		byte t = (byte) type;
-		return gm->A.or(gm.coders, VALUES[t]);
+		return gm -> A.or(gm.coders, VALUES[t]);
 	}
 	
 	public static Judgable<GeneticMaterial> implicit(int type)
 	{
 		byte t = (byte) (type | 0x80);
-		return gm->A.and(gm.coders, VALUES[t]);
+		return gm -> A.and(gm.coders, VALUES[t]);
 	}
 }

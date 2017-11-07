@@ -27,14 +27,13 @@ public class BLGSurfaceRiver extends BLGSurfaceBase
 	private static NoiseBase noise = new NoisePerlin(43185173394951L, 2, 4.0, 2.0, 2.0);
 	
 	@Override
-	protected void generateTopTerrain(World world, Random rand, ChunkPrimer primer, int x, int z, int x1, int z1, BiomeBase biome,
-			int height, float temperature, float rainfall, IBlockState[] cover, IBlockState[] rock)
+	protected void generateTopTerrain(World world, Random rand, ChunkPrimer primer, int x, int z, int x1, int z1, BiomeBase biome, int height, float temperature, float rainfall, IBlockState[] cover, IBlockState[] rock)
 	{
 		int y = worldHeight;
 		int c = -1, f = 0;
 		int h = Math.round((float) (noise.noise(x1, y * 0.8, z1) * 3));
 		
-		for (; y >= arrayYHeight; y --)
+		for (; y >= arrayYHeight; y--)
 		{
 			IBlockState state = primer.getBlockState(x, y, z);
 			if (state == AIR)
@@ -46,9 +45,9 @@ public class BLGSurfaceRiver extends BLGSurfaceBase
 			}
 			else if (state == WATER)
 			{
-				if (f ++ == 0)
+				if (f++ == 0)
 				{
-					if (temperature < 0.0F)//Ice point
+					if (temperature < 0.0F)// Ice point
 					{
 						primer.setBlockState(x, y, z, EnumBlock.ice.block.getDefaultState());
 					}
@@ -103,7 +102,8 @@ public class BLGSurfaceRiver extends BLGSurfaceBase
 				--c;
 				primer.setBlockState(x, y, z, state);
 			}
-			else setRockType(height, primer, x, y, z, rock);
+			else
+				setRockType(height, primer, x, y, z, rock);
 		}
 	}
 }

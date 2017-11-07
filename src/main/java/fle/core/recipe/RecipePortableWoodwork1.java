@@ -46,7 +46,7 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	public int[] getIntScaleRange(IBasicInventory inventory)
 	{
 		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
-		return new int[] {1, length / 2};
+		return new int[] { 1, length / 2 };
 	}
 	
 	@Override
@@ -93,6 +93,6 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	public int[] getDisplayNumbers(IBasicInventory inventory, int value)
 	{
 		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
-		return new int[]{value, length - value};
+		return new int[] { value, length - value };
 	}
 }

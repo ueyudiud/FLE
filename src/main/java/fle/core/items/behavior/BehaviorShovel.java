@@ -21,23 +21,20 @@ import net.minecraft.world.World;
 public class BehaviorShovel extends BehaviorBase
 {
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
 		{
 			if (player.isSneaking())
 			{
-				return BlockDirtMixture.checkAndSetBlock(world, pos.offset(facing.getOpposite())) ?
-						EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+				return BlockDirtMixture.checkAndSetBlock(world, pos.offset(facing.getOpposite())) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 			}
 		}
 		return super.onItemUse(stack, player, world, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
-			EntityLivingBase entity)
+	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity)
 	{
 		return true;
 	}

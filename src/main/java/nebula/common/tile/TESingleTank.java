@@ -16,8 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public abstract class TESingleTank extends TESynchronization
-implements IFluidHandler, IFluidHandlerIO
+public abstract class TESingleTank extends TESynchronization implements IFluidHandler, IFluidHandlerIO
 {
 	public abstract FluidTankN getTank();
 	
@@ -163,15 +162,12 @@ implements IFluidHandler, IFluidHandlerIO
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		return (capability == Capabilities.CAPABILITY_FLUID && canAccessFluidHandlerFrom(facing)) ||
-				super.hasCapability(capability, facing);
+		return (capability == Capabilities.CAPABILITY_FLUID && canAccessFluidHandlerFrom(facing)) || super.hasCapability(capability, facing);
 	}
 	
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return (capability == Capabilities.CAPABILITY_FLUID && canAccessFluidHandlerFrom(facing)) ?
-				Capabilities.CAPABILITY_FLUID.cast(new FluidHandlerWrapper(this, facing)) :
-					super.getCapability(capability, facing);
+		return (capability == Capabilities.CAPABILITY_FLUID && canAccessFluidHandlerFrom(facing)) ? Capabilities.CAPABILITY_FLUID.cast(new FluidHandlerWrapper(this, facing)) : super.getCapability(capability, facing);
 	}
 }

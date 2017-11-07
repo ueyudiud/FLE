@@ -14,18 +14,19 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class PacketEntity extends PacketWorld
 {
-	int entityID;
-	NBTTagCompound nbt;
+	int				entityID;
+	NBTTagCompound	nbt;
 	
 	public PacketEntity()
 	{
 		
 	}
+	
 	public PacketEntity(Entity entity)
 	{
 		super(entity.world);
 		this.entityID = entity.getEntityId();
-		if(entity instanceof IDescribable)
+		if (entity instanceof IDescribable)
 		{
 			this.nbt = ((IDescribable) entity).writeDescriptionsToNBT(new NBTTagCompound());
 		}
@@ -51,7 +52,7 @@ public class PacketEntity extends PacketWorld
 	public IPacket process(Network network)
 	{
 		Entity entity = world().getEntityByID(this.entityID);
-		if(entity instanceof IDescribable)
+		if (entity instanceof IDescribable)
 		{
 			((IDescribable) entity).readDescriptionsFromNBT(this.nbt);
 		}

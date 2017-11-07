@@ -18,7 +18,7 @@ public class NebulaPlayerHandler
 	@SubscribeEvent
 	public void getDigSpeed(BreakSpeed event)
 	{
-		if(event.getEntityPlayer() == null) return;
+		if (event.getEntityPlayer() == null) return;
 		
 		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
 		

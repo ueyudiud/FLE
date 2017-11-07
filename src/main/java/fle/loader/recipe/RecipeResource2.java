@@ -50,7 +50,7 @@ public class RecipeResource2
 			{
 				return ItemFluidDisplay.createFluidDisplay(input, true);
 			}
-		}, i-> FluidContainerHandler.drainContainer(i, input.amount).getKey());
+		}, i -> FluidContainerHandler.drainContainer(i, input.amount).getKey());
 	}
 	
 	static SingleInputMatch fluidOutput(@Nonnull FluidStack output)
@@ -68,8 +68,7 @@ public class RecipeResource2
 			{
 				if (stack == null || !(stack.getItem() instanceof IItemFluidContainer)) return false;
 				FluidStack stack1;
-				return ((IItemFluidContainer) stack.getItem()).canFill(stack, output) &&
-						((stack1 = FluidContainerHandler.getContain(stack)) == null || stack1.isFluidEqual(output));
+				return ((IItemFluidContainer) stack.getItem()).canFill(stack, output) && ((stack1 = FluidContainerHandler.getContain(stack)) == null || stack1.isFluidEqual(output));
 			}
 			
 			@Override
@@ -77,6 +76,6 @@ public class RecipeResource2
 			{
 				return IBFS.iFluidContainer.getSubItem("barrel");
 			}
-		}, i-> FluidContainerHandler.fillContainer(i, output).getKey());
+		}, i -> FluidContainerHandler.fillContainer(i, output).getKey());
 	}
 }

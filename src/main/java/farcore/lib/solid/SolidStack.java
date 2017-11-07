@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
 
 /**
- * Solid stack. Like fluid stack, this type provide
- * stack of solid.<p>
+ * Solid stack. Like fluid stack, this type provide stack of solid.
+ * <p>
  * 
  * @author ueyudiud
  */
@@ -37,9 +37,9 @@ public class SolidStack
 		}
 	};
 	
-	public int amount;
-	public NBTTagCompound tag;
-	private RegistryDelegate<SolidAbstract> solidDelegate;
+	public int								amount;
+	public NBTTagCompound					tag;
+	private RegistryDelegate<SolidAbstract>	solidDelegate;
 	
 	public static SolidStack sizeOf(SolidStack stack, int amount)
 	{
@@ -51,31 +51,33 @@ public class SolidStack
 	public static SolidStack loadFromNBT(NBTTagCompound nbt)
 	{
 		SolidStack stack;
-		return (stack = new SolidStack())
-				.readFromNBT(nbt).solidDelegate == null ? null : stack;
+		return (stack = new SolidStack()).readFromNBT(nbt).solidDelegate == null ? null : stack;
 	}
 	
 	protected SolidStack()
 	{
 	}
+	
 	public SolidStack(SolidAbstract solid, int amount)
 	{
 		this.solidDelegate = solid.delegate;
 		this.amount = amount;
 	}
+	
 	public SolidStack(SolidAbstract solid, int amount, NBTTagCompound nbt)
 	{
 		this(solid, amount);
-		if(nbt != null)
+		if (nbt != null)
 		{
 			this.tag = nbt.copy();
 		}
 	}
+	
 	SolidStack(SolidStack stack)
 	{
 		this.solidDelegate = stack.solidDelegate;
 		this.amount = stack.amount;
-		if(stack.tag != null)
+		if (stack.tag != null)
 		{
 			this.tag = stack.tag.copy();
 		}
@@ -95,7 +97,7 @@ public class SolidStack
 	public SolidStack readFromNBT(NBTTagCompound nbt)
 	{
 		this.amount = nbt.getInteger("Amount");
-		if(nbt.hasKey("Tag"))
+		if (nbt.hasKey("Tag"))
 		{
 			this.tag = nbt.getCompoundTag("Tag");
 		}
@@ -106,7 +108,7 @@ public class SolidStack
 	{
 		nbt.setString("SolidName", this.solidDelegate.get().getRegistryName().toString());
 		nbt.setInteger("Amount", this.amount);
-		if(this.tag != null)
+		if (this.tag != null)
 		{
 			nbt.setTag("Tag", this.tag);
 		}
@@ -124,6 +126,7 @@ public class SolidStack
 	
 	/**
 	 * Copy a solid stack, the stack is nullable.
+	 * 
 	 * @param stack the source stack.
 	 * @return the copied solid stack.
 	 */

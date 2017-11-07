@@ -5,23 +5,25 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Far land era energy event.
- * Used in each energy net tile entities.<br>
- * This event is handled in {@link farcore.handler.FarCoreEnergyHandler#BUS}.<br>
- * It is suggested add tile to energy net when tile is initialized,
- * and remove when chunk remove or tile is invalidated.<br>
+ * Far land era energy event. Used in each energy net tile entities.<br>
+ * This event is handled in
+ * {@link farcore.handler.FarCoreEnergyHandler#BUS}.<br>
+ * It is suggested add tile to energy net when tile is initialized, and remove
+ * when chunk remove or tile is invalidated.<br>
+ * 
  * @author ueyudiud
  * @see farcore.handler.FarCoreEnergyHandler
  */
 public abstract class EnergyEvent extends Event
 {
-	private World world;
-	public Object tile;
+	private World	world;
+	public Object	tile;
 	
 	public EnergyEvent(TileEntity tile)
 	{
 		this(tile.getWorld(), tile);
 	}
+	
 	public EnergyEvent(World world, Object tile)
 	{
 		this.world = world;
@@ -34,8 +36,9 @@ public abstract class EnergyEvent extends Event
 	}
 	
 	/**
-	 * Add tile into energy net, you need do it
-	 * when tile is loaded (first tick of update).
+	 * Add tile into energy net, you need do it when tile is loaded (first tick
+	 * of update).
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
@@ -45,6 +48,7 @@ public abstract class EnergyEvent extends Event
 		{
 			super(tile);
 		}
+		
 		public Add(World world, Object tile)
 		{
 			super(world, tile);
@@ -52,8 +56,9 @@ public abstract class EnergyEvent extends Event
 	}
 	
 	/**
-	 * Remove tile in energy net, you need do it
-	 * when tile is unloaded or removed (invalidated).
+	 * Remove tile in energy net, you need do it when tile is unloaded or
+	 * removed (invalidated).
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
@@ -63,6 +68,7 @@ public abstract class EnergyEvent extends Event
 		{
 			super(tile);
 		}
+		
 		public Remove(World world, Object tile)
 		{
 			super(world, tile);
@@ -71,6 +77,7 @@ public abstract class EnergyEvent extends Event
 	
 	/**
 	 * Rejoin tile into energy net.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
@@ -80,6 +87,7 @@ public abstract class EnergyEvent extends Event
 		{
 			super(tile);
 		}
+		
 		public Reload(World world, Object tile)
 		{
 			super(world, tile);
@@ -88,6 +96,7 @@ public abstract class EnergyEvent extends Event
 	
 	/**
 	 * Mark tile with some config changed.
+	 * 
 	 * @author ueyudiud
 	 *
 	 */
@@ -97,6 +106,7 @@ public abstract class EnergyEvent extends Event
 		{
 			super(tile);
 		}
+		
 		public Mark(World world, Object tile)
 		{
 			super(world, tile);

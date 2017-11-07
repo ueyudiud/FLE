@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockStatePaletteArray implements IBlockStatePalette
 {
-	private int capacity = 0;
-	private final int bitCount;
-	private final IBlockState[] states;
-	private final BlockStateContainerExt resizer;
+	private int								capacity	= 0;
+	private final int						bitCount;
+	private final IBlockState[]				states;
+	private final BlockStateContainerExt	resizer;
 	
 	public BlockStatePaletteArray(int bitCount, BlockStateContainerExt resizer)
 	{

@@ -14,14 +14,14 @@ import net.minecraft.world.World;
  */
 public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<ThermalEnergyHelper>
 {
-	float T;
-	float Tmax;
-	long E;
+	float	T;
+	float	Tmax;
+	long	E;
 	
-	float baseMaxTemp;
-	float heatCapacity;
-	float tempLimit;
-	float tempChangeSpeed;
+	float	baseMaxTemp;
+	float	heatCapacity;
+	float	tempLimit;
+	float	tempChangeSpeed;
 	
 	public ThermalEnergyHelper()
 	{
@@ -82,7 +82,8 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 	public void setTemperatureChangeSpeed(float tempChangeSpeed)
 	{
 		assert tempChangeSpeed >= 0;
-		this.tempChangeSpeed = tempChangeSpeed / (1 + tempChangeSpeed);//Rescaled speed.
+		this.tempChangeSpeed = tempChangeSpeed / (1 + tempChangeSpeed);// Rescaled
+																		// speed.
 	}
 	
 	public void setInternalEnergy(long energy)

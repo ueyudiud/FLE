@@ -49,8 +49,7 @@ public class RecipeFood
 			public boolean similar(ItemStack stack)
 			{
 				FluidStack f;
-				return stack.getItem() instanceof ItemSimpleFluidContainer &&
-						((f = ItemSimpleFluidContainer.getFluid(stack)) == null || f.isFluidEqual(output));
+				return stack.getItem() instanceof ItemSimpleFluidContainer && ((f = ItemSimpleFluidContainer.getFluid(stack)) == null || f.isFluidEqual(output));
 			}
 			
 			@Override
@@ -58,11 +57,7 @@ public class RecipeFood
 			{
 				return IBFS.iFluidContainer.getSubItem("bowl_wooden");
 			}
-		}, (i, o)-> FluidContainerHandler.fillContainer(o,
-				FluidStacks.sizeOf(output, ItemSimpleFluidContainer.getFluidAmount(i) + output.amount)), null),
-				MC.chip_rock.orePrefix,
-				new SingleInputMatch(input,
-						Selector.forChance(null, byproduct, bychance)
-						.anyTo().andThen(ItemStacks.COPY_ITEMSTACK).anyTo()));
+		}, (i, o) -> FluidContainerHandler.fillContainer(o, FluidStacks.sizeOf(output, ItemSimpleFluidContainer.getFluidAmount(i) + output.amount)), null), MC.chip_rock.orePrefix,
+				new SingleInputMatch(input, Selector.forChance(null, byproduct, bychance).anyTo().andThen(ItemStacks.COPY_ITEMSTACK).anyTo()));
 	}
 }

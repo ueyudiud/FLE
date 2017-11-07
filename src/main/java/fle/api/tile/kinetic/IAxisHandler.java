@@ -22,5 +22,6 @@ public interface IAxisHandler extends IKineticHandler
 		return A.or(getAxisHandlerAxis(), axis -> direction.axis == axis);
 	}
 	
-	@Nullable Axis[] getAxisHandlerAxis();
+	@Nullable
+	Axis[] getAxisHandlerAxis();
 }

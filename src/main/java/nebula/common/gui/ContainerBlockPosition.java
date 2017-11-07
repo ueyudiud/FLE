@@ -20,26 +20,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * The container with block position, active with block has GUI but no
  * TileEntity.
+ * 
  * @author ueyudiud
  */
 public class ContainerBlockPosition extends ContainerBase implements IInventoryChangedListener
 {
-	public final World world;
-	public final BlockPos pos;
-	private IBlockState state;
-	private int[] lastCurrentValue;
-	protected int[] currentValue;
+	public final World		world;
+	public final BlockPos	pos;
+	private IBlockState		state;
+	private int[]			lastCurrentValue;
+	protected int[]			currentValue;
 	
 	public ContainerBlockPosition(EntityPlayer player, ICoord coord)
 	{
 		this(player, coord.world(), coord.pos());
 	}
+	
 	public ContainerBlockPosition(EntityPlayer player, World world, BlockPos pos)
 	{
 		super(player);
 		this.world = world;
 		this.pos = pos;
-		//Get block state, to check if block changed to close GUI.
+		// Get block state, to check if block changed to close GUI.
 		this.state = world.getBlockState(pos);
 		this.currentValue = new int[getFieldCount()];
 		this.lastCurrentValue = new int[getFieldCount()];
@@ -54,7 +56,7 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	public void addListener(IContainerListener listener)
 	{
 		super.addListener(listener);
-		for(int i = 0; i < this.currentValue.length; ++i)
+		for (int i = 0; i < this.currentValue.length; ++i)
 		{
 			listener.sendProgressBarUpdate(this, i, this.currentValue[i]);
 		}
@@ -64,11 +66,11 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < this.currentValue.length; ++i)
+		for (int i = 0; i < this.currentValue.length; ++i)
 		{
-			if(this.lastCurrentValue[i] != this.currentValue[i])
+			if (this.lastCurrentValue[i] != this.currentValue[i])
 			{
-				for(IContainerListener listener : this.listeners)
+				for (IContainerListener listener : this.listeners)
 				{
 					listener.sendProgressBarUpdate(this, i, this.currentValue[i]);
 				}

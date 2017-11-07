@@ -6,9 +6,10 @@ package nebula.common.util.noise;
 import java.util.Random;
 
 /**
- * The coherent noise.<p>
- * Get random value for each lattice and smooth then by
- * s_curve lerp.
+ * The coherent noise.
+ * <p>
+ * Get random value for each lattice and smooth then by s_curve lerp.
+ * 
  * @author ueyudiud
  * @see #s_curve(double)
  */
@@ -19,7 +20,9 @@ public class NoiseCoherent extends NoiseBase
 	{
 		double generate(long x, long y, long z);
 		
-		default void setSeed(long seed) {}
+		default void setSeed(long seed)
+		{
+		}
 	}
 	
 	static RandomMapGenerator generator(long seed)
@@ -27,20 +30,22 @@ public class NoiseCoherent extends NoiseBase
 		return (x, y, z) -> next(x, y, z, seed);
 	}
 	
-	private double length;
-	private double offsetX;
-	private double offsetY;
-	private double offsetZ;
-	private RandomMapGenerator generator;
+	private double				length;
+	private double				offsetX;
+	private double				offsetY;
+	private double				offsetZ;
+	private RandomMapGenerator	generator;
 	
 	public NoiseCoherent(long seed)
 	{
 		this(seed, 1D);
 	}
+	
 	public NoiseCoherent(long seed, double length)
 	{
 		this(seed, length, generator(seed));
 	}
+	
 	public NoiseCoherent(long seed, double length, RandomMapGenerator generator)
 	{
 		super(seed);
@@ -53,8 +58,7 @@ public class NoiseCoherent extends NoiseBase
 	}
 	
 	@Override
-	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale,
-			double yScale, double zScale)
+	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale, double yScale, double zScale)
 	{
 		array = getOrCreate(array, u, v, w, false);
 		double xM = xScale / this.length;
@@ -64,10 +68,7 @@ public class NoiseCoherent extends NoiseBase
 		double y0 = y * yScale / this.length + this.offsetY;
 		double z0 = z * zScale / this.length + this.offsetZ;
 		double x1 = x0, y1 = y0, z1 = z0;
-		long
-		lastX = (long) x0,
-		lastY = (long) y0,
-		lastZ = (long) z0;
+		long lastX = (long) x0, lastY = (long) y0, lastZ = (long) z0;
 		double n1 = next(lastX, lastY, lastZ);
 		double n2 = next(lastX + 1, lastY, lastZ);
 		double n3 = next(lastX, lastY + 1, lastZ);
@@ -77,11 +78,11 @@ public class NoiseCoherent extends NoiseBase
 		double n7 = next(lastX, lastY + 1, lastZ + 1);
 		double n8 = next(lastX + 1, lastY + 1, lastZ + 1);
 		double u1, u2, u3, u4;
-		for(int k = 0; k < w; ++k, z1 += zM)
+		for (int k = 0; k < w; ++k, z1 += zM)
 		{
-			if(lastZ != (long) z1)
+			if (lastZ != (long) z1)
 			{
-				if(lastX == (long) x0 && lastY == (long) y0 && lastZ + 1 == (long) z1)
+				if (lastX == (long) x0 && lastY == (long) y0 && lastZ + 1 == (long) z1)
 				{
 					++lastZ;
 					n1 = n5;
@@ -108,11 +109,11 @@ public class NoiseCoherent extends NoiseBase
 					n8 = next(lastX + 1, lastY + 1, lastZ + 1);
 				}
 			}
-			for(int j = 0; j < v; ++j, y1 += yM)
+			for (int j = 0; j < v; ++j, y1 += yM)
 			{
-				if(lastY != (long) y1)
+				if (lastY != (long) y1)
 				{
-					if(lastX == (long) x0 && lastY + 1 == (long) y1 && lastZ == (long) z1)
+					if (lastX == (long) x0 && lastY + 1 == (long) y1 && lastZ == (long) z1)
 					{
 						++lastY;
 						n1 = n3;
@@ -139,11 +140,11 @@ public class NoiseCoherent extends NoiseBase
 						n8 = next(lastX + 1, lastY + 1, lastZ + 1);
 					}
 				}
-				for(int i = 0; i < u; ++i, x1 += xM)
+				for (int i = 0; i < u; ++i, x1 += xM)
 				{
-					if(lastX != (long) x1)
+					if (lastX != (long) x1)
 					{
-						if(lastX + 1 == (long) x1 && lastY == (long) y1 && lastZ == (long) z1)
+						if (lastX + 1 == (long) x1 && lastY == (long) y1 && lastZ == (long) z1)
 						{
 							++lastX;
 							n1 = n2;
@@ -227,6 +228,7 @@ public class NoiseCoherent extends NoiseBase
 		n = (n * (n * n * 4837491L + 2372847491729401L) + 474828475927192749L + seed) & 0x7FFFFFFFFFFFFFFFL;
 		return (double) n / (double) 0x7FFFFFFFFFFFFFFFL;
 	}
+	
 	static double next(long x, long y, long z, long seed)
 	{
 		x ^= (x >> 12);

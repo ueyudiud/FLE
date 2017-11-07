@@ -13,20 +13,20 @@ import nebula.common.config.ConfigProperty;
 @nebula.common.config.Config("nebula")
 public class NebulaConfig
 {
-	//Common
+	// Common
 	@ConfigProperty(category = "common", defValue = "false")
 	@ConfigComment("Enable this option to display all fluid in fluid tab")
-	public static boolean displayFluidInTab;
+	public static boolean	displayFluidInTab;
 	@ConfigProperty(category = "common", defValue = "true")
 	@ConfigComment("Enable this option will needed driking water to be alive.")
-	public static boolean enableWaterStat;
+	public static boolean	enableWaterStat;
 	@ConfigProperty(category = "common", defValue = "true")
 	@ConfigComment("The in-game GUI will be changed if enable this option.")
-	public static boolean overrideIngameStat;
-	//Client
+	public static boolean	overrideIngameStat;
+	// Client
 	@Deprecated
-	public static boolean multiThreadLight;
+	public static boolean	multiThreadLight;
 	@ConfigProperty(category = "client", defValue = "true")
 	@ConfigComment("Disable this option will let quad data be caculated during rendering, this will release some memory, but take more time to rendering.")
-	public static boolean storeModelTransformedData;
+	public static boolean	storeModelTransformedData;
 }

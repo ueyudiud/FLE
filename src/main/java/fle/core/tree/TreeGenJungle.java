@@ -40,15 +40,15 @@ public class TreeGenJungle extends TreeGenHuge
 			
 			for (int i1 = y + l - 2 - random.nextInt(4); i1 > y + l / 2; i1 -= 2 + random.nextInt(4))
 			{
-				float f = random.nextFloat() * (float)Math.PI * 2.0F;
-				int j1 = x + (int)(0.5F + MathHelper.cos(f) * 4.0F);
-				int k1 = z + (int)(0.5F + MathHelper.sin(f) * 4.0F);
+				float f = random.nextFloat() * (float) Math.PI * 2.0F;
+				int j1 = x + (int) (0.5F + MathHelper.cos(f) * 4.0F);
+				int k1 = z + (int) (0.5F + MathHelper.sin(f) * 4.0F);
 				int l1;
 				
 				for (l1 = 0; l1 < 5; ++l1)
 				{
-					j1 = x + (int)(1.5F + MathHelper.cos(f) * l1);
-					k1 = z + (int)(1.5F + MathHelper.sin(f) * l1);
+					j1 = x + (int) (1.5F + MathHelper.cos(f) * l1);
+					k1 = z + (int) (1.5F + MathHelper.sin(f) * l1);
 					generateLog(world, j1, i1 - 3 + l1 / 2, k1, 1);
 				}
 				

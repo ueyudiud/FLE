@@ -198,8 +198,7 @@ public interface IFarBlockState extends IBlockState
 	}
 	
 	@Override
-	default void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB aabb,
-			List<AxisAlignedBB> list, Entity entity)
+	default void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> list, Entity entity)
 	{
 		getBlock().addCollisionBoxToList(this, worldIn, pos, aabb, list, entity);
 	}

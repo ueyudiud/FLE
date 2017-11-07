@@ -17,6 +17,7 @@ public abstract class PacketBlockCoord extends PacketWorld
 	{
 		
 	}
+	
 	public PacketBlockCoord(World world, BlockPos pos)
 	{
 		super(world);

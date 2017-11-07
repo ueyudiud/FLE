@@ -20,8 +20,8 @@ import net.minecraft.world.gen.layer.IntCache;
  */
 public class LayerRiverMix extends Layer
 {
-	private GenLayer base;
-	private GenLayer river;
+	private GenLayer	base;
+	private GenLayer	river;
 	
 	public LayerRiverMix(long seed, GenLayer base, GenLayer river)
 	{

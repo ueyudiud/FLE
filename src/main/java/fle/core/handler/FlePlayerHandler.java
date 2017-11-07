@@ -22,17 +22,16 @@ public class FlePlayerHandler
 	
 	public static class PlayerInformation
 	{
-		boolean dronInToVoid = false;
-		int respawnXReal;
-		int respawnYReal;
-		int respawnZReal;
+		boolean	dronInToVoid	= false;
+		int		respawnXReal;
+		int		respawnYReal;
+		int		respawnZReal;
 	}
 	
 	private PlayerInformation getOrCreateInformation(EntityPlayer player)
 	{
 		UUID uuid = player.getGameProfile().getId();
-		if(map.containsKey(uuid))
-			return map.get(uuid);
+		if (map.containsKey(uuid)) return map.get(uuid);
 		PlayerInformation information = new PlayerInformation();
 		map.put(uuid, information);
 		return information;
@@ -47,9 +46,8 @@ public class FlePlayerHandler
 	@SubscribeEvent
 	public void onPlayerDead(LivingDeathEvent event)
 	{
-		if(!event.getEntityLiving().isServerWorld()) return;
-		if(event.getEntityLiving() instanceof EntityPlayerMP &&
-				event.getSource() instanceof DamageSourceTransfer)
+		if (!event.getEntityLiving().isServerWorld()) return;
+		if (event.getEntityLiving() instanceof EntityPlayerMP && event.getSource() instanceof DamageSourceTransfer)
 		{
 			markTransferPlayerToVoid((EntityPlayerMP) event.getEntityLiving());
 		}
@@ -61,21 +59,21 @@ public class FlePlayerHandler
 		PlayerInformation information = getOrCreateInformation(player);
 		information.dronInToVoid = true;
 	}
-
+	
 	@SubscribeEvent
 	public void onPlayerRespawn(PlayerRespawnEvent event)
 	{
 		
 	}
-
+	
 	@SubscribeEvent
 	public void onPlayerRespawn(LivingUpdateEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayerMP)
+		if (event.getEntityLiving() instanceof EntityPlayerMP)
 		{
-			if(getOrCreateInformation((EntityPlayer) event.getEntityLiving()).dronInToVoid)
+			if (getOrCreateInformation((EntityPlayer) event.getEntityLiving()).dronInToVoid)
 			{
-				if(event.getEntityLiving().world.provider.getDimension() != FLEAPI.voidDimID)
+				if (event.getEntityLiving().world.provider.getDimension() != FLEAPI.voidDimID)
 				{
 					((EntityPlayerMP) event.getEntityLiving()).inventory.clear();
 					event.getEntityLiving().setDead();

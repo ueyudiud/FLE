@@ -9,25 +9,25 @@ public class CalendarEmpty implements ICalendar
 	{
 		return 1000;
 	}
-
+	
 	@Override
 	public long day(long tick)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public long dayInYear(long tick)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public double dProgressInYear(long tick)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public String dateInfo(long tick)
 	{

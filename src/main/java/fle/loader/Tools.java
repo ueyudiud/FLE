@@ -43,10 +43,18 @@ public class Tools
 {
 	public static void initalizeTools()
 	{
-		EnumPhysicalDamageType.HIT.setSkill(new SkillAbstract("damage.hit", "Hit"){}.setExpInfo(100, 4.0F, 0.8F));
-		EnumPhysicalDamageType.CUT.setSkill(new SkillAbstract("damage.cutting", "Cutting"){}.setExpInfo(100, 4.0F, 0.8F));
-		EnumPhysicalDamageType.PUNCTURE.setSkill(new SkillAbstract("damage.puncture", "Puncture"){}.setExpInfo(100, 4.0F, 0.8F));
-		EnumPhysicalDamageType.SMASH.setSkill(new SkillAbstract("damage.smash", "Smash"){}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.HIT.setSkill(new SkillAbstract("damage.hit", "Hit")
+		{
+		}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.CUT.setSkill(new SkillAbstract("damage.cutting", "Cutting")
+		{
+		}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.PUNCTURE.setSkill(new SkillAbstract("damage.puncture", "Puncture")
+		{
+		}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.SMASH.setSkill(new SkillAbstract("damage.smash", "Smash")
+		{
+		}.setExpInfo(100, 4.0F, 0.8F));
 		
 		new ItemToolHead(MC.hard_hammer_flint);
 		new ItemToolHead(MC.shovel_rock);
@@ -77,16 +85,13 @@ public class Tools
 		addTool(17, "chisel.rock", "Chisel", null, MC.chisel_rock, new ToolChisel(), true, true, SubTags.ROPE, SubTags.HANDLE, new BehaviorModeSwitching("chisel", "carve", "polish"));
 	}
 	
-	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead,
-			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
+	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle,
+			IBehavior...behaviors)
 	{
 		return IBFS.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, behaviors);
 	}
 	
-	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle,
-			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
+	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior...behaviors)
 	{
 		return IBFS.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition, filterTie, filterHandle, behaviors);
 	}

@@ -26,13 +26,14 @@ public class FarWorldType extends WorldType
 {
 	/**
 	 * The {@link net.minecraft.world.storage.WorldInfo} use <tt>"default"</tt>
-	 * as default world generator if no matched world type found, so the replaced
-	 * world type is suggested set a same name to old world type.
+	 * as default world generator if no matched world type found, so the
+	 * replaced world type is suggested set a same name to old world type.
+	 * 
 	 * @see fargen.core.FarGen#load(net.minecraftforge.fml.common.event.FMLInitializationEvent)
 	 */
-	public static WorldType DEFAULT;
-	public static WorldType FLAT = WorldType.FLAT;
-	public static WorldType LARGE_BIOMES;
+	public static WorldType	DEFAULT;
+	public static WorldType	FLAT	= WorldType.FLAT;
+	public static WorldType	LARGE_BIOMES;
 	
 	public FarWorldType(int index, String name, String localName)
 	{
@@ -46,6 +47,7 @@ public class FarWorldType extends WorldType
 		}
 		LanguageManager.registerLocal("generator." + getName(), localName);
 	}
+	
 	public FarWorldType(String name, String localName)
 	{
 		super(FarGenConfig.hardOverride ? name : "far_" + name);
@@ -89,22 +91,20 @@ public class FarWorldType extends WorldType
 	{
 		switch (world.provider.getDimension())
 		{
-		case  0 : //The surface type.
-			if(this == DEFAULT)
+		case 0: // The surface type.
+			if (this == DEFAULT)
 				return new FarSurfaceChunkGenerator(world, world.getSeed());
-			//	return new ChunkProviderOverworld(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
-			else if(this == FLAT)
-				return new ChunkProviderFlat(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
+			// return new ChunkProviderOverworld(world, world.getSeed(),
+			// world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
+			else if (this == FLAT) return new ChunkProviderFlat(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
 			break;
-		case  1 : //The nether type.
-			if(this == DEFAULT)
-				return new ChunkProviderHell(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
+		case 1: // The nether type.
+			if (this == DEFAULT) return new ChunkProviderHell(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
 			break;
-		case -1 : //The end type.
-			if(this == DEFAULT)
-				return new ChunkProviderEnd(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
+		case -1: // The end type.
+			if (this == DEFAULT) return new ChunkProviderEnd(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
 			break;
-		default : //For others.
+		default: // For others.
 			break;
 		}
 		return super.getChunkGenerator(world, generatorOptions);
@@ -115,19 +115,19 @@ public class FarWorldType extends WorldType
 	{
 		switch (world.provider.getDimension())
 		{
-		case 0 :
-			if(this == DEFAULT)
+		case 0:
+			if (this == DEFAULT)
 			{
 				return new FarSurfaceBiomeProvider(world.getWorldInfo());
 			}
-			//				return new FarSurfaceBiomeProvider(world.getWorldInfo());
-			else if(this == FLAT)
+			// return new FarSurfaceBiomeProvider(world.getWorldInfo());
+			else if (this == FLAT)
 			{
 				FlatGeneratorInfo info = FlatGeneratorInfo.createFlatGeneratorFromString(world.getWorldInfo().getGeneratorOptions());
 				return new BiomeProviderSingle(Biome.getBiome(info.getBiome(), Biomes.DEFAULT));
 			}
 			break;
-		default :
+		default:
 			break;
 		}
 		return super.getBiomeProvider(world);

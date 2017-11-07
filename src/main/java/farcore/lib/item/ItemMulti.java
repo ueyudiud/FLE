@@ -28,23 +28,25 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Material provided, multi-generated item type.
- * Used in many items with similar function and different properties.
+ * Material provided, multi-generated item type. Used in many items with similar
+ * function and different properties.
+ * 
  * @author ueyudiud
  * @see nebula.common.item.ItemSubBehavior
  */
 public class ItemMulti extends ItemBase implements IUpdatableItem
 {
 	/**
-	 * General method for multiple item, use to get material from stack.
-	 * Return VOID material if stack is invalid.
+	 * General method for multiple item, use to get material from stack. Return
+	 * VOID material if stack is invalid.
+	 * 
 	 * @see farcore.lib.material.Mat
 	 * @param stack
 	 * @return
 	 */
 	public static Mat getMaterial(ItemStack stack)
 	{
-		if(stack != null && stack.getItem() instanceof ItemMulti)
+		if (stack != null && stack.getItem() instanceof ItemMulti)
 			return ((ItemMulti) stack.getItem()).getMaterialFromItem(stack);
 		else
 			return Mat.VOID;
@@ -52,13 +54,15 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	
 	/**
 	 * Get sub meta from stack.
-	 * @param stack the stack should be predicated that {@code stack.getItem() instanceof ItemMulti == true}.
+	 * 
+	 * @param stack the stack should be predicated that
+	 *            {@code stack.getItem() instanceof ItemMulti == true}.
 	 * @return the sub meta of stack.
 	 * @see nebula.common.item.ItemBase#getStackMetaOffset
 	 */
 	public static int getSubMeta(ItemStack stack)
 	{
-		if(stack != null && stack.getItem() instanceof ItemMulti)
+		if (stack != null && stack.getItem() instanceof ItemMulti)
 			return ((ItemMulti) stack.getItem()).getStackMetaOffset(stack);
 		else
 			return 0;
@@ -68,6 +72,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		return createStack(material, condition, 1);
 	}
+	
 	public static ItemStack createStack(Mat material, MatCondition condition, int size)
 	{
 		if (condition.instance != null)
@@ -86,15 +91,16 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		return null;
 	}
 	
-	public final MatCondition condition;
-	protected boolean enableChemicalFormula = true;
-	protected boolean registerToOreDict = true;
+	public final MatCondition	condition;
+	protected boolean			enableChemicalFormula	= true;
+	protected boolean			registerToOreDict		= true;
 	
 	public ItemMulti(MatCondition mc)
 	{
 		this(FarCore.ID, mc);
 		this.hasSubtypes = true;
 	}
+	
 	public ItemMulti(String modid, MatCondition mc)
 	{
 		super(modid, "multi." + mc.name);
@@ -111,6 +117,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	
 	/**
 	 * Get translation of displaying tool tip.
+	 * 
 	 * @param stack
 	 * @param tag
 	 * @return
@@ -123,7 +130,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			if (material.itemProp != null)
@@ -132,14 +139,17 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 				{
 					ItemStack s1 = templete.copy();
 					material.itemProp.setInstanceFromMeta(s1, i, material, this.condition);
-					LanguageManager.registerLocal(getTranslateName(s1),
-							this.condition.getLocal(material.itemProp.getReplacedLocalName(i, material)));
+					LanguageManager.registerLocal(getTranslateName(s1), this.condition.getLocal(material.itemProp.getReplacedLocalName(i, material)));
 				}
 			}
 			else
 			{
-				LanguageManager.registerLocal(
-						getTranslateName(templete),//If there will any replaced exist.
+				LanguageManager.registerLocal(getTranslateName(templete),// If
+																			// there
+																			// will
+																			// any
+																			// replaced
+																			// exist.
 						this.condition.getLocal(material));
 			}
 			if (this.registerToOreDict)
@@ -161,7 +171,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition))
 		{
 			ItemStack stack = new ItemStack(itemIn, 1, material.id);
 			if (material.itemProp != null)
@@ -191,39 +201,37 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		if(!entityIn.world.isRemote)
+		if (!entityIn.world.isRemote)
 		{
 			stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
-			if(entityIn instanceof EntityPlayer)
+			if (entityIn instanceof EntityPlayer)
 			{
-				if(stack == null)
+				if (stack == null)
 				{
 					((EntityPlayer) entityIn).inventory.removeStackFromSlot(itemSlot);
 					return;
 				}
 			}
-			if(stack.getItem() != this)
-				return;
+			if (stack.getItem() != this) return;
 		}
 	}
 	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
-		if(!entityItem.world.isRemote)
+		if (!entityItem.world.isRemote)
 		{
 			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
-			if(stack == null)
+			if (stack == null)
 			{
 				entityItem.setDead();
 				return false;
 			}
-			else if(stack != entityItem.getEntityItem())
+			else if (stack != entityItem.getEntityItem())
 			{
 				entityItem.setEntityItemStack(stack);
 			}
-			if(stack.getItem() != this)
-				return true;
+			if (stack.getItem() != this) return true;
 		}
 		return false;
 	}
@@ -232,7 +240,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material.itemProp != null)
+		if (material.itemProp != null)
 		{
 			stack = material.itemProp.updateItem(stack, material, this.condition, environment);
 		}
@@ -249,24 +257,22 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public int getStackMetaOffset(ItemStack stack)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material != null && material.itemProp != null)
-			return material.itemProp.getMetaOffset(stack, material, this.condition);
+		if (material != null && material.itemProp != null) return material.itemProp.getMetaOffset(stack, material, this.condition);
 		return 0;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
-		if(this.enableChemicalFormula)
+		if (this.enableChemicalFormula)
 		{
 			unlocalizedList.addNotNull("info.material.chemical.formula." + getMaterialFromItem(stack));
 		}
 		unlocalizedList.addToolTip("info.material.custom." + getMaterialFromItem(stack).name);
 		Mat material = getMaterialFromItem(stack);
-		if(material.itemProp != null)
+		if (material.itemProp != null)
 		{
 			material.itemProp.addInformation(stack, material, this.condition, unlocalizedList);
 		}
@@ -277,7 +283,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		super.setDamage(stack, damage & 0x7FFF);
 		Mat material = getMaterialFromItem(stack);
-		if(material.itemProp != null)
+		if (material.itemProp != null)
 		{
 			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.condition);
 		}

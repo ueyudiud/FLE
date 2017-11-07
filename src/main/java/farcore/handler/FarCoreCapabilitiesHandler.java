@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * The capabilities wrapper handler.
+ * 
  * @author ueyudiud
  */
 public class FarCoreCapabilitiesHandler
@@ -41,9 +42,7 @@ public class FarCoreCapabilitiesHandler
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 		{
-			return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY &&
-					this.tile instanceof IFluidHandler &&
-					((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
+			return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.tile instanceof IFluidHandler && ((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
 		}
 		
 		@Override

@@ -14,8 +14,8 @@ import net.minecraft.item.ItemStack;
  */
 public class OreStackExt implements AbstractStack
 {
-	private final String name;
-	private final int size;
+	private final String	name;
+	private final int		size;
 	
 	public OreStackExt(String ore)
 	{

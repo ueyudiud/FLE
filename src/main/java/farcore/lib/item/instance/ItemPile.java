@@ -33,11 +33,9 @@ public class ItemPile extends ItemMulti
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(!playerIn.canPlayerEdit(pos, facing, stack))
-			return EnumActionResult.FAIL;
+		if (!playerIn.canPlayerEdit(pos, facing, stack)) return EnumActionResult.FAIL;
 		Mat material = getMaterialFromItem(stack);
 		PropertyBlockable<?> property;
 		if (material.contain(SubTags.SAND))
@@ -57,8 +55,7 @@ public class ItemPile extends ItemMulti
 		if (material.contain(SubTags.DIRT) && stack.stackSize >= 9)
 		{
 			property = material.getProperty(MP.property_soil);
-			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack,
-					property.block.getDefaultState(), false) == EnumActionResult.SUCCESS)
+			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState(), false) == EnumActionResult.SUCCESS)
 			{
 				stack.stackSize -= 9;
 				return EnumActionResult.SUCCESS;
@@ -68,8 +65,7 @@ public class ItemPile extends ItemMulti
 		{
 			int use = Math.min(16, stack.stackSize);
 			property = material.getProperty(MP.property_sand);
-			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack,
-					property.block.getDefaultState().withProperty(BlockSand.LAYER, use), false) == EnumActionResult.SUCCESS)
+			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState().withProperty(BlockSand.LAYER, use), false) == EnumActionResult.SUCCESS)
 			{
 				stack.stackSize -= use;
 				return EnumActionResult.SUCCESS;

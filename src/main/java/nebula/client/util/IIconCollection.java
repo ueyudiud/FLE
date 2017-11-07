@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The texture supplier.
+ * 
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)

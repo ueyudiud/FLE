@@ -30,8 +30,7 @@ public abstract class LayerExpandMix extends Layer
 			for (int x1 = 0; x1 < w; x1++)
 			{
 				int index = (x1 + 1) + (z1 + 1) * xSize;
-				res[x1 + z1 * w] = getValue(x + x1 + 1, y + z1 + 1,
-						par[index - xSize], par[index + xSize], par[index - 1], par[index + 1], par[index]);
+				res[x1 + z1 * w] = getValue(x + x1 + 1, y + z1 + 1, par[index - xSize], par[index + xSize], par[index - 1], par[index + 1], par[index]);
 			}
 		return res;
 	}

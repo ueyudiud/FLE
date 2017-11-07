@@ -38,8 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class NebulaRenderHandler implements IIconLoader
 {
-	public static final NebulaRenderHandler INSTNACE = new NebulaRenderHandler();
-	public static boolean itemRenderingFlag = false;
+	public static final NebulaRenderHandler	INSTNACE			= new NebulaRenderHandler();
+	public static boolean					itemRenderingFlag	= false;
 	
 	public static boolean isItemRendering()
 	{
@@ -47,8 +47,8 @@ public final class NebulaRenderHandler implements IIconLoader
 	}
 	
 	/**
-	 * Register a item use custom renderer instead of model
-	 * rendering.
+	 * Register a item use custom renderer instead of model rendering.
+	 * 
 	 * @param item the item using custom renderer.
 	 * @param render the used renderer.
 	 * @see nebula.client.render.IItemCustomRender
@@ -80,10 +80,10 @@ public final class NebulaRenderHandler implements IIconLoader
 	@Override
 	public void registerIcon(IIconRegister register)
 	{
-		this.renders.values().forEach(l->l.registerIcon(register));
+		this.renders.values().forEach(l -> l.registerIcon(register));
 	}
 	
-	//Game display HUD rendering start.
+	// Game display HUD rendering start.
 	@SubscribeEvent
 	public void renderHUD(RenderGameOverlayEvent.Pre event)
 	{
@@ -94,7 +94,8 @@ public final class NebulaRenderHandler implements IIconLoader
 			EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
 			if (event.getType() == ElementType.HEALTH)
 			{
-				if (NebulaConfig.enableWaterStat)//Water stat need render before health rendering.
+				if (NebulaConfig.enableWaterStat)// Water stat need render
+													// before health rendering.
 				{
 					renderWaterStat(mc, player, updateCounter, event.getPartialTicks(), event.getResolution());
 				}
@@ -103,14 +104,16 @@ public final class NebulaRenderHandler implements IIconLoader
 			{
 				if (ForgeHooks.getTotalArmorValue(player) == 0)
 				{
-					//If level is 0, the GUI should not left a rendering position to armor, but vanilla rendering did.
-					//I don't know is this is a BUG or just a feature.
+					// If level is 0, the GUI should not left a rendering
+					// position to armor, but vanilla rendering did.
+					// I don't know is this is a BUG or just a feature.
 					left_height -= 10;
 				}
 			}
 			else if (event.getType() == ElementType.EXPERIENCE)
 			{
-				//				event.setCanceled(true);//Move experience information to player state screen.
+				// event.setCanceled(true);//Move experience information to
+				// player state screen.
 			}
 		}
 	}
@@ -138,24 +141,28 @@ public final class NebulaRenderHandler implements IIconLoader
 			int y = top;
 			byte background = 0;
 			
-			//			if (stats.getWaterLevel() > 10 && updateCounter % (level * 3 + 1) == 0)
-			//			{
-			//				y += L.nextInt(3) - 1;
-			//			}
+			// if (stats.getWaterLevel() > 10 && updateCounter % (level * 3 + 1)
+			// == 0)
+			// {
+			// y += L.nextInt(3) - 1;
+			// }
 			
 			Renders.drawTexturedModalRect(x, y, background * 9, 0, 9, 9, 0);
 			
 			if (idx < level)
-				Renders.drawTexturedModalRect(x, y, 0, 9, 9, 9, 0);//Full water icon.
-			else if (idx == level)
-				Renders.drawTexturedModalRect(x, y, 9, 9, 9, 9, 0);//Half water icon.
+				Renders.drawTexturedModalRect(x, y, 0, 9, 9, 9, 0);// Full water
+																	// icon.
+			else if (idx == level) Renders.drawTexturedModalRect(x, y, 9, 9, 9, 9, 0);// Half
+																						// water
+																						// icon.
 		}
 		
-		mc.renderEngine.bindTexture(GuiIngameForge.ICONS);//Bind back to vanilla texture.
-		GlStateManager.disableBlend();//GUI need disable blend.
+		mc.renderEngine.bindTexture(GuiIngameForge.ICONS);// Bind back to
+															// vanilla texture.
+		GlStateManager.disableBlend();// GUI need disable blend.
 		
 		mc.mcProfiler.endSection();
 	}
 	
-	//Game display HUD rendering end.
+	// Game display HUD rendering end.
 }

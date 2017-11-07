@@ -83,27 +83,27 @@ public class CommonLoader
 	public void preload()
 	{
 		ProgressBar bar = push("Far Core Preload", 8);
-		//Register common handler.
+		// Register common handler.
 		bar.step("Register Game Handlers");
 		registerEventListenerToMF(FarCoreEnergyHandler.getHandler());
 		registerEventListenerToMF(FarCoreCapabilitiesHandler.class);
 		registerEventListenerToMF(FarCoreBlockHandler.class);
-		//Register energy nets.
+		// Register energy nets.
 		bar.step("Add Energy Nets");
 		addNet(ThermalNet.INSTANCE);
 		addNet(new IEnergyNet.Impl(KineticNet.instance));
-		//Register world objects.
+		// Register world objects.
 		bar.step("Register World Objects");
 		NebulaWorldHandler.registerObject("heat.wave", HeatWave.class);
-		//Register local world handler.
+		// Register local world handler.
 		bar.step("Register Local World Handlers");
 		registerWorldThermalHandler(new TemperatureHandler());
-		//Initialize materials
-		//Some material will create blocks and items.
-		//DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
+		// Initialize materials
+		// Some material will create blocks and items.
+		// DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
 		bar.step("Initalize Materials");
 		M.init();
-		//Initialize blocks & items & fluids.
+		// Initialize blocks & items & fluids.
 		bar.step("Add Items and Blocks and Fluids");
 		new ItemDebugger().setCreativeTab(CT.TOOL);
 		EnumItem.display_fluid.set(Item.REGISTRY.getObject(new ResourceLocation("nebula", "display.fluid")));
@@ -136,16 +136,16 @@ public class CommonLoader
 		new BlockMetal();
 		new BlockScreen();
 		EnumBlock.vine.set(new BlockPlantVine(M.vine).setCreativeTab(CT.CROP_AND_WILD_PLANTS));
-		//Register tile entities.
+		// Register tile entities.
 		bar.step("Register Tile Entities");
 		registerTileEntity(TECrop.class, "farcore.crop");
 		registerTileEntity(TEOre.class, "farcore.ore");
 		registerTileEntity(TECustomCarvedStone.class, "farcore.carved.stone");
 		registerTileEntity(TESapling.class, "farcore.sapling");
 		registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
-		//		//Register entities.
-		//		bar.step("Register Entities");
-		//Initialize potions and mob effects.
+		// //Register entities.
+		// bar.step("Register Entities");
+		// Initialize potions and mob effects.
 		bar.step("Add Potion Effects");
 		Potions.init();
 		pop(bar);
@@ -154,8 +154,8 @@ public class CommonLoader
 	public void load()
 	{
 		ProgressBar bar = push("Far Core Load", 3);
-		//Post load item and block.
-		//For register to Ore Dictionary, Tool Uses, Compatibility, etc.
+		// Post load item and block.
+		// For register to Ore Dictionary, Tool Uses, Compatibility, etc.
 		bar.step("Post initalizing Items and Blocks");
 		ToolHooks.addEfficiencyTool(ROCK, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
 		ToolHooks.addHarvestableTool(ROCK, true, EnumToolTypes.HAMMER_DIGABLE);
@@ -165,7 +165,7 @@ public class CommonLoader
 		ToolHooks.addEfficiencyTool(LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
 		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
 		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
-		//Register languages.
+		// Register languages.
 		bar.step("Register Localized Entries");
 		registerLocal("info.debug.date", "Date : ");
 		registerLocal("info.log.length", "Legnth : %d");
@@ -200,7 +200,7 @@ public class CommonLoader
 	public void postload()
 	{
 		ProgressBar bar = ProgressManager.push("Far Core Post Load", 1);
-		//Reload materials.
+		// Reload materials.
 		bar.step("Reload Materials");
 		for (Mat material : Mat.materials())
 		{

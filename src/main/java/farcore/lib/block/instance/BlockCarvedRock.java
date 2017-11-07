@@ -26,7 +26,7 @@ public class BlockCarvedRock extends BlockSingleTE
 	{
 		super("carved_rock", Material.ROCK);
 		EnumBlock.carved_rock.set(this);
-		if(!Config.splitBrightnessOfSmallBlock)
+		if (!Config.splitBrightnessOfSmallBlock)
 		{
 			this.useNeighborBrightness = true;
 		}
@@ -59,8 +59,7 @@ public class BlockCarvedRock extends BlockSingleTE
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TECustomCarvedStone)
-			return ((TECustomCarvedStone) tile).isFullCube();
+		if (tile instanceof TECustomCarvedStone) return ((TECustomCarvedStone) tile).isFullCube();
 		return true;
 	}
 	

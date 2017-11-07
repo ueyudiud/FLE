@@ -29,7 +29,7 @@ public class BlockStreamFluid extends BlockStandardFluid implements IExtendedDat
 	
 	protected static Function<Object[], IBlockState> createFunctionApplier(BlockStreamFluid block)
 	{
-		return objects->block.getDefaultState().withProperty(LEVEL, create(objects).readOrSkip(block.quantaPerBlock) - 1);
+		return objects -> block.getDefaultState().withProperty(LEVEL, create(objects).readOrSkip(block.quantaPerBlock) - 1);
 	}
 	
 	public BlockStreamFluid(String registerName, FluidBase fluid, Material material)

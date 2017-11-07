@@ -51,8 +51,8 @@ public class BehaviorResearchItems1 extends BehaviorBase implements IIP_Containe
 	@SideOnly(Side.CLIENT)
 	private ResearchInstanceProxyClient generateProxy(EntityPlayer player)
 	{
-		int[][] points = {{5, 0}, {15, 0}, {0, 10}, {20, 10}, {5, 20}, {15, 20}};
-		int[][] links = {{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 3}, {2, 4}, {2, 5}, {3, 4}, {3, 5}, {4, 5}};
+		int[][] points = { { 5, 0 }, { 15, 0 }, { 0, 10 }, { 20, 10 }, { 5, 20 }, { 15, 20 } };
+		int[][] links = { { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 1, 2 }, { 1, 3 }, { 1, 4 }, { 1, 5 }, { 2, 3 }, { 2, 4 }, { 2, 5 }, { 3, 4 }, { 3, 5 }, { 4, 5 } };
 		ResearchInstance instance = new ResearchInstance(points, links);
 		return new ResearchInstanceProxyClient(player, instance);
 	}

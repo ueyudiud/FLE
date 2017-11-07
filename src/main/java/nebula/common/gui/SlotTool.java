@@ -22,7 +22,7 @@ public class SlotTool extends SlotBase
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean canPutStack(EntityPlayer player, ItemStack stack)
 	{
@@ -52,7 +52,7 @@ public class SlotTool extends SlotBase
 	{
 		return null;
 	}
-
+	
 	@Override
 	public void onSlotChanged()
 	{
@@ -64,7 +64,7 @@ public class SlotTool extends SlotBase
 	{
 		;
 	}
-
+	
 	@Override
 	public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
 	{

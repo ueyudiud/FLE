@@ -7,15 +7,16 @@ public class PropertyBlockable<B extends Block>
 {
 	public Mat material;
 	
-	public int harvestLevel;
+	public int		harvestLevel;
 	/**
 	 * The block hardness, for each block unit, this is extensive value.
 	 */
-	public float hardness;
+	public float	hardness;
 	/**
-	 * The block explosion resistance, for every block part, this is intensity value.
+	 * The block explosion resistance, for every block part, this is intensity
+	 * value.
 	 */
-	public float explosionResistance;
+	public float	explosionResistance;
 	
 	public B block;
 	

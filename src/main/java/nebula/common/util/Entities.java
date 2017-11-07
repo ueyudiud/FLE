@@ -15,7 +15,9 @@ import net.minecraft.util.math.BlockPos;
  */
 public final class Entities
 {
-	private Entities() {}
+	private Entities()
+	{
+	}
 	
 	public static double distanceSq(Entity entity, BlockPos pos)
 	{

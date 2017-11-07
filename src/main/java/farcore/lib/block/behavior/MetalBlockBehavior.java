@@ -31,8 +31,7 @@ public class MetalBlockBehavior<B extends BlockMetal> extends PropertyBlockable<
 	}
 	
 	@Override
-	public float getExplosionResistance(B block, IBlockState state, World world, BlockPos pos, Entity exploder,
-			Explosion explosion)
+	public float getExplosionResistance(B block, IBlockState state, World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return this.explosionResistance;
 	}

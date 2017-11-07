@@ -22,7 +22,9 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
 
 /**
- * The configuration handler, use to load configuration from file.<p>
+ * The configuration handler, use to load configuration from file.
+ * <p>
+ * 
  * @author ueyudiud
  * @see nebula.common.config.Config
  */
@@ -30,6 +32,7 @@ public final class NebulaConfiguration
 {
 	/**
 	 * Load configuration from file, the config can not be null.
+	 * 
 	 * @param config
 	 * @return
 	 */
@@ -37,10 +40,12 @@ public final class NebulaConfiguration
 	{
 		return loadConfig(config, "", config.getClass());
 	}
+	
 	public static Configuration loadConfig(@Nonnull Class<?> configClass)
 	{
 		return loadConfig(null, configClass);
 	}
+	
 	public static Configuration loadConfig(String category, @Nonnull Class<?> configClass)
 	{
 		try
@@ -54,8 +59,9 @@ public final class NebulaConfiguration
 	}
 	
 	/**
-	 * Load configuration and inject into static field.
-	 * The field should be <tt>static</tt> and <tt>public</tt>.
+	 * Load configuration and inject into static field. The field should be
+	 * <tt>static</tt> and <tt>public</tt>.
+	 * 
 	 * @param configClass
 	 */
 	public static Configuration loadStaticConfig(Class<?> configClass)
@@ -70,8 +76,7 @@ public final class NebulaConfiguration
 	
 	private static Configuration loadConfig(Object obj, String category, Class<?> configClass)
 	{
-		if (!configClass.isAnnotationPresent(Config.class))
-			throw new IllegalArgumentException("The cache type should has @Config annotation.");
+		if (!configClass.isAnnotationPresent(Config.class)) throw new IllegalArgumentException("The cache type should has @Config annotation.");
 		Config annotation = configClass.getAnnotation(Config.class);
 		Configuration config = new Configuration(new File(Game.getMCFile(), "config/" + annotation.value() + ".cfg"));
 		return loadConfig(obj, category, configClass, config, true);
@@ -79,8 +84,7 @@ public final class NebulaConfiguration
 	
 	private static Configuration loadConfig(Object c, String category, Class<?> configClass, Configuration config, boolean load)
 	{
-		if (!configClass.isAnnotationPresent(Config.class))
-			throw new IllegalArgumentException("The cache type should has @Config annotation.");
+		if (!configClass.isAnnotationPresent(Config.class)) throw new IllegalArgumentException("The cache type should has @Config annotation.");
 		
 		if (load)
 		{
@@ -98,7 +102,7 @@ public final class NebulaConfiguration
 		for (Field field : configClass.getFields())
 		{
 			int modifier = field.getModifiers();
-			if ((modifier & Modifier.FINAL) != 0) continue;//Skip final value.
+			if ((modifier & Modifier.FINAL) != 0) continue;// Skip final value.
 			if (flag ^ (modifier & Modifier.STATIC) != 0) continue;
 			@SuppressWarnings("unchecked")
 			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) getAdapter(field);
@@ -143,8 +147,7 @@ public final class NebulaConfiguration
 		return DEFAULT_VALUE_APPLIER.getOrDefault(field.getType(), DEF_VALUE_FUNCTION).apply(field);
 	}
 	
-	private static final Function<Field, String> DEF_VALUE_FUNCTION = field->
-	field.isAnnotationPresent(ConfigProperty.class) ? field.getAnnotation(ConfigProperty.class).defValue() : "";
+	private static final Function<Field, String> DEF_VALUE_FUNCTION = field -> field.isAnnotationPresent(ConfigProperty.class) ? field.getAnnotation(ConfigProperty.class).defValue() : "";
 	
 	private static final TypeAdapter<Object> ADAPTER_ANY = (arg, field, config, category, name, defValue, comments) -> {
 		if (field.isAnnotationPresent(Config.class))
@@ -156,104 +159,106 @@ public final class NebulaConfiguration
 		throw new IllegalArgumentException("Can not found type adapter for " + field.getType().getName() + ".");
 	};
 	
-	private static final TypeAdapter<Integer> ADAPTER_INT = (arg, field, config, category, name, defValue, comments) -> {
-		int minValue, maxValue;
-		
-		if (field.isAnnotationPresent(ConfigRangeInt.class))
-		{
-			ConfigRangeInt range = field.getAnnotation(ConfigRangeInt.class);
-			minValue = range.min();
-			maxValue = range.max();
-			comments += " range: [" + minValue + ", " + maxValue + "]";
-		}
-		else
-		{
-			minValue = Integer.MIN_VALUE;
-			maxValue = Integer.MAX_VALUE;
-		}
-		
-		Property property = config.get(category, name, defValue, comments, Type.INTEGER);
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		property.setDefaultValue(defValue);
-		field.setInt(arg, L.range(minValue, maxValue, property.getInt()));
-	};
-	private static final TypeAdapter<Long> ADAPTER_LONG = (arg, field, config, category, name, defValue, comments) -> {
-		long minValue, maxValue;
-		
-		if (field.isAnnotationPresent(ConfigRangeLong.class))
-		{
-			ConfigRangeLong range = field.getAnnotation(ConfigRangeLong.class);
-			minValue = range.min();
-			maxValue = range.max();
-			comments += " range: [" + minValue + ", " + maxValue + "]";
-		}
-		else
-		{
-			minValue = Long.MIN_VALUE;
-			maxValue = Long.MAX_VALUE;
-		}
-		
-		Property property = config.get(category, name, defValue, comments, Type.INTEGER);
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		property.setDefaultValue(defValue);
-		field.setLong(arg, L.range(minValue, maxValue, property.getLong()));
-	};
-	private static final TypeAdapter<?> ADAPTER_FLOAT = (arg, field, config, category, name, defValue, comments) -> {
-		double minValue, maxValue;
-		
-		if (field.isAnnotationPresent(ConfigRangeFloat.class))
-		{
-			ConfigRangeFloat range = field.getAnnotation(ConfigRangeFloat.class);
-			minValue = range.min();
-			maxValue = range.max();
-			comments += " range: [" + minValue + ", " + maxValue + "]";
-		}
-		else
-		{
-			if (field.getType() == float.class)
-			{
-				minValue = Float.MIN_VALUE;
-				maxValue = Float.MAX_VALUE;
-			}
-			else
-			{
-				minValue = Double.MIN_VALUE;
-				maxValue = Double.MAX_VALUE;
-			}
-		}
-		
-		Property property = config.get(category, name, defValue, comments, Type.DOUBLE);
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		property.setDefaultValue(defValue);
-		if (field.getType() == float.class)
-		{
-			field.setFloat(arg, (float) property.getDouble());
-		}
-		else
-		{
-			field.setDouble(arg, property.getDouble());
-		}
-	};
-	private static final TypeAdapter<Boolean> ADAPTER_BOOLEAN = (arg, field, config, category, name, defValue, comments) -> {
-		Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
-		property.setDefaultValue(defValue);
-		field.setBoolean(arg, property.getBoolean());
-	};
-	private static final TypeAdapter<String> ADAPTER_STRING = (arg, field, config, category, name, defValue, comments) -> {
-		Property property = config.get(category, name, defValue, comments, Type.STRING);
-		property.setDefaultValue(defValue);
-		field.set(arg, property.getString());
-	};
+	private static final TypeAdapter<Integer>	ADAPTER_INT		= (arg, field, config, category, name, defValue, comments) -> {
+																	int minValue, maxValue;
+																	
+																	if (field.isAnnotationPresent(ConfigRangeInt.class))
+																	{
+																		ConfigRangeInt range = field.getAnnotation(ConfigRangeInt.class);
+																		minValue = range.min();
+																		maxValue = range.max();
+																		comments += " range: [" + minValue + ", " + maxValue + "]";
+																	}
+																	else
+																	{
+																		minValue = Integer.MIN_VALUE;
+																		maxValue = Integer.MAX_VALUE;
+																	}
+																	
+																	Property property = config.get(category, name, defValue, comments, Type.INTEGER);
+																	property.setMinValue(minValue);
+																	property.setMaxValue(maxValue);
+																	property.setDefaultValue(defValue);
+																	field.setInt(arg, L.range(minValue, maxValue, property.getInt()));
+																};
+	private static final TypeAdapter<Long>		ADAPTER_LONG	= (arg, field, config, category, name, defValue, comments) -> {
+																	long minValue, maxValue;
+																	
+																	if (field.isAnnotationPresent(ConfigRangeLong.class))
+																	{
+																		ConfigRangeLong range = field.getAnnotation(ConfigRangeLong.class);
+																		minValue = range.min();
+																		maxValue = range.max();
+																		comments += " range: [" + minValue + ", " + maxValue + "]";
+																	}
+																	else
+																	{
+																		minValue = Long.MIN_VALUE;
+																		maxValue = Long.MAX_VALUE;
+																	}
+																	
+																	Property property = config.get(category, name, defValue, comments, Type.INTEGER);
+																	property.setMinValue(minValue);
+																	property.setMaxValue(maxValue);
+																	property.setDefaultValue(defValue);
+																	field.setLong(arg, L.range(minValue, maxValue, property.getLong()));
+																};
+	private static final TypeAdapter<?>			ADAPTER_FLOAT	= (arg, field, config, category, name, defValue, comments) -> {
+																	double minValue, maxValue;
+																	
+																	if (field.isAnnotationPresent(ConfigRangeFloat.class))
+																	{
+																		ConfigRangeFloat range = field.getAnnotation(ConfigRangeFloat.class);
+																		minValue = range.min();
+																		maxValue = range.max();
+																		comments += " range: [" + minValue + ", " + maxValue + "]";
+																	}
+																	else
+																	{
+																		if (field.getType() == float.class)
+																		{
+																			minValue = Float.MIN_VALUE;
+																			maxValue = Float.MAX_VALUE;
+																		}
+																		else
+																		{
+																			minValue = Double.MIN_VALUE;
+																			maxValue = Double.MAX_VALUE;
+																		}
+																	}
+																	
+																	Property property = config.get(category, name, defValue, comments, Type.DOUBLE);
+																	property.setMinValue(minValue);
+																	property.setMaxValue(maxValue);
+																	property.setDefaultValue(defValue);
+																	if (field.getType() == float.class)
+																	{
+																		field.setFloat(arg, (float) property.getDouble());
+																	}
+																	else
+																	{
+																		field.setDouble(arg, property.getDouble());
+																	}
+																};
+	private static final TypeAdapter<Boolean>	ADAPTER_BOOLEAN	= (arg, field, config, category, name, defValue, comments) -> {
+																	Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
+																	property.setDefaultValue(defValue);
+																	field.setBoolean(arg, property.getBoolean());
+																};
+	private static final TypeAdapter<String>	ADAPTER_STRING	= (arg, field, config, category, name, defValue, comments) -> {
+																	Property property = config.get(category, name, defValue, comments, Type.STRING);
+																	property.setDefaultValue(defValue);
+																	field.set(arg, property.getString());
+																};
 	
 	private static final Map<Class<?>, TypeAdapter<?>> TYPE_ADAPTER_MAP = new HashMap<>();
 	
 	private static final Map<Class<?>, Function<Field, ?>> DEFAULT_VALUE_APPLIER = new HashMap<>();
 	
 	/**
-	 * Register a {@link nebula.common.config.TypeAdapter} to configuration loader.
+	 * Register a {@link nebula.common.config.TypeAdapter} to configuration
+	 * loader.
+	 * 
 	 * @param type the type for adapter to loader.
 	 * @param adapter the adapter.
 	 * @param function
@@ -272,10 +277,12 @@ public final class NebulaConfiguration
 		registerTypeAdapter(int.class, ADAPTER_INT, null);
 		registerTypeAdapter(long.class, ADAPTER_LONG, null);
 		registerTypeAdapter(float.class, (TypeAdapter<Float>) ADAPTER_FLOAT, null);
-		registerTypeAdapter(double.class,(TypeAdapter<Double>) ADAPTER_FLOAT, null);
+		registerTypeAdapter(double.class, (TypeAdapter<Double>) ADAPTER_FLOAT, null);
 		registerTypeAdapter(boolean.class, ADAPTER_BOOLEAN, null);
 		registerTypeAdapter(String.class, ADAPTER_STRING, null);
 	}
 	
-	private NebulaConfiguration() { }
+	private NebulaConfiguration()
+	{
+	}
 }

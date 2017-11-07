@@ -27,16 +27,16 @@ public class Localization
 	@SideOnly(Side.CLIENT)
 	public static void addFoodStatInformation(IFoodStat stat, ItemStack stack, UnlocalizedList unlocalizedList)
 	{
-		if(stat != null && stat != IFoodStat.NO_EATABLE)
+		if (stat != null && stat != IFoodStat.NO_EATABLE)
 		{
-			if(unlocalizedList.isSneakDown())
+			if (unlocalizedList.isSneakDown())
 			{
 				unlocalizedList.add("info.food.label");
 				try
 				{
 					unlocalizedList.add("info.food.display", FORMAT_1.format(stat.getFoodAmount(stack)), FORMAT_1.format(stat.getSaturation(stack)), FORMAT_1.format(stat.getDrinkAmount(stack)));
 				}
-				catch(Exception exception)
+				catch (Exception exception)
 				{
 					;
 				}
@@ -57,7 +57,7 @@ public class Localization
 	@SideOnly(Side.CLIENT)
 	public static void addToolMaterialInformation(Mat material, @Nullable IToolStat stat, UnlocalizedList unlocalizedList)
 	{
-		if(!material.contain(SubTags.TOOL)) return;
+		if (!material.contain(SubTags.TOOL)) return;
 		unlocalizedList.add("info.tool.head.name", material.getLocalName());
 		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
 		unlocalizedList.add("info.tool.hardness", FORMAT_1.format(material.toolHardness));

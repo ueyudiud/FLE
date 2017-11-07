@@ -36,8 +36,7 @@ public class RockBehaviorNetherrack extends RockBehavior<BlockRock>
 	}
 	
 	@Override
-	public boolean onBurn(BlockRock block, IBlockState state, IModifiableCoord coord, float burnHardness,
-			Direction direction)
+	public boolean onBurn(BlockRock block, IBlockState state, IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		return false;
 	}

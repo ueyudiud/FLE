@@ -44,12 +44,10 @@ import net.minecraftforge.fluids.IFluidTank;
 /**
  * @author ueyudiud
  */
-public class TESmallRockyTank extends TESynchronization
-implements IFluidHandler, ITP_BlockHardness, ITP_ExplosionResistance,
-ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
+public class TESmallRockyTank extends TESynchronization implements IFluidHandler, ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
 {
-	private Mat material = M.stone;
-	private FluidTankN tank = new FluidTankN(4000).enableTemperature();
+	private Mat			material	= M.stone;
+	private FluidTankN	tank		= new FluidTankN(4000).enableTemperature();
 	
 	private byte light;
 	
@@ -80,8 +78,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if (nbt.hasKey("m"))
-			this.material = Mat.getMaterialByIDOrDefault(nbt, "m", M.stone);
+		if (nbt.hasKey("m")) this.material = Mat.getMaterialByIDOrDefault(nbt, "m", M.stone);
 	}
 	
 	@Override
@@ -96,8 +93,9 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	{
 		switch (type)
 		{
-		case 1 :
-			this.tank.writeToPacket(buf); break;
+		case 1:
+			this.tank.writeToPacket(buf);
+			break;
 		}
 	}
 	
@@ -106,8 +104,9 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	{
 		switch (type)
 		{
-		case 1 :
-			this.tank.readFromPacket(buf); break;
+		case 1:
+			this.tank.readFromPacket(buf);
+			break;
 		}
 	}
 	
@@ -132,8 +131,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	}
 	
 	@Override
-	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer,
-			Direction facing, ItemStack stack)
+	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		this.material = Mat.getMaterialFromStack(stack, "material", this.material);
 		syncToNearby();
@@ -213,9 +211,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_FLUID ?
-				L.castAny(new IFluidHandler.FluidHandlerWrapper(this, Direction.of(facing))) :
-					null;
+		return capability == Capabilities.CAPABILITY_FLUID ? L.castAny(new IFluidHandler.FluidHandlerWrapper(this, Direction.of(facing))) : null;
 	}
 	
 	@Override
@@ -236,8 +232,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 		if (canFill(direction, resource))
 		{
 			int amt = this.tank.fill(resource, process);
-			if (amt > 0 && process)
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+			if (amt > 0 && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			return amt;
 		}
 		return 0;
@@ -249,8 +244,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 		if (canDrain(direction, null))
 		{
 			FluidStack stack = this.tank.drain(maxAmount, process);
-			if (stack != null && process)
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+			if (stack != null && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			return stack;
 		}
 		return null;

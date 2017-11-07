@@ -14,12 +14,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 {
-	public static final byte
-	Working = 0x1, WaitForOutput = 0x2;
+	public static final byte Working = 0x1, WaitForOutput = 0x2;
 	
-	protected C cache;
-	protected int recipeMaxTick;
-	protected int recipeTick;
+	protected C		cache;
+	protected int	recipeMaxTick;
+	protected int	recipeTick;
 	
 	public TEITSRecipe(int size)
 	{
@@ -132,9 +131,12 @@ public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 	{
 		switch (id)
 		{
-		case 0 : return this.recipeTick;
-		case 1 : return this.recipeMaxTick;
-		default : return super.getField(id);
+		case 0:
+			return this.recipeTick;
+		case 1:
+			return this.recipeMaxTick;
+		default:
+			return super.getField(id);
 		}
 	}
 	
@@ -159,9 +161,15 @@ public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 	{
 		switch (id)
 		{
-		case 0 : this.recipeTick = value; return;
-		case 1 : this.recipeMaxTick = value; return;
-		default : super.setField(id, value); return;
+		case 0:
+			this.recipeTick = value;
+			return;
+		case 1:
+			this.recipeMaxTick = value;
+			return;
+		default:
+			super.setField(id, value);
+			return;
 		}
 	}
 }

@@ -29,16 +29,16 @@ public class StateMapperCircuit implements IStateMapperExt
 		IBlockState state = blockIn.getDefaultState();
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
 		PropertyTE property = ((BlockRedstoneCircuit) blockIn).property_TE;
-		for(TETag tag : property.getAllowedValues())
+		for (TETag tag : property.getAllowedValues())
 		{
-			if(tag.name().equals("void"))
+			if (tag.name().equals("void"))
 			{
 				continue;
 			}
 			IBlockState state2 = state.withProperty(property, tag);
-			for(String substate : BlockRedstoneCircuit.ALLOWED_STATES.get(tag.name()))
+			for (String substate : BlockRedstoneCircuit.ALLOWED_STATES.get(tag.name()))
 			{
-				for(Direction facing : Misc.PROP_DIRECTION_HORIZONTALS.getAllowedValues())
+				for (Direction facing : Misc.PROP_DIRECTION_HORIZONTALS.getAllowedValues())
 				{
 					IBlockState state3 = state2.withProperty(BlockRedstoneCircuit.CUSTOM_VALUE, substate).withProperty(Misc.PROP_DIRECTION_HORIZONTALS, facing);
 					Map<IProperty<?>, Comparable<?>> map = new HashMap(state3.getProperties());

@@ -23,6 +23,7 @@ public interface INebulaBakedModelPart
 	
 	/**
 	 * Get baked quad from model part.
+	 * 
 	 * @param facing the facing.
 	 * @param key the variant key.
 	 * @param rand the random number, use to get random model.

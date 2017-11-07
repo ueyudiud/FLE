@@ -50,23 +50,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorableModel
 {
-	private List<INebulaModelPart> parts;
-	private boolean gui3D;
-	private boolean builtIn;
-	private boolean ao;
-	private Item item;
-	ImmutableMap<TransformType, TRSRTransformation> transforms;
-	java.util.function.Function<ItemStack, String>[] itemDataGen;
-	java.util.function.Function<IBlockState, String>[] blockDataGen;
-	int[] itemLoadingData;
-	int[] blockLoadingData;
-	ToIntFunction<ItemStack>[] itemColors;
-	ToIntFunction<IBlockState>[] blockColors;
+	private List<INebulaModelPart>						parts;
+	private boolean										gui3D;
+	private boolean										builtIn;
+	private boolean										ao;
+	private Item										item;
+	ImmutableMap<TransformType, TRSRTransformation>		transforms;
+	java.util.function.Function<ItemStack, String>[]	itemDataGen;
+	java.util.function.Function<IBlockState, String>[]	blockDataGen;
+	int[]												itemLoadingData;
+	int[]												blockLoadingData;
+	ToIntFunction<ItemStack>[]							itemColors;
+	ToIntFunction<IBlockState>[]						blockColors;
 	
 	private Map<String, String> retextures;
 	
 	/**
 	 * Item layer model constructor.
+	 * 
 	 * @param location
 	 */
 	public FlexibleModel(String collection)
@@ -79,8 +80,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		this.builtIn = false;
 	}
 	
-	public FlexibleModel(Item item, ImmutableMap<TransformType, TRSRTransformation> transforms,
-			List<INebulaModelPart> parts, boolean gui3D, boolean ao, boolean builtIn)
+	public FlexibleModel(Item item, ImmutableMap<TransformType, TRSRTransformation> transforms, List<INebulaModelPart> parts, boolean gui3D, boolean ao, boolean builtIn)
 	{
 		this.item = item;
 		this.transforms = transforms;
@@ -90,14 +90,14 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		this.builtIn = builtIn;
 	}
 	
-	private Map<String, IIconCollection> resources;
-	private Collection<ResourceLocation> textures;
+	private Map<String, IIconCollection>	resources;
+	private Collection<ResourceLocation>	textures;
 	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		List<ResourceLocation> list = new ArrayList<>();
-		this.parts.forEach(part->list.addAll(part.getDependencies()));
+		this.parts.forEach(part -> list.addAll(part.getDependencies()));
 		return list;
 	}
 	
@@ -108,12 +108,12 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 			Set<String> keys = new HashSet<>();
 			keys.add("#particle");
 			this.textures = new HashSet<>();
-			this.parts.forEach(part-> {
+			this.parts.forEach(part -> {
 				keys.addAll(part.getResources());
 				this.textures.addAll(part.getDirectResources());
 			});
 			this.resources = new HashMap<>();
-			keys.forEach(key-> {
+			keys.forEach(key -> {
 				IIconCollection handler = getIconHandler(key);
 				this.textures.addAll(handler.resources());
 				this.resources.put(key, handler);
@@ -132,7 +132,10 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		if (this.textures == null) { loadResources(); }
+		if (this.textures == null)
+		{
+			loadResources();
+		}
 		return this.textures;
 	}
 	
@@ -145,7 +148,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	{
 		switch (key.charAt(0))
 		{
-		case '#' :
+		case '#':
 			key = key.substring(1);
 			if (keys.contains(key))
 			{
@@ -153,35 +156,31 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 				return NebulaModelLoader.ICON_HANDLER_MISSING;
 			}
 			keys.add(key);
-			if (this.retextures == null || !this.retextures.containsKey(key))
-				return NebulaModelLoader.ICON_HANDLER_MISSING;
+			if (this.retextures == null || !this.retextures.containsKey(key)) return NebulaModelLoader.ICON_HANDLER_MISSING;
 			return $getIconHandler(this.retextures.get(key), keys);
-		case '{' :
+		case '{':
 			return TemplateIconHandler.fromJson(key);
-		default :
+		default:
 			return NebulaModelLoader.loadIconHandler(key);
 		}
 	}
 	
 	/**
 	 * Bake model.
+	 * 
 	 * @param state Unused.
 	 */
 	@Override
-	public IBakedModel bake(@Nullable IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+	public IBakedModel bake(@Nullable IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		try
 		{
 			TRSRTransformation transformation = state.apply(Optional.absent()).or(TRSRTransformation.identity());
 			ImmutableList.Builder<INebulaBakedModelPart> builder = ImmutableList.builder();
-			this.parts.forEach(part->builder.add(
-					part.bake(format, L.toFunction(this.resources, NebulaModelLoader.ICON_HANDLER_MISSING), bakedTextureGetter::apply, transformation)));
+			this.parts.forEach(part -> builder.add(part.bake(format, L.toFunction(this.resources, NebulaModelLoader.ICON_HANDLER_MISSING), bakedTextureGetter::apply, transformation)));
 			IIconCollection particleSource = getIconHandler("#particle");
 			TextureAtlasSprite particle = bakedTextureGetter.apply(particleSource.build().getOrDefault(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE));
-			return new FlexibleBakedModel(this.transforms, builder.build(), particle,
-					this.gui3D, this.ao, this.builtIn, this.itemDataGen, this.blockDataGen,
-					this.itemLoadingData, this.blockLoadingData);
+			return new FlexibleBakedModel(this.transforms, builder.build(), particle, this.gui3D, this.ao, this.builtIn, this.itemDataGen, this.blockDataGen, this.itemLoadingData, this.blockLoadingData);
 		}
 		catch (Exception exception)
 		{
@@ -195,8 +194,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	{
 		if (textures == null || textures.isEmpty()) return this;
 		Map<String, String> builder = new HashMap<>();
-		if (this.retextures != null)
-			builder.putAll(this.retextures);
+		if (this.retextures != null) builder.putAll(this.retextures);
 		builder.putAll(textures);
 		FlexibleModel model = new FlexibleModel(this.item, this.transforms, this.parts, this.ao, this.gui3D, this.builtIn);
 		model.blockColors = this.blockColors;
@@ -215,8 +213,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		if (this.item != null && this.blockColors != null)
 		{
 			final ToIntFunction<IBlockState>[] functions = this.blockColors;
-			colors.registerBlockColorHandler((state, worldIn, pos, tintIndex)->
-			tintIndex >= functions.length || tintIndex < 0 ? -1 : functions[tintIndex].applyAsInt(state), Block.getBlockFromItem(this.item));
+			colors.registerBlockColorHandler((state, worldIn, pos, tintIndex) -> tintIndex >= functions.length || tintIndex < 0 ? -1 : functions[tintIndex].applyAsInt(state), Block.getBlockFromItem(this.item));
 		}
 	}
 	
@@ -226,8 +223,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		if (this.item != null && this.itemColors != null)
 		{
 			final ToIntFunction<ItemStack>[] functions = this.itemColors;
-			colors.registerItemColorHandler((stack, tintIndex)->
-			tintIndex >= functions.length || tintIndex < 0 ? -1 : functions[tintIndex].applyAsInt(stack), this.item);
+			colors.registerItemColorHandler((stack, tintIndex) -> tintIndex >= functions.length || tintIndex < 0 ? -1 : functions[tintIndex].applyAsInt(stack), this.item);
 		}
 	}
 }

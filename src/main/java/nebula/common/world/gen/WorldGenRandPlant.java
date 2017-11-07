@@ -17,8 +17,8 @@ import net.minecraft.world.gen.feature.WorldGenerator;
  */
 public class WorldGenRandPlant extends WorldGenerator
 {
-	protected int minHeight;
-	protected Selector<IBlockState> selector;
+	protected int					minHeight;
+	protected Selector<IBlockState>	selector;
 	
 	public WorldGenRandPlant(int minHeight, Selector<IBlockState> selector)
 	{
@@ -29,10 +29,7 @@ public class WorldGenRandPlant extends WorldGenerator
 	@Override
 	public boolean generate(World worldIn, Random rand, BlockPos position)
 	{
-		for (IBlockState state = worldIn.getBlockState(position);
-				(state.getBlock().isAir(state, worldIn, position) ||
-						state.getBlock().isLeaves(state, worldIn, position)) && position.getY() >= this.minHeight;
-				state = worldIn.getBlockState(position))
+		for (IBlockState state = worldIn.getBlockState(position); (state.getBlock().isAir(state, worldIn, position) || state.getBlock().isLeaves(state, worldIn, position)) && position.getY() >= this.minHeight; state = worldIn.getBlockState(position))
 		{
 			position = position.down();
 		}
@@ -44,10 +41,7 @@ public class WorldGenRandPlant extends WorldGenerator
 			BlockPos pos1 = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 			IBlockState state = this.selector.next(rand);
 			
-			if (worldIn.isAirBlock(pos1) &&
-					(state.getBlock() instanceof IBlockStayabilityCheck ?
-							((IBlockStayabilityCheck) state.getBlock()).canBlockStayAt(worldIn, pos1, state) :
-								state.getBlock().canPlaceBlockAt(worldIn, pos1)))
+			if (worldIn.isAirBlock(pos1) && (state.getBlock() instanceof IBlockStayabilityCheck ? ((IBlockStayabilityCheck) state.getBlock()).canBlockStayAt(worldIn, pos1, state) : state.getBlock().canPlaceBlockAt(worldIn, pos1)))
 			{
 				worldIn.setBlockState(pos1, state, 2);
 			}

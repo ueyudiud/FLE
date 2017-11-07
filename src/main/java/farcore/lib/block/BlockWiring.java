@@ -15,13 +15,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
- * This type provide wiring type block without
- * limited conduct energy.<br>
- * This class provide some functional method for
- * modder.
+ * This type provide wiring type block without limited conduct energy.<br>
+ * This class provide some functional method for modder.
+ * 
  * @author ueyudiud
  */
-public abstract class BlockWiring extends BlockSingleTE //The wiring block will use only single tile entity.
+public abstract class BlockWiring extends BlockSingleTE // The wiring block will
+														 // use only single tile
+														 // entity.
 {
 	public BlockWiring(String name, Material materialIn)
 	{
@@ -43,11 +44,11 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		TEWiring tile = (TEWiring) worldIn.getTileEntity(pos);
-		if(tile != null)
+		if (tile != null)
 		{
-			for(Direction direction : Direction.DIRECTIONS_3D)
+			for (Direction direction : Direction.DIRECTIONS_3D)
 			{
-				if(tile.canConnectWith(direction))
+				if (tile.canConnectWith(direction))
 				{
 					state = state.withProperty(Misc.PROPS_SIDE[direction.ordinal()], true);
 				}

@@ -51,18 +51,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TECircuitBase extends TESynchronization
-implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride,
-ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
-ITP_Drops, ITP_BoundingBox, ITP_BlockHardness,
-ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
+		implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile, ITP_Drops, ITP_BoundingBox, ITP_BlockHardness, ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	protected volatile boolean circuitRedsignalMarker = false;
 	
-	protected static final ActionResult<Float> SCREW_DRIVER_DAMAGE = new ActionResult<>(EnumActionResult.SUCCESS, 0.2F);
-	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
+	protected static final ActionResult<Float>	SCREW_DRIVER_DAMAGE	= new ActionResult<>(EnumActionResult.SUCCESS, 0.2F);
+	protected static final AxisAlignedBB		REDSTONE_DIODE_AABB	= new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 	
-	public Mat material = M.stone;
-	public Direction facing = Direction.N;
+	public Mat			material	= M.stone;
+	public Direction	facing		= Direction.N;
 	
 	@Override
 	public float getBlockHardness(IBlockState state)
@@ -139,7 +136,8 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		{
 			return Math.max(power, state.getValue(BlockRedstoneWire.POWER));
 		}
-		else return power;
+		else
+			return power;
 	}
 	
 	@Override
@@ -183,14 +181,13 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		IBlockState state = getBlockState();
 		Facing[] facings1 = getOutputFacings();
 		EnumFacing[] facings2 = new EnumFacing[facings1.length];
-		for(int i = 0; i < facings1.length; ++i)
+		for (int i = 0; i < facings1.length; ++i)
 		{
 			facings2[i] = facings1[i].toDirection(this.facing).of();
 		}
-		if(ForgeEventFactory.onNeighborNotify(this.world, this.pos, state, EnumSet.copyOf(Arrays.asList(facings2))).isCanceled())
-			return;
+		if (ForgeEventFactory.onNeighborNotify(this.world, this.pos, state, EnumSet.copyOf(Arrays.asList(facings2))).isCanceled()) return;
 		Block block = state.getBlock();
-		for(EnumFacing facing : facings2)
+		for (EnumFacing facing : facings2)
 		{
 			BlockPos pos1 = this.pos.offset(facing);
 			this.world.notifyBlockOfStateChange(pos1, block);
@@ -217,8 +214,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
-	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
-			Entity entity)
+	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity)
 	{
 		collidingBoxes.add(getCollisionBoundingBox(state));
 	}
@@ -242,17 +238,16 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public void onBlockDestroyedByPlayer(IBlockState state)
 	{
 		Block block = state.getBlock();
-		for(EnumFacing facing : EnumFacing.VALUES)
+		for (EnumFacing facing : EnumFacing.VALUES)
 		{
 			this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), block);
 		}
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if(tool == EnumToolTypes.SCREW_DRIVER)
+		if (tool == EnumToolTypes.SCREW_DRIVER)
 		{
 			onScrewDriverUsed(player, side, hitX, hitY, hitZ);
 			return SCREW_DRIVER_DAMAGE;
@@ -288,6 +283,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	
 	/**
 	 * Used for render type.
+	 * 
 	 * @return
 	 */
 	public String getState()

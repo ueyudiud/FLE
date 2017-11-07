@@ -15,8 +15,8 @@ import net.minecraft.world.EnumSkyBlock;
 public class EntityAICreeperSwellByLight extends EntityAIBase
 {
 	/** The creeper that is swelling. */
-	EntityCreeper swellingCreeper;
-	BlockPos target;
+	EntityCreeper	swellingCreeper;
+	BlockPos		target;
 	
 	public EntityAICreeperSwellByLight(EntityCreeper entitycreeperIn)
 	{

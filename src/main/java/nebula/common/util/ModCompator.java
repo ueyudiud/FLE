@@ -8,6 +8,7 @@ import nebula.Log;
 
 /**
  * To compact with other mods.
+ * 
  * @author ueyudiud
  *
  */
@@ -15,12 +16,14 @@ public class ModCompator
 {
 	/**
 	 * Give a default mod compactor for loading mod.
+	 * 
 	 * @return
 	 */
 	public static ModCompator newCompactor()
 	{
 		return newCompactor(Game.getActiveModID());
 	}
+	
 	public static ModCompator newCompactor(String value)
 	{
 		return COMPATORS.computeIfAbsent(value, ModCompator::new);
@@ -28,8 +31,8 @@ public class ModCompator
 	
 	private static final Map<String, ModCompator> COMPATORS = new HashMap();
 	
-	private Map<String, ICompatible> compatibles = new HashMap();
-	private final String modid;
+	private Map<String, ICompatible>	compatibles	= new HashMap();
+	private final String				modid;
 	
 	ModCompator(String modid)
 	{
@@ -54,7 +57,7 @@ public class ModCompator
 	
 	public final void call(String phase)
 	{
-		for(Entry<String, ICompatible> entry : this.compatibles.entrySet())
+		for (Entry<String, ICompatible> entry : this.compatibles.entrySet())
 		{
 			Log.info("The compatible from {} to {} start to invoke with phase {}.", this.modid, entry.getKey(), phase);
 			try

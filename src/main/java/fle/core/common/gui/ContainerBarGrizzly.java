@@ -25,8 +25,8 @@ import net.minecraft.world.World;
  */
 public class ContainerBarGrizzly extends ContainerBlockPosition implements ITickable
 {
-	private InventorySimple inventory = new InventorySimple(11);
-	private TemplateRecipeCache<ItemStack> cache;
+	private InventorySimple					inventory	= new InventorySimple(11);
+	private TemplateRecipeCache<ItemStack>	cache;
 	
 	public ContainerBarGrizzly(EntityPlayer player, World world, BlockPos pos)
 	{
@@ -37,16 +37,14 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 		addSlotToContainer(new SlotBase(real, 0, 40, 16));
 		addSlotToContainer(new SlotBase(real, 1, 58, 16));
 		addOutputSlotMatrix(real, 97, 16, 3, 3, 2, 18, 18);
-		TL
-		locationInput = new TL(size).addToList(),
-		locationTool = new TL(size + 1) {
+		TL locationInput = new TL(size).addToList(), locationTool = new TL(size + 1)
+		{
 			@Override
 			public boolean isItemValid(ItemStack stack)
 			{
 				return EnumToolTypes.BAR_GRIZZLY.toolMatch(stack);
 			}
-		}.addToList(),
-		locationOutput = new TL(size + 2, size + 11).addToList();
+		}.addToList(), locationOutput = new TL(size + 2, size + 11).addToList();
 		this.locationHand.appendTransferLocate(locationTool).appendTransferLocate(locationInput).appendTransferLocate(this.locationBag);
 		this.locationBag.appendTransferLocate(locationTool).appendTransferLocate(locationInput).appendTransferLocate(this.locationHand);
 		locationInput.appendTransferLocate(this.locationPlayer);
@@ -77,8 +75,8 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 				this.cache = RecipeMaps.WASHING_BARGRIZZLY.findRecipe(this.inventory.getStack(0));
 				if (this.cache != null)
 				{
-					this.inventory.decrStackSize(0, this.cache.<AbstractStack>get1(0));
-					this.currentValue[2] = this.cache.<Integer>get(0);
+					this.inventory.decrStackSize(0, this.cache.<AbstractStack> get1(0));
+					this.currentValue[2] = this.cache.<Integer> get(0);
 					detectAndSendChanges();
 				}
 			}
@@ -89,11 +87,11 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 					if (this.currentValue[0] < this.currentValue[2])
 					{
 						TileEntities.damageTool(this.inventory, 1, 0.01F, this.opener, EnumToolTypes.BAR_GRIZZLY);
-						this.currentValue[0] ++;
+						this.currentValue[0]++;
 					}
 					else
 					{
-						this.inventory.insertAllStacks(this.cache.<ItemStack[]>get(1), 2, 11, ()-> {
+						this.inventory.insertAllStacks(this.cache.<ItemStack[]> get(1), 2, 11, () -> {
 							this.currentValue[0] = 0;
 							this.cache = null;
 							this.currentValue[2] = 1;
@@ -122,7 +120,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 	{
 		switch (type)
 		{
-		case 0 :
+		case 0:
 			if (value == 0)
 			{
 				this.currentValue[1] = Math.min(this.currentValue[1] + 40, 400);

@@ -38,12 +38,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEWoodenPolishTable extends TEStaticInventory
-implements IPolishRecipeHandler, ITP_BlockHardness, ITP_ExplosionResistance,
-ITB_BlockActived, IGuiTile
+public class TEWoodenPolishTable extends TEStaticInventory implements IPolishRecipeHandler, ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockActived, IGuiTile
 {
-	ItemStack input;
-	char[] map = "         ".toCharArray();
+	ItemStack	input;
+	char[]		map	= "         ".toCharArray();
 	
 	public TEWoodenPolishTable()
 	{
@@ -63,8 +61,7 @@ ITB_BlockActived, IGuiTile
 	}
 	
 	@Override
-	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		if (isServer())
 		{
@@ -108,8 +105,7 @@ ITB_BlockActived, IGuiTile
 	
 	public void onPolish(EntityPlayer player, ItemStack useTool, int clickIndex)
 	{
-		if (useTool == null || !(useTool.getItem() instanceof IPolishableItem))
-			return;
+		if (useTool == null || !(useTool.getItem() instanceof IPolishableItem)) return;
 		int level = ((IPolishableItem) useTool.getItem()).getPolishLevel(useTool);
 		if (level < 0) return;
 		if (this.input == null)
@@ -123,7 +119,7 @@ ITB_BlockActived, IGuiTile
 			TemplateRecipeCache<IPolishRecipeHandler> cache = POLISHING.findRecipe(this);
 			if (cache != null)
 			{
-				this.stacks[1] = cache.<ItemStack>get(0).copy();
+				this.stacks[1] = cache.<ItemStack> get(0).copy();
 			}
 			else
 			{

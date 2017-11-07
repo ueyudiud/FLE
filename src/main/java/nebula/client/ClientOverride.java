@@ -41,16 +41,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The overridden method in Minecraft.<p>
+ * The overridden method in Minecraft.
+ * <p>
  * All are internal methods, do not use.
+ * 
  * @author ueyudiud
  *
  */
 @SideOnly(Side.CLIENT)
 public class ClientOverride
 {
-	public static final List<IWorldRender> RENDERS = new ArrayList<>();
-	private static int rainSoundCounter;
+	public static final List<IWorldRender>	RENDERS	= new ArrayList<>();
+	private static int						rainSoundCounter;
 	
 	public static void renderSpecialItem(ItemStack stack)
 	{
@@ -61,7 +63,8 @@ public class ClientOverride
 			render.renderItemStack(stack);
 			NebulaRenderHandler.itemRenderingFlag = false;
 		}
-		else ForgeHooksClient.renderTileItem(stack.getItem(), stack.getItemDamage());
+		else
+			ForgeHooksClient.renderTileItem(stack.getItem(), stack.getItemDamage());
 	}
 	
 	public static void renderDropOnGround(Random random, int rendererUpdateCount)
@@ -69,10 +72,9 @@ public class ClientOverride
 		Minecraft minecraft = Minecraft.getMinecraft();
 		World world = minecraft.world;
 		Entity entity = minecraft.getRenderViewEntity();
-		for(IWorldRender render : RENDERS)
+		for (IWorldRender render : RENDERS)
 		{
-			if(render.renderDropOnGround(world, entity, random, rendererUpdateCount))
-				return;
+			if (render.renderDropOnGround(world, entity, random, rendererUpdateCount)) return;
 		}
 		
 		float f = world.getRainStrength(1.0F);
@@ -86,12 +88,12 @@ public class ClientOverride
 		{
 			random.setSeed(rendererUpdateCount * 312987231L);
 			BlockPos blockpos = new BlockPos(entity);
-			//			int i = 10;
+			// int i = 10;
 			double d0 = 0.0D;
 			double d1 = 0.0D;
 			double d2 = 0.0D;
 			int j = 0;
-			int k = (int)(100.0F * f * f);
+			int k = (int) (100.0F * f * f);
 			
 			if (minecraft.gameSettings.particleSetting == 1)
 			{
@@ -158,15 +160,14 @@ public class ClientOverride
 	{
 		try
 		{
-			if (model instanceof ICustomItemRenderModel)
-				return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
+			if (model instanceof ICustomItemRenderModel) return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
 			return model.getQuads(null, facing, rand);
 		}
 		catch (RuntimeException exception)
 		{
 			if (model != null)
 			{
-				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", new Object[]{model, stack, facing});
+				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", new Object[] { model, stack, facing });
 				Log.catching(exception);
 			}
 			else
@@ -188,9 +189,7 @@ public class ClientOverride
 		}
 		try
 		{
-			return item instanceof IIP_CustomOverlayInGui &&
-					((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text) ?
-							null : stack;
+			return item instanceof IIP_CustomOverlayInGui && ((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text) ? null : stack;
 		}
 		catch (RuntimeException exception)
 		{

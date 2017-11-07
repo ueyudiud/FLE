@@ -22,12 +22,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TextureCollectionManager
 {
-	private static final Map<String, ResourceLocation> MISSING = ImmutableMap.of("missing", TextureMap.LOCATION_MISSING_TEXTURE);
-	private static final Map<String, Supplier<Map<String, ResourceLocation>>> BUILT_IN_TEXTURE_SET = new HashMap<>(16, 1.0F);
+	private static final Map<String, ResourceLocation>							MISSING					= ImmutableMap.of("missing", TextureMap.LOCATION_MISSING_TEXTURE);
+	private static final Map<String, Supplier<Map<String, ResourceLocation>>>	BUILT_IN_TEXTURE_SET	= new HashMap<>(16, 1.0F);
 	
-	static IResourceManager resourceManager;
-	static Map<String, Map<String, ResourceLocation>> cache;
-	static Map<String, Object> loadedTextureCols;
+	static IResourceManager								resourceManager;
+	static Map<String, Map<String, ResourceLocation>>	cache;
+	static Map<String, Object>							loadedTextureCols;
 	
 	static void reload(IResourceManager manager)
 	{
@@ -39,8 +39,7 @@ public class TextureCollectionManager
 	
 	public static void registerTextureSupplier(ResourceLocation location, Supplier<Map<String, ResourceLocation>> supplier)
 	{
-		if (BUILT_IN_TEXTURE_SET.containsKey(location))
-			throw new RuntimeException("Built in texture set name " + location + " already exist!");
+		if (BUILT_IN_TEXTURE_SET.containsKey(location)) throw new RuntimeException("Built in texture set name " + location + " already exist!");
 		BUILT_IN_TEXTURE_SET.put(location.toString(), supplier);
 	}
 	

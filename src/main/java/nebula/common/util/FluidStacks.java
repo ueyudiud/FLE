@@ -36,7 +36,9 @@ public final class FluidStacks
 {
 	public static final UnaryOperator<FluidStack> COPY_FLUIDSTACK = FluidStacks::copy;
 	
-	private FluidStacks() {}
+	private FluidStacks()
+	{
+	}
 	
 	public static @Nullable Fluid getFluid(@Nullable FluidStack stack)
 	{
@@ -55,9 +57,7 @@ public final class FluidStacks
 	
 	public static int getTemperature(@Nullable FluidStack stack, int def)
 	{
-		return stack instanceof FluidStackExt ?
-				((FluidStackExt) stack).getTemperature() :
-					stack != null ? stack.getFluid().getTemperature(stack) : def;
+		return stack instanceof FluidStackExt ? ((FluidStackExt) stack).getTemperature() : stack != null ? stack.getFluid().getTemperature(stack) : def;
 	}
 	
 	public static int getColor(@Nullable FluidStack stack)
@@ -136,14 +136,17 @@ public final class FluidStacks
 	public static int drainFluidToWorld(World world, @Nullable RayTraceResult result, @Nullable FluidStack stack, boolean doDrain)
 	{
 		if (result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return 0;
-		int amount = drainFluidToWorld(world, result.getBlockPos(), stack, doDrain);//For smart fluid block.
+		int amount = drainFluidToWorld(world, result.getBlockPos(), stack, doDrain);// For
+																					// smart
+																					// fluid
+																					// block.
 		if (amount > 0) return amount;
 		return drainFluidToWorld(world, result.getBlockPos().offset(result.sideHit), stack, doDrain);
 	}
 	
 	public static int drainFluidToWorld(World world, BlockPos pos, @Nullable FluidStack stack, boolean doDrain)
 	{
-		if(stack == null || !stack.getFluid().canBePlacedInWorld()) return 0;
+		if (stack == null || !stack.getFluid().canBePlacedInWorld()) return 0;
 		Block blockRaw = stack.getFluid().getBlock();
 		if (doDrain)
 		{
@@ -171,7 +174,8 @@ public final class FluidStacks
 				return Misc.BUCKET_CAPACITY;
 			}
 		}
-		else if (blockRaw instanceof BlockLiquid)//Use for vanilla water and lava.
+		else if (blockRaw instanceof BlockLiquid)// Use for vanilla water and
+													// lava.
 		{
 			if (stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
 			{
@@ -182,13 +186,12 @@ public final class FluidStacks
 				return Misc.BUCKET_CAPACITY;
 			}
 		}
-		return 0;//Unknown fluid type will prevent to drain to world.
+		return 0;// Unknown fluid type will prevent to drain to world.
 	}
 	
 	public static boolean areFluidStacksEqual(FluidStack stack1, FluidStack stack2)
 	{
-		return stack1 == null || stack2 == null ? stack1 == stack2 :
-			stack1.isFluidStackIdentical(stack2);
+		return stack1 == null || stack2 == null ? stack1 == stack2 : stack1.isFluidStackIdentical(stack2);
 	}
 	
 	public static FluidStack copy(FluidStack fluid)
@@ -204,10 +207,10 @@ public final class FluidStacks
 	}
 	
 	/**
-	 * Check is <code>resource</code> stack contains <code>target</code>
-	 * stack.
+	 * Check is <code>resource</code> stack contains <code>target</code> stack.
+	 * 
 	 * @param resource the resource stack, if the <code>null</code> is input,
-	 *        <code>false</code> will be return.
+	 *            <code>false</code> will be return.
 	 * @param target the target stack.
 	 * @see net.minecraftforge.fluids.FluidStack#containsFluid(FluidStack)
 	 */

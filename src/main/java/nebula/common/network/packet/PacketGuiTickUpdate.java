@@ -9,8 +9,10 @@ import nebula.common.network.Network;
 import net.minecraft.util.ITickable;
 
 /**
- * The ClientToServer packet.<p>
+ * The ClientToServer packet.
+ * <p>
  * Sent when GUI ticking each tick in client.
+ * 
  * @author ueyudiud
  */
 public class PacketGuiTickUpdate extends PacketGui
@@ -20,6 +22,7 @@ public class PacketGuiTickUpdate extends PacketGui
 	public PacketGuiTickUpdate()
 	{
 	}
+	
 	public PacketGuiTickUpdate(ContainerBase container)
 	{
 		super(container);

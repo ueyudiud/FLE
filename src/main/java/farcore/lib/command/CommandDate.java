@@ -31,8 +31,7 @@ public class CommandDate extends CommandBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(args.length != 0)
-			throw new CommandException("commands.date.arg.err");
+		if (args.length != 0) throw new CommandException("commands.date.arg.err");
 		World world = server.getEntityWorld();
 		notifyCommandListener(sender, this, CalendarHandler.getDateInfo(world));
 	}

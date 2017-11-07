@@ -8,12 +8,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class DamageSourceProjectile extends DamageSource
 {
 	public static final DamageSource instance = new DamageSourceProjectile();
-
+	
 	public DamageSourceProjectile()
 	{
 		super("farcore.projectile");
 	}
-
+	
 	@Override
 	public ITextComponent getDeathMessage(EntityLivingBase entity)
 	{

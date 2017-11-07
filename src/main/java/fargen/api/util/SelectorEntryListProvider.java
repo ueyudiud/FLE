@@ -13,21 +13,21 @@ import nebula.common.util.noise.NoiseBase;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * A random selector for surface(overworld)
- * generator provider.
+ * A random selector for surface(overworld) generator provider.
+ * 
  * @author ueyudiud
  */
 public class SelectorEntryListProvider<T>
 {
 	static class EntryProvider<T>
 	{
-		T value;
-		int baseMultiplier;
-		float tempMain;
-		float tempSigma;
-		float rainfallMain;
-		float rainfallSigma;
-		int noiseLayer;
+		T		value;
+		int		baseMultiplier;
+		float	tempMain;
+		float	tempSigma;
+		float	rainfallMain;
+		float	rainfallSigma;
+		int		noiseLayer;
 		
 		EntryProvider(T value, int layer, int base, float tMain, float tSigma, float rMain, float rSigma)
 		{
@@ -50,7 +50,9 @@ public class SelectorEntryListProvider<T>
 	{
 		private ImmutableList.Builder<EntryProvider<T>> builder = ImmutableList.builder();
 		
-		private Builder() {}
+		private Builder()
+		{
+		}
 		
 		public void add1(T value, int layer, int base, float minT, float maxT, float minR, float maxR)
 		{

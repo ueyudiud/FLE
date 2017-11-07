@@ -19,11 +19,11 @@ public class FuelHandler
 {
 	public static class FuelKey
 	{
-		public final AbstractStack fuel;
-		public final float flameTemperature;
-		public final float normalTemperature;
-		public final int normalPower;
-		public final long fuelValue;
+		public final AbstractStack	fuel;
+		public final float			flameTemperature;
+		public final float			normalTemperature;
+		public final int			normalPower;
+		public final long			fuelValue;
 		
 		FuelKey(AbstractStack fuel, float flameTemperature, float normalTemperature, int normalPower, long fuelValue)
 		{
@@ -50,12 +50,12 @@ public class FuelHandler
 	
 	public static boolean isFuel(ItemStack stack)
 	{
-		return L.contain(FUELS, f->f.fuel.similar(stack));
+		return L.contain(FUELS, f -> f.fuel.similar(stack));
 	}
 	
 	@Nullable
 	public static FuelKey getFuel(ItemStack stack)
 	{
-		return L.get(FUELS, f->f.fuel.contain(stack));
+		return L.get(FUELS, f -> f.fuel.contain(stack));
 	}
 }

@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The improved falling block.
+ * 
  * @author ueyudiud
  * @see net.minecraft.entity.item.EntityFallingBlock
  * @see nebula.common.block.IHitByFallenBehaviorBlock
@@ -40,74 +41,75 @@ public class EntityFallingBlockExtended extends Entity
 {
 	public static boolean canFallAt(World world, BlockPos pos, IBlockState target)
 	{
-		if(pos.getY() < 0) return true;
+		if (pos.getY() < 0) return true;
 		pos = pos.down();
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof IHitByFallenBehaviorBlock)
-			return !((IHitByFallenBehaviorBlock) state.getBlock()).isPermeatableBy(world, pos, state, target);
-		return (state.getBlock().isAir(state, world, pos) ||
-				state.getBlock() instanceof IFluidBlock ||
-				state.getBlock().isReplaceable(world, pos));
+		if (state.getBlock() instanceof IHitByFallenBehaviorBlock) return !((IHitByFallenBehaviorBlock) state.getBlock()).isPermeatableBy(world, pos, state, target);
+		return (state.getBlock().isAir(state, world, pos) || state.getBlock() instanceof IFluidBlock || state.getBlock().isReplaceable(world, pos));
 	}
 	
 	public static void replaceFallingBlock(World world, BlockPos pos, IBlockState state, int height)
 	{
 		IBlockState hited = world.getBlockState(pos);
-		if(!hited.getBlock().isAir(hited, world, pos))
+		if (!hited.getBlock().isAir(hited, world, pos))
 		{
-			if(hited.getBlock() instanceof IHitByFallenBehaviorBlock &&
-					((IHitByFallenBehaviorBlock) hited.getBlock()).onFallingOn(world, pos, hited, state, height))
-				return;
+			if (hited.getBlock() instanceof IHitByFallenBehaviorBlock && ((IHitByFallenBehaviorBlock) hited.getBlock()).onFallingOn(world, pos, hited, state, height)) return;
 			hited.getBlock().breakBlock(world, pos, hited);
-			if(!hited.getBlock().isReplaceable(world, pos))
+			if (!hited.getBlock().isReplaceable(world, pos))
 			{
 				Worlds.spawnDropsInWorld(world, pos, hited.getBlock().getDrops(world, pos, hited, 0));
 			}
 		}
 	}
 	
-	protected static final DataParameter<IBlockState> STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
-	protected static final DataParameter<BlockPos> ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
+	protected static final DataParameter<IBlockState>	STATE	= EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
+	protected static final DataParameter<BlockPos>		ORGIN	= EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
 	
 	private static final ISmartFallableBlock INSTANCE = new ISmartFallableBlock()
 	{
-		public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state) { return !canFallAt(world, pos, state) &&
-				world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, null, null); }
+		public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
+		{
+			return !canFallAt(world, pos, state) && world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, null, null);
+		}
 		
-		public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target) { return 2.0F; }
+		public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
+		{
+			return 2.0F;
+		}
 	};
 	
 	public boolean shouldDropItem = true;
 	
-	private ISmartFallableBlock fallable;
-	private IBlockState state;
-	private NBTTagCompound nbt;
-	//	private int startX;
+	private ISmartFallableBlock	fallable;
+	private IBlockState			state;
+	private NBTTagCompound		nbt;
+	// private int startX;
 	private int startY;
-	//	private int startZ;
-	private int lifeTime;
-	private boolean hitEntity;
+	// private int startZ;
+	private int		lifeTime;
+	private boolean	hitEntity;
 	
 	public EntityFallingBlockExtended(World world)
 	{
 		super(world);
 		this.fallable = INSTANCE;
 	}
+	
 	public EntityFallingBlockExtended(World world, BlockPos pos, BlockPos pos1, IBlockState state, TileEntity tile)
 	{
 		super(world);
 		try
 		{
 			this.preventEntitySpawning = true;
-			//			this.startX = pos.getX();
+			// this.startX = pos.getX();
 			this.startY = pos.getY();
-			//			this.startZ = pos.getZ();
+			// this.startZ = pos.getZ();
 			setState(state);
 			this.dataManager.set(STATE, state);
 			this.dataManager.set(ORGIN, pos1);
 			
 			setSize(0.98F, 0.98F);
-			setPosition(pos1.getX() + .5, pos1.getY() + (double)((1.0F - this.height) / 2.0F), pos1.getZ() + .5);
+			setPosition(pos1.getX() + .5, pos1.getY() + (double) ((1.0F - this.height) / 2.0F), pos1.getZ() + .5);
 			this.motionX = 0.0D;
 			this.motionY = 0.0D;
 			this.motionZ = 0.0D;
@@ -119,7 +121,7 @@ public class EntityFallingBlockExtended extends Entity
 				tile.writeToNBT(this.nbt = new NBTTagCompound());
 			}
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.error("Fail to create a new falling block, disable this falling action.", exception);
 			setDead();
@@ -141,8 +143,8 @@ public class EntityFallingBlockExtended extends Entity
 	}
 	
 	/**
-	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-	 * prevent them from trampling crops
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they
+	 * walk on. used for spiders and wolves to prevent them from trampling crops
 	 */
 	@Override
 	protected boolean canTriggerWalking()
@@ -158,7 +160,8 @@ public class EntityFallingBlockExtended extends Entity
 	}
 	
 	/**
-	 * Returns true if other Entities should be prevented from moving through this Entity.
+	 * Returns true if other Entities should be prevented from moving through
+	 * this Entity.
 	 */
 	@Override
 	public boolean canBeCollidedWith()
@@ -183,7 +186,7 @@ public class EntityFallingBlockExtended extends Entity
 		}
 		else
 		{
-			if(this.state == null || this.state == Misc.AIR)
+			if (this.state == null || this.state == Misc.AIR)
 			{
 				setDead();
 				return;
@@ -199,7 +202,7 @@ public class EntityFallingBlockExtended extends Entity
 				if (this.lifeTime == 1)
 				{
 					this.fallable.onStartFalling(this.world, pos);
-					//					this.world.setBlockToAir(pos);
+					// this.world.setBlockToAir(pos);
 				}
 				
 				if (this.onGround)
@@ -259,13 +262,12 @@ public class EntityFallingBlockExtended extends Entity
 			ArrayList<Entity> arraylist = new ArrayList<>(this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox()));
 			
 			float amount;
-			for(Entity entity : arraylist)
+			for (Entity entity : arraylist)
 			{
 				amount = this.fallable.onFallOnEntity(this.world, this, entity);
-				if(amount > 0)
+				if (amount > 0)
 				{
-					entity.attackEntityFrom(DamageSource.fallingBlock,
-							Math.min(MathHelper.floor(i * amount), 100F));
+					entity.attackEntityFrom(DamageSource.fallingBlock, Math.min(MathHelper.floor(i * amount), 100F));
 				}
 				this.hitEntity = true;
 			}

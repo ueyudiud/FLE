@@ -12,6 +12,7 @@ import nebula.base.Register;
 
 /**
  * The sub tag, use to mark a item for tags.
+ * 
  * @author ueyudiud
  *
  */
@@ -21,8 +22,8 @@ public final class SubTag implements Judgable<ISubTagContainer>
 	
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{
-		for(ISubTagContainer container : containers)
-			if(container != null)
+		for (ISubTagContainer container : containers)
+			if (container != null)
 			{
 				container.add(tags);
 			}
@@ -38,8 +39,8 @@ public final class SubTag implements Judgable<ISubTagContainer>
 		return tag;
 	}
 	
-	private final String name;
-	public final Collection<ISubTagContainer> relevantTaggedItems = new HashSet(1);
+	private final String						name;
+	public final Collection<ISubTagContainer>	relevantTaggedItems	= new HashSet(1);
 	
 	private SubTag(String name)
 	{
@@ -58,7 +59,7 @@ public final class SubTag implements Judgable<ISubTagContainer>
 		return this.name;
 	}
 	
-	public SubTag addContainerToList(ISubTagContainer... containers)
+	public SubTag addContainerToList(ISubTagContainer...containers)
 	{
 		if (containers != null)
 		{
@@ -71,7 +72,7 @@ public final class SubTag implements Judgable<ISubTagContainer>
 		return this;
 	}
 	
-	public SubTag addTo(ISubTagContainer... containers)
+	public SubTag addTo(ISubTagContainer...containers)
 	{
 		if (containers != null)
 		{

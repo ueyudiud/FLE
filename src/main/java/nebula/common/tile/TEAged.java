@@ -42,12 +42,11 @@ public class TEAged extends TESynchronization
 	@Override
 	protected void updateServer()
 	{
-		if(this.world != null)
-			if(this.world.getWorldTime() >= this.nextUpdateTick)
-			{
-				this.nextUpdateTick = getNextUpdateTick(this.nextUpdateTick);
-				updateServer1();
-			}
+		if (this.world != null) if (this.world.getWorldTime() >= this.nextUpdateTick)
+		{
+			this.nextUpdateTick = getNextUpdateTick(this.nextUpdateTick);
+			updateServer1();
+		}
 	}
 	
 	protected long getNextUpdateTick(long thisTick)

@@ -11,8 +11,8 @@ import net.minecraft.world.gen.layer.GenLayer;
  */
 public class LayerIslandAdd extends Layer
 {
-	final int rand;
-	final int type;
+	final int	rand;
+	final int	type;
 	
 	public LayerIslandAdd(long seed, GenLayer parent, int rand, int type)
 	{

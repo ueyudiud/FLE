@@ -14,13 +14,16 @@ import net.minecraft.world.World;
 
 /**
  * The block has custom behavior when hit by fallen block.
+ * 
  * @author ueyudiud
  * @see nebula.common.entity.EntityFallingBlockExtended
  */
 public interface IHitByFallenBehaviorBlock
 {
 	/**
-	 * Get should block fall down from this block, return true to ignore stay checking.
+	 * Get should block fall down from this block, return true to ignore stay
+	 * checking.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param state
@@ -30,7 +33,9 @@ public interface IHitByFallenBehaviorBlock
 	boolean isPermeatableBy(World world, BlockPos pos, IBlockState state, IBlockState fallen);
 	
 	/**
-	 * Called when block fall on, if return true, the falling block will try to replace block at this position.
+	 * Called when block fall on, if return true, the falling block will try to
+	 * replace block at this position.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param state

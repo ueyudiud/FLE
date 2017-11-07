@@ -14,12 +14,13 @@ import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * The template packet.
+ * 
  * @author ueyudiud
  */
 public abstract class PacketAbstract implements IPacket
 {
-	protected Side side;
-	protected INetHandler handler;
+	protected Side			side;
+	protected INetHandler	handler;
 	
 	@Override
 	public Side getSide()
@@ -42,9 +43,7 @@ public abstract class PacketAbstract implements IPacket
 	@Override
 	public EntityPlayer getPlayer()
 	{
-		return (this.handler instanceof NetHandlerPlayServer) ?
-				((NetHandlerPlayServer) this.handler).playerEntity :
-					Players.player();
+		return (this.handler instanceof NetHandlerPlayServer) ? ((NetHandlerPlayServer) this.handler).playerEntity : Players.player();
 	}
 	
 	@Override

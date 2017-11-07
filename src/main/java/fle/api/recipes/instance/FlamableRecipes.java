@@ -31,9 +31,9 @@ public class FlamableRecipes
 	
 	private static class Flamable
 	{
-		AbstractStack stack;
-		float smoderTemp;
-		float flamableTemp;
+		AbstractStack	stack;
+		float			smoderTemp;
+		float			flamableTemp;
 		
 		Flamable(AbstractStack stack, float smoderTemp, float flamableTemp)
 		{
@@ -41,8 +41,8 @@ public class FlamableRecipes
 		}
 	}
 	
-	private static final List<FlameSource> FLAMESOURCES = new ArrayList<>();
-	private static final List<Flamable> FLAMABLES = new ArrayList<>();
+	private static final List<FlameSource>	FLAMESOURCES	= new ArrayList<>();
+	private static final List<Flamable>		FLAMABLES		= new ArrayList<>();
 	
 	public static void addFlameSource(ToIntFunction<ICoord> function)
 	{
@@ -59,8 +59,7 @@ public class FlamableRecipes
 		int temp;
 		for (FlameSource source : FLAMESOURCES)
 		{
-			if ((temp = source.temperatureProvider.applyAsInt(coord)) > 0)
-				return temp;
+			if ((temp = source.temperatureProvider.applyAsInt(coord)) > 0) return temp;
 		}
 		return -1;
 	}
@@ -79,7 +78,7 @@ public class FlamableRecipes
 	
 	public static boolean isFlamable(ItemStack stack)
 	{
-		return L.contain(FLAMABLES, check->check.stack.similar(stack));
+		return L.contain(FLAMABLES, check -> check.stack.similar(stack));
 	}
 	
 	public static boolean isSmoder(ItemStack stack, float temperature)

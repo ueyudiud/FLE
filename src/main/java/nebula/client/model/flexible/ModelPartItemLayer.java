@@ -26,15 +26,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelPartItemLayer implements INebulaModelPart
 {
-	int index;
-	float zOffset;
-	String icon;
+	int		index;
+	float	zOffset;
+	String	icon;
 	
 	public ModelPartItemLayer(int index, String icon)
 	{
 		this.index = index;
 		this.icon = icon;
 	}
+	
 	public ModelPartItemLayer()
 	{
 	}
@@ -46,10 +47,8 @@ public class ModelPartItemLayer implements INebulaModelPart
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
-		return new BakedModelPart(Maps.transformValues(iconHandlerGetter.apply(this.icon).build(), location->
-		ItemLayerModel.getQuadsForSprite(this.index, bakedTextureGetter.apply(location), format, Optional.of(transformation))));
+		return new BakedModelPart(Maps.transformValues(iconHandlerGetter.apply(this.icon).build(), location -> ItemLayerModel.getQuadsForSprite(this.index, bakedTextureGetter.apply(location), format, Optional.of(transformation))));
 	}
 }

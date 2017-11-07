@@ -25,15 +25,16 @@ import net.minecraft.world.chunk.Chunk.EnumCreateEntityType;
  */
 public class PacketChunkNetData extends PacketChunkCoord
 {
-	int mark;
-	Map<BlockPos, byte[]> datas;
-	Chunk chunk;
-	List<BlockPos> pos;
+	int						mark;
+	Map<BlockPos, byte[]>	datas;
+	Chunk					chunk;
+	List<BlockPos>			pos;
 	
 	public PacketChunkNetData()
 	{
 		
 	}
+	
 	public PacketChunkNetData(int mark, Chunk chunk, List<BlockPos> pos)
 	{
 		super(chunk.getWorld(), chunk.xPosition, chunk.zPosition);
@@ -49,10 +50,10 @@ public class PacketChunkNetData extends PacketChunkCoord
 		{
 			this.datas = new HashMap<>(this.pos.size(), 1.00F);
 			ByteBuf buf;
-			for(BlockPos pos : this.pos)
+			for (BlockPos pos : this.pos)
 			{
 				TileEntity tile = this.chunk.getTileEntity(pos, EnumCreateEntityType.CHECK);
-				if(tile instanceof INetworkedSyncTile)
+				if (tile instanceof INetworkedSyncTile)
 				{
 					buf = Unpooled.buffer();
 					((INetworkedSyncTile) tile).writeNetworkData(this.mark, new PacketBufferExt(buf));
@@ -73,7 +74,7 @@ public class PacketChunkNetData extends PacketChunkCoord
 		super.encode(output);
 		output.writeShort(this.mark);
 		output.writeShort((this.datas.size() & 0xFFFF));
-		for(Entry<BlockPos, byte[]> entry : this.datas.entrySet())
+		for (Entry<BlockPos, byte[]> entry : this.datas.entrySet())
 		{
 			BlockPos pos = entry.getKey();
 			byte[] value = entry.getValue();
@@ -90,7 +91,7 @@ public class PacketChunkNetData extends PacketChunkCoord
 		this.mark = input.readShort();
 		this.datas = new HashMap<>();
 		int len = (input.readShort() & 0xFFFF);
-		for(int i = 0; i < len; ++i)
+		for (int i = 0; i < len; ++i)
 		{
 			BlockPos pos = input.readBlockPos();
 			byte[] array = new byte[input.readInt()];
@@ -103,10 +104,10 @@ public class PacketChunkNetData extends PacketChunkCoord
 	public IPacket process(Network network) throws IOException
 	{
 		Chunk chunk = world().getChunkFromChunkCoords(this.x, this.z);
-		for(Entry<BlockPos, byte[]> entry : this.datas.entrySet())
+		for (Entry<BlockPos, byte[]> entry : this.datas.entrySet())
 		{
 			TileEntity tile = chunk.getTileEntity(entry.getKey(), EnumCreateEntityType.CHECK);
-			if(tile instanceof INetworkedSyncTile)
+			if (tile instanceof INetworkedSyncTile)
 			{
 				((INetworkedSyncTile) tile).readNetworkData(this.mark, new PacketBufferExt(Unpooled.wrappedBuffer(entry.getValue())));
 			}

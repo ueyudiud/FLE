@@ -13,19 +13,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Fluid slot type.
+ * 
  * @author ueyudiud
  *
  */
 public abstract class FluidSlot<T extends IFluidTank>
 {
-	public T tank;
-	protected boolean shouldRender = true;
-	public int x;
-	public int y;
-	public int u;
-	public int v;
-	public int slotNumber;
-	public boolean renderHorizontal;
+	public T			tank;
+	protected boolean	shouldRender	= true;
+	public int			x;
+	public int			y;
+	public int			u;
+	public int			v;
+	public int			slotNumber;
+	public boolean		renderHorizontal;
 	
 	public FluidSlot(T tank, int x, int y, int u, int v)
 	{
@@ -50,6 +51,7 @@ public abstract class FluidSlot<T extends IFluidTank>
 	
 	/**
 	 * Get slot capacity.
+	 * 
 	 * @return
 	 */
 	public int getCapacity()
@@ -59,6 +61,7 @@ public abstract class FluidSlot<T extends IFluidTank>
 	
 	/**
 	 * Get fluid stack current in slot.
+	 * 
 	 * @return
 	 */
 	public FluidStack getStackInSlot()
@@ -68,12 +71,14 @@ public abstract class FluidSlot<T extends IFluidTank>
 	
 	/**
 	 * Set stack to slot.
+	 * 
 	 * @param stack
 	 */
 	public abstract void putStack(FluidStack stack);
 	
 	/**
 	 * Called when player clicked slot.
+	 * 
 	 * @param player The player.
 	 * @param currentStack The current item stack.
 	 */
@@ -84,12 +89,13 @@ public abstract class FluidSlot<T extends IFluidTank>
 	
 	/**
 	 * Render fluid slot into GUI.
+	 * 
 	 * @param gui
 	 */
 	@SideOnly(Side.CLIENT)
 	public void renderSlot(GuiContainerBase gui)
 	{
-		if(this.shouldRender)
+		if (this.shouldRender)
 		{
 			gui.drawFluid(this.x, this.y, this.tank.getInfo(), this.u, this.v, this.renderHorizontal);
 		}
@@ -97,6 +103,7 @@ public abstract class FluidSlot<T extends IFluidTank>
 	
 	/**
 	 * Should slot visible to click or do others actions.
+	 * 
 	 * @return
 	 */
 	public boolean isVisible()

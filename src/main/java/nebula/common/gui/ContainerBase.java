@@ -33,33 +33,32 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 {
 	public static boolean canAddItemToSlot(Slot slotIn, ItemStack stack, boolean stackSizeMatters)
 	{
-		return stack == null ||
-				slotIn.isItemValid(stack) && (!slotIn.getHasStack() ||
-						((slotIn != null && slotIn.getHasStack() && ItemStacks.isItemAndTagEqual(stack, slotIn.getStack())) &&
-								(slotIn.getStack().stackSize + (stackSizeMatters ? 0 : stack.stackSize) <= Math.min(slotIn.getItemStackLimit(stack), stack.getMaxStackSize()))));
+		return stack == null || slotIn.isItemValid(stack)
+				&& (!slotIn.getHasStack() || ((slotIn != null && slotIn.getHasStack() && ItemStacks.isItemAndTagEqual(stack, slotIn.getStack())) && (slotIn.getStack().stackSize + (stackSizeMatters ? 0 : stack.stackSize) <= Math.min(slotIn.getItemStackLimit(stack), stack.getMaxStackSize()))));
 	}
+	
 	public static ItemStack extractStackFrom(@Nullable EntityPlayer player, SlotBase slotIn, int maxSize, boolean simulate)
 	{
-		if(player != null)
+		if (player != null)
 		{
-			if(!slotIn.canTakeStack(player)) return null;
+			if (!slotIn.canTakeStack(player)) return null;
 		}
-		if(slotIn.getHasStack())
+		if (slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
 			int size = Math.min(stack2.getMaxStackSize(), stack2.stackSize);
 			ItemStack stack3;
-			if(!simulate)
+			if (!simulate)
 			{
 				stack3 = stack2.splitStack(size);
 				ItemStack stack4 = stack2.copy();
-				if(stack2.stackSize == 0)
+				if (stack2.stackSize == 0)
 				{
 					slotIn.putStack(null);
 				}
 				stack3.stackSize = size;
 				slotIn.onSlotChange(stack3, stack4);
-				if(player != null)
+				if (player != null)
 				{
 					slotIn.onPickupFromSlot(player, stack3);
 				}
@@ -77,33 +76,34 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		}
 		return null;
 	}
+	
 	public static int extractStackFrom(@Nullable EntityPlayer player, SlotBase slotIn, ItemStack stack, boolean simulate)
 	{
 		stack = ItemStacks.valid(stack);
-		if(stack == null) return 0;
-		if(player != null)
+		if (stack == null) return 0;
+		if (player != null)
 		{
-			if(!slotIn.canTakeStack(player)) return 0;
+			if (!slotIn.canTakeStack(player)) return 0;
 		}
-		if(slotIn.getHasStack())
+		if (slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if(ItemStacks.isItemAndTagEqual(stack, stack2))
+			if (ItemStacks.isItemAndTagEqual(stack, stack2))
 			{
 				int size = Math.min(stack.getMaxStackSize() - stack.stackSize, stack2.stackSize);
-				if(!simulate)
+				if (!simulate)
 				{
 					ItemStack stack3 = stack2.copy();
 					ItemStack stack4 = stack2.copy();
 					stack.stackSize += size;
 					stack2.stackSize -= size;
-					if(stack2.stackSize == 0)
+					if (stack2.stackSize == 0)
 					{
 						slotIn.putStack(null);
 					}
 					stack3.stackSize = size;
 					slotIn.onSlotChange(stack3, stack4);
-					if(player != null)
+					if (player != null)
 					{
 						slotIn.onPickupFromSlot(player, stack3);
 					}
@@ -117,23 +117,24 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		}
 		return 0;
 	}
+	
 	public static int injectStackIn(@Nullable EntityPlayer player, SlotBase slotIn, ItemStack stack, boolean simulate)
 	{
 		stack = ItemStacks.valid(stack);
-		if(stack == null) return 0;
-		if(!slotIn.isItemValid(stack)) return 0;
-		if(player != null)
+		if (stack == null) return 0;
+		if (!slotIn.isItemValid(stack)) return 0;
+		if (player != null)
 		{
-			if(!slotIn.canPutStack(player, stack)) return 0;
+			if (!slotIn.canPutStack(player, stack)) return 0;
 		}
 		int max = Math.min(stack.getMaxStackSize(), slotIn.getItemStackLimit(stack));
-		if(slotIn.getHasStack())
+		if (slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if(!ItemStacks.isItemAndTagEqual(stack, stack2)) return 0;
+			if (!ItemStacks.isItemAndTagEqual(stack, stack2)) return 0;
 			int size = Math.min(max - stack2.stackSize, stack.stackSize);
-			if(size <= 0) return 0;
-			if(!simulate)
+			if (size <= 0) return 0;
+			if (!simulate)
 			{
 				stack2.stackSize += size;
 				stack.stackSize -= size;
@@ -143,8 +144,8 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		else
 		{
 			int size = Math.min(max, stack.stackSize);
-			if(size <= 0) return 0;
-			if(!simulate)
+			if (size <= 0) return 0;
+			if (!simulate)
 			{
 				slotIn.putStack(stack.splitStack(size));
 				slotIn.onSlotChanged();
@@ -153,27 +154,27 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		}
 	}
 	
-	//	private static final byte START    = 0x0;
-	//	private static final byte ADD_SLOT = 0x1;
-	//	private static final byte END      = 0x2;
+	// private static final byte START = 0x0;
+	// private static final byte ADD_SLOT = 0x1;
+	// private static final byte END = 0x2;
 	//
-	//	private static final byte EVENLY_SPLIT     = 0x0;
-	//	private static final byte ONE_ITEM_BY_SLOT = 0x1;
-	//	private static final byte NOT_USED         = 0x2;
+	// private static final byte EVENLY_SPLIT = 0x0;
+	// private static final byte ONE_ITEM_BY_SLOT = 0x1;
+	// private static final byte NOT_USED = 0x2;
 	//
-	//	private static final byte TOTAL_PICK = 0x0;
-	//	private static final byte SPLIT_PICK = 0x1;
+	// private static final byte TOTAL_PICK = 0x0;
+	// private static final byte SPLIT_PICK = 0x1;
 	
-	protected TL locationPlayer;
-	protected TL locationBag;
-	protected TL locationHand;
+	protected TL	locationPlayer;
+	protected TL	locationBag;
+	protected TL	locationHand;
 	
 	protected boolean isClosed;
 	
-	protected EntityPlayer opener;
-	protected TreeMap<Integer, TL> transferLocates = new TreeMap<>(Comparator.naturalOrder());
-	protected List<FluidSlot> fluidSlots = new ArrayList<>();
-	private List<FluidStack> lastFluidStacks = new ArrayList<>();
+	protected EntityPlayer			opener;
+	protected TreeMap<Integer, TL>	transferLocates	= new TreeMap<>(Comparator.naturalOrder());
+	protected List<FluidSlot>		fluidSlots		= new ArrayList<>();
+	private List<FluidStack>		lastFluidStacks	= new ArrayList<>();
 	
 	public ContainerBase(EntityPlayer player)
 	{
@@ -217,7 +218,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 				for (int j = 0; j < this.listeners.size(); ++j)
 				{
 					IContainerListener listener = this.listeners.get(j);
-					if(listener instanceof EntityPlayerMP)
+					if (listener instanceof EntityPlayerMP)
 					{
 						Nebula.network.sendToPlayer(new PacketFluidUpdateSingle(this, i, stack1), (EntityPlayer) listener);
 					}
@@ -240,28 +241,33 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	{
 		addOpenerBagSlots(8, 84);
 	}
+	
 	protected void addOpenerBagSlots(int x, int y)
 	{
 		addStandardSlotMatrix(this.opener.inventory, x, y, 9, 3, 9, 18, 18);
 	}
+	
 	protected void addOpenerHandSlots()
 	{
 		addOpenerHandSlots(8, 142);
 	}
+	
 	protected void addOpenerHandSlots(int x, int y)
 	{
 		addStandardSlotMatrix(this.opener.inventory, x, y, 9, 1, 0, 18, 18);
 	}
+	
 	protected void addStandardSlotMatrix(IInventory inventory, int x, int y, int widthSlot, int heightSlot, int offSlot, int spacingU, int spacingV)
 	{
-		for(int i = 0; i < heightSlot; ++i)
+		for (int i = 0; i < heightSlot; ++i)
 		{
-			for(int j = 0; j < widthSlot; ++j)
+			for (int j = 0; j < widthSlot; ++j)
 			{
 				addSlotToContainer(new SlotBase(inventory, offSlot + i * widthSlot + j, x + j * spacingU, y + i * spacingV));
 			}
 		}
 	}
+	
 	protected void addOutputSlotMatrix(IInventory inventory, int x, int y, int widthSlot, int heightSlot, int offSlot, int spacingU, int spacingV)
 	{
 		for (int i = 0; i < heightSlot; ++i)
@@ -284,8 +290,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	@Override
 	protected Slot addSlotToContainer(Slot slotIn)
 	{
-		if (!(slotIn instanceof SlotBase))
-			throw new IllegalArgumentException("The slot must extended by SlotBase.");
+		if (!(slotIn instanceof SlotBase)) throw new IllegalArgumentException("The slot must extended by SlotBase.");
 		return super.addSlotToContainer(slotIn);
 	}
 	
@@ -318,8 +323,8 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	{
 		switch (clickTypeIn)
 		{
-		case PICKUP :
-		case QUICK_MOVE :
+		case PICKUP:
+		case QUICK_MOVE:
 			resetDrag();
 			Slot slot;
 			if (slotId >= 0 && (slot = getSlot(slotId)) instanceof SlotTool)
@@ -332,7 +337,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 				return stack;
 			}
 			break;
-		default :
+		default:
 			if (slotId >= 0 && getSlot(slotId) instanceof SlotTool)
 			{
 				return null;
@@ -354,8 +359,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 			Entry<Integer, TL> entry = this.transferLocates.floorEntry(index);
 			if (entry != null && entry.getValue().contain(index))
 			{
-				if (!entry.getValue().tryTransferItemStack(itemstack1))
-					return null;
+				if (!entry.getValue().tryTransferItemStack(itemstack1)) return null;
 				if (itemstack1.stackSize == itemstack.stackSize)
 				{
 					slot.onSlotChanged();
@@ -364,14 +368,16 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 				else
 				{
 					/**
-					 * Shift click always can not check decr in inventory for some uses,
-					 * for this, I use decr stack size instead of slot.onSlotChanged().
+					 * Shift click always can not check decr in inventory for
+					 * some uses, for this, I use decr stack size instead of
+					 * slot.onSlotChanged().
 					 */
 					slot.decrStackSize(itemstack.stackSize - itemstack1.stackSize);
 				}
 				slot.onPickupFromSlot(playerIn, itemstack1);
 			}
-			else return null;
+			else
+				return null;
 		}
 		return itemstack;
 	}
@@ -392,7 +398,10 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 					int maxSize = Math.min(slot.getItemStackLimit(itemstack), stack.getMaxStackSize());
 					if (itemstack.stackSize >= maxSize)
 					{
-						if (reverseDirection) --i; else ++i;
+						if (reverseDirection)
+							--i;
+						else
+							++i;
 						continue;
 					}
 					int j = itemstack.stackSize + stack.stackSize;
@@ -412,7 +421,10 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 						flag = true;
 					}
 				}
-				if (reverseDirection) --i; else ++i;
+				if (reverseDirection)
+					--i;
+				else
+					++i;
 			}
 		}
 		
@@ -426,7 +438,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 				int maxSize = Math.min(slot1.getItemStackLimit(stack), stack.getMaxStackSize());
 				if (itemstack1 == null && slot1.isItemValid(stack))
 				{
-					if(stack.stackSize <= maxSize)
+					if (stack.stackSize <= maxSize)
 					{
 						slot1.putStack(stack.copy());
 						slot1.onSlotChanged();
@@ -441,7 +453,10 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 						flag = true;
 					}
 				}
-				if (reverseDirection) --i; else ++i;
+				if (reverseDirection)
+					--i;
+				else
+					++i;
 			}
 		}
 		return flag;
@@ -455,23 +470,26 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	
 	/**
 	 * The Transfer Location, use for shift click transfer items.
+	 * 
 	 * @author ueyudiud
 	 */
 	public class TL
 	{
-		Node<TL> transferTargets;
-		protected int startId;
-		protected int endId;
-		boolean reverseDirection;
+		Node<TL>		transferTargets;
+		protected int	startId;
+		protected int	endId;
+		boolean			reverseDirection;
 		
 		public TL(int id)
 		{
 			this(id, id + 1, false);
 		}
+		
 		public TL(int startId, int endId)
 		{
 			this(startId, endId, false);
 		}
+		
 		public TL(int startId, int endId, boolean reverseDirection)
 		{
 			this.startId = startId;
@@ -521,8 +539,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		
 		public boolean mergeItemStack(ItemStack itemstack)
 		{
-			return !isItemValid(itemstack) ? false :
-				ContainerBase.this.mergeItemStack(itemstack, this.startId, this.endId, this.reverseDirection);
+			return !isItemValid(itemstack) ? false : ContainerBase.this.mergeItemStack(itemstack, this.startId, this.endId, this.reverseDirection);
 		}
 	}
 	
@@ -536,8 +553,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		@Override
 		public boolean isItemValid(ItemStack stack)
 		{
-			return stack.getItem() instanceof IItemFluidContainer ||
-					stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			return stack.getItem() instanceof IItemFluidContainer || stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 		}
 	}
 }

@@ -26,7 +26,9 @@ import net.minecraftforge.common.DimensionManager;
  */
 public final class Players
 {
-	private Players() {}
+	private Players()
+	{
+	}
 	
 	public static EntityPlayer player()
 	{
@@ -46,24 +48,23 @@ public final class Players
 	public static boolean matchCurrentToolType(EntityPlayer player, EnumToolType...types)
 	{
 		ItemStack stack = player.getHeldItemMainhand();
-		if(stack == null)
+		if (stack == null)
 		{
 			stack = player.getHeldItemOffhand();
 		}
-		if(stack == null)
+		if (stack == null)
 		{
-			for(EnumToolType type : types)
-				if(type == EnumToolType.HAND)
-					return true;
+			for (EnumToolType type : types)
+				if (type == EnumToolType.HAND) return true;
 			return false;
 		}
 		List<EnumToolType> list;
-		if(stack.getItem() instanceof ITool)
+		if (stack.getItem() instanceof ITool)
 		{
 			list = ((ITool) stack.getItem()).getToolTypes(stack);
-			for(EnumToolType type : types)
+			for (EnumToolType type : types)
 			{
-				if(list.contains(type)) return true;
+				if (list.contains(type)) return true;
 			}
 			return false;
 		}
@@ -73,13 +74,13 @@ public final class Players
 	
 	public static void destoryPlayerCurrentItem(EntityPlayer player)
 	{
-		if(player == null) return;
-		if(player.getHeldItemMainhand() != null && player.getHeldItemMainhand().stackSize <= 0)
+		if (player == null) return;
+		if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().stackSize <= 0)
 		{
 			player.renderBrokenItemStack(player.getHeldItemMainhand());
 			player.setHeldItem(EnumHand.MAIN_HAND, null);
 		}
-		if(player.getHeldItemOffhand() != null && player.getHeldItemOffhand().stackSize <= 0)
+		if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().stackSize <= 0)
 		{
 			player.renderBrokenItemStack(player.getHeldItemOffhand());
 			player.setHeldItem(EnumHand.OFF_HAND, null);
@@ -89,8 +90,7 @@ public final class Players
 	public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z)
 	{
 		WorldServer targetWorld = DimensionManager.getWorld(dim);
-		if(targetWorld != null)
-			return moveEntityToAnotherDim(entity, dim, x, y, z, targetWorld.getDefaultTeleporter());
+		if (targetWorld != null) return moveEntityToAnotherDim(entity, dim, x, y, z, targetWorld.getDefaultTeleporter());
 		return null;
 	}
 	
@@ -98,13 +98,13 @@ public final class Players
 	{
 		WorldServer targetWorld = DimensionManager.getWorld(dim);
 		WorldServer originalWorld = DimensionManager.getWorld(entity.world.provider.getDimension());
-		if(targetWorld != null && originalWorld != null && targetWorld != originalWorld)
+		if (targetWorld != null && originalWorld != null && targetWorld != originalWorld)
 		{
-			if(entity.isRiding())
+			if (entity.isRiding())
 			{
 				entity.dismountRidingEntity();
 			}
-			if(entity.isBeingRidden())
+			if (entity.isBeingRidden())
 			{
 				entity.removePassengers();
 			}

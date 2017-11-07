@@ -13,19 +13,20 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class Containernxn<T extends TileEntity & IInventory> extends ContainerTileInventory<T>
 {
-	public final int row;
-	public final int column;
+	public final int	row;
+	public final int	column;
 	
 	public Containernxn(T tile, EntityPlayer player, EnumSlotsSize size)
 	{
 		this(tile, player, size.x, size.y, size.row, size.column, 18, 18);
 	}
+	
 	public Containernxn(T tile, EntityPlayer player, int x, int y, int row, int column)
 	{
 		this(tile, player, x, y, row, column, 18, 18);
 	}
-	public Containernxn(T tile, EntityPlayer player,
-			int x, int y, int row, int column, int spacingU, int spacingV)
+	
+	public Containernxn(T tile, EntityPlayer player, int x, int y, int row, int column, int spacingU, int spacingV)
 	{
 		super(tile, player);
 		int size = this.inventorySlots.size();

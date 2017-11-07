@@ -19,13 +19,12 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class MaterialPoolInputRecipeHandler
-implements IRecipeMap<MaterialPoolInputRecipeHandler.Recipe, List<Stack<Mat>>, ItemStack>
+public class MaterialPoolInputRecipeHandler implements IRecipeMap<MaterialPoolInputRecipeHandler.Recipe, List<Stack<Mat>>, ItemStack>
 {
 	static class Recipe
 	{
-		AbstractStack match;
-		Object[] outputs;
+		AbstractStack	match;
+		Object[]		outputs;
 		
 		Recipe(AbstractStack input, Object[] stacks)
 		{
@@ -34,8 +33,8 @@ implements IRecipeMap<MaterialPoolInputRecipeHandler.Recipe, List<Stack<Mat>>, I
 		}
 	}
 	
-	private final String name;
-	private final List<MaterialPoolInputRecipeHandler.Recipe> recipes = new ArrayList<>();
+	private final String										name;
+	private final List<MaterialPoolInputRecipeHandler.Recipe>	recipes	= new ArrayList<>();
 	
 	public MaterialPoolInputRecipeHandler(String name)
 	{
@@ -78,7 +77,8 @@ implements IRecipeMap<MaterialPoolInputRecipeHandler.Recipe, List<Stack<Mat>>, I
 			{
 				stacks.add(new Stack(helper.read()));
 			}
-			else throw new IllegalArgumentException("Illegal material pool input recipe table, got: " + input + "=>" + helper.toString());
+			else
+				throw new IllegalArgumentException("Illegal material pool input recipe table, got: " + input + "=>" + helper.toString());
 		}
 		addRecipe(input, stacks);
 	}
@@ -116,6 +116,6 @@ implements IRecipeMap<MaterialPoolInputRecipeHandler.Recipe, List<Stack<Mat>>, I
 	@Override
 	public void removeRecipeByHandler(ItemStack stack)
 	{
-		this.recipes.removeIf(r->r.match.similar(stack));
+		this.recipes.removeIf(r -> r.match.similar(stack));
 	}
 }

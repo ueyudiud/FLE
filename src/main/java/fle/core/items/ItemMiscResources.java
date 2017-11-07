@@ -91,7 +91,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		super.registerRender();
 		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/misc_resource"));
-		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack->this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
 		NebulaModelLoader.registerTextureSet(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/misc_resource/" + key)));
 	}
 	
@@ -100,9 +100,12 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		switch (stack.getItemDamage())
 		{
-		case 3 : return  8;
-		case 12 : return 11;
-		default: return -1;
+		case 3:
+			return 8;
+		case 12:
+			return 11;
+		default:
+			return -1;
 		}
 	}
 	
@@ -111,9 +114,12 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		switch (stack.getItemDamage())
 		{
-		case 3 : return 'c';
-		case 12 : return 'c';
-		default: return base;
+		case 3:
+			return 'c';
+		case 12:
+			return 'c';
+		default:
+			return base;
 		}
 	}
 	
@@ -122,7 +128,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		if (player == null || !player.capabilities.isCreativeMode)
 		{
-			stack.stackSize --;
+			stack.stackSize--;
 		}
 	}
 	
@@ -132,8 +138,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		List<IBehavior> behaviors = getBehavior(stack);
 		for (IBehavior behavior : behaviors)
 		{
-			if (behavior instanceof IIP_Containerable)
-				return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
+			if (behavior instanceof IIP_Containerable) return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
 		}
 		return null;
 	}
@@ -145,8 +150,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		List<IBehavior> behaviors = getBehavior(stack);
 		for (IBehavior behavior : behaviors)
 		{
-			if (behavior instanceof IIP_Containerable)
-				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
+			if (behavior instanceof IIP_Containerable) return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
 		}
 		return null;
 	}

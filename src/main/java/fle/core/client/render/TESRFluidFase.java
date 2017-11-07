@@ -22,8 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRFluidFase<T extends TileEntity> extends TESRBase<T>
 {
-	float minX, minY, minZ, maxX, maxY, maxZ;
-	Function<T, FluidTankInfo> func;
+	float						minX, minY, minZ, maxX, maxY, maxZ;
+	Function<T, FluidTankInfo>	func;
 	
 	public TESRFluidFase(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Function<T, FluidTankInfo> func)
 	{
@@ -41,10 +41,10 @@ public class TESRFluidFase<T extends TileEntity> extends TESRBase<T>
 	{
 		this.helper.setIconCoordScale(1.0F);
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GL11.glTranslatef((float) x, (float) y, (float) z);
 		GlStateManager.disableLighting();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		//Render fluid.
+		// Render fluid.
 		{
 			GlStateManager.enableBlend();
 			FluidTankInfo tank = this.func.apply(tile);

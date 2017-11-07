@@ -5,21 +5,24 @@
 package nebula.base;
 
 /**
- * The stack instance.<p>
+ * The stack instance.
+ * <p>
  * With a element*size type.
+ * 
  * @author ueyudiud
  *
  * @param <E>
  */
 public class Stack<E>
 {
-	public E element;
-	public long size;
+	public E	element;
+	public long	size;
 	
 	public Stack(E element)
 	{
 		this(element, 1L);
 	}
+	
 	public Stack(E element, long size)
 	{
 		this.element = element;
@@ -59,8 +62,6 @@ public class Stack<E>
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj == this ? true :
-			!(obj instanceof Stack) ? false :
-				((Stack) obj).element.equals(this.element) && ((Stack) obj).size == this.size;
+		return obj == this ? true : !(obj instanceof Stack) ? false : ((Stack) obj).element.equals(this.element) && ((Stack) obj).size == this.size;
 	}
 }

@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
- * The improved packet buffer provided more helper
- * methods.
+ * The improved packet buffer provided more helper methods.
+ * 
  * @author ueyudiud
  */
 public class PacketBufferExt extends PacketBuffer
@@ -24,6 +24,7 @@ public class PacketBufferExt extends PacketBuffer
 	{
 		super(Unpooled.wrappedBuffer(datas));
 	}
+	
 	public PacketBufferExt(ByteBuf wrapped)
 	{
 		super(wrapped);
@@ -36,7 +37,7 @@ public class PacketBufferExt extends PacketBuffer
 		{
 			boolean marker = readBoolean();
 			Fluid fluid = FluidRegistry.getFluid(readShort());
-			if (marker)//Fluid stack type maker.
+			if (marker)// Fluid stack type maker.
 			{
 				int temperature = readInt();
 				return new FluidStackExt(fluid, amt, temperature, readCompoundTag());
@@ -58,7 +59,8 @@ public class PacketBufferExt extends PacketBuffer
 		else
 		{
 			writeInt(stack.amount);
-			boolean flag = stack instanceof FluidStackExt;//Mark fluid stack type.
+			boolean flag = stack instanceof FluidStackExt;// Mark fluid stack
+															// type.
 			writeBoolean(flag);
 			writeShort(FluidRegistry.getFluidID(stack.getFluid()));
 			if (flag)
@@ -79,6 +81,9 @@ public class PacketBufferExt extends PacketBuffer
 	
 	public void writeFixedIntArray(int[] array) throws IOException
 	{
-		for (int element : array) { writeInt(element); }
+		for (int element : array)
+		{
+			writeInt(element);
+		}
 	}
 }

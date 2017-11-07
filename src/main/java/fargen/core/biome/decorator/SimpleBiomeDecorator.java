@@ -34,22 +34,20 @@ public class SimpleBiomeDecorator extends BiomeDecorator
 	
 	static
 	{
-		Selector<IBlockState> selector = new WeightedRandomSelector<>(
-				new Stack<>(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), 880),
-				new Stack<>(M.bristlegrass.getProperty(MP.property_plant).block().getDefaultState(), 120));
+		Selector<IBlockState> selector = new WeightedRandomSelector<>(new Stack<>(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), 880), new Stack<>(M.bristlegrass.getProperty(MP.property_plant).block().getDefaultState(), 120));
 		GRASS_GENERATOR = Selector.single(new WorldGenRandPlant(132, selector));
 	}
 	
-	public int grassPerChunk = 1;
-	public boolean enableStoneChipGen = true;
-	public Selector<WorldGenerator> grassGenerator = GRASS_GENERATOR;
+	public int						grassPerChunk		= 1;
+	public boolean					enableStoneChipGen	= true;
+	public Selector<WorldGenerator>	grassGenerator		= GRASS_GENERATOR;
 	
 	@Override
 	public void decorate(final World world, final Random rand, final BlockPos pos, final IChunkGenerator generator)
 	{
 		int pass, xOff, yOff, zOff, x, y, z;
 		
-		if(TerrainGen.decorate(world, rand, pos, Decorate.EventType.GRASS))
+		if (TerrainGen.decorate(world, rand, pos, Decorate.EventType.GRASS))
 		{
 			for (pass = 0; pass < this.grassPerChunk; ++pass)
 			{
@@ -63,7 +61,6 @@ public class SimpleBiomeDecorator extends BiomeDecorator
 				}
 			}
 		}
-		if (this.enableStoneChipGen)
-			GEN_STONE_CHIP.generate(world, rand, pos, generator);
+		if (this.enableStoneChipGen) GEN_STONE_CHIP.generate(world, rand, pos, generator);
 	}
 }

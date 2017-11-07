@@ -16,9 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class GuiContainerTileInventory<T extends TileEntity & IInventory> extends GuiContainerBase
 {
-	private Optional<String> tileName;
-	protected EntityPlayer opener;
-	protected T tile;
+	private Optional<String>	tileName;
+	protected EntityPlayer		opener;
+	protected T					tile;
 	
 	public GuiContainerTileInventory(ContainerTileInventory<T> inventorySlotsIn, ResourceLocation location)
 	{
@@ -26,6 +26,7 @@ public abstract class GuiContainerTileInventory<T extends TileEntity & IInventor
 		this.tile = inventorySlotsIn.tile;
 		this.opener = inventorySlotsIn.getOpener();
 	}
+	
 	public GuiContainerTileInventory(ContainerTileInventory<T> inventorySlotsIn, ResourceLocation location, int width, int height)
 	{
 		super(inventorySlotsIn, location, width, height);

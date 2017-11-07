@@ -56,15 +56,15 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
 /**
- * Will be removed later.
- * The redstone circuit model part instead.
+ * Will be removed later. The redstone circuit model part instead.
+ * 
  * @author ueyudiud
  */
 @Deprecated
 public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IModelCustomData
 {
-	private static final float PLATE_HEIGHT = .125F;
-	private static final IModel MODEL = new ModelRedstoneCircuit();
+	private static final float	PLATE_HEIGHT	= .125F;
+	private static final IModel	MODEL			= new ModelRedstoneCircuit();
 	
 	public static enum RedstoneCircuitModelLoader implements INebulaCustomModelLoader
 	{
@@ -97,18 +97,21 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	
 	/**
 	 * For game was always crashing when I debugging.<br>
-	 * It might takes too much memory to build quad, so I tried cached those quad.
+	 * It might takes too much memory to build quad, so I tried cached those
+	 * quad.
+	 * 
 	 * @author ueyudiud
 	 */
 	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap<>();
 	
-	private IModel parent;
-	private ResourceLocation layer;
+	private IModel				parent;
+	private ResourceLocation	layer;
 	
 	private ModelRedstoneCircuit()
 	{
 		this.layer = new ResourceLocation(FarCore.ID, "blocks/void");
 	}
+	
 	private ModelRedstoneCircuit(ResourceLocation layer, IModel parent)
 	{
 		this.parent = parent;
@@ -120,7 +123,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	{
 		List<ResourceLocation> locations = new ArrayList<>();
 		locations.add(this.layer);
-		if(this.parent != null)
+		if (this.parent != null)
 		{
 			locations.addAll(this.parent.getTextures());
 		}
@@ -128,38 +131,37 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	}
 	
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		TextureAtlasSprite missing = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
 		Map<Mat, Map<EnumFacing, List<BakedQuad>>> map = bakedQuads.get(this.layer);
-		if(map == null)
+		if (map == null)
 		{
 			TextureAtlasSprite layer = bakedTextureGetter.apply(this.layer);
 			ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder = ImmutableMap.builder();
-			for(EnumFacing facing : EnumFacing.HORIZONTALS)
+			for (EnumFacing facing : EnumFacing.HORIZONTALS)
 			{
 				Optional<TRSRTransformation> transformation = Optional.of(new TRSRTransformation(facing));
 				builder.put(facing, buildQuads(missing, layer, format, transformation));
 			}
 			Map<EnumFacing, List<BakedQuad>> map1 = builder.build();
 			ImmutableMap.Builder<Mat, Map<EnumFacing, List<BakedQuad>>> builder2 = ImmutableMap.builder();
-			for(Mat material : Mat.filt(SubTags.ROCK))
+			for (Mat material : Mat.filt(SubTags.ROCK))
 			{
 				TextureAtlasSprite sprite;
 				try
 				{
 					sprite = MaterialTextureLoader.getIcon(material, MC.stone);
 				}
-				catch(NullPointerException exception)
+				catch (NullPointerException exception)
 				{
 					sprite = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
 				}
 				ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder1 = ImmutableMap.builder();
-				for(Entry<EnumFacing, List<BakedQuad>> entry : map1.entrySet())
+				for (Entry<EnumFacing, List<BakedQuad>> entry : map1.entrySet())
 				{
 					ImmutableList.Builder<BakedQuad> builder3 = ImmutableList.builder();
-					for(BakedQuad quad : entry.getValue())
+					for (BakedQuad quad : entry.getValue())
 					{
 						builder3.add(new BakedQuadRetextured(quad, sprite));
 					}
@@ -177,19 +179,18 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	public IModel retexture(ImmutableMap<String, String> textures)
 	{
 		IModel parent0 = this.parent;
-		if(this.parent instanceof IRetexturableModel)
+		if (this.parent instanceof IRetexturableModel)
 		{
 			parent0 = ((IRetexturableModel) this.parent).retexture(textures);
 		}
-		return new ModelRedstoneCircuit(
-				getRealLocationFromPathOrDefault("layer", textures, this.layer), parent0);
+		return new ModelRedstoneCircuit(getRealLocationFromPathOrDefault("layer", textures, this.layer), parent0);
 	}
 	
 	@Override
 	public IModel process(ImmutableMap<String, String> customData)
 	{
 		IModel parent0;
-		if(this.parent == null && customData.containsKey("mixed"))
+		if (this.parent == null && customData.containsKey("mixed"))
 		{
 			String mixed = customData.get("mixed");
 			ResourceLocation location = new ResourceLocation(mixed.substring(1, mixed.length() - 1));
@@ -203,7 +204,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		{
 			parent0 = this.parent;
 		}
-		if(parent0 instanceof IModelCustomData)
+		if (parent0 instanceof IModelCustomData)
 		{
 			parent0 = ((IModelCustomData) parent0).process(customData);
 		}
@@ -214,8 +215,8 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	{
 		private static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_TRANSFORMTION;
 		
-		private Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads;
-		private IBakedModel model;
+		private Map<Mat, Map<EnumFacing, List<BakedQuad>>>	quads;
+		private IBakedModel									model;
 		
 		BakedRedstoneCiruitModel(Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads, IBakedModel model)
 		{
@@ -226,11 +227,11 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
-			if(facing != null) return ImmutableList.of();
+			if (facing != null) return ImmutableList.of();
 			Mat rock = TECircuitBase.getRockType(stack);
 			Map<EnumFacing, List<BakedQuad>> map = this.quads.get(rock);
 			List<BakedQuad> list;
-			if(map != null)
+			if (map != null)
 			{
 				list = new ArrayList<>(map.getOrDefault(EnumFacing.NORTH, ImmutableList.of()));
 			}
@@ -238,7 +239,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			{
 				list = new ArrayList<>();
 			}
-			if(this.model != null)
+			if (this.model != null)
 			{
 				list.addAll(this.model.getQuads(null, facing, rand));
 			}
@@ -248,15 +249,14 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
-			if(side != null) return ImmutableList.of();
-			if(state instanceof BlockStateTileEntityWapper)
+			if (side != null) return ImmutableList.of();
+			if (state instanceof BlockStateTileEntityWapper)
 			{
 				@SuppressWarnings("unchecked")
-				BlockStateTileEntityWapper<? extends TECircuitBase> wapper =
-				(BlockStateTileEntityWapper<? extends TECircuitBase>) state;
+				BlockStateTileEntityWapper<? extends TECircuitBase> wapper = (BlockStateTileEntityWapper<? extends TECircuitBase>) state;
 				Map<EnumFacing, List<BakedQuad>> map = this.quads.get(wapper.tile.material);
 				List<BakedQuad> list;
-				if(map != null)
+				if (map != null)
 				{
 					list = new ArrayList<>(map.getOrDefault(wapper.tile.facing.of(), ImmutableList.of()));
 				}
@@ -264,7 +264,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 				{
 					list = new ArrayList<>();
 				}
-				if(this.model != null)
+				if (this.model != null)
 				{
 					list.addAll(this.model.getQuads(state, side, rand));
 				}
@@ -274,22 +274,40 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		}
 		
 		@Override
-		public boolean isAmbientOcclusion() { return false; }
+		public boolean isAmbientOcclusion()
+		{
+			return false;
+		}
 		
 		@Override
-		public boolean isGui3d() { return true; }
+		public boolean isGui3d()
+		{
+			return true;
+		}
 		
 		@Override
-		public boolean isBuiltInRenderer() { return false; }
+		public boolean isBuiltInRenderer()
+		{
+			return false;
+		}
 		
 		@Override
-		public TextureAtlasSprite getParticleTexture() { return this.model != null ? this.model.getParticleTexture() : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite(); }
+		public TextureAtlasSprite getParticleTexture()
+		{
+			return this.model != null ? this.model.getParticleTexture() : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+		}
 		
 		@Override
-		public ItemCameraTransforms getItemCameraTransforms() { return this.model != null ? this.model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT; }
+		public ItemCameraTransforms getItemCameraTransforms()
+		{
+			return this.model != null ? this.model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT;
+		}
 		
 		@Override
-		public ItemOverrideList getOverrides() { return this.model != null ? this.model.getOverrides() : ItemOverrideList.NONE; }
+		public ItemOverrideList getOverrides()
+		{
+			return this.model != null ? this.model.getOverrides() : ItemOverrideList.NONE;
+		}
 		
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType)
@@ -301,21 +319,21 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		{
 			ImmutableMap.Builder<TransformType, TRSRTransformation> builder = ImmutableMap.builder();
 			builder.put(TransformType.NONE, TRSRTransformation.identity());
-			builder.put(TransformType.THIRD_PERSON_LEFT_HAND,  ModelHelper.transformation(0.23483497F, 0.60772145F, 0.5F,        0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.THIRD_PERSON_RIGHT_HAND, ModelHelper.transformation(0.23483497F, 0.60772145F, 0.5F,        0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.FIRST_PERSON_LEFT_HAND,  ModelHelper.transformation(0.78284276F, 0.5F,        0.5F,        0.0F,       0.9238796F, 0.0F,       -0.3826834F, 0.4F,   0.4F,   0.4F,   0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.FIRST_PERSON_RIGHT_HAND, ModelHelper.transformation(0.78284276F, 0.5F,        0.5F,        0.0F,       0.9238796F, 0.0F,       -0.3826834F, 0.4F,   0.4F,   0.4F,   0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.HEAD,                    ModelHelper.transformation(1.0F,        1.0F,        1.0F,        0.0F,       1.0F,       0.0F,        0.0F,       0.25F,  0.25F,  0.25F,  0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.GUI,                     ModelHelper.transformation(0.94194174F, 0.22936705F, 0.34375006F,-0.1F,       0.9F,       0.23911762F,-0.37F,      0.625F, 0.625F, 0.625F, 0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.GROUND,                  ModelHelper.transformation(0.375F,      0.25F,       0.375F,      0.0F,       0.0F,       0.0F,        1.0F,       0.25F,  0.25F,  0.25F,  0.0F, 0.0F, 0.0F, 1.0F));
-			builder.put(TransformType.FIXED,                   ModelHelper.transformation(0.25F,       0.25F,       0.25F,       0.0F,       0.0F,       0.0F,        1.0F,       0.5F,   0.5F,   0.5F,   0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.THIRD_PERSON_LEFT_HAND, ModelHelper.transformation(0.23483497F, 0.60772145F, 0.5F, 0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.THIRD_PERSON_RIGHT_HAND, ModelHelper.transformation(0.23483497F, 0.60772145F, 0.5F, 0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.FIRST_PERSON_LEFT_HAND, ModelHelper.transformation(0.78284276F, 0.5F, 0.5F, 0.0F, 0.9238796F, 0.0F, -0.3826834F, 0.4F, 0.4F, 0.4F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.FIRST_PERSON_RIGHT_HAND, ModelHelper.transformation(0.78284276F, 0.5F, 0.5F, 0.0F, 0.9238796F, 0.0F, -0.3826834F, 0.4F, 0.4F, 0.4F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.HEAD, ModelHelper.transformation(1.0F, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.25F, 0.25F, 0.25F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.GUI, ModelHelper.transformation(0.94194174F, 0.22936705F, 0.34375006F, -0.1F, 0.9F, 0.23911762F, -0.37F, 0.625F, 0.625F, 0.625F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.GROUND, ModelHelper.transformation(0.375F, 0.25F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 0.25F, 0.25F, 0.0F, 0.0F, 0.0F, 1.0F));
+			builder.put(TransformType.FIXED, ModelHelper.transformation(0.25F, 0.25F, 0.25F, 0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 0.5F, 0.5F, 0.0F, 0.0F, 0.0F, 1.0F));
 			BLOCK_TRANSFORMTION = builder.build();
 		}
 	}
 	
 	public static List<BakedQuad> buildQuads(TextureAtlasSprite texture, TextureAtlasSprite layer, VertexFormat format, Optional<TRSRTransformation> transformation)
 	{
-		if(texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
+		if (texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
 		{
 			Log.warn("The icon {%s, %s} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
 			return ImmutableList.of();
@@ -324,26 +342,26 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		int v = texture.getIconHeight();
 		byte[] height = new byte[u * v];
 		ImmutableList.Builder<BakedQuad> builder2 = ImmutableList.builder();
-		BakedQuadBuilder builder = new BakedQuadBuilder(format,
-				new ModelModifierByCoordTransformer(transformation.or(TRSRTransformation.identity()), null), builder2::add);
+		BakedQuadBuilder builder = new BakedQuadBuilder(format, new ModelModifierByCoordTransformer(transformation.or(TRSRTransformation.identity()), null), builder2::add);
 		builder.switchTextureScale();
-		int[] pixels = layer.getFrameTextureData(0)[0];//Only provide first frame for height.
-		for(int v1 = 0; v1 < v; v1++)
+		int[] pixels = layer.getFrameTextureData(0)[0];// Only provide first
+														// frame for height.
+		for (int v1 = 0; v1 < v; v1++)
 		{
-			for(int u1 = 0; u1 < u; u1++)
+			for (int u1 = 0; u1 < u; u1++)
 			{
 				int idx = (u1 + v1 * u);
 				height[idx] = (byte) (pixels[idx] >> 24);
 			}
 		}
-		for(int f = 0; f < layer.getFrameCount(); ++f)
+		for (int f = 0; f < layer.getFrameCount(); ++f)
 		{
-			for(int v1 = 0; v1 < v; v1++)
+			for (int v1 = 0; v1 < v; v1++)
 			{
-				for(int u1 = 0; u1 < u; u1++)
+				for (int u1 = 0; u1 < u; u1++)
 				{
 					int idx = (u1 + v1 * u);
-					if(height[idx] == 0)
+					if (height[idx] == 0)
 					{
 						continue;
 					}
@@ -353,44 +371,44 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 					float maxZ = (float) (v1 + 1) / (float) v;
 					float minY;
 					float maxY = (L.uint(height[idx]) + 1) * PLATE_HEIGHT / 256F;
-					if(u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
+					if (u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * PLATE_HEIGHT / 256F;
 						builder.startQuad(u1 == 0 ? EnumFacing.WEST : null, -1, texture);
-						builder.normal(-1, 0, 0);//WEST
+						builder.normal(-1, 0, 0);// WEST
 						builder.pos(minX, minY, minZ, minZ, minY);
 						builder.pos(minX, minY, maxZ, maxZ, minY);
 						builder.pos(minX, maxY, maxZ, maxZ, maxY);
 						builder.pos(minX, maxY, minZ, minZ, maxY);
 						builder.endQuad();
 					}
-					if(u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
+					if (u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * PLATE_HEIGHT / 256F;
-						builder.startQuad(u1 == u-1 ? EnumFacing.EAST : null, -1, texture);
-						builder.normal(1, 0, 0);//EAST
+						builder.startQuad(u1 == u - 1 ? EnumFacing.EAST : null, -1, texture);
+						builder.normal(1, 0, 0);// EAST
 						builder.pos(maxX, minY, maxZ, minZ, minY);
 						builder.pos(maxX, minY, minZ, maxZ, minY);
 						builder.pos(maxX, maxY, minZ, maxZ, maxY);
 						builder.pos(maxX, maxY, maxZ, minZ, maxY);
 						builder.endQuad();
 					}
-					if(v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
+					if (v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * PLATE_HEIGHT / 256F;
 						builder.startQuad(v1 == 0 ? EnumFacing.NORTH : null, -1, texture);
-						builder.normal(0, 0, -1);//NORTH
+						builder.normal(0, 0, -1);// NORTH
 						builder.pos(minX, minY, minZ, minX, minY);
 						builder.pos(minX, maxY, minZ, minX, maxY);
 						builder.pos(maxX, maxY, minZ, maxX, maxY);
 						builder.pos(maxX, minY, minZ, maxX, minY);
 						builder.endQuad();
 					}
-					if(v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
+					if (v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * PLATE_HEIGHT / 256F;
 						builder.startQuad(v1 == v - 1 ? EnumFacing.SOUTH : null, -1, texture);
-						builder.normal(0, 0, 1);//SOUTH
+						builder.normal(0, 0, 1);// SOUTH
 						builder.pos(maxX, minY, maxZ, minX, minY);
 						builder.pos(maxX, maxY, maxZ, minX, maxY);
 						builder.pos(minX, maxY, maxZ, maxX, maxY);
@@ -398,7 +416,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 						builder.endQuad();
 					}
 					builder.startQuad(null, -1, texture);
-					builder.normal(0, 1, 0);//UP
+					builder.normal(0, 1, 0);// UP
 					builder.pos(minX, maxY, maxZ, minX, maxZ);
 					builder.pos(maxX, maxY, maxZ, maxX, maxZ);
 					builder.pos(maxX, maxY, minZ, maxX, minZ);
@@ -407,7 +425,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 				}
 			}
 			builder.startQuad(null, -1, texture);
-			builder.normal(0, -1, 0);//DOWN
+			builder.normal(0, -1, 0);// DOWN
 			builder.pos(0, 0, 0, 0, 1);
 			builder.pos(1, 0, 0, 1, 1);
 			builder.pos(1, 0, 1, 1, 0);

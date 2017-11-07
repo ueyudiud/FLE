@@ -10,18 +10,21 @@ public interface IProjectileItem
 {
 	/**
 	 * Called when projective item is initialized.
+	 * 
 	 * @param entity
 	 */
 	void initEntity(EntityProjectileItem entity);
 	
 	/**
 	 * Called when projective item is updating.
+	 * 
 	 * @param entity
 	 */
 	void onEntityTick(EntityProjectileItem entity);
 	
 	/**
 	 * Called when projective item hitting on ground.
+	 * 
 	 * @param world
 	 * @param pos
 	 * @param entity
@@ -31,8 +34,9 @@ public interface IProjectileItem
 	boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction);
 	
 	/**
-	 * Called when projective item hitting on another entity.
-	 * Use to attack entity, give entity potion effect, etc.
+	 * Called when projective item hitting on another entity. Use to attack
+	 * entity, give entity potion effect, etc.
+	 * 
 	 * @param world
 	 * @param target
 	 * @param entity

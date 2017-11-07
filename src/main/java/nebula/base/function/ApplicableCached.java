@@ -11,8 +11,8 @@ import java.util.function.Supplier;
  */
 class ApplicableCached<T> implements Applicable<T>
 {
-	Supplier<? extends T> supplier;
-	Optional<T> cache;
+	Supplier<? extends T>	supplier;
+	Optional<T>				cache;
 	
 	ApplicableCached(Supplier<? extends T> supplier)
 	{

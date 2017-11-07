@@ -17,12 +17,13 @@ import net.minecraft.inventory.Container;
  */
 public class PacketGuiAction extends PacketGui
 {
-	private byte type;
-	private long code;
+	private byte	type;
+	private long	code;
 	
 	public PacketGuiAction()
 	{
 	}
+	
 	public PacketGuiAction(byte type, long code, ContainerBase container)
 	{
 		super(container);

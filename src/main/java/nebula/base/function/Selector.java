@@ -14,9 +14,11 @@ import nebula.base.IntegerMap;
 import nebula.common.util.L;
 
 /**
- * The selector, is a functional interface.<p>
+ * The selector, is a functional interface.
+ * <p>
  * 
- * The result of function is randomly, or use specific RNG to get the result.<p>
+ * The result of function is randomly, or use specific RNG to get the result.
+ * <p>
  * 
  * Used the same random with same seed <i>should</i> return same result.
  * 
@@ -26,7 +28,7 @@ import nebula.common.util.L;
 @FunctionalInterface
 public interface Selector<E> extends Function<Random, E>
 {
-	//The selector provide methods.
+	// The selector provide methods.
 	
 	static <E> Selector<E> forChance(@Nullable E def, @Nullable E spe, int chance)
 	{
@@ -41,6 +43,7 @@ public interface Selector<E> extends Function<Random, E>
 	
 	/**
 	 * Return a <tt>Selector</tt> with always return a constant.
+	 * 
 	 * @param element the constant to return.
 	 * @return the selector.
 	 */
@@ -49,19 +52,27 @@ public interface Selector<E> extends Function<Random, E>
 		return new Selector<E>()
 		{
 			@Override
-			public E next(Random random) { return element; }
+			public E next(Random random)
+			{
+				return element;
+			}
 			
 			@Override
-			public E next(int random) { return element; }
+			public E next(int random)
+			{
+				return element;
+			}
 		};
 	}
 	
 	/**
-	 * Return a <tt>Selector</tt> with weight map from {@link nebula.base.IntegerMap}.
-	 * the data will be not copied to selector, the modification of map can still affect
-	 * the result of selecting.
-	 * @param map the integer map, each key in map may can be returned by <tt>next()</tt>
-	 *            with weight (which is mapped value in map) to return.
+	 * Return a <tt>Selector</tt> with weight map from
+	 * {@link nebula.base.IntegerMap}. the data will be not copied to selector,
+	 * the modification of map can still affect the result of selecting.
+	 * 
+	 * @param map the integer map, each key in map may can be returned by
+	 *            <tt>next()</tt> with weight (which is mapped value in map) to
+	 *            return.
 	 * @return the selector.
 	 */
 	static <E> Selector<E> of(IntegerMap<? extends E> map)
@@ -71,6 +82,7 @@ public interface Selector<E> extends Function<Random, E>
 	
 	/**
 	 * Return a <tt>Selector</tt> can select result from specific elements.
+	 * 
 	 * @param elements the elements can be returned by <tt>next()</tt>
 	 * @return the selector.
 	 */
@@ -79,11 +91,12 @@ public interface Selector<E> extends Function<Random, E>
 		return random -> L.random(random, elements);
 	}
 	
-	//The selector provide methods end.
+	// The selector provide methods end.
 	
 	/**
 	 * Wrapped as a <tt>Applicable</tt>, which used default RNG to select
 	 * result.
+	 * 
 	 * @return the function.
 	 * @see nebula.common.util.L#random()
 	 */
@@ -103,17 +116,19 @@ public interface Selector<E> extends Function<Random, E>
 	}
 	
 	/**
-	 * Get next element from selector,
-	 * used the selected random generator.
+	 * Get next element from selector, used the selected random generator.
+	 * 
 	 * @param random the custom random generator.
 	 * @return the selected element.
 	 */
 	E next(Random random);
 	
 	/**
-	 * The seed based generate random.<p>
-	 * For each seed, the result will be a constant unless which time the
-	 * method is called.
+	 * The seed based generate random.
+	 * <p>
+	 * For each seed, the result will be a constant unless which time the method
+	 * is called.
+	 * 
 	 * @param random the random seed.
 	 * @return the selected element.
 	 */

@@ -37,23 +37,22 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  */
 public final class TileEntities
 {
-	private TileEntities() {}
+	private TileEntities()
+	{
+	}
 	
-	public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
-			Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
+	public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
 	{
 		if (tile == null) return false;
-		if (tile instanceof TEBase && !((TEBase) tile).isInitialized())
-			return false;
+		if (tile instanceof TEBase && !((TEBase) tile).isInitialized()) return false;
 		EnumFacing facing2 = facing.of();
-		if (heldItem != null && heldItem.getItem() instanceof ITool &&
-				tile instanceof IToolableTile)
+		if (heldItem != null && heldItem.getItem() instanceof ITool && tile instanceof IToolableTile)
 		{
 			ITool tool = (ITool) heldItem.getItem();
 			ActionResult<Float> result;
-			for(EnumToolType toolType : tool.getToolTypes(heldItem))
+			for (EnumToolType toolType : tool.getToolTypes(heldItem))
 			{
-				if((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
+				if ((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
 				{
 					tool.onToolUse(playerIn, heldItem, toolType, result.getResult());
 					return true;
@@ -69,9 +68,9 @@ public final class TileEntities
 				FluidStack input;
 				FluidStack output;
 				int amt;
-				if((output = handler2.drain(Integer.MAX_VALUE, false)) != null)
+				if ((output = handler2.drain(Integer.MAX_VALUE, false)) != null)
 				{
-					if((amt = handler.fill(output, true)) != 0)
+					if ((amt = handler.fill(output, true)) != 0)
 					{
 						input = output.copy();
 						input.amount = amt;
@@ -79,9 +78,9 @@ public final class TileEntities
 						return true;
 					}
 				}
-				else if((output = handler.drain(Integer.MAX_VALUE, false)) != null)
+				else if ((output = handler.drain(Integer.MAX_VALUE, false)) != null)
 				{
-					if((amt = handler2.fill(output, true)) != 0)
+					if ((amt = handler2.fill(output, true)) != 0)
 					{
 						input = output.copy();
 						input.amount = amt;
@@ -95,26 +94,28 @@ public final class TileEntities
 		{
 			IItemHandlerIO handler = (IItemHandlerIO) tile;
 			ActionResult<ItemStack> result = handler.onPlayerTryUseIO(heldItem, playerIn, facing, hitX, hitY, hitZ, true);
-			if(result.getType() == EnumActionResult.SUCCESS)
+			if (result.getType() == EnumActionResult.SUCCESS)
 			{
-				if(heldItem != result.getResult())
+				if (heldItem != result.getResult())
 				{
 					playerIn.setHeldItem(hand, heldItem = ItemStack.copyItemStack(result.getResult()));
-					for(int i = 0; i < playerIn.inventory.getSizeInventory(); ++i)
+					for (int i = 0; i < playerIn.inventory.getSizeInventory(); ++i)
 					{
 						ItemStack stack = playerIn.inventory.getStackInSlot(i);
-						if(stack != null && stack != heldItem)
+						if (stack != null && stack != heldItem)
 						{
 							result = handler.onPlayerTryUseIO(stack, playerIn, facing, hitX, hitY, hitZ, false);
-							switch(result.getType())
+							switch (result.getType())
 							{
-							case FAIL : return true;
-							case SUCCESS :
-								if(result.getResult() != stack)
+							case FAIL:
+								return true;
+							case SUCCESS:
+								if (result.getResult() != stack)
 								{
 									playerIn.inventory.setInventorySlotContents(i, stack);
 								}
-							case PASS : break;
+							case PASS:
+								break;
 							}
 						}
 					}
@@ -132,13 +133,12 @@ public final class TileEntities
 	
 	public static boolean matchOutput(AbstractStack output, ItemStack stackInSlot, int stackLimit)
 	{
-		return output == null || stackInSlot == null ? true :
-			output.similar(stackInSlot) && stackInSlot.stackSize + output.size(stackInSlot) <= Math.min(stackLimit, stackInSlot.getMaxStackSize());
+		return output == null || stackInSlot == null ? true : output.similar(stackInSlot) && stackInSlot.stackSize + output.size(stackInSlot) <= Math.min(stackLimit, stackInSlot.getMaxStackSize());
 	}
 	
 	public static void insertStack(AbstractStack stack, IBasicInventory inventory, int idx)
 	{
-		if(inventory.getStack(idx) == null)
+		if (inventory.getStack(idx) == null)
 		{
 			inventory.setInventorySlotContents(idx, stack.instance());
 		}
@@ -151,7 +151,7 @@ public final class TileEntities
 	
 	public static void insertStack(AbstractStack stack, IInventory inventory, int idx)
 	{
-		if(inventory.getStackInSlot(idx) == null)
+		if (inventory.getStackInSlot(idx) == null)
 		{
 			inventory.setInventorySlotContents(idx, stack.instance());
 		}
@@ -171,10 +171,10 @@ public final class TileEntities
 		{
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of());
 			
-			if(handler.fill(fill, false) != 0)
+			if (handler.fill(fill, false) != 0)
 			{
 				amount = handler.fill(fill, process);
-				if(process && amount > 0)
+				if (process && amount > 0)
 				{
 					tank.drain(amount, true);
 				}
@@ -192,19 +192,20 @@ public final class TileEntities
 	public static void dropItemStacks(World world, BlockPos pos, IInventory inventory)
 	{
 		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
-		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i);
+		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i)
+			;
 		Worlds.spawnDropsInWorld(world, pos, list);
 	}
 	
 	public static void dropItemStacks(World world, BlockPos pos, IBasicInventory inventory)
 	{
 		List<ItemStack> list = new ArrayList<>();
-		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i);
+		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i)
+			;
 		Worlds.spawnDropsInWorld(world, pos, list);
 	}
 	
-	public static void damageTool(IBasicInventory inventory, int index, float amount,
-			EntityPlayer user, EnumToolType type)
+	public static void damageTool(IBasicInventory inventory, int index, float amount, EntityPlayer user, EnumToolType type)
 	{
 		ItemStack stack = inventory.getStack(index);
 		if (stack == null) return;

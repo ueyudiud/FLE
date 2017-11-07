@@ -42,8 +42,8 @@ public interface IItemMatProp
 	 * @param material
 	 * @param condition
 	 * @param environment
-	 * @param saveTag Some item might is multiple materials item, give
-	 * material a saving NBT tag.
+	 * @param saveTag Some item might is multiple materials item, give material
+	 *            a saving NBT tag.
 	 * @return
 	 */
 	ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment, String saveTag);
@@ -59,6 +59,7 @@ public interface IItemMatProp
 	
 	/**
 	 * Get entity attack damage multiple.
+	 * 
 	 * @param stack
 	 * @param material
 	 * @param target

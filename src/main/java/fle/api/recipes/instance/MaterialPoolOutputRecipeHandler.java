@@ -17,11 +17,10 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class MaterialPoolOutputRecipeHandler
-implements IRecipeMap<Function<StackContainer<Mat>, ItemStack>, ItemStack, StackContainer<Mat>>
+public class MaterialPoolOutputRecipeHandler implements IRecipeMap<Function<StackContainer<Mat>, ItemStack>, ItemStack, StackContainer<Mat>>
 {
-	private final String name;
-	private final List<Function<StackContainer<Mat>, ItemStack>> recipes = new ArrayList<>();
+	private final String											name;
+	private final List<Function<StackContainer<Mat>, ItemStack>>	recipes	= new ArrayList<>();
 	
 	public MaterialPoolOutputRecipeHandler(String name)
 	{
@@ -58,8 +57,7 @@ implements IRecipeMap<Function<StackContainer<Mat>, ItemStack>, ItemStack, Stack
 		for (Function<StackContainer<Mat>, ItemStack> function : this.recipes)
 		{
 			ItemStack stack = function.apply(handler);
-			if (stack != null)
-				return stack;
+			if (stack != null) return stack;
 		}
 		return null;
 	}
@@ -73,6 +71,6 @@ implements IRecipeMap<Function<StackContainer<Mat>, ItemStack>, ItemStack, Stack
 	@Override
 	public void removeRecipeByHandler(StackContainer<Mat> handler)
 	{
-		this.recipes.removeIf(r->r.apply(handler)!=null);
+		this.recipes.removeIf(r -> r.apply(handler) != null);
 	}
 }

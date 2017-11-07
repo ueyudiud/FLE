@@ -80,7 +80,7 @@ public class TESRScreenLineChart extends TESRBase<TEScreenLineChart> implements 
 		{
 			this.helper.vertex_p((float) i / (float) l - mov, chart.rescaleValue(heights[i]), 0.0);
 		}
-		this.helper.vertex_p(1, chart.rescaleValue(Maths.lerp(heights[l], heights[l-1], delay)), 0);
+		this.helper.vertex_p(1, chart.rescaleValue(Maths.lerp(heights[l], heights[l - 1], delay)), 0);
 		this.helper.draw();
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

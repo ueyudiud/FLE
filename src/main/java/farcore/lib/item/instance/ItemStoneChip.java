@@ -46,24 +46,22 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(stack.stackSize < 9)
-			return EnumActionResult.PASS;
-		if(!worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos))
+		if (stack.stackSize < 9) return EnumActionResult.PASS;
+		if (!worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos))
 		{
 			pos = pos.offset(facing);
 		}
-		if(!playerIn.canPlayerEdit(pos, facing, stack))
+		if (!playerIn.canPlayerEdit(pos, facing, stack))
 			return EnumActionResult.FAIL;
 		else
 		{
 			Mat material = getMaterialFromItem(stack);
-			if(material.contain(SubTags.ROCK))
+			if (material.contain(SubTags.ROCK))
 			{
 				RockBehavior property = material.getProperty(MP.property_rock);
-				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.TYPE, EnumRockType.cobble_art), 3))
+				if (worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.TYPE, EnumRockType.cobble_art), 3))
 				{
 					stack.stackSize -= 9;
 					return EnumActionResult.SUCCESS;
@@ -74,11 +72,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
-			EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
 		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
-		if(result == null)
+		if (result == null)
 		{
 			playerIn.setActiveHand(hand);
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
@@ -104,18 +101,17 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		float f = (getMaxItemUseDuration(stack) - timeLeft);
 		f /= 20F;
 		f = (f * f + f * 3.5F) / 3F;
-		if(f < 0.2F) return;
-		if(f > 1.0F)
+		if (f < 0.2F) return;
+		if (f > 1.0F)
 		{
 			f = 1.0F;
 		}
 		ItemStack stack1;
-		if(entityLiving instanceof EntityPlayer &&
-				((EntityPlayer) entityLiving).capabilities.isCreativeMode)
+		if (entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).capabilities.isCreativeMode)
 		{
 			stack1 = stack.copy();
 			stack1.stackSize = 1;
-			if(!worldIn.isRemote)
+			if (!worldIn.isRemote)
 			{
 				KS.HURLING.using((EntityPlayer) entityLiving, shootStoneChipExp);
 			}
@@ -124,7 +120,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		{
 			stack1 = stack.splitStack(1);
 		}
-		if(!worldIn.isRemote)
+		if (!worldIn.isRemote)
 		{
 			float inaccuracy = !(entityLiving instanceof EntityPlayer) ? 1.0F : 3F / (1F + KS.SHOOTING.level((EntityPlayer) entityLiving));
 			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1, inaccuracy);
@@ -136,10 +132,14 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	}
 	
 	@Override
-	public void initEntity(EntityProjectileItem entity){ }
+	public void initEntity(EntityProjectileItem entity)
+	{
+	}
 	
 	@Override
-	public void onEntityTick(EntityProjectileItem entity){	}
+	public void onEntityTick(EntityProjectileItem entity)
+	{
+	}
 	
 	@Override
 	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
@@ -150,14 +150,14 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
 	{
-		if(target instanceof EntityLivingBase)
+		if (target instanceof EntityLivingBase)
 		{
 			EntityLivingBase entity1 = (EntityLivingBase) target;
 			float damage = MathHelper.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
 			float speed = damage;
 			damage *= 0.4F;
 			Mat material = getMaterialFromItem(entity.currentItem);
-			if(material != null)
+			if (material != null)
 			{
 				damage *= (1F + material.toolDamageToEntity);
 			}
@@ -166,8 +166,8 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 				damage *= ((IEntityDamageEffect) target).getDamageMultiplier(EnumPhysicalDamageType.HIT);
 			}
 			entity1.playSound(SoundEvents.BLOCK_STONE_HIT, 1.0F, 3.0F);
-			if(entity.shooter != null)
-				if(entity.shooter instanceof EntityPlayer)
+			if (entity.shooter != null)
+				if (entity.shooter instanceof EntityPlayer)
 				{
 					damage *= 1 + KS.HURLING.level((EntityPlayer) entity.shooter) * 0.05F;
 					entity1.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity.shooter).setProjectile(), damage);
@@ -181,7 +181,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 				entity1.attackEntityFrom(DamageSourceProjectile.instance, damage);
 			}
 			entity1.addVelocity(entity.motionX * .02, entity.motionY * .02, entity.motionZ * .02);
-			if(entity.world.rand.nextFloat() * 4F + 1F < speed)
+			if (entity.world.rand.nextFloat() * 4F + 1F < speed)
 			{
 				entity.setDead();
 			}
@@ -192,8 +192,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
-			boolean advanced)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
 		unlocalizedList.add("info.stone.chip.throwable");
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);

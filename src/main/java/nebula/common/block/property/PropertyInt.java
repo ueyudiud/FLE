@@ -14,11 +14,11 @@ import nebula.common.util.L;
 
 public class PropertyInt implements IStandardProperty<Integer>
 {
-	private final String name;
-	private final int min;
-	private final int max;
-	private Integer instance;
-	private final List<Integer> list;
+	private final String		name;
+	private final int			min;
+	private final int			max;
+	private Integer				instance;
+	private final List<Integer>	list;
 	
 	public PropertyInt(String name, int min, int max)
 	{
@@ -88,10 +88,7 @@ public class PropertyInt implements IStandardProperty<Integer>
 	@Override
 	public boolean equals(Object obj)
 	{
-		return this == obj || ((obj instanceof PropertyInt) &&
-				((PropertyInt) obj).name == this.name &&
-				((PropertyInt) obj).max == this.max &&
-				((PropertyInt) obj).min == this.min);
+		return this == obj || ((obj instanceof PropertyInt) && ((PropertyInt) obj).name == this.name && ((PropertyInt) obj).max == this.max && ((PropertyInt) obj).min == this.min);
 	}
 	
 	@Override

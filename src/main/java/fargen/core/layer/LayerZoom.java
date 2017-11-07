@@ -17,6 +17,7 @@ public class LayerZoom extends Layer
 		super(seed);
 		this.parent = layer;
 	}
+	
 	public LayerZoom(long seed, int magnify, GenLayer layer)
 	{
 		super(seed);

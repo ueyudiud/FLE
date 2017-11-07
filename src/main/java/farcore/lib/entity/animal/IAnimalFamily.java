@@ -32,8 +32,8 @@ public interface IAnimalFamily<E extends Entity & IAnimalAccess> extends IFamily
 	
 	abstract class Impl<E extends Entity & IAnimalAccess> implements IAnimalFamily<E>
 	{
-		protected final String name;
-		private Constructor<?> nativeAnimalConstructor, childAnimalConstructor;
+		protected final String	name;
+		private Constructor<?>	nativeAnimalConstructor, childAnimalConstructor;
 		
 		public Impl(String name)
 		{
@@ -61,13 +61,13 @@ public interface IAnimalFamily<E extends Entity & IAnimalAccess> extends IFamily
 		@Override
 		public E createNativeAnimal(World world, IAnimalSpecie specie)
 		{
-			return R.<E>newInstance(nativeAnimalConstructor, world, specie);
+			return R.<E> newInstance(nativeAnimalConstructor, world, specie);
 		}
 		
 		@Override
 		public E createChildAnimal(World world, GeneticMaterial gm)
 		{
-			return R.<E>newInstance(childAnimalConstructor, world, gm);
+			return R.<E> newInstance(childAnimalConstructor, world, gm);
 		}
 	}
 }

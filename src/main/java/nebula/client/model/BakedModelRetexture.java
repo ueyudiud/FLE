@@ -29,8 +29,7 @@ public abstract class BakedModelRetexture implements IBakedModel
 	
 	protected IBlockState unwrapState(IBlockState state)
 	{
-		return state instanceof BlockStateTileEntityWapper ?
-				((BlockStateWrapper) state).getRealState() : state;
+		return state instanceof BlockStateTileEntityWapper ? ((BlockStateWrapper) state).getRealState() : state;
 	}
 	
 	protected static <K, V> void apply(Iterable<K> iterable, Builder<V> builder, Function<? super K, ? extends V> function)

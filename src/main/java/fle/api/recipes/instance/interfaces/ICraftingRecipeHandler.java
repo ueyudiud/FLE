@@ -28,5 +28,6 @@ public interface ICraftingRecipeHandler extends IMatrixInventory, ICoord
 		return false;
 	}
 	
-	@Nullable EntityPlayer getPlayer();
+	@Nullable
+	EntityPlayer getPlayer();
 }

@@ -38,14 +38,15 @@ import net.minecraftforge.items.IItemHandler;
 
 /**
  * Base TileEntity, add some helper method.
+ * 
  * @author ueyudiud
  */
 public class TEBase extends TileEntity implements IModifiableCoord
 {
-	protected IBlockState state;
-	public Random random = new Random();
-	public boolean isUpdating;
-	private int lightLevel;
+	protected IBlockState	state;
+	public Random			random	= new Random();
+	public boolean			isUpdating;
+	private int				lightLevel;
 	
 	public TEBase()
 	{
@@ -90,7 +91,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToAll(IPacket player)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendToAll(player);
 		}
@@ -98,7 +99,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToServer(IPacket packet)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendToServer(packet);
 		}
@@ -106,7 +107,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToPlayer(IPacket packet, EntityPlayer player)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendToPlayer(packet, player);
 		}
@@ -114,7 +115,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendLargeToPlayer(IPacket packet, EntityPlayer player)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendLargeToPlayer(packet, player);
 		}
@@ -122,7 +123,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToNearby(IPacket packet, float range)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendToNearBy(packet, this, range);
 		}
@@ -130,7 +131,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToDim(IPacket packet)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			sendToDim(packet, this.world.provider.getDimension());
 		}
@@ -138,7 +139,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public void sendToDim(IPacket packet, int dim)
 	{
-		if(this.world != null)
+		if (this.world != null)
 		{
 			Nebula.network.sendToDim(packet, dim);
 		}
@@ -219,8 +220,8 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	}
 	
 	/**
-	 * The rotate for block check,
-	 * INFO : The direction must be 2D rotation!
+	 * The rotate for block check, INFO : The direction must be 2D rotation!
+	 * 
 	 * @param frontOffset
 	 * @param lrOffset
 	 * @param udOffset
@@ -233,7 +234,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	@Deprecated
 	public boolean matchBlock(int frontOffset, int lrOffset, int udOffset, Direction direction, Block block, int meta, boolean ignoreUnloadChunk)
 	{
-		if(this.world == null) return false;
+		if (this.world == null) return false;
 		int x = frontOffset * direction.x + lrOffset * direction.z;
 		int y = udOffset;
 		int z = frontOffset * direction.z + lrOffset * direction.x;
@@ -242,27 +243,25 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public boolean matchBlock(int offsetX, int offsetY, int offsetZ, Block block, int meta, boolean ignoreUnloadChunk)
 	{
-		return this.world == null ? false :
-			Worlds.isBlock(this.world, this.pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
+		return this.world == null ? false : Worlds.isBlock(this.world, this.pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
 	}
 	
 	public boolean matchBlockNearby(int offsetX, int offsetY, int offsetZ, Block block, int meta, boolean ignoreUnloadChunk)
 	{
-		return this.world == null ? false :
-			Worlds.isBlockNearby(this.world, this.pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
+		return this.world == null ? false : Worlds.isBlockNearby(this.world, this.pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
 	}
 	
 	@Override
 	public void explode(boolean removeTile, float strength, boolean isFlaming, boolean isSmoking)
 	{
 		IBlockState state = null;
-		if(!removeTile)
+		if (!removeTile)
 		{
 			state = this.world.getBlockState(this.pos);
 		}
 		this.world.setBlockState(this.pos, Blocks.AIR.getDefaultState(), removeTile ? 3 : 4);
 		this.world.newExplosion(null, this.pos.getX() + .5, this.pos.getY() + .5, this.pos.getZ() + .5, strength, isFlaming, isSmoking);
-		if(!removeTile)
+		if (!removeTile)
 		{
 			this.world.setBlockState(this.pos, state, 4);
 			this.world.setTileEntity(this.pos, this);
@@ -324,7 +323,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	public void markLightForUpdate(EnumSkyBlock type)
 	{
 		int level = this.world.getLightFor(type, this.pos);
-		if(this.lightLevel != level)
+		if (this.lightLevel != level)
 		{
 			this.world.checkLight(this.pos);
 			this.lightLevel = level;
@@ -333,8 +332,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public boolean canBlockStay()
 	{
-		return this.world == null ? true :
-			getBlockType().canPlaceBlockAt(this.world, this.pos);
+		return this.world == null ? true : getBlockType().canPlaceBlockAt(this.world, this.pos);
 	}
 	
 	public boolean tileGUICheck(EnumHand hand)
@@ -355,7 +353,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	@Override
 	public IBlockState getBlockState()
 	{
-		if(this.state == null)
+		if (this.state == null)
 		{
 			regetBlockState();
 		}
@@ -408,9 +406,14 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	{
 		this.state = this.world.getBlockState(this.pos);
 		this.blockType = this.state.getBlock();
-		if(this.blockType instanceof BlockTE)
+		if (this.blockType instanceof BlockTE)
 		{
-			this.state = ((BlockTE) this.blockType).property_TE.withProperty(this.state, this);//Mark for real tile entity property.
+			this.state = ((BlockTE) this.blockType).property_TE.withProperty(this.state, this);// Mark
+																								// for
+																								// real
+																								// tile
+																								// entity
+																								// property.
 		}
 	}
 	
@@ -429,7 +432,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	@Override
 	public Block getBlockType()
 	{
-		if(this.state == null)
+		if (this.state == null)
 		{
 			regetBlockState();
 		}
@@ -439,7 +442,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	@Override
 	public int getBlockMetadata()
 	{
-		if(this.state == null)
+		if (this.state == null)
 		{
 			regetBlockState();
 		}
@@ -502,8 +505,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 					ItemStack remain = handler.insertItem(i, stack, true);
 					if (fullStackTransfer ? remain == null : remain.stackSize < stack.stackSize)
 					{
-						if (process)
-							handler.insertItem(i, stack, false);
+						if (process) handler.insertItem(i, stack, false);
 						return stack.stackSize - remain.stackSize;
 					}
 				}
