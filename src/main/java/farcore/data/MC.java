@@ -1,4 +1,3 @@
-//format:off
 /*
  * copyright© 2016-2017 ueyudiud
  */
@@ -14,6 +13,7 @@ import nebula.common.util.SubTag;
  * 
  * @author ueyudiud
  */
+//format:off
 public class MC
 {
 	/**

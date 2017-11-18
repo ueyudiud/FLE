@@ -7,6 +7,9 @@ import javax.annotation.Nullable;
 
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.util.Direction;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
@@ -14,8 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
  * 
  * @author ueyudiud
  * @see nebula.common.inventory.InventoryHelper#drainOrFillTank(IFluidHandlerIO,
- *      net.minecraft.entity.player.EntityPlayer, net.minecraft.util.EnumHand,
- *      Direction, net.minecraft.item.ItemStack, byte)
+ *      EntityPlayer, EnumHand, Direction, ItemStack, byte)
  */
 public interface IFluidHandlerIO
 {

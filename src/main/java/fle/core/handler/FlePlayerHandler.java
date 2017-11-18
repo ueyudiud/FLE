@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.handler;
 
 import java.util.HashMap;
@@ -8,7 +11,6 @@ import fle.api.FLEAPI;
 import fle.api.util.DamageSourceTransfer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -22,7 +24,7 @@ public class FlePlayerHandler
 	
 	public static class PlayerInformation
 	{
-		boolean	dronInToVoid	= false;
+		boolean	dronInToVoid = false;
 		int		respawnXReal;
 		int		respawnYReal;
 		int		respawnZReal;

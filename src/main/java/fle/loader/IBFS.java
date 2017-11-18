@@ -7,6 +7,7 @@ import farcore.data.CT;
 import farcore.lib.item.instance.ItemStoneChip;
 import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
+import fle.core.blocks.BlockGasExplosive;
 import fle.core.blocks.BlockPottery;
 import fle.core.blocks.BlockResourceMisc;
 import fle.core.blocks.BlockRockySimpleMachine;
@@ -53,10 +54,13 @@ public class IBFS
 		ResourceLocation loc = new ResourceLocation("fle", "fluids/juice");
 		fsJuice = new FluidBase[] { new FluidBase("sugarcane_juice", "Sugarcane Juice", loc, loc).setColor(0xFF8D8F67).setDensity(1250), new FluidBase("citrus_juice", "Citrus Juice", loc, loc).setColor(0xFFE5F35A)
 				.setDensity(1250), new FluidBase("bitter_orange_juice", "Bitter Orange Juice", loc, loc).setColor(0xFFECB447).setDensity(1250), new FluidBase("lemon_juice", "Lemon Juice", loc, loc).setColor(0xFFFFEB7F).setDensity(1250), new FluidBase("tangerine_juice", "Tangerine Juice", loc, loc)
-						.setColor(0xFFFFA830).setDensity(1250), new FluidBase("pomelo_juice", "Pomelo Juice", loc, loc).setColor(0xFFECF376).setDensity(1250), new FluidBase("lime_juice", "Lime Juice", loc, loc).setColor(0xFFF69500)
-								.setDensity(1250), new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250), new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250), };
+				.setColor(0xFFFFA830).setDensity(1250), new FluidBase("pomelo_juice", "Pomelo Juice", loc, loc).setColor(0xFFECF376).setDensity(1250), new FluidBase("lime_juice", "Lime Juice", loc, loc).setColor(0xFFF69500)
+				.setDensity(1250), new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250), new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250), };
 		fLimeMortar = new FluidBase("lime_mortar", "Lime Mortar").setDensity(1400).setViscosity(1100);
 		fAnimalOil = new FluidBase("animal_oil", "Animal Oil").setDensity(800).setViscosity(900);
+		fNaturalGas = new FluidBase("natural_gas", "Natural Gas").setDensity(-20).setViscosity(20).setBurning().setGaseous(true);
+		
+		fNaturalGas.setBlock(new BlockGasExplosive(fNaturalGas, 25, 800, 9.0F));
 	}
 	
 	public static void setBlocksItemsProperties()
@@ -83,4 +87,5 @@ public class IBFS
 	public static FluidBase[]				fsJuice;
 	public static FluidBase					fLimeMortar;
 	public static FluidBase					fAnimalOil;
+	public static FluidBase					fNaturalGas;
 }

@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import nebula.base.function.Applicable;
+import nebula.common.nbt.INBTReader;
+import nebula.common.nbt.INBTWriter;
 import nebula.common.util.Direction;
 import nebula.common.util.Properties;
 import net.minecraft.block.properties.IProperty;
@@ -17,8 +19,11 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.fluids.Fluid;
 
 /**
@@ -53,7 +58,7 @@ public class Misc
 	
 	public static final Function	TO_NULL		= arg -> null;
 	public static final Consumer	NO_ACTION	= arg -> {
-												};
+	};
 	public static final Applicable	NO_APPLY	= () -> null;
 	
 	public static final boolean[]	BOOLS_EMPTY		= new boolean[0];
@@ -63,6 +68,30 @@ public class Misc
 	public static final long[]		LONGS_EMPTY		= new long[0];
 	public static final float[]		FLOATS_EMPTY	= new float[0];
 	public static final double[]	DOUBLES_EMPTY	= new double[0];
+	
+	public static final IStorage<?> STORAGE = new IStorage<Object>()
+	{
+		@Override
+		public NBTBase writeNBT(Capability<Object> capability, Object instance, EnumFacing side)
+		{
+			if (instance instanceof INBTWriter<?, ?>)
+			{
+				return ((INBTWriter) instance).writeToNBT(instance);
+			}
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public void readNBT(Capability<Object> capability, Object instance, EnumFacing side, NBTBase nbt)
+		{
+			if (instance instanceof INBTReader<?, ?>)
+			{
+				((INBTReader) instance).readFromNBT1(nbt);
+				return;
+			}
+			throw new UnsupportedOperationException();
+		}
+	};
 	
 	public static <T, R> Function<T, R> anyTo(R result)
 	{

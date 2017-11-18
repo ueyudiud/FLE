@@ -68,7 +68,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	 */
 	public @Nonnull IBlockState getStateFromData(int data)
 	{
-		Block block = Block.REGISTRY.getObjectById((data >> 20) & 0xFFF);
+		Block block = Block.REGISTRY.getObjectById((data >>> 20) & 0xFFF);
 		if (block == null) return Misc.AIR;
 		try
 		{

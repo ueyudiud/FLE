@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
+public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISolidHandler
 {
 	protected int			capacity;
 	protected SolidStack	stack;
@@ -137,10 +137,17 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 	}
 	
 	@Override
-	public SolidTank readFromNBT(NBTTagCompound nbt)
+	public SolidStack drain(SolidStack source, boolean doDrain)
+	{
+		if (source == null || !source.isSoildEqual(this.stack))
+			return null;
+		return drain(source.amount, doDrain);
+	}
+	
+	@Override
+	public void readFromNBT1(NBTTagCompound nbt)
 	{
 		this.stack = SolidStack.loadFromNBT(nbt.getCompoundTag("stack"));
-		return this;
 	}
 	
 	@Override
@@ -160,8 +167,21 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>
 	}
 	
 	@Override
+	public final SolidTank readFromNBT(NBTTagCompound nbt)
+	{
+		readFromNBT1(nbt);
+		return this;
+	}
+	
+	@Override
 	public final void writeToNBT(SolidTank target, NBTTagCompound nbt)
 	{
 		target.writeToNBT(nbt);
+	}
+	
+	@Override
+	public ISoildHandlerProperty getProperty()
+	{
+		return null;
 	}
 }

@@ -3,7 +3,7 @@
  */
 package nebula.common.block;
 
-import static nebula.common.block.BlockStreamFluid.LEVEL;
+import static nebula.common.block.BlockStreamFluid.LEVEL_STREAM;
 import static net.minecraftforge.fluids.BlockFluidBase.FLUID_RENDER_PROPS;
 
 import com.google.common.base.Optional;
@@ -45,7 +45,7 @@ public class ExtendedStreamBlockFluidState extends ExtendedBlockState
 		
 		private <T extends Comparable<T>> IProperty<T> checkCast(IProperty<T> property)
 		{
-			return property == BlockFluidBase.LEVEL || property == BlockLiquid.LEVEL ? (IProperty<T>) LEVEL : property;
+			return property == BlockFluidBase.LEVEL || property == BlockLiquid.LEVEL ? (IProperty<T>) LEVEL_STREAM : property;
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class ExtendedStreamBlockFluidState extends ExtendedBlockState
 		super(blockIn, properties, ObjectArrays.concat(FLUID_RENDER, unlistedProperties, IUnlistedProperty.class));
 	}
 	
-	public ExtendedStreamBlockFluidState(Block blockIn, IProperty<?>[] properties)
+	public ExtendedStreamBlockFluidState(Block blockIn, IProperty<?>...properties)
 	{
 		super(blockIn, properties, FLUID_RENDER);
 	}

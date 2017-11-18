@@ -38,11 +38,8 @@ public class ClassTransformer implements IClassTransformer
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		if (transformedName.startsWith("com.google.")) return basicClass;// Gson
-																			// uses
-																			// do
-																			// not
-																			// modify.
+		//Json uses, do not modify.
+		if (transformedName.startsWith("com.google.")) return basicClass;
 		NebulaASMLogHelper.outputInit();
 		if (transformedName.startsWith("net.minecraft."))
 		{
@@ -128,8 +125,8 @@ public class ClassTransformer implements IClassTransformer
 				if (!info.matchNode(instructions.get(idx))) break;
 				int off = info.performAnchorOperation(instructions, idx, this.numInsertions);
 				if (info.off < 0)// If offset is negative, will return to last
-									// node to check (For it may modified
-									// before)
+					// node to check (For it may modified
+					// before)
 				{
 					idx += off;
 				}

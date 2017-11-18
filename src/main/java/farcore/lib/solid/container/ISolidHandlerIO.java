@@ -9,6 +9,8 @@ import farcore.lib.solid.SolidStack;
 import nebula.common.util.Direction;
 
 /**
+ * Solid container (tile entity predicated) handler.<p>
+ * Use to drain or fill solid from player.
  * @author ueyudiud
  */
 public interface ISolidHandlerIO
@@ -16,13 +18,15 @@ public interface ISolidHandlerIO
 	/**
 	 * Match side can extract solid.
 	 * 
-	 * @return
+	 * @param to the side to extract.
+	 * @return <code>true</code> if solid can extract from side.
 	 */
 	boolean canExtractSolid(Direction to);
 	
 	/**
 	 * Match side can insert solid.
 	 * 
+	 * @param from the side to insert.
 	 * @param stack For asked stack, null for ask general behavior.
 	 * @return
 	 */

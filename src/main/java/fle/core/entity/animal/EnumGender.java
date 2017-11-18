@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.entity.animal;
 
 /**
@@ -11,7 +10,9 @@ package fle.core.entity.animal;
  */
 public enum EnumGender
 {
-	FEMALE, MALE, UNKNOWN;
+	FEMALE,
+	MALE,
+	UNKNOWN;
 	
 	public static final EnumGender[] SEXUAL = { MALE, FEMALE };
 }

@@ -59,6 +59,12 @@ public class FluidBase extends Fluid
 	}
 	
 	@Override
+	public FluidBase setGaseous(boolean isGaseous)
+	{
+		return (FluidBase) super.setGaseous(isGaseous);
+	}
+	
+	@Override
 	public int getColor()
 	{
 		return this.color;

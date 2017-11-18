@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.tile.pottery;
 
 import static nebula.common.inventory.InventoryHelper.FD_DRAIN;

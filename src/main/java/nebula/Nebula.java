@@ -91,7 +91,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String	MODID	= "nebula";
 	public static final String	NAME	= "Nebula";
-	public static final String	VERSION	= "2.1.0";
+	public static final String	VERSION	= "2.1.2";
 	
 	/**
 	 * The built-in render id, for prevent has location collide when naming
@@ -149,8 +149,11 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		}, "Bootstrap Initalizer").start();
 	}
 	
+	/** The language manager. */
 	private LanguageManager	lang;
-	private Configuration	configuration;
+	
+	/** The configuration of Nebula. */
+	private Configuration configuration;
 	
 	public static CreativeTabs tabFluids;
 	
@@ -182,6 +185,15 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		return true;
 	}
 	
+	/**
+	 * Get language manager instance.
+	 * <p>
+	 * Use to internationalize string, if you need't reload
+	 * localization file, use state method instead.
+	 * 
+	 * @return the language manager.
+	 * @see nebula.common.LanguageManager
+	 */
 	public LanguageManager getLanguageManager()
 	{
 		return this.lang;
@@ -191,7 +203,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public void check(FMLConstructionEvent event)
 	{
 		Log.info("Injecting Nebula proxy...");// Forge does not let Dummy Mod
-												// Container auto inject proxy.
+		// Container auto inject proxy.
 		try
 		{
 			SidedProxy proxy = getClass().getField("proxy").getAnnotation(SidedProxy.class);

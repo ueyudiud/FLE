@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common;
 
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;

@@ -9,6 +9,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -52,7 +54,19 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		return register.get(name);
 	}
 	
-	public void registerPacket(Class<? extends IPacket> packet, Side side)
+	/**
+	 * Register packet to network, the network need allocate network id for it.
+	 * <p>
+	 * The packet SHOULD has a constructor without parameters input for it will
+	 * be create in target side by it.
+	 * 
+	 * @param packet the packet class.
+	 * @param side the side which packet is predicated to send to (Now it just
+	 *            to let modder know the side packet send to).
+	 * @throws IllegalArgumentException if packet class does not has a valid
+	 *             constructor to initialize.
+	 */
+	public void registerPacket(Class<? extends IPacket> packet, @Nonnull Side side)
 	{
 		if (this.packetTypes.contain(packet.getName())) throw new IllegalArgumentException("Duplicate Packet! " + this.id);
 		try
@@ -77,10 +91,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	{
 		this.channelName = name;
 		this.channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[] { this, new HandlerClient(this), new HandlerServer(this) });
-		registerPacket(PacketLarge.class, Side.CLIENT);// This is a important
-														// packet, used in the
-														// method in basic
-														// network.
+		registerPacket(PacketLarge.class, Side.CLIENT);// This is a important packet, used in the method in basic network.
 	}
 	
 	@Override

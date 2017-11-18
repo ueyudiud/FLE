@@ -418,9 +418,10 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		}
 		Block block = state.getBlock();
 		
-		if (this.displacements.containsKey(block))
+		Boolean flag = this.displacements.get(block);
+		if (flag != null)
 		{
-			if (this.displacements.get(block))
+			if (flag)
 			{
 				block.dropBlockAsItem(world, pos, state, 0);
 				world.setBlockToAir(pos);
@@ -430,7 +431,8 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		}
 		
 		Material material = state.getMaterial();
-		if (material.blocksMovement() || material == Material.PORTAL) return -level;
+		if (material.blocksMovement() || material == Material.PORTAL)
+			return -level;
 		
 		int density = getDensity(world, pos);
 		if (density == Integer.MAX_VALUE)

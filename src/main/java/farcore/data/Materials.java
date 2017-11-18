@@ -6,7 +6,9 @@ package farcore.data;
 import farcore.lib.block.material.MaterialIce;
 import farcore.lib.block.material.MaterialLog;
 import farcore.lib.block.material.MaterialOre;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialTransparent;
 
 /**
  * All kinds of material may used in Far Core and it's child mod.
@@ -16,6 +18,7 @@ import net.minecraft.block.material.Material;
 public class Materials
 {
 	public static final Material	AIR			= Material.AIR;
+	public static final Material	GAS			= new MaterialTransparent(MapColor.AIR);
 	public static final Material	ROCK		= Material.ROCK;
 	public static final Material	SAND		= Material.SAND;
 	/**

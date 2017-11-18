@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package farcore.lib.block.instance;
+package farcore.lib.fluid;
 
 import java.util.Random;
 

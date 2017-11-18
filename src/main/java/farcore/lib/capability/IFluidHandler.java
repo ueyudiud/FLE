@@ -1,20 +1,14 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.capability;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
+import nebula.common.util.FluidStacks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -53,7 +47,7 @@ public interface IFluidHandler
 	{
 		int getCapacity();
 		
-		List<FluidStack> getStacks();
+		FluidStack[] getStacks();
 		
 		default boolean canFill()
 		{
@@ -86,9 +80,9 @@ public interface IFluidHandler
 		}
 		
 		@Override
-		public List<FluidStack> getStacks()
+		public FluidStack[] getStacks()
 		{
-			return tank.getFluid() == null ? ImmutableList.of() : Arrays.asList(tank.getFluid());
+			return new FluidStack[] { tank.getFluid() };
 		}
 		
 		@Override
@@ -139,9 +133,9 @@ public interface IFluidHandler
 		}
 		
 		@Override
-		public List<FluidStack> getStacks()
+		public FluidStack[] getStacks()
 		{
-			return tank.hasFluid() ? Arrays.asList(tank.getFluid()) : ImmutableList.of();
+			return new FluidStack[] { tank.getFluid() };
 		}
 		
 		@Override
@@ -184,7 +178,7 @@ public interface IFluidHandler
 			this.property = property;
 			if (id >= 0)
 			{
-				this.stack = property.getStacks().get(id);
+				this.stack = FluidStacks.copy(property.getStacks()[id]);
 			}
 		}
 		
@@ -253,8 +247,8 @@ public interface IFluidHandler
 		{
 			if (properties != null) return properties;
 			SidedFluidIOProperty property = handler.getProperty(direction);
-			List<FluidStack> list = property.getStacks();
-			return properties = (list.isEmpty() ? new IFluidTankProperties[] { new SidedFluidIOPropertyWrapper(property) } : A.transform(L.cast(list, FluidStack.class), IFluidTankProperties.class, stack -> new SidedFluidIOPropertyWrapper(property, stack)));
+			FluidStack[] list = property.getStacks();
+			return properties = (list.length == 0 ? new IFluidTankProperties[] { new SidedFluidIOPropertyWrapper(property) } : A.transform(list, IFluidTankProperties.class, stack -> new SidedFluidIOPropertyWrapper(property, stack)));
 		}
 		
 		@Override

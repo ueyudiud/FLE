@@ -1,14 +1,14 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.fluid.container;
+
+import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import farcore.data.Capabilities;
 import nebula.base.Ety;
 import nebula.base.IntegerEntry;
 import nebula.common.inventory.IBasicInventory;
@@ -18,7 +18,6 @@ import nebula.common.util.FluidStacks;
 import nebula.common.util.ItemStacks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
@@ -85,9 +84,9 @@ public class FluidContainerHandler
 				}
 			}
 		}
-		if (stack.hasCapability(Capabilities.CAPABILITY_FLUID, null))
+		if (stack.hasCapability(FLUID_HANDLER_CAPABILITY, null))
 		{
-			IFluidHandler handler = stack.getCapability(Capabilities.CAPABILITY_FLUID, null);
+			IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 			FluidStack stack2 = handler.drain(Integer.MAX_VALUE, true);
 			if (stack2 != null && io.canInsertFluid(from, stack2))
 			{
@@ -177,9 +176,9 @@ public class FluidContainerHandler
 					}
 				}
 			}
-			else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+			else if (stack.hasCapability(FLUID_HANDLER_CAPABILITY, null))
 			{
-				IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 				handler.drain(required, true);
 				if (inventory.insertStack(out, stack, true))
 				{
@@ -251,9 +250,9 @@ public class FluidContainerHandler
 					}
 				}
 			}
-			else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+			else if (stack.hasCapability(FLUID_HANDLER_CAPABILITY, null))
 			{
-				IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+				IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 				handler.drain(amount, true);
 				if (inventory.insertStack(out, stack, true))
 				{
@@ -296,9 +295,9 @@ public class FluidContainerHandler
 				}
 			}
 		}
-		if (stack.hasCapability(Capabilities.CAPABILITY_FLUID, null))
+		if (stack.hasCapability(FLUID_HANDLER_CAPABILITY, null))
 		{
-			IFluidHandler handler = stack.getCapability(Capabilities.CAPABILITY_FLUID, null);
+			IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 			int amount = handler.fill(resource, true);
 			if (amount > 0)
 			{
@@ -330,10 +329,10 @@ public class FluidContainerHandler
 				}
 			}
 		}
-		if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+		if (stack.hasCapability(FLUID_HANDLER_CAPABILITY, null))
 		{
 			stack = stack.copy();
-			IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 			FluidStack stack2 = handler.drain(amount, true);
 			return new Ety(ItemStacks.valid(stack), stack2);
 		}

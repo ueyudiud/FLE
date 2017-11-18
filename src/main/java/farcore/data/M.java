@@ -1,4 +1,3 @@
-//format:off
 /*
  * copyright© 2016-2017 ueyudiud
  */
@@ -29,6 +28,7 @@ import nebula.Log;
  * 
  * @author ueyudiud
  */
+//format:off
 public class M
 {
 	// Water
