@@ -3,6 +3,7 @@
  */
 package nebula.base;
 
+import java.io.Serializable;
 import java.util.Map.Entry;
 
 import nebula.common.util.L;
@@ -15,8 +16,10 @@ import nebula.common.util.L;
  * @param <K> the <tt>key</tt> type.
  * @param <V> the <tt>value</tt> type.
  */
-public class Ety<K, V> implements Entry<K, V>
+public class Ety<K, V> implements Entry<K, V>, Serializable
 {
+	private static final long serialVersionUID = 4841003441525797019L;
+	
 	/** The key object. */
 	public final K	key;
 	/** The value object. */

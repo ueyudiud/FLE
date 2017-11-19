@@ -84,11 +84,22 @@ public class BlockGas extends BlockStreamFluid
 			}
 			return;
 		}
+		switch (level)
+		{
+		case 0 : return;
+		case 1 :
+			if (prelevel != 1)
+			{
+				worldIn.setBlockState(pos, state.withProperty(getLevelProperty(), level - 1), 2);
+			}
+			return;
+		default: break;
+		}
 		int[] neighbourLevels = new int[6];
 		for (Direction direction : Direction.DIRECTIONS_3D)
 		{
 			int i = getFluidLevel(worldIn, direction.offset(pos));
-			neighbourLevels[direction.ordinal()] = i >= level ? -1 : i;
+			neighbourLevels[direction.ordinal()] = i > level ? -1 : i;
 		}
 		
 		int count = 1;
@@ -158,32 +169,12 @@ public class BlockGas extends BlockStreamFluid
 		
 		Block block = state.getBlock();
 		
-		Boolean flag = this.displacements.get(block);
-		if (flag != null)
+		if (this.displacements.getOrDefault(block, Boolean.FALSE))
 		{
-			if (flag)
-			{
-				block.dropBlockAsItem(world, pos, state, 0);
-				world.setBlockToAir(pos);
-				return level;
-			}
-			return -level;
+			block.dropBlockAsItem(world, pos, state, 0);
+			world.setBlockToAir(pos);
+			return level;
 		}
-		
-		//		Material material = state.getMaterial();
-		//		if (material.blocksMovement() || material == Material.PORTAL) return -level;
-		//
-		//		int density = getDensity(world, pos);
-		//		if (density == Integer.MAX_VALUE)
-		//		{
-		//			block.dropBlockAsItem(world, pos, state, 0);
-		//			world.setBlockToAir(pos);
-		//			return level;
-		//		}
-		
-		// if (this.density > density)
-		// return true;
-		// else
 		return -level;
 	}
 }

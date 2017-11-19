@@ -60,7 +60,7 @@ public class IBFS
 		fAnimalOil = new FluidBase("animal_oil", "Animal Oil").setDensity(800).setViscosity(900);
 		fNaturalGas = new FluidBase("natural_gas", "Natural Gas").setDensity(-20).setViscosity(20).setBurning().setGaseous(true);
 		
-		fNaturalGas.setBlock(new BlockGasExplosive(fNaturalGas, 25, 800, 9.0F));
+		fNaturalGas.setBlock(new BlockGasExplosive(fNaturalGas, 360, 200, 9.0F));
 	}
 	
 	public static void setBlocksItemsProperties()

@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.base;
 
 import java.util.Collection;
@@ -99,12 +102,27 @@ public interface IRegister<T> extends Iterable<T>
 	@Nullable
 	T get(String name);
 	
+	/**
+	 * Get element with select id, if it is not present, give bake default
+	 * one.
+	 * 
+	 * @param id the element id.
+	 * @param def the default element return.
+	 * @return the element with id registered, or <tt>def</tt> when no element
+	 *         with id found.
+	 * @see #get(int)
+	 */
 	default T get(int id, @Nullable T def)
 	{
 		T target;
 		return (target = get(id)) != null ? target : def;
 	}
 	
+	/**
+	 * Get element by id.
+	 * @param id the id of element.
+	 * @return the element with id registered, or <tt>null</tt> if no element found.
+	 */
 	T get(int id);
 	
 	/**
@@ -114,13 +132,28 @@ public interface IRegister<T> extends Iterable<T>
 	 */
 	Collection<T> targets();
 	
+	/**
+	 * Get all registry names set.
+	 * 
+	 * @return
+	 */
 	Set<String> names();
 	
+	/**
+	 * Return <code>true</code> if id is present in register.
+	 * @param id the register id.
+	 * @return
+	 */
 	default boolean contain(int id)
 	{
 		return get(id) != null;
 	}
 	
+	/**
+	 * Return <code>true</code> if name is present in register.
+	 * @param name the register name.
+	 * @return
+	 */
 	default boolean contain(@Nonnull String name)
 	{
 		return get(name) != null;

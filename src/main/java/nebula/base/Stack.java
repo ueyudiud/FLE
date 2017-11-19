@@ -1,8 +1,9 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
+
+import java.io.Serializable;
 
 /**
  * The stack instance.
@@ -13,8 +14,10 @@ package nebula.base;
  *
  * @param <E>
  */
-public class Stack<E>
+public class Stack<E> implements Serializable
 {
+	private static final long serialVersionUID = 5764072518204022515L;
+	
 	public E	element;
 	public long	size;
 	
@@ -62,6 +65,7 @@ public class Stack<E>
 	@Override
 	public boolean equals(Object obj)
 	{
-		return obj == this ? true : !(obj instanceof Stack) ? false : ((Stack) obj).element.equals(this.element) && ((Stack) obj).size == this.size;
+		return obj == this ? true : !(obj instanceof Stack) ? false :
+			((Stack<?>) obj).element.equals(this.element) && ((Stack<?>) obj).size == this.size;
 	}
 }

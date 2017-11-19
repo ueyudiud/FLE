@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base.function;
 
 import java.util.Iterator;
@@ -35,11 +34,9 @@ public interface SequenceConsumer<T> extends ObjIntConsumer<T>
 	
 	default <T1 extends T> void accept(T1[] list, int start, int end)
 	{
-		for (int i = start; i < end; accept(i++, list[i]))
-			;
+		for (int i = start; i < end; accept(i++, list[i]));
 	}
 	
-	@SuppressWarnings("unchecked")
 	default void accept(Iterable<? extends T> iterable)
 	{
 		if (iterable instanceof List)
@@ -57,10 +54,8 @@ public interface SequenceConsumer<T> extends ObjIntConsumer<T>
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	default void accept(List<? extends T> list)
 	{
-		for (int i = 0; i < list.size(); accept(i++, list.get(i)))
-			;
+		for (int i = 0; i < list.size(); accept(i++, list.get(i)));
 	}
 }

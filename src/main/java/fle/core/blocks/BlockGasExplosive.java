@@ -5,6 +5,7 @@ package fle.core.blocks;
 
 import java.util.Random;
 
+import farcore.data.EnumBlock;
 import farcore.data.Materials;
 import farcore.lib.fluid.BlockGas;
 import fle.api.recipes.instance.FlamableRecipes;
@@ -23,10 +24,10 @@ import net.minecraft.world.World;
  */
 public class BlockGasExplosive extends BlockGas
 {
-	private int checkRange = 3;
-	private int minFlameTemp;
-	private int minExplosiveAmount;
-	private float explosiveStrength;
+	private int		checkRange	= 3;
+	private int		minFlameTemp;
+	private int		minExplosiveAmount;
+	private float	explosiveStrength;
 	
 	public BlockGasExplosive(FluidBase fluid, int minFlameTemp, int minExplosiveAmount, float explosiveStrength)
 	{
@@ -54,16 +55,19 @@ public class BlockGasExplosive extends BlockGas
 						{
 							pos1.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k);
 							int value = getFluidLevel(worldIn, pos1);
-							amount += value;
-							mainX += i * amount;
-							mainY += j * amount;
-							mainZ += k * amount;
+							if (value > 0)
+							{
+								amount += value;
+								mainX += i * value;
+								mainY += j * value;
+								mainZ += k * value;
+							}
 							if ((max - ++total) * MAX_QUANTA_VALUE + amount < this.minExplosiveAmount)
 							{
 								break label;
 							}
 						}
-				
+					
 				if (amount >= this.minExplosiveAmount)
 				{
 					for (int i = -this.checkRange; i < this.checkRange; ++i)
@@ -76,11 +80,7 @@ public class BlockGasExplosive extends BlockGas
 									worldIn.setBlockToAir(pos1);
 								}
 							}
-					worldIn.newExplosion(null,
-							pos.getX() + mainX * this.checkRange,
-							pos.getY() + mainY * this.checkRange,
-							pos.getZ() + mainZ * this.checkRange,
-							this.explosiveStrength * amount / 1000F, true, false);
+					worldIn.newExplosion(null, pos.getX() + mainX * this.checkRange / total, pos.getY() + mainY * this.checkRange / total, pos.getZ() + mainZ * this.checkRange / total, this.explosiveStrength * amount / this.quantaPerBlockFloat, true, true);
 					return;
 				}
 			}
@@ -89,8 +89,11 @@ public class BlockGasExplosive extends BlockGas
 	}
 	
 	@Override
-	public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
+	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)
 	{
-		world.setBlockToAir(pos);
+		if (worldIn.rand.nextInt(12) == 0 && EnumBlock.fire.block.canPlaceBlockAt(worldIn, pos))
+		{
+			worldIn.setBlockState(pos, EnumBlock.fire.apply(12));
+		}
 	}
 }

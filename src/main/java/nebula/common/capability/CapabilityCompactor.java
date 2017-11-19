@@ -62,7 +62,6 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		return hasCapability(capability, facing) ? (T) this.map.get(capability).apply() : null;

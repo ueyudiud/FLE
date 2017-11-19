@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.lang.reflect.Array;
@@ -236,13 +235,12 @@ public class L
 	}
 	
 	/**
-	 * Cast object to any type, use to casting wildcard.
+	 * Cast object to any type, use to casting wild card value.
 	 * 
 	 * @param <C> a cast type.
 	 * @param arg a casting argument.
 	 * @return the casted value (Just the argument input).
 	 */
-	@SuppressWarnings("unchecked")
 	public static <C> C castAny(@Nullable Object arg)
 	{
 		return (C) arg;

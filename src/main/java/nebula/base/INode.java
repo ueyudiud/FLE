@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import java.util.Iterator;
@@ -23,6 +22,17 @@ import nebula.common.util.L;
  * The each node chain likes a {@link java.util.LinkedList}, but in a chain, you
  * need take operation on each node instead of whole node chain.
  * <p>
+ * Some words meaning in this type:
+ * <li>
+ * next/last - the node return by <tt>node.next()</tt> / <tt>node.last()</tt>
+ * <li>
+ * start/end - the node be called <tt>node = node.next()</tt> /
+ * <tt>node = node.last()</tt> until no node returned, and the last node is
+ * starting/ending of node chain.
+ * <li>
+ * after/before - the node can be called by <tt>node = node.next()</tt> /
+ * <tt>node = node.last()</tt> several times(at least once) to get.
+ * </li>
  * 
  * @author ueyudiud
  *
@@ -217,13 +227,27 @@ public interface INode<T> extends Iterable<T>
 		return p.test(value()) ? this : (result = findBefore(p)) != null ? result : findAfter(p);
 	}
 	
-	default INode<T> findAfter(Predicate<T> judgable)
+	/**
+	 * Return first matched element after this node.
+	 * 
+	 * @param p the matching function.
+	 * @return the matched target.
+	 * @see #find(Predicate)
+	 */
+	default INode<T> findAfter(Predicate<T> p)
 	{
 		if (!hasNext()) return null;
 		INode<T> node = next();
-		return judgable.test(node.value()) ? node : node.findAfter(judgable);
+		return p.test(node.value()) ? node : node.findAfter(p);
 	}
 	
+	/**
+	 * Return first matched element before this node.
+	 * 
+	 * @param p the matching function.
+	 * @return the matched target.
+	 * @see #find(Predicate)
+	 */
 	default INode<T> findBefore(Predicate<T> judgable)
 	{
 		if (!hasLast()) return null;
@@ -329,6 +353,13 @@ public interface INode<T> extends Iterable<T>
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Remove next node from node chain.
+	 * 
+	 * @return the value at removed node.
+	 * @see #remove()
+	 * @throws IllegalStateException if next node isn't present.
+	 */
 	default T removeNext()
 	{
 		if (!hasNext()) throw new IllegalStateException();
@@ -336,6 +367,13 @@ public interface INode<T> extends Iterable<T>
 		return node.remove();
 	}
 	
+	/**
+	 * Remove last node from node chain.
+	 * 
+	 * @return the value at removed nod.
+	 * @see #remove()
+	 * @throws IllegalStateException if last node isn't present.
+	 */
 	default T removeLast()
 	{
 		if (!hasLast()) throw new IllegalStateException();
@@ -343,13 +381,19 @@ public interface INode<T> extends Iterable<T>
 		return node.remove();
 	}
 	
+	/**
+	 * Return array copied all elements after this node.
+	 * 
+	 * @param clazz the array type.
+	 * @return the array.
+	 */
 	default T[] toArray(Class<T> clazz)
 	{
 		return Iterators.toArray(iterator(), clazz);
 	}
 	
 	/**
-	 * Return the hashcode of node.
+	 * Return the hashcode of <b>node chain</b>.
 	 * <p>
 	 * Consider the hashcode of node chain and position, use for calculation:
 	 * <code>
@@ -362,6 +406,8 @@ public interface INode<T> extends Iterable<T>
 	int hashCode();
 	
 	/**
+	 * Check is two <b>node chains</b> are same.
+	 * <p>
 	 * Return <tt>true</tt> if two node chains contains same elements and the
 	 * position on node chain are equal.
 	 * 

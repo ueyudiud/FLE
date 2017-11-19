@@ -12,7 +12,10 @@ import nebula.common.stack.AbstractStack;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.world.ICoord;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.BlockFluidBase;
 
 /**
  * @author ueyudiud
@@ -44,6 +47,18 @@ public class FlamableRecipes
 	private static final List<FlameSource>	FLAMESOURCES	= new ArrayList<>();
 	private static final List<Flamable>		FLAMABLES		= new ArrayList<>();
 	
+	static
+	{
+		addFlameSource(coord-> {
+			Block block = coord.getBlockState().getBlock();
+			if (block == Blocks.TORCH)
+				return 400;
+			if (block == Blocks.LIT_FURNACE)
+				return 420;
+			return -1;
+		});
+	}
+	
 	public static void addFlameSource(ToIntFunction<ICoord> function)
 	{
 		FLAMESOURCES.add(new FlameSource(function));
@@ -61,7 +76,7 @@ public class FlamableRecipes
 		{
 			if ((temp = source.temperatureProvider.applyAsInt(coord)) > 0) return temp;
 		}
-		return -1;
+		return (temp = BlockFluidBase.getTemperature(coord.world(), coord.pos())) == Integer.MAX_VALUE ? -1 : temp;
 	}
 	
 	public static boolean isFlamable(ICoord coord, int minFlameTemperature)

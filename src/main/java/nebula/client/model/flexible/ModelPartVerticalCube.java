@@ -63,7 +63,7 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 			}
 		}
 		else if (object.has("from")/* && object.has("to") */)// Minecraft
-																// loader.
+			// loader.
 		{
 			float[] array1 = Jsons.getFloatArray(object, "from", 3);
 			float[] array2 = Jsons.getFloatArray(object, "to", 3);
@@ -73,7 +73,7 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 			if (flag) part.renderFlag = 0;
 		}
 		if (object.has("layer"))// For normal layer offset, expand cube size to
-								// make sure the new layer cover will on.
+			// make sure the new layer cover will on.
 		{
 			int layer = object.get("layer").getAsInt();
 			part.xyzPos[0] -= 1.6E-3F * layer;
@@ -197,7 +197,6 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IModelModifier modifier = new ModelModifierByCoordTransformer(transformation, this.transformer);

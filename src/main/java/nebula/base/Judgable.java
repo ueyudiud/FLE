@@ -54,7 +54,8 @@ public interface Judgable<T> extends Predicate<T>
 	{
 		return target -> {
 			for (Predicate<? super T> checker : collection)
-				if (checker.test(target)) return true;
+				if (checker.test(target))
+					return true;
 			return false;
 		};
 	}

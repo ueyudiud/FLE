@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import java.lang.reflect.Array;
@@ -17,13 +16,20 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import nebula.base.function.SequenceConsumer;
 import nebula.common.util.A;
 
 /**
+ * The array parsing helper.
+ * <p>
+ * It takes some useful methods.
+ * 
  * @author ueyudiud
  */
 public class ObjArrayParseHelper
@@ -83,7 +89,6 @@ public class ObjArrayParseHelper
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <I> boolean match(Predicate<I> predicate)
 	{
 		return predicate.test((I) this.array[this.off]);
@@ -181,12 +186,19 @@ public class ObjArrayParseHelper
 			consumer.accept(read());
 	}
 	
+	public <I> void readToEnd(SequenceConsumer<I> consumer)
+	{
+		while (hasNext())
+			consumer.accept(this.off, read());
+	}
+	
 	/**
+	 * Read elements to end of array.
 	 * 
-	 * @param consumer
+	 * @param consumer the consumer to accept elements.
 	 * @return Return true if array is fully read.
 	 */
-	public <I1, I2> boolean readToEnd(BiConsumer<I1, I2> consumer)
+	public <I1, I2> boolean readToEnd(@Nonnull BiConsumer<I1, I2> consumer)
 	{
 		while (hasNext(2))
 			consumer.accept(read(), read());
@@ -198,12 +210,12 @@ public class ObjArrayParseHelper
 		return new Ety<>(read(), read());
 	}
 	
-	public <K, T, V> Entry<K, T> readEntry(Function<V, T> function)
+	public <K, T, V> Entry<K, T> readEntry(@Nonnull Function<V, T> function)
 	{
 		return new Ety<>(read(), function.apply(read()));
 	}
 	
-	public <K, V> boolean readEntryToEnd(Consumer<Entry<K, V>> consumer)
+	public <K, V> boolean readEntryToEnd(@Nonnull Consumer<Entry<K, V>> consumer)
 	{
 		return readToEnd((K k, V v) -> consumer.accept(new Ety<>(k, v)));
 	}
@@ -217,7 +229,7 @@ public class ObjArrayParseHelper
 		return new Stack<>(read());
 	}
 	
-	public <R, I> Stack<R> readStack(Function<I, R> function)
+	public <R, I> Stack<R> readStack(@Nonnull Function<I, R> function)
 	{
 		if (hasNext(2) && (this.array[this.off + 1] instanceof Integer || this.array[this.off + 1] instanceof Long))
 		{
@@ -226,18 +238,23 @@ public class ObjArrayParseHelper
 		return new Stack<>(function.apply(read()));
 	}
 	
-	public <R> void readStackToEnd(Consumer<Stack<R>> consumer)
+	public <R> void readStackToEnd(@Nonnull Consumer<Stack<R>> consumer)
 	{
 		while (hasNext())
 			consumer.accept(readStack());
 	}
 	
-	public <R, I> void readStackToEnd(Function<I, R> function, Consumer<Stack<R>> consumer)
+	public <R, I> void readStackToEnd(@Nonnull Function<I, R> function, @Nonnull Consumer<Stack<R>> consumer)
 	{
 		while (hasNext())
 			consumer.accept(readStack(function));
 	}
 	
+	/**
+	 * Copies remained values to a immutable list.
+	 * 
+	 * @return the immutable list.
+	 */
 	public <E> List<E> toList()
 	{
 		return (List<E>) ImmutableList.copyOf(remainArray());

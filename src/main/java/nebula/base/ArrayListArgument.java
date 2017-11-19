@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import java.util.AbstractList;
@@ -10,6 +9,9 @@ import java.util.Collection;
 import nebula.common.util.A;
 
 /**
+ * The helper list. It is only suggested used in wrap in constructor such as
+ * <code>new ArrayList(new ArrayListArgument(array))</code>.
+ * 
  * @author ueyudiud
  */
 class ArrayListArgument<E> extends AbstractList<E>
@@ -21,6 +23,10 @@ class ArrayListArgument<E> extends AbstractList<E>
 		this.array = array;
 	}
 	
+	/**
+	 * Skipped clone action, return array direct. It means you action on array
+	 * will modified this array.
+	 */
 	@Override
 	public Object[] toArray()
 	{

@@ -66,7 +66,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		super("fire", Materials.FIRE);
 		setTickRandomly(true);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Fire");
 		EnumBlock.fire.set(this);
 		EnumBlock.fire.stateApplier = objs -> {
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(objs);
@@ -82,6 +81,12 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, SPREAD_CHECK, STATE, NORTH, EAST, SOUTH, WEST, UPPER, SMOLDER);
+	}
+	
+	@Override
+	public void postInitalizedBlocks()
+	{
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Fire");
 	}
 	
 	@Override

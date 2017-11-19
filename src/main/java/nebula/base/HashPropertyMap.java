@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class HashPropertyMap implements IPropertyMap
 {
-	private transient HashMap<IProperty<?>, Object> map;
+	private HashMap<IProperty<?>, Object> map;
 	
 	public HashPropertyMap()
 	{

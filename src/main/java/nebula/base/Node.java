@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.base;
 
 import java.util.Iterator;
@@ -73,16 +76,8 @@ public class Node<T> implements INode<T>
 	 */
 	public static <T> Node<T> chain(Iterable<T> iterable)
 	{
-		if (iterable instanceof List && !(iterable instanceof LinkedList))// The
-																			// iterator
-																			// for
-																			// linked
-																			// list
-																			// is
-																			// faster
-																			// than
-																			// index
-																			// positioned.
+		if (iterable instanceof List && !(iterable instanceof LinkedList))
+			// The iterator for linked list is faster than index positioned.
 		{
 			return chain((List<T>) iterable);
 		}

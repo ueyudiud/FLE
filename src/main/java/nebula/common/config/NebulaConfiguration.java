@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.config;
 
 import java.io.File;
@@ -104,7 +103,6 @@ public final class NebulaConfiguration
 			int modifier = field.getModifiers();
 			if ((modifier & Modifier.FINAL) != 0) continue;// Skip final value.
 			if (flag ^ (modifier & Modifier.STATIC) != 0) continue;
-			@SuppressWarnings("unchecked")
 			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) getAdapter(field);
 			if (adapter == null)
 			{
@@ -160,96 +158,96 @@ public final class NebulaConfiguration
 	};
 	
 	private static final TypeAdapter<Integer>	ADAPTER_INT		= (arg, field, config, category, name, defValue, comments) -> {
-																	int minValue, maxValue;
-																	
-																	if (field.isAnnotationPresent(ConfigRangeInt.class))
-																	{
-																		ConfigRangeInt range = field.getAnnotation(ConfigRangeInt.class);
-																		minValue = range.min();
-																		maxValue = range.max();
-																		comments += " range: [" + minValue + ", " + maxValue + "]";
-																	}
-																	else
-																	{
-																		minValue = Integer.MIN_VALUE;
-																		maxValue = Integer.MAX_VALUE;
-																	}
-																	
-																	Property property = config.get(category, name, defValue, comments, Type.INTEGER);
-																	property.setMinValue(minValue);
-																	property.setMaxValue(maxValue);
-																	property.setDefaultValue(defValue);
-																	field.setInt(arg, L.range(minValue, maxValue, property.getInt()));
-																};
+		int minValue, maxValue;
+		
+		if (field.isAnnotationPresent(ConfigRangeInt.class))
+		{
+			ConfigRangeInt range = field.getAnnotation(ConfigRangeInt.class);
+			minValue = range.min();
+			maxValue = range.max();
+			comments += " range: [" + minValue + ", " + maxValue + "]";
+		}
+		else
+		{
+			minValue = Integer.MIN_VALUE;
+			maxValue = Integer.MAX_VALUE;
+		}
+		
+		Property property = config.get(category, name, defValue, comments, Type.INTEGER);
+		property.setMinValue(minValue);
+		property.setMaxValue(maxValue);
+		property.setDefaultValue(defValue);
+		field.setInt(arg, L.range(minValue, maxValue, property.getInt()));
+	};
 	private static final TypeAdapter<Long>		ADAPTER_LONG	= (arg, field, config, category, name, defValue, comments) -> {
-																	long minValue, maxValue;
-																	
-																	if (field.isAnnotationPresent(ConfigRangeLong.class))
-																	{
-																		ConfigRangeLong range = field.getAnnotation(ConfigRangeLong.class);
-																		minValue = range.min();
-																		maxValue = range.max();
-																		comments += " range: [" + minValue + ", " + maxValue + "]";
-																	}
-																	else
-																	{
-																		minValue = Long.MIN_VALUE;
-																		maxValue = Long.MAX_VALUE;
-																	}
-																	
-																	Property property = config.get(category, name, defValue, comments, Type.INTEGER);
-																	property.setMinValue(minValue);
-																	property.setMaxValue(maxValue);
-																	property.setDefaultValue(defValue);
-																	field.setLong(arg, L.range(minValue, maxValue, property.getLong()));
-																};
+		long minValue, maxValue;
+		
+		if (field.isAnnotationPresent(ConfigRangeLong.class))
+		{
+			ConfigRangeLong range = field.getAnnotation(ConfigRangeLong.class);
+			minValue = range.min();
+			maxValue = range.max();
+			comments += " range: [" + minValue + ", " + maxValue + "]";
+		}
+		else
+		{
+			minValue = Long.MIN_VALUE;
+			maxValue = Long.MAX_VALUE;
+		}
+		
+		Property property = config.get(category, name, defValue, comments, Type.INTEGER);
+		property.setMinValue(minValue);
+		property.setMaxValue(maxValue);
+		property.setDefaultValue(defValue);
+		field.setLong(arg, L.range(minValue, maxValue, property.getLong()));
+	};
 	private static final TypeAdapter<?>			ADAPTER_FLOAT	= (arg, field, config, category, name, defValue, comments) -> {
-																	double minValue, maxValue;
-																	
-																	if (field.isAnnotationPresent(ConfigRangeFloat.class))
-																	{
-																		ConfigRangeFloat range = field.getAnnotation(ConfigRangeFloat.class);
-																		minValue = range.min();
-																		maxValue = range.max();
-																		comments += " range: [" + minValue + ", " + maxValue + "]";
-																	}
-																	else
-																	{
-																		if (field.getType() == float.class)
-																		{
-																			minValue = Float.MIN_VALUE;
-																			maxValue = Float.MAX_VALUE;
-																		}
-																		else
-																		{
-																			minValue = Double.MIN_VALUE;
-																			maxValue = Double.MAX_VALUE;
-																		}
-																	}
-																	
-																	Property property = config.get(category, name, defValue, comments, Type.DOUBLE);
-																	property.setMinValue(minValue);
-																	property.setMaxValue(maxValue);
-																	property.setDefaultValue(defValue);
-																	if (field.getType() == float.class)
-																	{
-																		field.setFloat(arg, (float) property.getDouble());
-																	}
-																	else
-																	{
-																		field.setDouble(arg, property.getDouble());
-																	}
-																};
+		double minValue, maxValue;
+		
+		if (field.isAnnotationPresent(ConfigRangeFloat.class))
+		{
+			ConfigRangeFloat range = field.getAnnotation(ConfigRangeFloat.class);
+			minValue = range.min();
+			maxValue = range.max();
+			comments += " range: [" + minValue + ", " + maxValue + "]";
+		}
+		else
+		{
+			if (field.getType() == float.class)
+			{
+				minValue = Float.MIN_VALUE;
+				maxValue = Float.MAX_VALUE;
+			}
+			else
+			{
+				minValue = Double.MIN_VALUE;
+				maxValue = Double.MAX_VALUE;
+			}
+		}
+		
+		Property property = config.get(category, name, defValue, comments, Type.DOUBLE);
+		property.setMinValue(minValue);
+		property.setMaxValue(maxValue);
+		property.setDefaultValue(defValue);
+		if (field.getType() == float.class)
+		{
+			field.setFloat(arg, (float) property.getDouble());
+		}
+		else
+		{
+			field.setDouble(arg, property.getDouble());
+		}
+	};
 	private static final TypeAdapter<Boolean>	ADAPTER_BOOLEAN	= (arg, field, config, category, name, defValue, comments) -> {
-																	Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
-																	property.setDefaultValue(defValue);
-																	field.setBoolean(arg, property.getBoolean());
-																};
+		Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
+		property.setDefaultValue(defValue);
+		field.setBoolean(arg, property.getBoolean());
+	};
 	private static final TypeAdapter<String>	ADAPTER_STRING	= (arg, field, config, category, name, defValue, comments) -> {
-																	Property property = config.get(category, name, defValue, comments, Type.STRING);
-																	property.setDefaultValue(defValue);
-																	field.set(arg, property.getString());
-																};
+		Property property = config.get(category, name, defValue, comments, Type.STRING);
+		property.setDefaultValue(defValue);
+		field.set(arg, property.getString());
+	};
 	
 	private static final Map<Class<?>, TypeAdapter<?>> TYPE_ADAPTER_MAP = new HashMap<>();
 	
