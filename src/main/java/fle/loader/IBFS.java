@@ -5,6 +5,7 @@ package fle.loader;
 
 import farcore.data.CT;
 import farcore.lib.item.instance.ItemStoneChip;
+import farcore.lib.solid.Solid;
 import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGasExplosive;
@@ -61,6 +62,15 @@ public class IBFS
 		fNaturalGas = new FluidBase("natural_gas", "Natural Gas").setDensity(-20).setViscosity(20).setBurning().setGaseous(true);
 		
 		fNaturalGas.setBlock(new BlockGasExplosive(fNaturalGas, 360, 200, 9.0F));
+		
+		sMillet = new Solid("millet", "Millet");
+		sWholemealMillet = new Solid("millet_wholemeal", "Wholemeal Millet");
+		sWheat = new Solid("wheat", "Wheat");
+		sWholemealWheat = new Solid("wheat_wholemeal", "Wholemeal Wheat");
+		sBlackPepper = new Solid("black_pepper", "Black Pepper");
+		sTurmericRhizome = new Solid("turmeric_rhizome", "Thurmeric Rhizome");
+		sPricklyAsh = new Solid("prickly_ash", "Prickly Ash");
+		sCinnamon = new Solid("cinnamon", "Cinnamon");
 	}
 	
 	public static void setBlocksItemsProperties()
@@ -88,4 +98,12 @@ public class IBFS
 	public static FluidBase					fLimeMortar;
 	public static FluidBase					fAnimalOil;
 	public static FluidBase					fNaturalGas;
+	public static Solid						sMillet;
+	public static Solid						sWholemealMillet;
+	public static Solid						sWheat;
+	public static Solid						sWholemealWheat;
+	public static Solid						sBlackPepper;
+	public static Solid						sTurmericRhizome;
+	public static Solid						sPricklyAsh;
+	public static Solid						sCinnamon;
 }

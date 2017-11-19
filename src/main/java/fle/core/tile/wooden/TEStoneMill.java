@@ -6,6 +6,7 @@ package fle.core.tile.wooden;
 import java.io.IOException;
 
 import farcore.data.Keys;
+import farcore.lib.solid.container.SolidContainerHelper;
 import farcore.lib.solid.container.SolidTank;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
@@ -16,6 +17,7 @@ import fle.core.common.gui.wooden.ContainerStoneMill;
 import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.fluid.FluidTankN;
+import nebula.common.inventory.InventoryHelper;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
@@ -94,6 +96,7 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	@Override
 	protected void updateServer()
 	{
+		SolidContainerHelper.drainOrFillTank(this, this.tank1, 1, 2, InventoryHelper.FD_DRAIN);
 		super.updateServer();
 		if (this.buffer > 0)
 		{

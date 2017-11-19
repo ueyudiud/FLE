@@ -4,9 +4,10 @@
 package farcore.lib.solid;
 
 import nebula.client.render.IIconRegister;
+import nebula.common.LanguageManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
@@ -17,7 +18,7 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 {
 	public static final ResourceLocation SOILDS = new ResourceLocation("farcore:soild");
 	
-	public static final IForgeRegistry<SolidAbstract> REGISTRY;
+	public static final FMLControlledNamespacedRegistry<SolidAbstract> REGISTRY;
 	
 	static
 	{
@@ -32,7 +33,7 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	}
 	
 	@Override
-	public Class<SolidAbstract> getRegistryType()
+	public final Class<SolidAbstract> getRegistryType()
 	{
 		return SolidAbstract.class;
 	}
@@ -60,6 +61,16 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	public final ResourceLocation getRegistryName()
 	{
 		return this.registryName;
+	}
+	
+	public String getUnlocalizedname()
+	{
+		return "MISSING_UNLOCALIZED_NAME_" + this.registryName;
+	}
+	
+	public String getLocalizedname()
+	{
+		return LanguageManager.translateToLocal(getUnlocalizedname() + ".name");
 	}
 	
 	@SideOnly(Side.CLIENT)

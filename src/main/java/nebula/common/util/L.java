@@ -655,7 +655,9 @@ public class L
 	 */
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
 	{
-		return arg1 == arg2 ? true : (arg1 == null ^ arg2 == null) ? false : arg1.equals(arg2);
+		return arg1 == arg2 ? true :
+			(arg1 == null || arg2 == null) ? false :
+				arg1.equals(arg2);
 	}
 	
 	/**

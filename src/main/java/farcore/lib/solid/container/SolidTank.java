@@ -32,6 +32,11 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 		return this.stack;
 	}
 	
+	public void setStack(SolidStack stack)
+	{
+		this.stack = stack;
+	}
+	
 	public int getSolidAmount()
 	{
 		return this.stack == null ? 0 : this.stack.amount;
@@ -43,7 +48,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	 * @param stack
 	 * @return
 	 */
-	public boolean canFill(SolidStack stack)
+	public boolean canFill(@Nullable SolidStack stack)
 	{
 		return true;
 	}
@@ -182,6 +187,6 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	@Override
 	public ISoildHandlerProperty getProperty()
 	{
-		return null;
+		return new SimpleSoildHandlerProperty(this.capacity, this.stack, canFill(null), canDrain());
 	}
 }

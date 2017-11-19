@@ -3,6 +3,7 @@
  */
 package farcore.lib.solid;
 
+import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
@@ -10,6 +11,9 @@ import javax.annotation.Nullable;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
 
 /**
@@ -21,6 +25,46 @@ import net.minecraftforge.fml.common.registry.RegistryDelegate;
 public class SolidStack
 {
 	public static final UnaryOperator<SolidStack> COPY_SOLIDSTACK = SolidStack::copyOf;
+	
+	/**
+	 * Solid stack serializer.
+	 */
+	public static final DataSerializer<SolidStack> SERIALIZER = new DataSerializer<SolidStack>()
+	{
+		@Override
+		public void write(PacketBuffer buf, SolidStack value)
+		{
+			if (value == null)
+				buf.writeBoolean(false);
+			else
+			{
+				buf.writeBoolean(true);
+				buf.writeShort(SolidAbstract.REGISTRY.getId(value.getSolid()));
+				buf.writeInt(value.amount);
+				buf.writeCompoundTag(value.tag);
+			}
+		}
+		
+		@Override
+		public SolidStack read(PacketBuffer buf) throws IOException
+		{
+			if (buf.readBoolean())
+			{
+				SolidAbstract solid = SolidAbstract.REGISTRY.getObjectById(buf.readShort());
+				if (solid != null)
+				{
+					return new SolidStack(solid, buf.readInt(), buf.readCompoundTag());
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public DataParameter<SolidStack> createKey(int id)
+		{
+			return new DataParameter<>(id, this);
+		}
+	};
 	
 	/**
 	 * Solid stack reader and writer.
@@ -55,6 +99,13 @@ public class SolidStack
 	{
 		SolidStack stack;
 		return (stack = new SolidStack()).readFromNBT(nbt).solidDelegate == null ? null : stack;
+	}
+	
+	public static boolean areStackEqual(SolidStack stack1, SolidStack stack2)
+	{
+		return stack1 == stack2 ? true :
+			stack1 == null || stack2 == null ? false :
+				stack1.isSoildEqual(stack2) && stack1.amount == stack2.amount;
 	}
 	
 	protected SolidStack()
