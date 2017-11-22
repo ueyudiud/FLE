@@ -13,10 +13,11 @@ import javax.annotation.Nullable;
 
 import nebula.Nebula;
 import nebula.base.Node;
+import nebula.common.data.IBufferSerializer;
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.fluid.container.IItemFluidContainer;
-import nebula.common.network.packet.PacketFluidUpdateAll;
-import nebula.common.network.packet.PacketFluidUpdateSingle;
+import nebula.common.network.packet.PacketContainerDataUpdateAll;
+import nebula.common.network.packet.PacketContainerDataUpdateSingle;
 import nebula.common.util.ItemStacks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,6 +29,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ContainerBase extends Container implements IGuiActionListener
 {
@@ -154,16 +157,117 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		}
 	}
 	
-	// private static final byte START = 0x0;
-	// private static final byte ADD_SLOT = 0x1;
-	// private static final byte END = 0x2;
-	//
-	// private static final byte EVENLY_SPLIT = 0x0;
-	// private static final byte ONE_ITEM_BY_SLOT = 0x1;
-	// private static final byte NOT_USED = 0x2;
-	//
-	// private static final byte TOTAL_PICK = 0x0;
-	// private static final byte SPLIT_PICK = 0x1;
+	protected static Object[] concat(IBufferSerializer<?, ?> serializer, Object[] datas)
+	{
+		Object[] values = new Object[datas.length + 1];
+		values[0] = serializer;
+		System.arraycopy(datas, 0, values, 1, datas.length);
+		return values;
+	}
+	
+	public class BaseContainerDataHandler<C extends ContainerBase> implements IContainerDataHandler
+	{
+		protected ItemStack[] stacks1;
+		protected FluidStack[] stacks2;
+		
+		protected BaseContainerDataHandler()
+		{
+		}
+		
+		@Override
+		public void addListener(IContainerListener listener)
+		{
+			if (ContainerBase.this.listeners.contains(listener))
+			{
+				throw new IllegalArgumentException("Listener already listening");
+			}
+			else
+			{
+				ContainerBase.this.listeners.add(listener);
+				if (listener instanceof EntityPlayerMP)
+				{
+					detectAndSendChanges();
+					Nebula.network.sendToPlayer(getAllDataPacket(), (EntityPlayerMP) listener);
+				}
+				else
+				{
+					listener.updateCraftingInventory(ContainerBase.this, getInventory());
+					this.detectAndSendChanges();
+				}
+			}
+		}
+		
+		@Override
+		public void detectAndSendChanges()
+		{
+			if (this.stacks1 == null)
+			{
+				this.stacks1 = new ItemStack[ContainerBase.this.inventorySlots.size()];
+				this.stacks2 = new FluidStack[ContainerBase.this.fluidSlots.size()];
+			}
+			for (int i = 0; i < this.stacks1.length; ++i)
+			{
+				ItemStack stack = ContainerBase.this.inventorySlots.get(i).getStack();
+				ItemStack stack1 = this.stacks1[i];
+				
+				if (!ItemStack.areItemStacksEqual(stack1, stack))
+				{
+					this.stacks1[i] = ItemStack.copyItemStack(stack);
+					
+					final int i0 = i;
+					ContainerBase.this.listeners.forEach(listener->listener.sendSlotContents(ContainerBase.this, i0, this.stacks1[i0]));
+				}
+			}
+			for (int i = 0; i < this.stacks2.length; ++i)
+			{
+				FluidStack stack = ContainerBase.this.fluidSlots.get(i).getStackInSlot();
+				FluidStack stack1 = this.stacks2[i];
+				
+				if (!FluidStackExt.areFluidStackEqual(stack, stack1))
+				{
+					this.stacks2[i] = stack1 = FluidStackExt.copyOf(stack);
+					
+					for (IContainerListener listener : ContainerBase.this.listeners)
+					{
+						if (listener instanceof EntityPlayerMP)
+						{
+							Nebula.network.sendToPlayer(new PacketContainerDataUpdateSingle(ContainerBase.this, ContainerDataHandlerManager.BS_FS, i, stack1), (EntityPlayer) listener);
+						}
+					}
+				}
+			}
+		}
+		
+		protected PacketContainerDataUpdateAll getAllDataPacket()
+		{
+			if (this.stacks1 == null)
+			{
+				this.stacks1 = new ItemStack[ContainerBase.this.inventorySlots.size()];
+				this.stacks2 = new FluidStack[ContainerBase.this.fluidSlots.size()];
+			}
+			List<Object[]> list = new ArrayList<>(2);
+			if (this.stacks1.length != 0)
+				list.add(concat(ContainerDataHandlerManager.BS_IS, this.stacks1));
+			if (this.stacks2.length != 0)
+				list.add(concat(ContainerDataHandlerManager.BS_FS, this.stacks2));
+			return new PacketContainerDataUpdateAll(ContainerBase.this, list.toArray(new Object[list.size()][]));
+		}
+		
+		@Override
+		@SideOnly(Side.CLIENT)
+		public <T> void updateValue(Class<T> type, int id, T value)
+		{
+			if (type == ItemStack.class)
+			{
+				ContainerBase.this.inventorySlots.get(id).putStack((ItemStack) value);
+			}
+			else if (type == FluidStack.class)
+			{
+				ContainerBase.this.fluidSlots.get(id).putStack((FluidStack) value);
+			}
+			else throw new IllegalArgumentException("No valid access for " + type);
+		}
+	}
 	
 	protected TL	locationPlayer;
 	protected TL	locationBag;
@@ -174,11 +278,25 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	protected EntityPlayer			opener;
 	protected TreeMap<Integer, TL>	transferLocates	= new TreeMap<>(Comparator.naturalOrder());
 	protected List<FluidSlot>		fluidSlots		= new ArrayList<>();
-	private List<FluidStack>		lastFluidStacks	= new ArrayList<>();
+	protected IContainerDataHandler handler;
 	
 	public ContainerBase(EntityPlayer player)
 	{
 		this.opener = player;
+	}
+	
+	protected IContainerDataHandler createHandler()
+	{
+		return new BaseContainerDataHandler<>();
+	}
+	
+	public IContainerDataHandler getDataHandler()
+	{
+		if (this.handler == null)
+		{
+			this.handler = createHandler();
+		}
+		return this.handler;
 	}
 	
 	public EntityPlayer getOpener()
@@ -194,37 +312,13 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	@Override
 	public void addListener(IContainerListener listener)
 	{
-		super.addListener(listener);
-		if (listener instanceof EntityPlayerMP)
-		{
-			Nebula.network.sendToPlayer(new PacketFluidUpdateAll(this), (EntityPlayerMP) listener);
-		}
+		getDataHandler().addListener(listener);
 	}
 	
 	@Override
 	public void detectAndSendChanges()
 	{
-		super.detectAndSendChanges();
-		for (int i = 0; i < this.fluidSlots.size(); ++i)
-		{
-			FluidStack stack = this.fluidSlots.get(i).getStackInSlot();
-			FluidStack stack1 = this.lastFluidStacks.get(i);
-			
-			if (!FluidStackExt.areFluidStackEqual(stack, stack1))
-			{
-				stack1 = FluidStackExt.copyOf(stack);
-				this.lastFluidStacks.set(i, stack1);
-				
-				for (int j = 0; j < this.listeners.size(); ++j)
-				{
-					IContainerListener listener = this.listeners.get(j);
-					if (listener instanceof EntityPlayerMP)
-					{
-						Nebula.network.sendToPlayer(new PacketFluidUpdateSingle(this, i, stack1), (EntityPlayer) listener);
-					}
-				}
-			}
-		}
+		getDataHandler().detectAndSendChanges();
 	}
 	
 	protected void addOpenerSlots()
@@ -283,14 +377,13 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	{
 		slot.slotNumber = this.inventorySlots.size();
 		this.fluidSlots.add(slot);
-		this.lastFluidStacks.add((FluidStack) null);
 		return slot;
 	}
 	
 	@Override
 	protected Slot addSlotToContainer(Slot slotIn)
 	{
-		if (!(slotIn instanceof SlotBase)) throw new IllegalArgumentException("The slot must extended by SlotBase.");
+		assert slotIn instanceof SlotBase;
 		return super.addSlotToContainer(slotIn);
 	}
 	
@@ -500,6 +593,13 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		public TL addToList()
 		{
 			ContainerBase.this.transferLocates.put(this.startId, this);
+			return this;
+		}
+		
+		public TL appendTransferLocate(TL... transferLocates)
+		{
+			for (TL t : transferLocates)
+				appendTransferLocate(t);
 			return this;
 		}
 		

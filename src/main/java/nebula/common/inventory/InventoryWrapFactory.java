@@ -152,19 +152,19 @@ public final class InventoryWrapFactory
 			return this.inventory.getStack(index);
 		}
 		
-		public int incrStack(int index, ItemStack resource, boolean process)
+		public int incrItem(int index, ItemStack resource, boolean process)
 		{
-			return this.inventory.incrStack(index, resource, process);
+			return this.inventory.incrItem(index, resource, process);
 		}
 		
 		public ItemStack decrStackSize(int index, int count)
 		{
-			return decrStack(index, count, true);
+			return decrItem(index, count, true);
 		}
 		
-		public @Nullable ItemStack decrStack(int index, int count, boolean process)
+		public @Nullable ItemStack decrItem(int index, int count, boolean process)
 		{
-			return this.inventory.decrStack(index, count, process);
+			return this.inventory.decrItem(index, count, process);
 		}
 		
 		public @Nullable ItemStack removeStackFromSlot(int index)
@@ -191,14 +191,14 @@ public final class InventoryWrapFactory
 		{
 			if (!this.inventory.isItemValidForSlot(slot, stack) || stack == null) return stack;
 			stack = stack.copy();
-			int size = this.inventory.incrStack(slot, stack, simulate);
+			int size = this.inventory.incrItem(slot, stack, simulate);
 			stack.stackSize -= size;
 			return stack;
 		}
 		
 		public ItemStack extractItem(int slot, int amount, boolean simulate)
 		{
-			return this.inventory.decrStack(slot, amount, simulate);
+			return this.inventory.decrItem(slot, amount, simulate);
 		}
 	}
 	
@@ -220,9 +220,9 @@ public final class InventoryWrapFactory
 		}
 		
 		@Override
-		public ItemStack decrStack(int index, int count, boolean process)
+		public ItemStack decrItem(int index, int count, boolean process)
 		{
-			ItemStack stack = super.decrStack(index, count, process);
+			ItemStack stack = super.decrItem(index, count, process);
 			if (process && stack != null)
 			{
 				this.container.onCraftMatrixChanged(this);
@@ -261,12 +261,8 @@ public final class InventoryWrapFactory
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 		{
 			int size = insertItem(stack, this.direction, simulate);
-			if (size > 0)
-			{
-				return size == stack.stackSize ? null : ItemStacks.sizeOf(stack, stack.stackSize - size);
-			}
-			else
-				return stack;
+			return size == 0 ? stack :
+				size == stack.stackSize ? null : ItemStacks.sizeOf(stack, stack.stackSize - size);
 		}
 		
 		@Override

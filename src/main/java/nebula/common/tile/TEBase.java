@@ -409,11 +409,11 @@ public class TEBase extends TileEntity implements IModifiableCoord
 		if (this.blockType instanceof BlockTE)
 		{
 			this.state = ((BlockTE) this.blockType).property_TE.withProperty(this.state, this);// Mark
-																								// for
-																								// real
-																								// tile
-																								// entity
-																								// property.
+			// for
+			// real
+			// tile
+			// entity
+			// property.
 		}
 	}
 	

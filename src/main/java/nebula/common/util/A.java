@@ -439,31 +439,57 @@ public final class A
 	 * Get sub list of array.
 	 * 
 	 * @param array the source array.
-	 * @param off the sublist start pos(include itself).
+	 * @param off the sublist start position(include itself).
 	 * @return the sub array with element start at <tt>off</tt> position in
-	 *         source array and include all element after.
+	 *         source array and include all element after, if off position is
+	 *         <code>0</code>, the method will return itself.
 	 * @see #sublist(Object[], int, int)
 	 */
 	public static <E> E[] sublist(@Nonnull E[] array, int off)
 	{
-		return sublist(array, off, array.length - off);
+		return off == 0 ? array : sublist(array, off, array.length - off);
 	}
 	
 	/**
 	 * Create a sub list from argument list.
 	 * 
 	 * @param array the source of array.
-	 * @param off the sublist start pos(include itself).
+	 * @param off the sublist start position(include itself).
 	 * @param len the length of array.
 	 * @return the sub array with element start at <tt>off</tt> position in
-	 *         source array and end at <tt>off + len</tt> postion in source
-	 *         array.
+	 *         source array and end at <tt>off + len</tt> position in source
+	 *         array, if off is <code>0</code> and len is
+	 *         <code>array.length</code>, the method will return itself.
 	 * @throws java.lang.IndexOutOfBoundsException when copy length is out of
 	 *             array bound.
 	 */
 	public static <E> E[] sublist(@Nonnull E[] array, int off, int len)
 	{
+		if (off == 0 && len == array.length)
+			return array;
 		E[] a1 = ObjectArrays.newArray(array, len);
+		System.arraycopy(array, off, a1, 0, len);
+		return a1;
+	}
+	
+	/**
+	 * Create a sub list from argument int list.
+	 * 
+	 * @param array the source of array.
+	 * @param off the sublist start position(include itself).
+	 * @param len the length of array.
+	 * @return the sub array with element start at <tt>off</tt> position in
+	 *         source array and end at <tt>off + len</tt> position in source
+	 *         array, if off is <code>0</code> and len is
+	 *         <code>array.length</code>, the method will return itself.
+	 * @throws java.lang.IndexOutOfBoundsException when copy length is out of
+	 *             array bound.
+	 */
+	public static int[] sublist(@Nonnull int[] array, int off, int len)
+	{
+		if (off == 0 && len == array.length)
+			return array;
+		int[] a1 = new int[len];
 		System.arraycopy(array, off, a1, 0, len);
 		return a1;
 	}

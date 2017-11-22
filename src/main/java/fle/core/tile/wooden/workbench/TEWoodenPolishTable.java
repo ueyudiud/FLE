@@ -139,7 +139,7 @@ public class TEWoodenPolishTable extends TEStaticInventory implements IPolishRec
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		if (index == 1)
 		{
@@ -151,7 +151,7 @@ public class TEWoodenPolishTable extends TEStaticInventory implements IPolishRec
 			}
 			return stack;
 		}
-		return super.decrStack(index, count, process);
+		return super.decrItem(index, count, process);
 	}
 	
 	@Override

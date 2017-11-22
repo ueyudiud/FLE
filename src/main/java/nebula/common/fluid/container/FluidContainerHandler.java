@@ -156,7 +156,7 @@ public class FluidContainerHandler
 					{
 						IItemFluidContainerV1 container = containerRaw.castV1();
 						container.drain(stack, required, true);
-						if (!container.hasFluid(stack) && inventory.insertStack(out, stack, true))
+						if (!container.hasFluid(stack) && inventory.instItem(out, stack, true))
 						{
 							inventory.decrStackSize(in, 1);
 						}
@@ -168,7 +168,7 @@ public class FluidContainerHandler
 						if (container.getContain(stack).containsFluid(required))
 						{
 							ItemStack stack2 = container.drain(stack, false);
-							if (stack2 != null && inventory.insertStack(out, stack2, true))
+							if (stack2 != null && inventory.instItem(out, stack2, true))
 							{
 								return true;
 							}
@@ -180,7 +180,7 @@ public class FluidContainerHandler
 			{
 				IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 				handler.drain(required, true);
-				if (inventory.insertStack(out, stack, true))
+				if (inventory.instItem(out, stack, true))
 				{
 					inventory.decrStackSize(in, 1);
 					return true;
@@ -230,7 +230,7 @@ public class FluidContainerHandler
 					{
 						IItemFluidContainerV1 container = containerRaw.castV1();
 						container.drain(stack, amount, true);
-						if (!container.hasFluid(stack) && inventory.insertStack(out, stack, true))
+						if (!container.hasFluid(stack) && inventory.instItem(out, stack, true))
 						{
 							inventory.decrStackSize(in, 1);
 						}
@@ -242,7 +242,7 @@ public class FluidContainerHandler
 						if (container.capacity(stack) >= amount)
 						{
 							ItemStack stack2 = container.drain(stack, false);
-							if (stack2 != null && inventory.insertStack(out, stack2, true))
+							if (stack2 != null && inventory.instItem(out, stack2, true))
 							{
 								return true;
 							}
@@ -254,7 +254,7 @@ public class FluidContainerHandler
 			{
 				IFluidHandler handler = stack.getCapability(FLUID_HANDLER_CAPABILITY, null);
 				handler.drain(amount, true);
-				if (inventory.insertStack(out, stack, true))
+				if (inventory.instItem(out, stack, true))
 				{
 					inventory.decrStackSize(in, 1);
 					return true;

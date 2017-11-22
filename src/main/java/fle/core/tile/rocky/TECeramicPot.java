@@ -170,9 +170,9 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (insertStack(1, this.cache.get(2), false) && insertStack(5, this.cache.get(3), true))
+		if (instItem(1, this.cache.get(2), false) && instItem(5, this.cache.get(3), true))
 		{
-			return insertStack(1, this.cache.get(2), true);// always true.
+			return instItem(1, this.cache.get(2), true);// always true.
 		}
 		return false;
 	}

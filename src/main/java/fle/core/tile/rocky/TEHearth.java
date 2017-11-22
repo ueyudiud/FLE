@@ -87,7 +87,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 			if (isServer())
 			{
 				int size;
-				if (stack != null && FuelHandler.isFuel(stack) && (size = incrStack(0, stack, true)) > 0)
+				if (stack != null && FuelHandler.isFuel(stack) && (size = incrItem(0, stack, true)) > 0)
 				{
 					if (stack.stackSize == size)
 						player.setHeldItem(hand, null);

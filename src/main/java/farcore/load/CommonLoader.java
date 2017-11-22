@@ -59,6 +59,7 @@ import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
 import farcore.lib.item.instance.ItemTreeLog;
 import farcore.lib.material.Mat;
+import farcore.lib.solid.SolidStack;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -67,6 +68,7 @@ import farcore.lib.tile.instance.TESapling;
 import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.fluid.FluidBase;
+import nebula.common.gui.ContainerDataHandlerManager;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.EnumChatFormatting;
 import net.minecraft.block.material.Material;
@@ -153,7 +155,7 @@ public class CommonLoader
 	
 	public void load()
 	{
-		ProgressBar bar = push("Far Core Load", 3);
+		ProgressBar bar = push("Far Core Load", 4);
 		// Post load item and block.
 		// For register to Ore Dictionary, Tool Uses, Compatibility, etc.
 		bar.step("Post initalizing Items and Blocks");
@@ -194,6 +196,8 @@ public class CommonLoader
 		bar.step("Register Key Binding");
 		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
 		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
+		bar.step("Network Registring");
+		ContainerDataHandlerManager.registerSerializer(SolidStack.BS);
 		pop(bar);
 	}
 	

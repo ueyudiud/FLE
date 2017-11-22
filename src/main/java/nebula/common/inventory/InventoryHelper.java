@@ -6,6 +6,7 @@ package nebula.common.inventory;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -215,7 +216,7 @@ public class InventoryHelper
 				entry = FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, true);
 				if (entry != null)
 				{
-					if (inventory.incrStack(out, entry.getKey(), true) != 0)
+					if (inventory.incrItem(out, entry.getKey(), true) != 0)
 					{
 						stack1 = inventory.decrStackSize(in, 1);
 						FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, false);
@@ -251,7 +252,7 @@ public class InventoryHelper
 				entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, true);
 				if (entry != null)
 				{
-					if (inventory.incrStack(out, entry.getKey(), true) > 0)
+					if (inventory.incrItem(out, entry.getKey(), true) > 0)
 					{
 						stack = inventory.decrStackSize(in, 1);
 						FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, false);
@@ -406,15 +407,15 @@ public class InventoryHelper
 	 * @param from The start insert index of inventory.
 	 * @param to The end insert index of inventory (Not include 'to' id self).
 	 * @param stacks
-	 * @param appliable The result applier.
-	 * @return The result apply by appliable.
+	 * @param appliable The result supplier.
+	 * @return The result apply by supplier.
 	 */
-	public static <T> T insertAllStacks(IBasicInventory inventory, int from, int to, ItemStack[] stacks, @Nullable Applicable<T> appliable)
+	public static <T> T insertAllStacks(IBasicInventory inventory, int from, int to, ItemStack[] stacks, @Nullable Supplier<T> appliable)
 	{
 		if (insertAllStacks(inventory, from, to, stacks, false))
 		{
 			insertAllStacks(inventory, from, to, stacks, true);
-			return appliable == null ? null : appliable.apply();
+			return Applicable.orApply(appliable, null);
 		}
 		return null;
 	}

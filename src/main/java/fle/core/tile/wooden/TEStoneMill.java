@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>> implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
-	private SolidTank	tank1	= new SolidTank(1000);
+	public SolidTank	tank1	= new SolidTank(1000);
 	public FluidTankN	tank2	= new FluidTankN(4000);
 	private int			buffer;
 	@SideOnly(Side.CLIENT)

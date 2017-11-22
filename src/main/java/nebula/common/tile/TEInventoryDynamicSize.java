@@ -143,7 +143,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
@@ -154,7 +154,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		ItemStack result = ItemStacks.copyNomoreThan(stacks()[index], count);
 		if (result != null)
@@ -195,7 +195,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		return decrStack(index, count, true);
+		return decrItem(index, count, true);
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
+import nebula.common.data.IBufferSerializer;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,6 +64,27 @@ public class SolidStack
 		public DataParameter<SolidStack> createKey(int id)
 		{
 			return new DataParameter<>(id, this);
+		}
+	};
+	
+	public static final IBufferSerializer<PacketBuffer, SolidStack> BS = new IBufferSerializer<PacketBuffer, SolidStack>()
+	{
+		@Override
+		public void write(PacketBuffer buffer, SolidStack value)
+		{
+			SERIALIZER.write(buffer, value);
+		}
+		
+		@Override
+		public SolidStack read(PacketBuffer buffer) throws IOException
+		{
+			return SERIALIZER.read(buffer);
+		}
+		
+		@Override
+		public Class<SolidStack> getTargetClass()
+		{
+			return SolidStack.class;
 		}
 	};
 	

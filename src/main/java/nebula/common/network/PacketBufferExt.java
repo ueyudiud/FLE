@@ -50,7 +50,7 @@ public class PacketBufferExt extends PacketBuffer
 		return null;
 	}
 	
-	public void writeFluidStack(FluidStack stack) throws IOException
+	public void writeFluidStack(FluidStack stack)
 	{
 		if (stack == null)
 		{
@@ -59,8 +59,7 @@ public class PacketBufferExt extends PacketBuffer
 		else
 		{
 			writeInt(stack.amount);
-			boolean flag = stack instanceof FluidStackExt;// Mark fluid stack
-															// type.
+			boolean flag = stack instanceof FluidStackExt;// Mark fluid stack type.
 			writeBoolean(flag);
 			writeShort(FluidRegistry.getFluidID(stack.getFluid()));
 			if (flag)

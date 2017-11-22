@@ -73,6 +73,17 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 		return LanguageManager.translateToLocal(getUnlocalizedname() + ".name");
 	}
 	
+	/**
+	 * Returned aRGB color of solid stack.
+	 * 
+	 * @param stack the stack to get color.
+	 * @return the aRGB color.
+	 */
+	public int getColor(SolidStack stack)
+	{
+		return 0xFFFFFFFF;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public void registerIcon(IIconRegister register)
 	{

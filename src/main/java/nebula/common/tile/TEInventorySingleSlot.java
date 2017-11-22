@@ -160,7 +160,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
@@ -171,7 +171,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		ItemStack result = ItemStacks.copyNomoreThan(this.stack, count);
 		if (result != null)
@@ -212,7 +212,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		return decrStack(index, count, true);
+		return decrItem(index, count, true);
 	}
 	
 	@Override

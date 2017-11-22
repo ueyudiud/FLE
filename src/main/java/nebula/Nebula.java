@@ -36,11 +36,11 @@ import nebula.common.item.ItemFluidDisplay;
 import nebula.common.network.Network;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.network.packet.PacketChunkNetData;
+import nebula.common.network.packet.PacketContainerDataUpdateAll;
+import nebula.common.network.packet.PacketContainerDataUpdateSingle;
 import nebula.common.network.packet.PacketEntity;
 import nebula.common.network.packet.PacketEntityAsk;
 import nebula.common.network.packet.PacketFluidSlotClick;
-import nebula.common.network.packet.PacketFluidUpdateAll;
-import nebula.common.network.packet.PacketFluidUpdateSingle;
 import nebula.common.network.packet.PacketGuiAction;
 import nebula.common.network.packet.PacketGuiSyncData;
 import nebula.common.network.packet.PacketGuiTickUpdate;
@@ -91,7 +91,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String	MODID	= "nebula";
 	public static final String	NAME	= "Nebula";
-	public static final String	VERSION	= "2.1.2";
+	public static final String	VERSION	= "2.2.1";
 	
 	/**
 	 * The built-in render id, for prevent has location collide when naming
@@ -278,8 +278,8 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		network.registerPacket(PacketTESAsk.class, Side.CLIENT);
 		network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
-		network.registerPacket(PacketFluidUpdateAll.class, Side.CLIENT);
-		network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
+		network.registerPacket(PacketContainerDataUpdateAll.class, Side.CLIENT);
+		network.registerPacket(PacketContainerDataUpdateSingle.class, Side.CLIENT);
 		network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);

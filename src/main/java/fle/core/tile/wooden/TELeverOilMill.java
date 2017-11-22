@@ -131,12 +131,12 @@ public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<I
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (insertStack(0, this.cache.get(1), false) &&
+		if (instItem(0, this.cache.get(1), false) &&
 		// this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
 				this.tank.insertFluid(this.cache.<FluidStack> get(2), false))
 		{
 			// this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
-			incrStack(1, this.cache.get(1), true);
+			incrItem(1, this.cache.get(1), true);
 			return true;
 		}
 		return false;

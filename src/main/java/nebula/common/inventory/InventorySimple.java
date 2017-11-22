@@ -59,13 +59,13 @@ public class InventorySimple implements IBasicInventory
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		return InventoryHelper.incrStack(this, index, false, resource, process, false);
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		return InventoryHelper.decrStack(this, index, false, count, process);
 	}

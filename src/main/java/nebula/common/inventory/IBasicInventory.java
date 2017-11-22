@@ -1,9 +1,13 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.inventory;
+
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import nebula.base.function.Applicable;
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 
@@ -26,7 +30,8 @@ public interface IBasicInventory
 	/**
 	 * Copy stacks data from array.
 	 * 
-	 * @param stacks
+	 * @param stacks the source array.
+	 * @throws IllegalArgumentException if stacks length is less than inventory slot size.
 	 */
 	void fromArray(ItemStack[] stacks);
 	
@@ -55,12 +60,12 @@ public interface IBasicInventory
 	 * Removes up to a specified number of items from an inventory slot and
 	 * returns them in a new stack.
 	 * 
-	 * @see #decrStack(int, int, boolean)
+	 * @see #decrItem(int, int, boolean)
 	 */
 	@Nullable
 	default ItemStack decrStackSize(int index, int count)
 	{
-		return decrStack(index, count, true);
+		return decrItem(index, count, true);
 	}
 	
 	@Nullable
@@ -92,12 +97,12 @@ public interface IBasicInventory
 	 *            <tt>false</tt> the inventory will only give a simulate result.
 	 * @return return <tt>true</tt> when all can be insert into inventory.
 	 */
-	default boolean insertStack(int index, @Nullable ItemStack resource, boolean process)
+	default boolean instItem(int index, @Nullable ItemStack resource, boolean process)
 	{
 		if (resource == null) return true;
-		if (incrStack(index, resource, false) == resource.stackSize)
+		if (incrItem(index, resource, false) == resource.stackSize)
 		{
-			if (process) incrStack(index, resource, true);
+			if (process) incrItem(index, resource, true);
 			return true;
 		}
 		return false;
@@ -120,10 +125,10 @@ public interface IBasicInventory
 	 *            <tt>false</tt> the inventory will only give a simulate result.
 	 * @return the insert stack size.
 	 */
-	int incrStack(int index, @Nullable ItemStack resource, boolean process);
+	int incrItem(int index, @Nullable ItemStack resource, boolean process);
 	
 	@Nullable
-	ItemStack decrStack(int index, int count, boolean process);
+	ItemStack decrItem(int index, int count, boolean process);
 	
 	/**
 	 * Removes a stack from the given slot and returns it.
@@ -169,12 +174,12 @@ public interface IBasicInventory
 		return true;
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, Applicable<T> appliable)
+	default <T> T insertAllStacks(ItemStack[] stacks, Supplier<T> appliable)
 	{
 		return insertAllStacks(stacks, 0, getSizeInventory(), appliable);
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Applicable<T> appliable)
+	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Supplier<T> appliable)
 	{
 		return InventoryHelper.insertAllStacks(this, from, to, stacks, appliable);
 	}
