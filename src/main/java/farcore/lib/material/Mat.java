@@ -6,9 +6,11 @@ package farcore.lib.material;
 import static farcore.data.V.MATERIAL_SIZE;
 import static net.minecraft.init.Bootstrap.isRegistered;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,9 +49,10 @@ import farcore.lib.tree.Tree;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
 import nebula.base.IPropertyMap.IProperty;
+import nebula.base.IRegister;
 import nebula.base.IntegerMap;
 import nebula.base.Judgable;
-import nebula.base.Register;
+import nebula.base.SortedRegister;
 import nebula.common.LanguageManager;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.A;
@@ -69,7 +72,81 @@ import net.minecraft.nbt.NBTTagString;
  */
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
-	private static final Register<Mat> REGISTER = new Register<>(MATERIAL_SIZE);
+	private static final IRegister<Mat> REGISTER = new SortedRegister<Mat>(MATERIAL_SIZE, m->m.id)
+	{
+		private final Mat[] materials = new Mat[MATERIAL_SIZE];
+		
+		@Override
+		protected void reg(int id, String name, Mat material)
+		{
+			super.reg(id, name, material);
+			this.materials[id] = material;
+		}
+		
+		@Override
+		protected void build()
+		{
+			if (!this.sorted)
+			{
+				((ArrayList<?>) this.resource).trimToSize();
+				Arrays.sort(this.sortedNames = this.resource.toArray(new Delegate[this.resource.size()]), Delegate::compareName);
+				this.sorted = true;
+			}
+		}
+		
+		@Override
+		public String name(int id)
+		{
+			Mat material = this.materials[id];
+			return material != null ? material.name : null;
+		}
+		
+		@Override
+		public Mat get(int id)
+		{
+			return this.materials[id];
+		}
+		
+		@Override
+		public Mat get(int id, Mat def)
+		{
+			Mat material = this.materials[id];
+			return material != null ? material : def;
+		}
+		
+		@Override
+		public boolean contain(int id)
+		{
+			return this.materials[id] != null;
+		}
+		
+		@Override
+		public Iterator<Mat> iterator()
+		{
+			build();
+			return new Iterator<Mat>()
+			{
+				int count = 0;
+				int id = -1;
+				
+				@Override
+				public boolean hasNext()
+				{
+					return this.count < size();
+				}
+				
+				@Override
+				public Mat next()
+				{
+					if (this.count >= size())
+						throw new IndexOutOfBoundsException();
+					while (materials[++this.id] == null);
+					this.count++;
+					return materials[this.id];
+				}
+			};
+		}
+	};
 	
 	private static final Map<Judgable<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap<>();
 	
@@ -117,7 +194,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			System.out.println("The material may be in debug enviorment, skip VOID property registeration.");
 	}
 	
-	public static Register<Mat> materials()
+	public static IRegister<Mat> materials()
 	{
 		return REGISTER;
 	}
@@ -440,14 +517,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		public Builder setSoil(float hardness, float resistance)
 		{
 			PropertyBlockable property = new PropertyBlockable(Mat.this, -1,// It
-																			// seems
-																			// no
-																			// soil
-																			// need
-																			// use
-																			// tool
-																			// to
-																			// harvest.
+					// seems
+					// no
+					// soil
+					// need
+					// use
+					// tool
+					// to
+					// harvest.
 					hardness, resistance);
 			property.block = new BlockSoil(Mat.this.modid, "soil." + Mat.this.name, Materials.DIRT, Mat.this, property);
 			add(SubTags.DIRT);
@@ -457,14 +534,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		public Builder setClay(float hardness, float resistance)
 		{
 			PropertyBlockable property = new PropertyBlockable(Mat.this, -1,// It
-																			// seems
-																			// no
-																			// soil
-																			// need
-																			// use
-																			// tool
-																			// to
-																			// harvest.
+					// seems
+					// no
+					// soil
+					// need
+					// use
+					// tool
+					// to
+					// harvest.
 					hardness, resistance);
 			property.block = new BlockClay(Mat.this.modid, "soil." + Mat.this.name, Materials.CLAY, Mat.this, property);
 			add(SubTags.CLAY);
@@ -547,7 +624,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		LanguageManager.registerLocal("material." + name + ".name", localized);
 		if (register)
 		{
-			Mat.REGISTER.register(id, name, this);
+			REGISTER.register(name, this);//The id allocator is already exists, need't to set in method.
 		}
 	}
 	

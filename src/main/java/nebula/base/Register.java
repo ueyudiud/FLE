@@ -21,9 +21,8 @@ import nebula.common.util.A;
  */
 public class Register<T> implements IRegister<T>
 {
-	private int		point	= 0;
-	private int		size	= 0;
-	private float	factor;
+	private int point	= 0;
+	private int size	= 0;
 	
 	private Object[]	targets;
 	private String[]	names;
@@ -38,14 +37,14 @@ public class Register<T> implements IRegister<T>
 	
 	public Register(int length)
 	{
-		this(length, 0.75F);
-	}
-	
-	public Register(int length, float factor)
-	{
-		this.factor = factor;
 		this.targets = new Object[length];
 		this.names = new String[length];
+	}
+	
+	@Deprecated
+	public Register(int length, float factor)
+	{
+		this(length);
 	}
 	
 	private void extraList(int size)
@@ -61,7 +60,7 @@ public class Register<T> implements IRegister<T>
 		{
 			if (this.point >= this.names.length)
 			{
-				extraList((int) (this.names.length * (1 + this.factor)));
+				extraList(this.names.length + (this.names.length >> 1));
 				continue;
 			}
 			else if (this.names[this.point] == null)
@@ -79,31 +78,9 @@ public class Register<T> implements IRegister<T>
 		if (contain(id)) throw new IllegalArgumentException("The id " + id + " has already registed with " + this.targets[id] + "!");
 		if (id >= this.names.length)
 		{
-			extraList((int) (id * (1 + this.factor) + 1));
+			extraList(id + (this.names.length >> 1));
 		}
 	}
-	
-	// private int[] freePoints(int length)
-	// {
-	// int l = 0;
-	// int[] ids = new int[length];
-	// do
-	// {
-	// if(this.point >= this.names.length)
-	// {
-	// extraList((int) (length + this.names.length * (1 + this.factor)));
-	// continue;
-	// }
-	// else if(this.names[this.point] == null)
-	// {
-	// ids[l] = this.point;
-	// l++;
-	// }
-	// this.point++;
-	// }
-	// while (l < length);
-	// return ids;
-	// }
 	
 	@Override
 	public int register(String name, T arg)
@@ -156,11 +133,12 @@ public class Register<T> implements IRegister<T>
 	public int id(String name)
 	{
 		if (name == null) return -1;
+		int hash = name.hashCode();
 		String name1 = null;
 		for (int i = 0; i < this.names.length; i++)
 		{
 			name1 = this.names[i];
-			if (name1 != null && name1.equals(name)) return i;
+			if (name1 != null && name1.hashCode() == hash && name1.equals(name)) return i;
 		}
 		return -1;
 	}

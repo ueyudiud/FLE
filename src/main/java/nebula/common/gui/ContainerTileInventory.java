@@ -88,6 +88,26 @@ public abstract class ContainerTileInventory<T extends TileEntity & IInventory> 
 			}
 			super.detectAndSendChanges();
 		}
+		
+		@Override
+		@SideOnly(Side.CLIENT)
+		@SuppressWarnings("hiding")
+		public <T> void updateValue(Class<T> type, int id, T value)
+		{
+			if (type == ItemStack.class)
+			{
+				ContainerTileInventory.this.inventorySlots.get(id).putStack((ItemStack) value);
+			}
+			else if (type == FluidStack.class)
+			{
+				ContainerTileInventory.this.fluidSlots.get(id).putStack((FluidStack) value);
+			}
+			else if (type == Integer.class)
+			{
+				ContainerTileInventory.this.tile.setField(id, (Integer) value);
+			}
+			else throw new IllegalArgumentException("No valid access for " + type);
+		}
 	}
 	
 	/**

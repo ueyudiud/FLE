@@ -22,7 +22,9 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	
 	static
 	{
-		REGISTRY = PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"), 0, 32768, true, null, null, null);
+		REGISTRY =
+				PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"),
+						0, 32768, true, null, null, null);
 	}
 	
 	public final RegistryDelegate<SolidAbstract>	delegate		= PersistentRegistryManager.makeDelegate(this, SolidAbstract.class);

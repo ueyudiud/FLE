@@ -48,7 +48,7 @@ public interface IRegister<T> extends Iterable<T>
 	 * @return The id of element, <code>-1</code> means the element is not
 	 *         present in register.
 	 */
-	int id(T arg);
+	int id(@Nonnull T arg);
 	
 	/**
 	 * Get element id from name.
@@ -57,7 +57,7 @@ public interface IRegister<T> extends Iterable<T>
 	 * @return The id of element with select name, <code>-1</code> means the
 	 *         element is not present in register.
 	 */
-	int id(String name);
+	int id(@Nonnull String name);
 	
 	/**
 	 * Get name of element.
@@ -65,7 +65,7 @@ public interface IRegister<T> extends Iterable<T>
 	 * @param arg the element.
 	 * @return the name.
 	 */
-	String name(T arg);
+	String name(@Nonnull T arg);
 	
 	/**
 	 * Get name of element from id.
@@ -86,7 +86,7 @@ public interface IRegister<T> extends Iterable<T>
 	 *         with name found.
 	 * @see #get(String)
 	 */
-	default T get(String name, @Nullable T def)
+	default T get(@Nonnull String name, @Nullable T def)
 	{
 		T target;
 		return (target = get(name)) != null ? target : def;
@@ -100,7 +100,7 @@ public interface IRegister<T> extends Iterable<T>
 	 *         with name found.
 	 */
 	@Nullable
-	T get(String name);
+	T get(@Nonnull String name);
 	
 	/**
 	 * Get element with select id, if it is not present, give bake default

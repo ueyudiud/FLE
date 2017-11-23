@@ -22,6 +22,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -84,6 +86,17 @@ public class ContainerTIF<T extends TileEntity & IInventory> extends ContainerTi
 				}
 			}
 			super.detectAndSendChanges();
+		}
+		
+		@Override
+		@SideOnly(Side.CLIENT)
+		public <U> void updateValue(Class<U> type, int id, U value)
+		{
+			if (type == SolidStack.class)
+			{
+				ContainerTIF.this.solidSlots.get(id).putStack((SolidStack) value);
+			}
+			else super.updateValue(type, id, value);
 		}
 	}
 	

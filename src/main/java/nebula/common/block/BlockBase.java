@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.block;
 
 import java.util.ArrayList;
@@ -299,14 +298,14 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
 		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) // do not
-																	 // drop
-																	 // items
-																	 // while
-																	 // restoring
-																	 // blockstates,
-																	 // prevents
-																	 // item
-																	 // dupe
+			// drop
+			// items
+			// while
+			// restoring
+			// blockstates,
+			// prevents
+			// item
+			// dupe
 		{
 			List<ItemStack> items = getDrops(worldIn, pos, state, this.thread1.get(), fortune, false);
 			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, this.harvesters.get());
