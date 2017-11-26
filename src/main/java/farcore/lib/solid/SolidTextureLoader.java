@@ -27,7 +27,7 @@ public class SolidTextureLoader implements IIconLoader
 	@Override
 	public void registerIcon(IIconRegister register)
 	{
-		for (SolidAbstract solid : SolidAbstract.REGISTRY)
+		for (Solid solid : Solid.REGISTRY)
 		{
 			solid.registerIcon(register);
 		}

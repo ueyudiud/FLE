@@ -3,68 +3,96 @@
  */
 package farcore.lib.solid;
 
+import nebula.base.register.IRegisterDelegate;
+import nebula.base.register.IRegisterElement;
+import nebula.base.register.IdAllocatableRegister;
 import nebula.client.render.IIconRegister;
 import nebula.common.LanguageManager;
-import nebula.common.util.Game;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Solid extends SolidAbstract
+public abstract class Solid implements IRegisterElement<Solid>
 {
-	protected ResourceLocation		location;
-	@SideOnly(Side.CLIENT)
-	protected TextureAtlasSprite	icon;
+	public static final IdAllocatableRegister<Solid> REGISTRY = new IdAllocatableRegister<>(true);
 	
-	protected String unlocalized;
+	public final IRegisterDelegate<Solid>	delegate;
+	private ResourceLocation				name;
+	private String							unlocalizedName;
 	
-	public Solid(String name, String localizedName)
+	public Solid(String name)
 	{
-		this(Game.getActiveModID(), name, localizedName);
-	}
-	
-	public Solid(String modid, String name, String localizedName)
-	{
-		super(modid + ":" + name);
-		this.location = new ResourceLocation(modid, "solids/" + name);
-		this.unlocalized = name;
-		LanguageManager.registerLocal(getUnlocalizedname() + ".name", localizedName);
+		setRegistryName(name);
+		this.delegate = REGISTRY.register(this);
 	}
 	
 	@Override
+	public final Class<Solid> getTargetClass()
+	{
+		return Solid.class;
+	}
+	
+	@Override
+	public final void setRegistryName(String name)
+	{
+		if (this.name != null) throw new IllegalStateException("The name of " + this.name + " already exist!");
+		this.name = new ResourceLocation(name);
+		this.unlocalizedName = this.name.getResourcePath();
+	}
+	
+	@Override
+	public String getRegisteredName()
+	{
+		return this.name.toString();
+	}
+	
+	public void setUnlocalizedName(String unlocalizedName)
+	{
+		this.unlocalizedName = unlocalizedName;
+	}
+	
 	public String getUnlocalizedname()
 	{
-		return "solid." + this.unlocalized;
+		return "MISSING_UNLOCALIZED_NAME_" + this.unlocalizedName;
 	}
 	
-	@Override
+	public String getLocalizedname()
+	{
+		return LanguageManager.translateToLocal(getUnlocalizedname() + ".name");
+	}
+	
+	/**
+	 * Returned aRGB color of solid stack.
+	 * 
+	 * @param stack the stack to get color.
+	 * @return the aRGB color.
+	 */
+	public int getColor(SolidStack stack)
+	{
+		return 0xFFFFFFFF;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public void registerIcon(IIconRegister register)
 	{
-		this.icon = register.registerIcon(getTextureName());
 	}
 	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTextureName()
 	{
-		if (this.location == null)
-		{
-			this.location = super.getTextureName();
-		}
-		return this.location;
+		return new ResourceLocation(this.name.getResourceDomain(), "solids/" + this.name.getResourcePath());
 	}
 	
-	@Override
 	@SideOnly(Side.CLIENT)
 	public TextureAtlasSprite getIcon()
 	{
-		return this.icon;
+		return null;
 	}
 	
-	public void setIcon(ResourceLocation location)
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getIcon(SolidStack stack)
 	{
-		this.location = location;
+		return getIcon();
 	}
 }

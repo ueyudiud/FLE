@@ -6,6 +6,7 @@ package farcore.lib.solid;
 import org.lwjgl.opengl.GL11;
 
 import farcore.lib.solid.container.SolidTank;
+import nebula.Log;
 import nebula.client.gui.GuiContainerBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -76,6 +77,7 @@ public class SolidSlot
 	 */
 	public void putStack(SolidStack stack)
 	{
+		Log.info(stack.toString());
 		this.tank.setStack(stack);
 	}
 	

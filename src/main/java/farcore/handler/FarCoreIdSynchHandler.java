@@ -5,7 +5,7 @@ package farcore.handler;
 
 import java.io.IOException;
 
-import farcore.lib.solid.SolidAbstract;
+import farcore.lib.solid.Solid;
 import nebula.Log;
 import nebula.Nebula;
 import nebula.common.network.IPacket;
@@ -49,14 +49,14 @@ public class FarCoreIdSynchHandler
 		@Override
 		protected void encode(PacketBufferExt output) throws IOException
 		{
-			SolidAbstract.REGISTRY.serialize(output);
+			Solid.REGISTRY.serialize(output);
 		}
 		
 		@Override
 		protected void decode(PacketBufferExt input) throws IOException
 		{
 			Log.reset();
-			SolidAbstract.REGISTRY.deserialize(input, Log::cache);
+			Solid.REGISTRY.deserialize(input, Log::cache);
 			Log.logCachedInformations(Object::toString, "Some missing solid name found: ");
 		}
 	}

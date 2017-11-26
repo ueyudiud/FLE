@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import farcore.lib.solid.SolidAbstract;
+import farcore.lib.solid.Solid;
 import farcore.lib.solid.SolidStack;
 import nebula.common.util.L;
 import net.minecraft.item.Item;
@@ -32,15 +32,15 @@ public final class SolidContainerManager
 	{
 		int hashcode;
 		Item item;
-		SolidAbstract solid;
+		Solid solid;
 		int meta;
 		
-		public SolidContainerKey(Item item, SolidAbstract solid, int meta)
+		public SolidContainerKey(Item item, Solid solid, int meta)
 		{
 			this.item = item;
 			this.solid = solid;
 			this.meta = meta;
-			this.hashcode = (solid.hashCode() * 31 + item.hashCode()) * 31 + meta;
+			this.hashcode = Objects.hash(solid, item, meta);
 		}
 		
 		@Override
@@ -65,9 +65,9 @@ public final class SolidContainerManager
 	static class SolidContainerKeySearching
 	{
 		ItemStack stack;
-		SolidAbstract solid;
+		Solid solid;
 		
-		SolidContainerKeySearching(ItemStack stack, SolidAbstract solid)
+		SolidContainerKeySearching(ItemStack stack, Solid solid)
 		{
 			this.stack = stack;
 			this.solid = solid;
@@ -76,7 +76,7 @@ public final class SolidContainerManager
 		@Override
 		public int hashCode()
 		{
-			return (Objects.hashCode(this.solid) * 31 + this.stack.getItem().hashCode()) * 31 + this.stack.getItemDamage();
+			return Objects.hash(this.solid, this.stack.getItem(), this.stack.getItemDamage());
 		}
 		
 		@Override
@@ -111,24 +111,24 @@ public final class SolidContainerManager
 	public static void addContainerItem(@Nonnull Item item, int emptyMeta, int filledMeta, @Nonnull SolidStack contain)
 	{
 		Objects.requireNonNull(item);
-		SolidAbstract solid = contain.getSolid();
+		Solid solid = contain.getSolid();
 		SolidContainerData data = new SolidContainerData(new ItemStack(item, 1, emptyMeta), contain.copy(), new ItemStack(item, 1, filledMeta));
-		MAP1.put(new SolidContainerKey(item, solid, emptyMeta), data);
-		MAP1.put(new SolidContainerKey(item, null, filledMeta), data);
-		MAP2.put(new SolidContainerKey(item, null, emptyMeta), data);
+		MAP2.put(new SolidContainerKey(item, solid, emptyMeta), data);
+		MAP2.put(new SolidContainerKey(item, null, filledMeta), data);
+		MAP1.put(new SolidContainerKey(item, null, emptyMeta), data);
 	}
 	
 	public static void addContainerItem(@Nullable ItemStack empty,
 			@Nonnull SolidStack contain, @Nonnull ItemStack filled)
 	{
-		SolidAbstract solid = contain.getSolid();
+		Solid solid = contain.getSolid();
 		SolidContainerData data = new SolidContainerData(ItemStack.copyItemStack(empty), contain.copy(), filled.copy());
 		if (empty != null)
 		{
-			MAP1.put(new SolidContainerKey(empty.getItem(), solid, empty.getItemDamage()), data);
-			MAP2.put(new SolidContainerKey(empty.getItem(), null, empty.getItemDamage()), data);
+			MAP2.put(new SolidContainerKey(empty.getItem(), solid, empty.getItemDamage()), data);
+			MAP1.put(new SolidContainerKey(empty.getItem(), null, empty.getItemDamage()), data);
 		}
-		MAP1.put(new SolidContainerKey(filled.getItem(), null, filled.getItemDamage()), data);
+		MAP2.put(new SolidContainerKey(filled.getItem(), null, filled.getItemDamage()), data);
 	}
 	
 	public static boolean isEmptyContainer(ItemStack empty)
@@ -144,7 +144,7 @@ public final class SolidContainerManager
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")
-	public static SolidContainerData getFilledContainer(ItemStack empty, SolidAbstract solid)
+	public static SolidContainerData getFilledContainer(ItemStack empty, Solid solid)
 	{
 		return MAP2.get(new SolidContainerKeySearching(empty, solid));
 	}

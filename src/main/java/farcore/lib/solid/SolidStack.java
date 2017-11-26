@@ -51,7 +51,7 @@ public class SolidStack
 		{
 			return buf.readBoolean() ?
 					new SolidStack(
-							SolidAbstract.REGISTRY.getDelegete(buf.readShort()),
+							Solid.REGISTRY.getDelegete(buf.readShort()),
 							buf.readInt(), buf.readCompoundTag()) :
 								null;
 		}
@@ -104,7 +104,7 @@ public class SolidStack
 	
 	public int									amount;
 	public NBTTagCompound						tag;
-	private IRegisterDelegate<SolidAbstract>	delegate;
+	private IRegisterDelegate<Solid>	delegate;
 	
 	public static SolidStack sizeOf(SolidStack stack, int amount)
 	{
@@ -130,20 +130,20 @@ public class SolidStack
 	{
 	}
 	
-	protected SolidStack(IRegisterDelegate<SolidAbstract> delegate, int amount, NBTTagCompound nbt)
+	protected SolidStack(IRegisterDelegate<Solid> delegate, int amount, NBTTagCompound nbt)
 	{
 		this.delegate = delegate;
 		this.amount = amount;
 		this.tag = nbt != null ? nbt.copy() : null;
 	}
 	
-	public SolidStack(SolidAbstract solid, int amount)
+	public SolidStack(Solid solid, int amount)
 	{
 		this.delegate = solid.delegate;
 		this.amount = amount;
 	}
 	
-	public SolidStack(SolidAbstract solid, int amount, NBTTagCompound nbt)
+	public SolidStack(Solid solid, int amount, NBTTagCompound nbt)
 	{
 		this(solid.delegate, amount, nbt);
 	}
@@ -153,7 +153,7 @@ public class SolidStack
 		this(stack.delegate, stack.amount, stack.tag);
 	}
 	
-	public final SolidAbstract getSolid()
+	public final Solid getSolid()
 	{
 		return this.delegate.get();
 	}
@@ -168,7 +168,7 @@ public class SolidStack
 	{
 		if (nbt.hasKey("SolidName"))
 		{
-			this.delegate = SolidAbstract.REGISTRY.getDelegate(nbt.getString("SolidName"));
+			this.delegate = Solid.REGISTRY.getDelegate(nbt.getString("SolidName"));
 			this.amount = nbt.getInteger("Amount");
 			if (nbt.hasKey("Tag"))
 			{

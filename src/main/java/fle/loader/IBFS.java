@@ -5,7 +5,7 @@ package fle.loader;
 
 import farcore.data.CT;
 import farcore.lib.item.instance.ItemStoneChip;
-import farcore.lib.solid.Solid;
+import farcore.lib.solid.SolidBase;
 import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGasExplosive;
@@ -18,6 +18,7 @@ import fle.core.blocks.BlockWoodenSimpleWorkbench;
 import fle.core.blocks.container.BlockChest;
 import fle.core.blocks.container.BlockRockyTank;
 import fle.core.items.ItemMiscResources;
+import fle.core.items.ItemSack;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemSubCropRelated;
 import fle.core.items.ItemToolFar;
@@ -40,6 +41,7 @@ public class IBFS
 		iTool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.TOOL);
 		iFluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.TOOL);
 		iResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.RESOURCE_ITEM);
+		iSack = (ItemSack) new ItemSack().setCreativeTab(CT.TOOL);
 		bDitch = new BlockDitch();
 		bResources = new BlockResourceMisc().setCreativeTab(CT.MACHINE);
 		bWoodenWorkbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
@@ -63,14 +65,14 @@ public class IBFS
 		
 		fNaturalGas.setBlock(new BlockGasExplosive(fNaturalGas, 360, 200, 9.0F));
 		
-		sMillet = new Solid("millet", "Millet");
-		sWholemealMillet = new Solid("millet_wholemeal", "Wholemeal Millet");
-		sWheat = new Solid("wheat", "Wheat");
-		sWholemealWheat = new Solid("wheat_wholemeal", "Wholemeal Wheat");
-		sBlackPepper = new Solid("black_pepper", "Black Pepper");
-		sTurmericRhizome = new Solid("turmeric_rhizome", "Thurmeric Rhizome");
-		sPricklyAsh = new Solid("prickly_ash", "Prickly Ash");
-		sCinnamon = new Solid("cinnamon", "Cinnamon");
+		sMillet = new SolidBase("millet", "Millet");
+		sWholemealMillet = new SolidBase("millet_wholemeal", "Wholemeal Millet");
+		sWheat = new SolidBase("wheat", "Wheat");
+		sWholemealWheat = new SolidBase("wheat_wholemeal", "Wholemeal Wheat");
+		sBlackPepper = new SolidBase("black_pepper", "Black Pepper");
+		sTurmericRhizome = new SolidBase("turmeric_rhizome", "Thurmeric Rhizome");
+		sPricklyAsh = new SolidBase("prickly_ash", "Prickly Ash");
+		sCinnamon = new SolidBase("cinnamon", "Cinnamon");
 	}
 	
 	public static void setBlocksItemsProperties()
@@ -82,6 +84,7 @@ public class IBFS
 	public static ItemSimpleFluidContainer	iFluidContainer;
 	public static ItemMiscResources			iResources;
 	public static ItemSubCropRelated		iCropRelated;
+	public static ItemSack					iSack;
 	public static Block						bDitch;
 	public static Block						bWoodenWorkbench;
 	public static Block						bWoodenMachine;
@@ -98,12 +101,12 @@ public class IBFS
 	public static FluidBase					fLimeMortar;
 	public static FluidBase					fAnimalOil;
 	public static FluidBase					fNaturalGas;
-	public static Solid						sMillet;
-	public static Solid						sWholemealMillet;
-	public static Solid						sWheat;
-	public static Solid						sWholemealWheat;
-	public static Solid						sBlackPepper;
-	public static Solid						sTurmericRhizome;
-	public static Solid						sPricklyAsh;
-	public static Solid						sCinnamon;
+	public static SolidBase						sMillet;
+	public static SolidBase						sWholemealMillet;
+	public static SolidBase						sWheat;
+	public static SolidBase						sWholemealWheat;
+	public static SolidBase						sBlackPepper;
+	public static SolidBase						sTurmericRhizome;
+	public static SolidBase						sPricklyAsh;
+	public static SolidBase						sCinnamon;
 }

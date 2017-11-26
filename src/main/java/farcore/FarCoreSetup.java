@@ -9,7 +9,7 @@ import farcore.data.Config;
 import farcore.lib.command.CommandDate;
 import farcore.lib.command.CommandSkill;
 import farcore.lib.oredict.OreDictExt;
-import farcore.lib.solid.SolidAbstract;
+import farcore.lib.solid.Solid;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import nebula.Log;
@@ -105,7 +105,7 @@ public class FarCoreSetup
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
-		SolidAbstract.REGISTRY.allocIdAuto();
+		Solid.REGISTRY.allocIdAuto();
 		event.registerServerCommand(new CommandDate());
 		event.registerServerCommand(new CommandSkill());
 	}
