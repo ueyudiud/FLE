@@ -7,7 +7,9 @@ import static nebula.common.LanguageManager.registerLocal;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerModEntity;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +35,7 @@ import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.ItemBase;
 import nebula.common.item.ItemFluidDisplay;
+import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.network.Network;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.network.packet.PacketChunkNetData;
@@ -50,6 +53,7 @@ import nebula.common.network.packet.PacketTESAsk;
 import nebula.common.network.packet.PacketTESync;
 import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.Game;
+import nebula.common.util.L;
 import nebula.common.util.Sides;
 import nebula.common.world.IBlockDataProvider;
 import net.minecraft.creativetab.CreativeTabs;
@@ -91,7 +95,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String	MODID	= "nebula";
 	public static final String	NAME	= "Nebula";
-	public static final String	VERSION	= "2.2.1";
+	public static final String	VERSION	= "2.3.1";
 	
 	/**
 	 * The built-in render id, for prevent has location collide when naming
@@ -127,7 +131,24 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	 */
 	public static IBlockDataProvider blockDataProvider = new IBlockDataProvider.Template();
 	
+	/**
+	 * The fluid item.
+	 * @see ItemFluidDisplay
+	 */
 	public static ItemFluidDisplay fluid_displayment;
+	
+	/**
+	 * The world data providers, use to load or save world data from file.
+	 * <p>
+	 * The provider SHOULD access <tt>null</tt> as input for method <tt>readFromNBT</tt>
+	 * for if the data is missing.
+	 */
+	public static final Map<String, INBTReaderAndWritter<Void, ?>> worldDataProviders = new HashMap<>(4);
+	
+	public static void addWorldDataProvider(String name, INBTReaderAndWritter<Void, ?> provider)
+	{
+		worldDataProviders.put(name, provider);
+	}
 	
 	/**
 	 * The mod sided proxy.
@@ -313,12 +334,19 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public NBTTagCompound getDataForWriting(SaveHandler handler, WorldInfo info)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
+		for (Entry<String, INBTReaderAndWritter<Void, ?>> entry : worldDataProviders.entrySet())
+		{
+			nbt.setTag(entry.getKey(), entry.getValue().writeToNBT(null));
+		}
 		return nbt;
 	}
 	
 	@Override
 	public void readData(SaveHandler handler, WorldInfo info, Map<String, NBTBase> propertyMap, NBTTagCompound tag)
 	{
-		
+		for (Entry<String, INBTReaderAndWritter<Void, ?>> entry : worldDataProviders.entrySet())
+		{
+			entry.getValue().readFromNBT(L.castAny(tag.getTag(entry.getKey())));
+		}
 	}
 }

@@ -36,6 +36,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreBlockHandler;
 import farcore.handler.FarCoreCapabilitiesHandler;
 import farcore.handler.FarCoreEnergyHandler;
+import farcore.handler.FarCoreIdSynchHandler;
 import farcore.instances.TemperatureHandler;
 import farcore.lib.block.instance.BlockCarvedRock;
 import farcore.lib.block.instance.BlockCrop;
@@ -198,6 +199,7 @@ public class CommonLoader
 		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
 		bar.step("Network Registring");
 		ContainerDataHandlerManager.registerSerializer(SolidStack.BS);
+		FarCoreIdSynchHandler.initialize();
 		pop(bar);
 	}
 	

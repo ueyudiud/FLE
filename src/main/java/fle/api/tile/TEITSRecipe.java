@@ -33,6 +33,7 @@ public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 		{
 			getRecipeMap().writeToNBT(this.cache, compound, "cache");
 			compound.setInteger("recipetick", this.recipeTick);
+			compound.setInteger("recipemaxtick", this.recipeMaxTick);
 		}
 		return compound;
 	}
@@ -44,6 +45,7 @@ public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 		if ((this.cache = getRecipeMap().readFromNBT(compound, "cache")) != null)
 		{
 			this.recipeTick = compound.getInteger("recipetick");
+			this.recipeMaxTick = compound.getInteger("recipemaxtick");
 		}
 	}
 	
@@ -81,6 +83,7 @@ public abstract class TEITSRecipe<H, C> extends TEInventoryTankSingleAbstract
 			{
 				if (onRecipeOutput())
 				{
+					markDirty();
 					onRecipeRefresh();
 					disable(WaitForOutput);
 				}

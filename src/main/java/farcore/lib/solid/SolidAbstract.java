@@ -3,71 +3,61 @@
  */
 package farcore.lib.solid;
 
+import nebula.base.register.IRegisterDelegate;
+import nebula.base.register.IRegisterElement;
+import nebula.base.register.IdAllocatableRegister;
 import nebula.client.render.IIconRegister;
 import nebula.common.LanguageManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
-import net.minecraftforge.fml.common.registry.RegistryDelegate;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract>
+public abstract class SolidAbstract implements IRegisterElement<SolidAbstract>
 {
 	public static final ResourceLocation SOILDS = new ResourceLocation("farcore:soild");
 	
-	public static final FMLControlledNamespacedRegistry<SolidAbstract> REGISTRY;
+	public static final IdAllocatableRegister<SolidAbstract> REGISTRY = new IdAllocatableRegister<>(true);
 	
-	static
+	public final IRegisterDelegate<SolidAbstract> delegate;
+	private ResourceLocation name;
+	private String unlocalizedName;
+	
+	public SolidAbstract(String name)
 	{
-		REGISTRY =
-				PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"),
-						0, 32768, true, null, null, null);
-	}
-	
-	public final RegistryDelegate<SolidAbstract>	delegate		= PersistentRegistryManager.makeDelegate(this, SolidAbstract.class);
-	private ResourceLocation						registryName	= null;
-	
-	public SolidAbstract()
-	{
+		setRegistryName(name);
+		this.delegate = REGISTRY.register(this);
 	}
 	
 	@Override
-	public final Class<SolidAbstract> getRegistryType()
+	public final Class<SolidAbstract> getTargetClass()
 	{
 		return SolidAbstract.class;
 	}
 	
-	public final SolidAbstract setRegistryName(String name)
+	@Override
+	public final void setRegistryName(String name)
 	{
-		return setRegistryName(new ResourceLocation(name));
-	}
-	
-	public final SolidAbstract setRegistryName(String modid, String name)
-	{
-		return setRegistryName(new ResourceLocation(modid, name));
+		if (this.name != null)
+			throw new IllegalStateException("The name of " + this.name + " already exist!");
+		this.name = new ResourceLocation(name);
+		this.unlocalizedName = this.name.getResourcePath();
 	}
 	
 	@Override
-	public final SolidAbstract setRegistryName(ResourceLocation name)
+	public String getRegisteredName()
 	{
-		if (getRegistryName() != null) throw new IllegalStateException("Attempted to set registry name with existing registry name! New: " + name + " Old: " + getRegistryName());
-		
-		this.registryName = name;
-		return this;
+		return this.name.toString();
 	}
 	
-	@Override
-	public final ResourceLocation getRegistryName()
+	public void setUnlocalizedName(String unlocalizedName)
 	{
-		return this.registryName;
+		this.unlocalizedName = unlocalizedName;
 	}
 	
 	public String getUnlocalizedname()
 	{
-		return "MISSING_UNLOCALIZED_NAME_" + this.registryName;
+		return "MISSING_UNLOCALIZED_NAME_" + this.unlocalizedName;
 	}
 	
 	public String getLocalizedname()
@@ -94,7 +84,7 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTextureName()
 	{
-		return new ResourceLocation(getRegistryName().getResourceDomain(), "solids/" + getRegistryName().getResourcePath());
+		return new ResourceLocation(this.name.getResourceDomain(), "solids/" + this.name.getResourcePath());
 	}
 	
 	@SideOnly(Side.CLIENT)

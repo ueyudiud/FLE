@@ -9,6 +9,7 @@ import farcore.data.Config;
 import farcore.lib.command.CommandDate;
 import farcore.lib.command.CommandSkill;
 import farcore.lib.oredict.OreDictExt;
+import farcore.lib.solid.SolidAbstract;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import nebula.Log;
@@ -49,7 +50,7 @@ public class FarCoreSetup
 	 * continent. Please use FLE version to compact your Far Core modification
 	 * is needed update.
 	 */
-	public static final String VERSION = "1.1e";
+	public static final String VERSION = "1.2a";
 	
 	/** The sided proxy of far core. */
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
@@ -104,6 +105,7 @@ public class FarCoreSetup
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
+		SolidAbstract.REGISTRY.allocIdAuto();
 		event.registerServerCommand(new CommandDate());
 		event.registerServerCommand(new CommandSkill());
 	}

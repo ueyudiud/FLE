@@ -26,7 +26,7 @@ public class Solid extends SolidAbstract
 	
 	public Solid(String modid, String name, String localizedName)
 	{
-		setRegistryName(modid, name);
+		super(modid + ":" + name);
 		this.location = new ResourceLocation(modid, "solids/" + name);
 		this.unlocalized = name;
 		LanguageManager.registerLocal(getUnlocalizedname() + ".name", localizedName);

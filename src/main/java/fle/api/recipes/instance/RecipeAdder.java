@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes.instance;
 
 import static farcore.lib.solid.SolidStack.COPY_SOLIDSTACK;
@@ -107,7 +106,7 @@ public final class RecipeAdder
 	public static void addLeverOilMillRecipe(AbstractStack input, int duration, @Nullable ItemStack output1, int[] outputChance, @Nullable FluidStack output2, int minOutput, int maxOutput)
 	{
 		LEVER_OIL_MILL
-				.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput)).setData(input, duration, copyItemStack(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
+		.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput)).setData(input, duration, copyItemStack(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
 	}
 	
 	public static void addDirtMixtureInputRecipe(AbstractStack input, Object...objects)

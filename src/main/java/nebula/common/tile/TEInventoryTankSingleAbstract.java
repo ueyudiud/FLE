@@ -103,6 +103,16 @@ public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic imp
 	}
 	
 	@Override
+	public void readFromDescription1(NBTTagCompound nbt)
+	{
+		super.readFromDescription1(nbt);
+		if (nbt.hasKey("t"))
+		{
+			tank().readFromNBT1(nbt, "t");
+		}
+	}
+	
+	@Override
 	public boolean canInsertFluid(Direction from, FluidStack stack)
 	{
 		return tank().canInsertFluid(from, stack);

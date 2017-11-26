@@ -183,14 +183,15 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 			}
 			else
 			{
-				ContainerBase.this.listeners.add(listener);
 				if (listener instanceof EntityPlayerMP)
 				{
 					detectAndSendChanges();
+					ContainerBase.this.listeners.add(listener);
 					Nebula.network.sendToPlayer(getAllDataPacket(), (EntityPlayerMP) listener);
 				}
 				else
 				{
+					ContainerBase.this.listeners.add(listener);
 					listener.updateCraftingInventory(ContainerBase.this, getInventory());
 					this.detectAndSendChanges();
 				}

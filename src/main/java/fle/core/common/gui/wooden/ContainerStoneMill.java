@@ -26,7 +26,7 @@ public class ContainerStoneMill extends ContainerTIF<TEStoneMill>
 		addSlotToContainer(new SlotBase(tile, 1, 55, 52));
 		addSlotToContainer(new SlotOutput(tile, 2, 91, 52));
 		addSlotToContainer(new FluidSlotN(tile.tank2, 117, 48, 8, 20).setRenderHorizontal());
-		addSlotToContainer(new SolidSlot(tile.tank1, 73, 52, 16, 16).setRenderHorizontal());
+		addSlotToContainer(new SolidSlot(tile.tank1, 73, 52, 16, 16));
 		TL
 		input = new TL(id)
 		{

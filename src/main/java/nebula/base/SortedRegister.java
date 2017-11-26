@@ -211,7 +211,7 @@ public class SortedRegister<T> extends AbstractRegister<T>
 			else if (cmp > 0)
 				high = mid - 1;
 			else
-				return this.sortedIDs[mid];
+				return this.sortedNames[mid];
 		}
 		return null;
 	}

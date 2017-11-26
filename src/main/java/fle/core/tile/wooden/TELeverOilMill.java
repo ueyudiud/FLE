@@ -59,6 +59,7 @@ public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<I
 	public TELeverOilMill()
 	{
 		super(2);
+		this.syncTankState = false;
 	}
 	
 	@Override
@@ -132,7 +133,7 @@ public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<I
 	protected boolean onRecipeOutput()
 	{
 		if (instItem(0, this.cache.get(1), false) &&
-		// this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
+				// this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
 				this.tank.insertFluid(this.cache.<FluidStack> get(2), false))
 		{
 			// this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
