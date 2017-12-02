@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import farcore.data.Capabilities;
 import farcore.data.Keys;
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import fle.api.tile.TEITSRecipe;
@@ -283,7 +283,7 @@ public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<I
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ? Capabilities.CAPABILITY_FLUID.cast(new IFluidHandler.FluidHandlerWrapper(this, facing))
+		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ? Capabilities.CAPABILITY_FLUID.cast(new IFluidHandlerHelper.FluidHandlerWrapper(this, facing))
 				: capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(InventoryWrapFactory.wrap(getName(), this)) : super.getCapability(capability, facing);
 	}
 }

@@ -14,8 +14,6 @@ import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
 
 /**
  * Solid stack. Like fluid stack, this type provide stack of solid.
@@ -30,51 +28,28 @@ public class SolidStack
 	/**
 	 * Solid stack serializer.
 	 */
-	public static final DataSerializer<SolidStack> SERIALIZER = new DataSerializer<SolidStack>()
-	{
-		@Override
-		public void write(PacketBuffer buf, SolidStack value)
-		{
-			if (value == null)
-				buf.writeBoolean(false);
-			else
-			{
-				buf.writeBoolean(true);
-				buf.writeShort(value.delegate.id());
-				buf.writeInt(value.amount);
-				buf.writeCompoundTag(value.tag);
-			}
-		}
-		
-		@Override
-		public SolidStack read(PacketBuffer buf) throws IOException
-		{
-			return buf.readBoolean() ?
-					new SolidStack(
-							Solid.REGISTRY.getDelegete(buf.readShort()),
-							buf.readInt(), buf.readCompoundTag()) :
-								null;
-		}
-		
-		@Override
-		public DataParameter<SolidStack> createKey(int id)
-		{
-			return new DataParameter<>(id, this);
-		}
-	};
-	
 	public static final IBufferSerializer<PacketBuffer, SolidStack> BS = new IBufferSerializer<PacketBuffer, SolidStack>()
 	{
 		@Override
 		public void write(PacketBuffer buffer, SolidStack value)
 		{
-			SERIALIZER.write(buffer, value);
+			if (value == null)
+				buffer.writeBoolean(false);
+			else
+			{
+				buffer.writeBoolean(true);
+				buffer.writeShort(value.delegate.id());
+				buffer.writeInt(value.amount);
+				buffer.writeCompoundTag(value.tag);
+			}
 		}
 		
 		@Override
 		public SolidStack read(PacketBuffer buffer) throws IOException
 		{
-			return SERIALIZER.read(buffer);
+			return buffer.readBoolean() ?
+					new SolidStack(Solid.REGISTRY.getDelegete(buffer.readShort()), buffer.readInt(), buffer.readCompoundTag()) :
+						null;
 		}
 		
 		@Override
@@ -102,8 +77,8 @@ public class SolidStack
 		}
 	};
 	
-	public int									amount;
-	public NBTTagCompound						tag;
+	public int							amount;
+	public NBTTagCompound				tag;
 	private IRegisterDelegate<Solid>	delegate;
 	
 	public static SolidStack sizeOf(SolidStack stack, int amount)

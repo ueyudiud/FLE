@@ -8,7 +8,7 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.data.EnumFluid;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import fle.api.tile.ILogProductionCollector;
 import fle.api.util.DrinkableFluidHandler;
 import fle.api.util.DrinkableFluidHandler.DrinkableFluidEntry;
@@ -40,7 +40,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public class TEWoodenBowl extends TESingleTank implements ITP_Drops, IFluidHandler, IFluidHandlerIO, ITB_BlockPlacedBy, ILogProductionCollector, ITP_BoundingBox, ITB_BlockActived
+public class TEWoodenBowl extends TESingleTank implements ITP_Drops, IFluidHandlerHelper, IFluidHandlerIO, ITB_BlockPlacedBy, ILogProductionCollector, ITP_BoundingBox, ITB_BlockActived
 {
 	private static final AxisAlignedBB AABB_BOWL = new AxisAlignedBB(0.25F, 0F, 0.25F, 0.75F, 0.25F, 0.75F);
 	

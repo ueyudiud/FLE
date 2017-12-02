@@ -11,7 +11,7 @@ import farcore.data.Capabilities;
 import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
 import nebula.common.NebulaSynchronizationHandler;
@@ -44,7 +44,7 @@ import net.minecraftforge.fluids.IFluidTank;
 /**
  * @author ueyudiud
  */
-public class TESmallRockyTank extends TESynchronization implements IFluidHandler, ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
+public class TESmallRockyTank extends TESynchronization implements IFluidHandlerHelper, ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
 {
 	private Mat			material	= M.stone;
 	private FluidTankN	tank		= new FluidTankN(4000).enableTemperature();
@@ -211,7 +211,7 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		return capability == Capabilities.CAPABILITY_FLUID ? L.castAny(new IFluidHandler.FluidHandlerWrapper(this, Direction.of(facing))) : null;
+		return capability == Capabilities.CAPABILITY_FLUID ? L.castAny(new IFluidHandlerHelper.FluidHandlerWrapper(this, Direction.of(facing))) : null;
 	}
 	
 	@Override

@@ -5,7 +5,7 @@ package nebula.common.tile;
 
 import javax.annotation.Nullable;
 
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic implements IFluidHandlerIO, IFluidHandler
+public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic implements IFluidHandlerIO, IFluidHandlerHelper
 {
 	protected boolean syncTankState = true;
 	

@@ -117,15 +117,8 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public float temp()
 	{
-		return ThermalNet.getEnvironmentTemperature(this.world, this.pos);// No
-																			// use
-																			// near-by
-																			// temperature
-																			// for
-																			// it
-																			// change
-																			// so
-																			// quickly.
+		// No use near-by temperature for it change so quickly.
+		return ThermalNet.getEnvironmentTemperature(this.world, this.pos);
 	}
 	
 	@Override

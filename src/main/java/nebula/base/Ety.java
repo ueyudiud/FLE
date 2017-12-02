@@ -60,12 +60,8 @@ public class Ety<K, V> implements Entry<K, V>, Serializable
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
-			return true;
-		else if (!(obj instanceof Entry))
-			return false;
-		else
-			return L.equal(this.key, ((Entry<?, ?>) obj).getKey());
+		return (obj == this) || ((obj instanceof Entry) &&
+				L.equal(this.key, ((Entry) obj).getKey()));
 	}
 	
 	@Override

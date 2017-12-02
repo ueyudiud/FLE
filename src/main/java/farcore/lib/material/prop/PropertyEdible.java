@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.material.prop;
 
 import nebula.common.item.IFoodStat;
@@ -48,25 +47,25 @@ public class PropertyEdible implements IFoodStat
 	@Override
 	public float[] getNutritionAmount(ItemStack stack)
 	{
-		return nutrAmount;
+		return this.nutrAmount;
 	}
 	
 	@Override
 	public float getFoodAmount(ItemStack stack)
 	{
-		return foodLevel;
+		return this.foodLevel;
 	}
 	
 	@Override
 	public float getSaturation(ItemStack stack)
 	{
-		return saturationLevel;
+		return this.saturationLevel;
 	}
 	
 	@Override
 	public float getDrinkAmount(ItemStack stack)
 	{
-		return waterLevel;
+		return this.waterLevel;
 	}
 	
 	@Override
@@ -78,7 +77,7 @@ public class PropertyEdible implements IFoodStat
 	@Override
 	public boolean isWolfEdible(ItemStack stack)
 	{
-		return wolfEdible;
+		return this.wolfEdible;
 	}
 	
 	@Override
@@ -97,9 +96,9 @@ public class PropertyEdible implements IFoodStat
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
 		stack.stackSize--;
-		if (effect != null)
+		if (this.effect != null)
 		{
-			player.addPotionEffect(new PotionEffect(effect));
+			player.addPotionEffect(new PotionEffect(this.effect));
 		}
 		return stack;
 	}

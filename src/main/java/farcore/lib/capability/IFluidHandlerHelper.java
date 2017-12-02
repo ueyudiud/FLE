@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  * 
  * @author ueyudiud
  */
-public interface IFluidHandler
+public interface IFluidHandlerHelper
 {
 	boolean canFill(Direction direction, FluidStack stack);
 	
@@ -228,7 +228,7 @@ public interface IFluidHandler
 	class FluidHandlerWrapper implements net.minecraftforge.fluids.capability.IFluidHandler
 	{
 		Direction				direction;
-		IFluidHandler			handler;
+		IFluidHandlerHelper			handler;
 		IFluidTankProperties[]	properties;
 		
 		public FluidHandlerWrapper(TileEntity tile, EnumFacing direction)
@@ -238,7 +238,7 @@ public interface IFluidHandler
 		
 		public FluidHandlerWrapper(TileEntity tile, Direction direction)
 		{
-			this.handler = (IFluidHandler) tile;
+			this.handler = (IFluidHandlerHelper) tile;
 			this.direction = direction;
 		}
 		

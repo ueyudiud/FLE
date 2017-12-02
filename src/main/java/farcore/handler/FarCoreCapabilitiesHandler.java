@@ -5,7 +5,7 @@
 package farcore.handler;
 
 import farcore.FarCore;
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import nebula.common.util.Direction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -42,7 +42,7 @@ public class FarCoreCapabilitiesHandler
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 		{
-			return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.tile instanceof IFluidHandler && ((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
+			return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.tile instanceof IFluidHandlerHelper && ((IFluidHandlerHelper) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
 		}
 		
 		@Override
@@ -54,7 +54,7 @@ public class FarCoreCapabilitiesHandler
 		
 		private Object castCapability(Capability<?> capability, EnumFacing facing)
 		{
-			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return new IFluidHandler.FluidHandlerWrapper(this.tile, Direction.of(facing));
+			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return new IFluidHandlerHelper.FluidHandlerWrapper(this.tile, Direction.of(facing));
 			return null;
 		}
 	}

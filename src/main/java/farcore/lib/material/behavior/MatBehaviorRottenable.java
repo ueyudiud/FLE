@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.material.behavior;
 
 import farcore.energy.thermal.ThermalNet;
