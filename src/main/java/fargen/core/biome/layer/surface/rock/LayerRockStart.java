@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.biome.layer.surface.rock;
 
 import fargen.core.layer.Layer;

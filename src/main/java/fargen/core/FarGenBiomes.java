@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core;
 
 import static fargen.core.biome.BiomeBase.BiomePropertiesExtended.newProperties;

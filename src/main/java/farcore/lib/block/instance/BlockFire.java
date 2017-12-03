@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.block.instance;
 
 import static nebula.common.util.Direction.D;

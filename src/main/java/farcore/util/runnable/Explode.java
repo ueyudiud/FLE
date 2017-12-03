@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.util.runnable;
 
 import java.util.List;
@@ -48,23 +51,23 @@ public class Explode implements Runnable
 	public Explode(World worldIn, Entity entityIn, double x, double y, double z, float size, ExplosionType type, boolean smoking, List<BlockPos> affectedPositions)
 	{
 		this(worldIn, entityIn, x, y, z, size, type, smoking);
-		affectedBlockPositions.addAll(affectedPositions);
+		this.affectedBlockPositions.addAll(affectedPositions);
 	}
 	
 	public Explode(World worldIn, Entity entityIn, double x, double y, double z, float size, ExplosionType type, boolean smoking)
 	{
-		explosionRNG = new Random();
-		affectedBlockPositions = Lists.<BlockPos> newArrayList();
-		playerKnockbackMap = Maps.<EntityPlayer, Vec3d> newHashMap();
-		world = worldIn;
-		exploder = entityIn;
-		explosionSize = size;
-		explosionX = x;
-		explosionY = y;
-		explosionZ = z;
+		this.explosionRNG = new Random();
+		this.affectedBlockPositions = Lists.<BlockPos> newArrayList();
+		this.playerKnockbackMap = Maps.<EntityPlayer, Vec3d> newHashMap();
+		this.world = worldIn;
+		this.exploder = entityIn;
+		this.explosionSize = size;
+		this.explosionX = x;
+		this.explosionY = y;
+		this.explosionZ = z;
 		this.type = type;
-		isSmoking = smoking;
-		position = new Vec3d(explosionX, explosionY, explosionZ);
+		this.isSmoking = smoking;
+		this.position = new Vec3d(this.explosionX, this.explosionY, this.explosionZ);
 	}
 	
 	@Override

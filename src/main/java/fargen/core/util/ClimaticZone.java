@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core.util;
 
 import static farcore.data.EnumTempCategory.FRIGID;

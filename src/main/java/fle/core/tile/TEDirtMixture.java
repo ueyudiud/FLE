@@ -5,7 +5,6 @@ package fle.core.tile;
 
 import java.util.List;
 
-import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.SubTags;
@@ -22,7 +21,6 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
-import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
@@ -44,8 +42,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_BlockActived, ITP_BlockHardness, ITP_ExplosionResistance, IUpdatableTile
 {
-	private long				duration;
-	private long				mixture;
+	//	private long				duration;
+	//	private long				mixture;
 	private StackContainer<Mat>	stacks	= new StackContainer<>(5184);
 	
 	public StackContainer<Mat> getStacks()
@@ -113,7 +111,7 @@ public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_B
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		int lv = ItemStacks.getToolLevel(stack, EnumToolTypes.SHOVEL);
+		//		int lv = ItemStacks.getToolLevel(stack, EnumToolTypes.SHOVEL);
 		return EnumActionResult.PASS;
 	}
 	

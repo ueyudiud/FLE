@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance.circuit;
 
 import java.util.Arrays;
@@ -51,7 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TECircuitBase extends TESynchronization
-		implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile, ITP_Drops, ITP_BoundingBox, ITP_BlockHardness, ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
+implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile, ITP_Drops, ITP_BoundingBox, ITP_BlockHardness, ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	protected volatile boolean circuitRedsignalMarker = false;
 	

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.layer.surface;
 
 import fargen.core.layer.abstracts.LayerExpandMix;

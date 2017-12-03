@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Direction;
@@ -17,7 +20,7 @@ public abstract class TESensor extends TECircuitBase
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setByte("power", value);
+		nbt.setByte("power", this.value);
 		return super.writeToNBT(nbt);
 	}
 	
@@ -25,14 +28,14 @@ public abstract class TESensor extends TECircuitBase
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		value = nbt.getByte("power");
+		this.value = nbt.getByte("power");
 	}
 	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setByte("p", value);
+		nbt.setByte("p", this.value);
 	}
 	
 	@Override
@@ -41,7 +44,7 @@ public abstract class TESensor extends TECircuitBase
 		super.readFromDescription1(nbt);
 		if (nbt.hasKey("p"))
 		{
-			value = nbt.getByte("p");
+			this.value = nbt.getByte("p");
 		}
 	}
 	
@@ -52,10 +55,10 @@ public abstract class TESensor extends TECircuitBase
 		if ((getWorldTime() & 0x1) == 0)
 		{
 			int newvalue = getValue();
-			if (newvalue != value)
+			if (newvalue != this.value)
 			{
 				notifyNeighbors();
-				value = (byte) newvalue;
+				this.value = (byte) newvalue;
 			}
 		}
 	}
@@ -69,13 +72,13 @@ public abstract class TESensor extends TECircuitBase
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return value;
+		return this.value;
 	}
 	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return value;
+		return this.value;
 	}
 	
 	@Override

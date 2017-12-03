@@ -31,7 +31,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Extra Data mod, use to let Minecraft world can store 2<sup>20</sup> size of
- * meta instead of 16 only.
+ * meta instead of 16 only. This mod may not update to 1.13 and upper version
+ * for Minecraft has already delete number id and metadata, so it means we can
+ * use them directly.
  * <p>
  * 
  * <b>Important information: If you used this mod, the world may unable to

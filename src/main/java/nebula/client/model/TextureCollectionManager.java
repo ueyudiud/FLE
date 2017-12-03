@@ -39,11 +39,10 @@ public class TextureCollectionManager
 	
 	public static void registerTextureSupplier(ResourceLocation location, Supplier<Map<String, ResourceLocation>> supplier)
 	{
-		if (BUILT_IN_TEXTURE_SET.containsKey(location)) throw new RuntimeException("Built in texture set name " + location + " already exist!");
+		if (BUILT_IN_TEXTURE_SET.containsKey(location.toString())) throw new RuntimeException("Built in texture set name " + location + " already exist!");
 		BUILT_IN_TEXTURE_SET.put(location.toString(), supplier);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static Map<String, ResourceLocation> getResourceLocationCache(String key)
 	{
 		if (cache != null)

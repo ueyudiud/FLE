@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter<MWCStack>
 {
+	private static final long serialVersionUID = -116240400653078125L;
+	
 	public static final INBTCompoundReaderAndWritter<MWCStack> HANDLER = new INBTCompoundReaderAndWritter<MWCStack>()
 	{
 		@Override

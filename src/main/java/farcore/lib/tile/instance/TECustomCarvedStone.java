@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance;
 
 import static nebula.common.util.L.index8i;

@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance;
 
 import java.util.ArrayList;
@@ -57,7 +60,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TEOre extends TEStatic
-		implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy, ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler, ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest, ITP_Drops, IToolableTile
+implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy, ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler, ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest, ITP_Drops, IToolableTile
 {
 	private static enum DropType
 	{

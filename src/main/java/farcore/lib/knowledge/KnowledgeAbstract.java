@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.knowledge;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,20 +14,20 @@ public class KnowledgeAbstract implements IKnowledge
 	protected KnowledgeAbstract(String name)
 	{
 		this.name = name;
-		id = REGISTER.register(name, this);
+		this.id = REGISTER.register(name, this);
 	}
 	
 	@Override
 	public String getRegisteredName()
 	{
-		return name;
+		return this.name;
 	}
 	
 	@Override
 	public boolean access(EntityPlayer player)
 	{
 		NBTTagCompound tag = player.getEntityData();
-		if (tag.hasKey("knowledge")) return tag.getCompoundTag("knowledge").getBoolean(name);
+		if (tag.hasKey("knowledge")) return tag.getCompoundTag("knowledge").getBoolean(this.name);
 		return false;
 	}
 	
@@ -36,7 +39,7 @@ public class KnowledgeAbstract implements IKnowledge
 		{
 			tag.setTag("knowledge", tag);
 		}
-		tag.getCompoundTag("knowledge").setBoolean(name, true);
+		tag.getCompoundTag("knowledge").setBoolean(this.name, true);
 	}
 	
 	@Override
@@ -45,7 +48,7 @@ public class KnowledgeAbstract implements IKnowledge
 		NBTTagCompound tag = player.getEntityData();
 		if (tag.hasKey("knowledge"))
 		{
-			tag.getCompoundTag("knowledge").setBoolean(name, false);
+			tag.getCompoundTag("knowledge").setBoolean(this.name, false);
 		}
 	}
 }

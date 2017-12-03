@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.world.gen;
 
 import farcore.lib.tree.ITreeGenerator;
@@ -18,6 +21,6 @@ public class FarWorldGenTree extends FarWorldGenerator
 	@Override
 	protected boolean generate()
 	{
-		return generator.generateTreeAt(world, pos, rand, selector.next(rand));
+		return this.generator.generateTreeAt(this.world, this.pos, this.rand, this.selector.next(this.rand));
 	}
 }

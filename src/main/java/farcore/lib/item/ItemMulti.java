@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.item;
 
 import java.util.List;
@@ -145,11 +144,11 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			else
 			{
 				LanguageManager.registerLocal(getTranslateName(templete),// If
-																			// there
-																			// will
-																			// any
-																			// replaced
-																			// exist.
+						// there
+						// will
+						// any
+						// replaced
+						// exist.
 						this.condition.getLocal(material));
 			}
 			if (this.registerToOreDict)

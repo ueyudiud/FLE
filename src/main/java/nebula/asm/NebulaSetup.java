@@ -440,7 +440,7 @@ public class NebulaSetup implements IFMLCallHook
 	@Override
 	public Void call() throws Exception
 	{
-		File destination = new File(this.mcPath, "asm/" + (this.runtimeDeobf ? "obf" : "mcp"));
+		File destination = new File(mcPath, "asm/" + (runtimeDeobf ? "obf" : "mcp"));
 		File file;
 		
 		if (!destination.exists())
@@ -456,7 +456,7 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		if (markVersion(destination))
 		{
-			final String suffix = this.runtimeDeobf ? "obf" : "mcp";
+			final String suffix = runtimeDeobf ? "obf" : "mcp";
 			final URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
 			file = new File(url.toURI());
 			for (String str : NebulaCoreAPI.ASM_SEARCHING_DIRECTION)

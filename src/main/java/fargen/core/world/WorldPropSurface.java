@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.world;
 
 import farcore.data.EnumBlock;
@@ -131,7 +130,7 @@ public class WorldPropSurface implements IWorldPropProvider
 			zone = ClimaticZone.temperate_plain;
 		}
 		return Maths.lerp(zone.sunshine[a], zone.sunshine[b], d) * V.sq2f;// *
-																			// world.getSunBrightnessFactor(0F);
+		// world.getSunBrightnessFactor(0F);
 	}
 	
 	@Override

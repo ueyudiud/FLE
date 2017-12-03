@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;

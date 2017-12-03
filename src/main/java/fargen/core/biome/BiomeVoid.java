@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core.biome;
 
 import fargen.core.util.ClimaticZone;
@@ -8,9 +11,9 @@ public class BiomeVoid extends BiomeBase
 	public BiomeVoid()
 	{
 		super(-1, false, BiomePropertiesExtended.newProperties("void").setClimaticZone(ClimaticZone.frigid_desert).setTemperature(-1F).setRainfall(0F));
-		spawnableCaveCreatureList.clear();
-		spawnableCreatureList.clear();
-		spawnableWaterCreatureList.clear();
+		this.spawnableCaveCreatureList.clear();
+		this.spawnableCreatureList.clear();
+		this.spawnableWaterCreatureList.clear();
 	}
 	
 	@Override

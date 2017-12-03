@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.model.block;
 
 import java.util.ArrayList;
@@ -345,7 +348,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		BakedQuadBuilder builder = new BakedQuadBuilder(format, new ModelModifierByCoordTransformer(transformation.or(TRSRTransformation.identity()), null), builder2::add);
 		builder.switchTextureScale();
 		int[] pixels = layer.getFrameTextureData(0)[0];// Only provide first
-														// frame for height.
+		// frame for height.
 		for (int v1 = 0; v1 < v; v1++)
 		{
 			for (int u1 = 0; u1 < u; u1++)

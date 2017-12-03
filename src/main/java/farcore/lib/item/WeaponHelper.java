@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.item;
 
 import farcore.data.EnumPhysicalDamageType;
@@ -43,7 +42,7 @@ public class WeaponHelper
 		Mat material = ItemTool.getMaterial(stack, "head");
 		IItemMatProp materialProperty = material.itemProp;
 		if (entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// &&
-																			// !entity.isInvisibleToPlayer(player))
+			// !entity.isInvisibleToPlayer(player))
 		{
 			float baseMultiple = 1F;
 			if (type.getSkill() != null)

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.layer;
 
 import net.minecraft.world.gen.layer.GenLayer;

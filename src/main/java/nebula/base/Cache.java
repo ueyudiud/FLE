@@ -36,8 +36,7 @@ public class Cache<E> implements Serializable
 	};
 	
 	/** The stored element. */
-	@Nullable
-	Object element;
+	@Nullable Object element;
 	
 	/**
 	 * Create a new cache with <tt>null</tt> element.
@@ -79,7 +78,6 @@ public class Cache<E> implements Serializable
 	}
 	
 	// Optional like.
-	
 	public boolean isAbsent()
 	{
 		return this.element == NULL;

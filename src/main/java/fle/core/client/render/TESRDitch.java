@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.client.render;
 
 import static nebula.common.util.Maths.lerp;
@@ -27,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRDitch extends TESRBase<TEDitch>
 {
-	private static final float	WEIGHT1	= 8.0F / 16.0F;
+	//	private static final float	WEIGHT1	= 8.0F / 16.0F;
 	private static final float	WEIGHT2	= 2.0F / 16.0F;
 	private static final float	P1		= 6.0F / 16.0F;
 	private static final float	P2		= 10.0F / 16.0F;

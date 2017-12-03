@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.base.function;
 
 import java.util.Iterator;
@@ -71,23 +74,10 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		if (this.first == null || this.allWeight == 0) return null;
 		int i = random.nextInt(this.allWeight);
 		INode<IntegerEntry<T>> node;
-		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();// The
-																						// weight
-																						// is
-																						// still
-																						// more
-																						// than
-																						// random
-																						// number,
-																						// or
-																						// it
-																						// has
-																						// no
-																						// node
-																						// any
-																						// more.
-				node = node.next())
-			;
+		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();
+				// The weight is still more than random number,
+				// or it has no node any more.
+				node = node.next());
 		return node.value().getKey();
 	}
 	
@@ -102,23 +92,10 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		if (this.first == null || this.allWeight == 0) return null;
 		int i = Maths.mod(random, this.allWeight);
 		INode<IntegerEntry<T>> node;
-		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();// The
-																						// weight
-																						// is
-																						// still
-																						// more
-																						// than
-																						// random
-																						// number,
-																						// or
-																						// it
-																						// has
-																						// no
-																						// node
-																						// any
-																						// more.
-				node = node.next())
-			;
+		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();
+				// The weight is still more than random number,
+				// or it has no node any more.
+				node = node.next());
 		return node.value().getKey();
 	}
 	
