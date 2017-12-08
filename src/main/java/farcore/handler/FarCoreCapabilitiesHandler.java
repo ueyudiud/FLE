@@ -45,7 +45,6 @@ public class FarCoreCapabilitiesHandler
 		}
 		
 		@Override
-		@SuppressWarnings("unchecked")
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 		{
 			return !hasCapability(capability, facing) ? null : (T) castCapability(capability, facing);

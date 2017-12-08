@@ -234,8 +234,8 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	}
 	
 	@Override
-	public boolean isTrue(ISubTagContainer target)
+	public boolean test(ISubTagContainer target)
 	{
-		return this.filter.isTrue(target) && (!(target instanceof Mat) || isBelongTo((Mat) target));
+		return this.filter.test(target) && (!(target instanceof Mat) || isBelongTo((Mat) target));
 	}
 }

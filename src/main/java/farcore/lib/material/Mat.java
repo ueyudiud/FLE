@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import farcore.data.MP;
@@ -248,17 +248,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		if (!MATERIALS_CACHE.containsKey(filter) || alwaysInit)
 		{
-			ImmutableList.Builder<Mat> list = ImmutableList.builder();
-			for (Mat material : REGISTER)
-			{
-				if (filter.isTrue(material))
-				{
-					list.add(material);
-				}
-			}
-			List<Mat> ret = list.build();
+			List<Mat> ret = REGISTER.stream().filter(filter).collect(Collectors.toList());
 			if (!alwaysInit)
 			{
+				((ArrayList) ret).trimToSize();//Predicate Collectors.toList() return ArrayList.
 				MATERIALS_CACHE.put(filter, ret);
 			}
 			return ret;

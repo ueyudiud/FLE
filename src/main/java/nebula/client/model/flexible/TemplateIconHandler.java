@@ -60,9 +60,8 @@ public class TemplateIconHandler implements IIconCollection
 				return get(this.retextures.get(sub), list);
 			}
 			else
-				return TextureMap.LOCATION_MISSING_TEXTURE;// Get missing
-															// texture as
-															// default.
+				// Get missing texture as default.
+				return TextureMap.LOCATION_MISSING_TEXTURE;
 		}
 		else
 			return new ResourceLocation(key);

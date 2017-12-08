@@ -5,15 +5,16 @@ package nebula.base.register;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +30,7 @@ import net.minecraft.network.PacketBuffer;
  */
 public class IdAllocatableRegister<T extends IRegisterElement<T>> extends AbstractRegister<T>
 {
-	class IdAllocatableDelegate implements IRegisterDelegate<T>
+	class IdAllocatableDelegate implements IRegisterDelegate<T>, Entry<String, T>
 	{
 		final String name;
 		boolean fixedID;
@@ -94,6 +95,27 @@ public class IdAllocatableRegister<T extends IRegisterElement<T>> extends Abstra
 							this.id != -1 && this.id == delegate.id() :
 								this.name.equals(delegate.name()) :
 									this.value == delegate.get();
+		}
+		
+		@Override
+		public String getKey()
+		{
+			return this.name;
+		}
+		
+		@Override
+		public T getValue()
+		{
+			return this.value;
+		}
+		
+		@Override
+		public T setValue(T value)
+		{
+			//T old = this.value;
+			//changeRef(value);
+			//return old;
+			throw new UnsupportedOperationException();
 		}
 	}
 	
@@ -307,7 +329,7 @@ public class IdAllocatableRegister<T extends IRegisterElement<T>> extends Abstra
 	}
 	
 	@Override
-	public Collection<T> targets()
+	public Set<T> targets()
 	{
 		return this.values;
 	}
@@ -350,6 +372,18 @@ public class IdAllocatableRegister<T extends IRegisterElement<T>> extends Abstra
 	public Iterator<T> iterator()
 	{
 		return this.values.iterator();
+	}
+	
+	@Override
+	public Stream<T> stream()
+	{
+		return this.values.stream();
+	}
+	
+	@Override
+	public Stream<Entry<String, T>> entryStream()
+	{
+		return (Stream) this.delegates.values().stream();
 	}
 	
 	public void allocIdAuto()

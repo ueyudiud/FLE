@@ -3,7 +3,6 @@
  */
 package nebula.base;
 
-import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +64,7 @@ public class SortedRegister<T> extends AbstractRegister<T>
 	protected Delegate<T>[]		sortedIDs;
 	protected Delegate<T>[]		sortedNames;
 	
-	protected Collection<T>		targets;
+	protected Set<T>			targets;
 	protected Set<String>		names;
 	
 	public SortedRegister()
@@ -276,7 +275,7 @@ public class SortedRegister<T> extends AbstractRegister<T>
 	}
 	
 	@Override
-	public Collection<T> targets()
+	public Set<T> targets()
 	{
 		if (this.targets == null)
 		{
@@ -285,7 +284,7 @@ public class SortedRegister<T> extends AbstractRegister<T>
 		return this.targets;
 	}
 	
-	private class SortedRegisterCollection extends AbstractCollection<T>
+	private class SortedRegisterCollection extends AbstractSet<T>
 	{
 		@Override
 		public Iterator<T> iterator()

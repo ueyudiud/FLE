@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package ed.chunk;
 
 import net.minecraft.block.state.IBlockState;

@@ -4,13 +4,34 @@
 package nebula.base;
 
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import com.google.common.collect.Iterators;
 
 /**
  * @author ueyudiud
  */
 public abstract class AbstractRegister<T> implements IRegister<T>
 {
+	private static final int characteristics = Spliterator.NONNULL | Spliterator.DISTINCT;
+	
+	@Override
+	public Stream<T> stream()
+	{
+		return StreamSupport.stream(Spliterators.spliterator(iterator(), size(), characteristics), false);
+	}
+	
+	@Override
+	public Stream<Entry<String, T>> entryStream()
+	{
+		return StreamSupport.stream(Spliterators.spliterator(Iterators.transform(iterator(), t->new Ety<>(name(t), t)), size(), characteristics), false);
+	}
+	
 	@Override
 	public int hashCode()
 	{

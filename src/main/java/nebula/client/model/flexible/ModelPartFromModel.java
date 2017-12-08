@@ -75,7 +75,7 @@ public class ModelPartFromModel implements INebulaModelPart
 	{
 		if (this.model instanceof IRetexturableModel)
 		{
-			return new ModelPartFromModel(((IRetexturableModel) this.model).retexture(ImmutableMap.copyOf(retexture)), this.container);
+			return new ModelPartFromModel(((IRetexturableModel) this.model).retexture(retexture instanceof ImmutableMap ? (ImmutableMap<String, String>) retexture : ImmutableMap.copyOf(retexture)), this.container);
 		}
 		return this;
 	}

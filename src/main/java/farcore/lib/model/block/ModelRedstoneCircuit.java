@@ -255,7 +255,6 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			if (side != null) return ImmutableList.of();
 			if (state instanceof BlockStateTileEntityWapper)
 			{
-				@SuppressWarnings("unchecked")
 				BlockStateTileEntityWapper<? extends TECircuitBase> wapper = (BlockStateTileEntityWapper<? extends TECircuitBase>) state;
 				Map<EnumFacing, List<BakedQuad>> map = this.quads.get(wapper.tile.material);
 				List<BakedQuad> list;

@@ -98,7 +98,6 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 		TextureAtlasSprite iconDef = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		List<BakedQuad>[] quads = bakedQuads.computeIfAbsent(this.layer, l -> {
 			TextureAtlasSprite layer = bakedTextureGetter.apply(l);
-			@SuppressWarnings("unchecked")
 			List<BakedQuad>[] result = new List[4];
 			for (EnumFacing facing : EnumFacing.HORIZONTALS)
 			{
@@ -134,7 +133,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 		builder.switchTextureScale();// Switch to 1 pixel scale.
 		
 		int[] pixels = layer.getFrameTextureData(0)[0];// Only provide first
-														// frame for height.
+		// frame for height.
 		for (int v1 = 0; v1 < v; v1++)
 		{
 			for (int u1 = 0; u1 < u; u1++)

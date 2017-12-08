@@ -3,8 +3,9 @@
  */
 package nebula.base;
 
-import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -130,7 +131,7 @@ public interface IRegister<T> extends Iterable<T>
 	 * 
 	 * @return
 	 */
-	Collection<T> targets();
+	Set<T> targets();
 	
 	/**
 	 * Get all registry names set.
@@ -194,6 +195,18 @@ public interface IRegister<T> extends Iterable<T>
 	 * @return the size
 	 */
 	int size();
+	
+	/**
+	 * Get (name, element) entry stream.
+	 * @return
+	 */
+	Stream<Entry<String, T>> entryStream();
+	
+	/**
+	 * Get the elements stream.
+	 * @return
+	 */
+	Stream<T> stream();
 	
 	/**
 	 * Return the hashcode of register. For all value registered in entry, the
