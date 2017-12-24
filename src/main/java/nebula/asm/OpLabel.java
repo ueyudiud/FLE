@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.asm;
 
 import java.util.Iterator;
@@ -78,7 +77,7 @@ public abstract class OpLabel
 			for (int i = 1; i < this.len; ++i)
 			{
 				list.remove(current.getNext());// Remove length - 1 size of
-												// nodes.
+				// nodes.
 			}
 			current1 = current;
 			do
