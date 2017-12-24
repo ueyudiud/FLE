@@ -160,9 +160,9 @@ public class OreDictExt
 		registerOre("paper", new ItemStack(Items.PAPER));
 		registerOre("book", new ItemStack(Items.BOOK));// Far Core added.
 		registerOre("book", new ItemStack(Items.ENCHANTED_BOOK));// Far Core
-																	// added.
+		// added.
 		registerOre("book", new ItemStack(Items.WRITTEN_BOOK));// Far Core
-																// added.
+		// added.
 		
 		// mob drops
 		registerOre("slimeball", Items.SLIME_BALL);
@@ -203,7 +203,7 @@ public class OreDictExt
 		registerOre("clay", Blocks.CLAY);// Far Core added.
 		registerOre("clayHardened", Blocks.HARDENED_CLAY);// Far Core added.
 		registerOre("clayHardened", Blocks.STAINED_HARDENED_CLAY);// Far Core
-																	// added.
+		// added.
 		registerOre("netherrack", Blocks.NETHERRACK);
 		registerOre("obsidian", Blocks.OBSIDIAN);
 		registerOre("glowstone", Blocks.GLOWSTONE);
@@ -244,8 +244,8 @@ public class OreDictExt
 			registerOre("blockGlass" + dyes[i], new ItemStack(Blocks.STAINED_GLASS, 1, 15 - i));
 			registerOre("paneGlass" + dyes[i], new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 15 - i));
 			registerOre("clayHardened" + dyes[i], new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 15 - i));// Far
-																											// Core
-																											// added.
+			// Core
+			// added.
 		}
 	}
 	
@@ -491,7 +491,7 @@ public class OreDictExt
 		for (int i = 0; i < FUNCTION_MAP.size(); ++i)
 		{
 			Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map = FUNCTION_MAP.get(i);
-			if (map.containsKey(item) && map.get(item).getKey().isTrue(stack)) list.add(ID_TO_NAME.get(i));
+			if (map.containsKey(item) && map.get(item).getKey().test(stack)) list.add(ID_TO_NAME.get(i));
 		}
 		return list;
 	}
@@ -506,7 +506,7 @@ public class OreDictExt
 	public static boolean oreMatchs(ItemStack stack, String oreName)
 	{
 		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map;
-		return NAME_TO_ID.containsKey(oreName) ? (map = FUNCTION_MAP.get(NAME_TO_ID.get(oreName))).containsKey(stack.getItem()) && map.get(stack.getItem()).getKey().isTrue(stack) : false;
+		return NAME_TO_ID.containsKey(oreName) ? (map = FUNCTION_MAP.get(NAME_TO_ID.get(oreName))).containsKey(stack.getItem()) && map.get(stack.getItem()).getKey().test(stack) : false;
 	}
 	
 	private OreDictExt()

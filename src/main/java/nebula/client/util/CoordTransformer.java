@@ -29,13 +29,8 @@ public class CoordTransformer implements Cloneable
 	
 	double[]					oppisite, rotation, scale, transform;
 	boolean						changed;
-	Function<Tuple3d, Tuple3d>	function	= Function.identity();				// If
-																				// no
-																				// change
-																				// detected,
-																				// use
-																				// identity
-																				// function.
+	// If no change detected, use identity function.
+	Function<Tuple3d, Tuple3d>	function	= Function.identity();
 	
 	public CoordTransformer()
 	{
@@ -194,70 +189,22 @@ public class CoordTransformer implements Cloneable
 		switch (rotation)
 		{
 		default:
-		case X0_Y0:
-			x = 0;
-			y = 0;
-			break;
-		case X0_Y90:
-			x = 0;
-			y = 1;
-			break;
-		case X0_Y180:
-			x = 0;
-			y = 2;
-			break;
-		case X0_Y270:
-			x = 0;
-			y = 3;
-			break;
-		case X90_Y0:
-			x = 1;
-			y = 0;
-			break;
-		case X90_Y90:
-			x = 1;
-			y = 1;
-			break;
-		case X90_Y180:
-			x = 1;
-			y = 2;
-			break;
-		case X90_Y270:
-			x = 1;
-			y = 3;
-			break;
-		case X180_Y0:
-			x = 2;
-			y = 0;
-			break;
-		case X180_Y90:
-			x = 2;
-			y = 1;
-			break;
-		case X180_Y180:
-			x = 2;
-			y = 2;
-			break;
-		case X180_Y270:
-			x = 2;
-			y = 3;
-			break;
-		case X270_Y0:
-			x = 3;
-			y = 0;
-			break;
-		case X270_Y90:
-			x = 3;
-			y = 1;
-			break;
-		case X270_Y180:
-			x = 3;
-			y = 2;
-			break;
-		case X270_Y270:
-			x = 3;
-			y = 3;
-			break;
+		case X0_Y0    : x = 0; y = 0; break;
+		case X0_Y90   : x = 0; y = 1; break;
+		case X0_Y180  : x = 0; y = 2; break;
+		case X0_Y270  : x = 0; y = 3; break;
+		case X90_Y0   : x = 1; y = 0; break;
+		case X90_Y90  : x = 1; y = 1; break;
+		case X90_Y180 : x = 1; y = 2; break;
+		case X90_Y270 : x = 1; y = 3; break;
+		case X180_Y0  : x = 2; y = 0; break;
+		case X180_Y90 : x = 2; y = 1; break;
+		case X180_Y180: x = 2; y = 2; break;
+		case X180_Y270: x = 2; y = 3; break;
+		case X270_Y0  : x = 3; y = 0; break;
+		case X270_Y90 : x = 3; y = 1; break;
+		case X270_Y180: x = 3; y = 2; break;
+		case X270_Y270: x = 3; y = 3; break;
 		}
 		double[] ds1 = MODEL_ROTATION_VAL[x];
 		double[] ds2 = MODEL_ROTATION_VAL[y];

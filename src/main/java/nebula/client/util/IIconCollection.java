@@ -18,11 +18,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public interface IIconCollection
 {
+	/**
+	 * Return all icon contains in this collection.
+	 * 
+	 * @return the collection size.
+	 */
 	int size();
 	
+	/**
+	 * Get loaded resource by this collection.
+	 * 
+	 * @return the resources collection.
+	 */
 	Collection<ResourceLocation> resources();
 	
+	/**
+	 * <tt>retexture</tt> action, relocate resource by input
+	 * argument.
+	 * 
+	 * @param map
+	 * @return the retextered icon collection.
+	 */
 	IIconCollection retexture(Map<String, String> map);
 	
+	/**
+	 * Build icon in collection.
+	 * @return
+	 */
 	Map<String, ResourceLocation> build();
 }

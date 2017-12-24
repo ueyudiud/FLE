@@ -18,12 +18,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class StateMapperStiars extends StateMapperExt
+public class StateMapperStairs extends StateMapperExt
 {
 	private static final IProperty<String>	SHAPE	= StateMapperExt.createFakeProperty("shape", "normal", "inner", "outer");
 	private static final IProperty<String>	STATE	= StateMapperExt.createFakeProperty("state", "bottom_north", "bottom_south", "bottom_east", "bottom_west", "top_north", "top_south", "top_east", "top_west");
 	
-	public StateMapperStiars(String modid, String path, IProperty main, IProperty...ignores)
+	public StateMapperStairs(String modid, String path, IProperty main, IProperty...ignores)
 	{
 		super(modid, path, main, ignores);
 	}

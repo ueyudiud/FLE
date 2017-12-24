@@ -32,6 +32,11 @@ public class BakedQuadRetex extends BakedQuad
 		remapQuad(quad.getSprite());
 	}
 	
+	/**
+	 * Fixed remapping method.
+	 * 
+	 * @param sprite the old sprite.
+	 */
 	private void remapQuad(TextureAtlasSprite sprite)
 	{
 		for (int i = 0; i < 4; ++i)

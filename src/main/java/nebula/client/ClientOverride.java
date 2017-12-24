@@ -159,14 +159,15 @@ public class ClientOverride
 	{
 		try
 		{
-			if (model instanceof ICustomItemRenderModel) return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
+			if (model instanceof ICustomItemRenderModel)
+				return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
 			return model.getQuads(null, facing, rand);
 		}
 		catch (RuntimeException exception)
 		{
 			if (model != null)
 			{
-				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", new Object[] { model, stack, facing });
+				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", model, stack, facing);
 				Log.catching(exception);
 			}
 			else

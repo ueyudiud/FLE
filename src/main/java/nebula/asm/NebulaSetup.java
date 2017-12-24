@@ -106,10 +106,10 @@ public class NebulaSetup implements IFMLCallHook
 	 */
 	private static final int VERSION = 13;
 	
-	final JsonDeserializer<OpInformation>		DESERIALIZER1	= (json, typeOfT, context) -> {
+	final JsonDeserializer<OpInfo>		DESERIALIZER1	= (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
 		JsonObject object = json.getAsJsonObject();
-		OpInformation information = new OpInformation(object.get("name").getAsString());
+		OpInfo information = new OpInfo(object.get("name").getAsString());
 		try
 		{
 			if (!object.has("modification"))
@@ -304,7 +304,7 @@ public class NebulaSetup implements IFMLCallHook
 		}
 	};
 	
-	private final Gson gson = new GsonBuilder().registerTypeAdapter(OpInformation.class, this.DESERIALIZER1).registerTypeAdapter(OpLabel.class, this.DESERIALIZER2).registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3).create();
+	private final Gson gson = new GsonBuilder().registerTypeAdapter(OpInfo.class, this.DESERIALIZER1).registerTypeAdapter(OpLabel.class, this.DESERIALIZER2).registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3).create();
 	
 	private static File		mcPath;
 	private static boolean	runtimeDeobf;
@@ -368,12 +368,26 @@ public class NebulaSetup implements IFMLCallHook
 		{
 			for (File file2 : file.listFiles(name -> name.getName().endsWith(".json")))
 			{
-				try (
-						BufferedReader reader = new BufferedReader(new FileReader(file2)))
+				try (BufferedReader reader = new BufferedReader(new FileReader(file2)))
 				{
-					OpInformation information = this.gson.fromJson(reader, OpInformation.class);
+					OpInfo information = this.gson.fromJson(reader, OpInfo.class);
 					information.put();
 					NebulaASMLogHelper.LOG.info("Loaded {} modifications.", information.mcpname);
+				}
+				catch (RuntimeException exception)
+				{
+					NebulaASMLogHelper.LOG.error("Fail to parse OperationInformation at " + file2.getPath(), exception);
+				}
+				catch (IOException exception)
+				{
+					NebulaASMLogHelper.LOG.error("Fail to load OperationInformation", exception);
+				}
+			}
+			for (File file2 : file.listFiles(name -> name.getName().endsWith(".fad")))
+			{
+				try (BufferedReader reader = new BufferedReader(new FileReader(file2)))
+				{
+					new Parser(new Lexer(reader)).joinin();
 				}
 				catch (RuntimeException exception)
 				{

@@ -116,6 +116,5 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 *             provide in time, etc.
 	 * @return the applied value.
 	 */
-	@Nullable
-	T apply();
+	@Nullable T apply();
 }

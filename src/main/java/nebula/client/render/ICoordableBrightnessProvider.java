@@ -8,6 +8,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The coordinate brightness data provider.
+ * 
+ * @author ueyudiud
+ */
 public interface ICoordableBrightnessProvider
 {
 	@SideOnly(Side.CLIENT)

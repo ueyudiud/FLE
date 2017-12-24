@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import net.minecraft.block.Block;
@@ -46,7 +45,7 @@ public final class OreDict
 	{
 		if (autoValid)
 		{
-			name = nebula.common.util.Strings.validateOre(false, name);
+			name = Strings.validateOre(false, name);
 		}
 		registerValid(name, ore);
 	}

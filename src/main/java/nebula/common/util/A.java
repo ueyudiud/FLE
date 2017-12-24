@@ -21,7 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ObjectArrays;
-import com.google.common.reflect.TypeToken;
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Ints;
 
 /**
  * Array helper methods.
@@ -44,9 +45,7 @@ public final class A
 	 */
 	public static int[] copyToLength(int[] array, int len)
 	{
-		int[] result = new int[len];
-		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
-		return result;
+		return Arrays.copyOf(array, len);
 	}
 	
 	/**
@@ -64,16 +63,11 @@ public final class A
 	{
 		if (array != null)
 		{
-			T[] result = ObjectArrays.newArray(array, len);
-			System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
-			return result;
+			return Arrays.copyOf(array, len);
 		}
 		else
 		{
-			return (T[]) ObjectArrays.newArray(new TypeToken<T>()
-			{
-				private static final long serialVersionUID = 8964692193893392799L;
-			}.getRawType(), len);
+			return (T[]) new Object[len];
 		}
 	}
 	
@@ -122,16 +116,12 @@ public final class A
 	
 	public static boolean contain(int[] list, int arg)
 	{
-		for (int element : list)
-			if (element == arg) return true;
-		return false;
+		return Ints.contains(list, arg);
 	}
 	
 	public static boolean contain(char[] list, char arg)
 	{
-		for (char element : list)
-			if (element == arg) return true;
-		return false;
+		return Chars.contains(list, arg);
 	}
 	
 	/**
@@ -162,44 +152,51 @@ public final class A
 	 */
 	public static <E1, E2> boolean and(E1[] list1, E2[] list2, BiPredicate<? super E1, ? super E2> checker)
 	{
-		if (list1.length != list2.length) throw new IllegalArgumentException();
-		for (int i = 0; i < list1.length; ++i)
-			if (!checker.test(list1[i], list2[i])) return false;
+		if (list1.length != list2.length) throw new IllegalArgumentException("Array length not same.");
+		final int length = list1.length;
+		for (int i = 0; i < length; ++i)
+			if (!checker.test(list1[i], list2[i]))
+				return false;
 		return true;
 	}
 	
 	public static <E> boolean and(int[] list, IntPredicate predicate)
 	{
 		for (int element : list)
-			if (!predicate.test(element)) return false;
+			if (!predicate.test(element))
+				return false;
 		return true;
 	}
 	
 	public static <E> boolean and(long[] list, LongPredicate predicate)
 	{
 		for (long element : list)
-			if (!predicate.test(element)) return false;
+			if (!predicate.test(element))
+				return false;
 		return true;
 	}
 	
 	public static <E> boolean or(E[] list, Predicate<? super E> checker)
 	{
 		for (E element : list)
-			if (checker.test(element)) return true;
+			if (checker.test(element))
+				return true;
 		return false;
 	}
 	
 	public static <E> boolean or(int[] list, IntPredicate predicate)
 	{
 		for (int element : list)
-			if (predicate.test(element)) return true;
+			if (predicate.test(element))
+				return true;
 		return false;
 	}
 	
 	public static <E> boolean or(long[] list, LongPredicate predicate)
 	{
 		for (long element : list)
-			if (predicate.test(element)) return true;
+			if (predicate.test(element))
+				return true;
 		return false;
 	}
 	
@@ -214,14 +211,11 @@ public final class A
 	{
 		switch (length)
 		{
-		case 0:
-			return new int[0];
-		case 1:
-			return new int[] { value };
+		case 0 : return new int[0];
+		case 1 : return new int[] { value };
 		default:
 			int[] ret = new int[length];
-			for (int i = 0; i < ret.length; ret[i++] = value)
-				;
+			for (int i = 0; i < length; ret[i++] = value);
 			return ret;
 		}
 	}
@@ -237,71 +231,74 @@ public final class A
 	{
 		switch (length)
 		{
-		case 0:
-			return new char[0];
-		case 1:
-			return new char[] { value };
+		case 0 : return new char[0];
+		case 1 : return new char[] { value };
 		default:
 			char[] ret = new char[length];
-			for (int i = 0; i < ret.length; ret[i++] = value)
-				;
+			Arrays.fill(ret, value);
 			return ret;
 		}
 	}
 	
 	public static <E> E[] fill(E[] array, IntFunction<E> function)
 	{
-		for (int i = 0; i < array.length; array[i] = function.apply(i), ++i)
-			;
+		final int length = array.length;
+		for (int i = 0; i < length; array[i] = function.apply(i), ++i);
 		return array;
 	}
 	
 	/**
 	 * Get first equally <code>int</code> value position.
 	 * 
-	 * @param list the array.
+	 * @param array the array.
 	 * @param arg the element to match.
 	 * @return the index, or <code>-1</code> if not matched.
 	 */
-	public static int indexOf(int[] list, int arg)
+	public static int indexOf(int[] array, int arg)
 	{
-		for (int i = 0; i < list.length; ++i)
-			if (list[i] == arg) return i;
+		final int length = array.length;
+		for (int i = 0; i < length; ++i)
+			if (array[i] == arg)
+				return i;
 		return -1;
 	}
 	
 	/**
 	 * Get first equally <code>char</code> value position.
 	 * 
-	 * @param list the array.
+	 * @param array the array.
 	 * @param arg the element to match.
 	 * @return the index, or <code>-1</code> if not matched.
 	 */
-	public static int indexOf(char[] list, char arg)
+	public static int indexOf(char[] array, char arg)
 	{
-		for (int i = 0; i < list.length; ++i)
-			if (list[i] == arg) return i;
+		final int length = array.length;
+		for (int i = 0; i < length; ++i)
+			if (array[i] == arg)
+				return i;
 		return -1;
 	}
 	
 	/**
 	 * Get first matched element index in list.
 	 * 
-	 * @param list the array.
+	 * @param array the array.
 	 * @param arg the matching target.
 	 * @return the index of element, <code>-1</code> means no element matched.
 	 */
-	public static int indexOfFirst(Object[] list, Object arg)
+	public static int indexOfFirst(Object[] array, Object arg)
 	{
-		for (int i = 0; i < list.length; ++i)
+		final int length = array.length;
+		for (int i = 0; i < length; ++i)
 		{
 			try
 			{
-				if (L.equal(list[i], arg)) return i;
+				if (L.equal(array[i], arg))
+					return i;
 			}
 			catch (ClassCastException exception)
 			{
-				;
+				continue;
 			}
 		}
 		return -1;
@@ -317,9 +314,9 @@ public final class A
 	 */
 	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<? super K, ? extends T> function)
 	{
-		T[] result = ObjectArrays.newArray(elementClass, array.length);
-		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i)
-			;
+		final int length = array.length;
+		T[] result = ObjectArrays.newArray(elementClass, length);
+		for (int i = 0; i < length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -332,9 +329,9 @@ public final class A
 	 */
 	public static <K> Object[] transform(K[] array, Function<? super K, ?> function)
 	{
-		Object[] result = new Object[array.length];
-		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i)
-			;
+		final int length = array.length;
+		Object[] result = new Object[length];
+		for (int i = 0; i < length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -348,9 +345,9 @@ public final class A
 	 */
 	public static <T> T[] transform(int[] array, Class<T> elementClass, IntFunction<? extends T> function)
 	{
-		T[] result = ObjectArrays.newArray(elementClass, array.length);
-		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i)
-			;
+		final int length = array.length;
+		T[] result = ObjectArrays.newArray(elementClass, length);
+		for (int i = 0; i < length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -372,8 +369,8 @@ public final class A
 	public static int[] rangeIntArray(int from, int to)
 	{
 		int[] array = new int[to - from];
-		for (int i = 0; i < array.length; array[i] = from + i, i++)
-			;
+		final int length = array.length;
+		for (int i = 0; i < length; array[i] = from + i, i++);
 		return array;
 	}
 	
@@ -390,8 +387,7 @@ public final class A
 	public static int[] createIntArray(int length, IntUnaryOperator operator)
 	{
 		int[] result = new int[length];
-		for (int i = 0; i < length; result[i] = operator.applyAsInt(i), ++i)
-			;
+		for (int i = 0; i < length; result[i] = operator.applyAsInt(i), ++i);
 		return result;
 	}
 	
@@ -406,8 +402,7 @@ public final class A
 	public static long[] createLongArray(int length, IntToLongFunction function)
 	{
 		long[] result = new long[length];
-		for (int i = 0; i < length; result[i] = function.applyAsLong(i), ++i)
-			;
+		for (int i = 0; i < length; result[i] = function.applyAsLong(i), ++i);
 		return result;
 	}
 	

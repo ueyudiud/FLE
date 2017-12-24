@@ -4,7 +4,7 @@
 package nebula.common.util;
 
 /**
- * The no client only chat formatting.
+ * The no ClientOnly chat formatting type.
  * 
  * @author ueyudiud
  */

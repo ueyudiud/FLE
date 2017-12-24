@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.util;
 
 import nebula.Log;
@@ -82,12 +85,12 @@ public enum Direction implements IStringSerializable
 	public final int		boundY;
 	public final int		boundZ;
 	/**
-	 * The direction flag for <tt>long</tt> state marker, this is normal
+	 * The direction flag for state marker, this is normal
 	 * directions flag.
 	 */
 	public final int		flag;
 	/**
-	 * The direction flag for <tt>long</tt> state marker, this is horizontal
+	 * The direction flag for state marker, this is horizontal
 	 * directions flag.
 	 */
 	public final int		flag1;

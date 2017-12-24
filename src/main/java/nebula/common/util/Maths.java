@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import net.minecraft.util.math.BlockPos;
@@ -259,16 +258,12 @@ public final class Maths
 	public static int gcd(int a, int b)
 	{
 		if (b > a)
-		{
-			a ^= b;
-			b ^= a;
-			a ^= b;
-		}
+			return gcd(b, a);
 		do
 		{
-			int temp = a % b;
+			int t = a % b;
 			a = b;
-			b = temp;
+			b = t;
 		}
 		while (b != 0);
 		return a;

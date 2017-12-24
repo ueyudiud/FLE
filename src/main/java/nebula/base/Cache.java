@@ -11,12 +11,14 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import nebula.base.function.Applicable;
+
 /**
  * The cache is to cache a element.
  * 
  * @author ueyudiud
  */
-public class Cache<E> implements Serializable
+public class Cache<E> implements Serializable, Applicable<E>
 {
 	private static final long serialVersionUID = -3454337834646888382L;
 	
@@ -154,5 +156,11 @@ public class Cache<E> implements Serializable
 	public Object clone()
 	{
 		return new Cache<>(this.element);
+	}
+	
+	@Override
+	public E apply()
+	{
+		return get();
 	}
 }
