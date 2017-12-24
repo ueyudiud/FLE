@@ -383,21 +383,6 @@ public class NebulaSetup implements IFMLCallHook
 					NebulaASMLogHelper.LOG.error("Fail to load OperationInformation", exception);
 				}
 			}
-			for (File file2 : file.listFiles(name -> name.getName().endsWith(".fad")))
-			{
-				try (BufferedReader reader = new BufferedReader(new FileReader(file2)))
-				{
-					new Parser(new Lexer(reader)).joinin();
-				}
-				catch (RuntimeException exception)
-				{
-					NebulaASMLogHelper.LOG.error("Fail to parse OperationInformation at " + file2.getPath(), exception);
-				}
-				catch (IOException exception)
-				{
-					NebulaASMLogHelper.LOG.error("Fail to load OperationInformation", exception);
-				}
-			}
 		}
 		catch (RuntimeException exception)
 		{
