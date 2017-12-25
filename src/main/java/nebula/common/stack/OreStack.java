@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.stack;
 
 import java.util.List;
@@ -5,6 +8,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -15,10 +19,10 @@ public class OreStack implements AbstractStack
 		return size <= 0 ? null : new OreStack(stack.oreName, size);
 	}
 	
-	private ImmutableList<ItemStack>	list;
 	public final String					oreName;
-	private List<ItemStack>				ore;
 	public final int					size;
+	private List<ItemStack>				ore;
+	private ImmutableList<ItemStack>	list;
 	
 	public OreStack(String ore)
 	{
@@ -32,16 +36,10 @@ public class OreStack implements AbstractStack
 		this.size = size;
 	}
 	
-	@Deprecated
-	public OreStack(String ore, int size, boolean useContainer)
-	{
-		this(ore, size);
-	}
-	
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return this.ore.stream().anyMatch(target -> OreDictionary.itemMatches(target, stack, false));
+		return stack != null && L.contain(this.ore, target -> OreDictionary.itemMatches(target, stack, false));
 	}
 	
 	@Override
@@ -71,7 +69,10 @@ public class OreStack implements AbstractStack
 	@Override
 	public ItemStack instance()
 	{
-		if (!display().isEmpty()) return ItemStack.copyItemStack(this.list.get(0));
+		if (!display().isEmpty())
+		{
+			return ItemStack.copyItemStack(this.list.get(0));
+		}
 		return null;
 	}
 	

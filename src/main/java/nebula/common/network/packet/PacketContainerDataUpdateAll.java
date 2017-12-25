@@ -66,6 +66,20 @@ public class PacketContainerDataUpdateAll extends PacketGui
 	@Override
 	public IPacket process(Network network)
 	{
+		//The Nebula network send packet faster than local network in client side, to waiting data to get synch, it should wait some time...
+		while (getPlayer().openContainer.windowId == 0)
+		{
+			try
+			{
+				synchronized (this)
+				{
+					wait(1);
+				}
+			}
+			catch (InterruptedException e)
+			{
+			}
+		}
 		ContainerBase container = container();
 		if (container != null)
 		{

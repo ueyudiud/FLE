@@ -5,7 +5,6 @@ package nebula.common.network.packet;
 
 import java.io.IOException;
 
-import nebula.Log;
 import nebula.common.gui.ContainerBase;
 import nebula.common.network.PacketAbstract;
 import nebula.common.network.PacketBufferExt;
@@ -40,7 +39,7 @@ public abstract class PacketGui extends PacketAbstract
 	protected ContainerBase container()
 	{
 		EntityPlayer player = getPlayer();
-		Log.info("{} ? {}, ({})", this.guiid, player.openContainer.windowId, player.openContainer);
+		//		Log.info("{} ? {}, ({})", this.guiid, player.openContainer.windowId, player.openContainer);
 		return player.openContainer.windowId == this.guiid && (player.openContainer instanceof ContainerBase) ? (ContainerBase) player.openContainer : null;
 	}
 }

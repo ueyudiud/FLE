@@ -1,0 +1,27 @@
+{
+	"name": "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer",
+	"modification": [
+		{
+			"name": "a|(Ladz;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "net/minecraftforge/client/ForgeHooksClient",
+					"name": "renderTileItem",
+					"desc": "(Ladx;I)V",
+					"off": -3,
+					"len": 4,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderSpecialItem",
+							"desc": "(Ladz;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

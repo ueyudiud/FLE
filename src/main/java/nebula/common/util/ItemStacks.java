@@ -130,14 +130,13 @@ public final class ItemStacks
 	
 	public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
 	{
-		if (stacks == null || stacks.isEmpty()) return ImmutableList.of();
+		if (stacks == null || stacks.isEmpty())
+			return ImmutableList.of();
 		ImmutableList.Builder builder = ImmutableList.builder();
 		for (ItemStack stack : stacks)
 			if (stack != null)
 			{
-				ItemStack stack2 = stack.copy();
-				stack2.stackSize = size;
-				builder.add(valid(stack2.copy()));
+				builder.add(sizeOf(stack, size));
 			}
 		return builder.build();
 	}
