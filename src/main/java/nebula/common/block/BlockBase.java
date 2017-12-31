@@ -297,15 +297,8 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
-		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) // do not
-			// drop
-			// items
-			// while
-			// restoring
-			// blockstates,
-			// prevents
-			// item
-			// dupe
+		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots)
+			// do not drop items while restoring blockstates, prevents item dupe
 		{
 			List<ItemStack> items = getDrops(worldIn, pos, state, this.thread1.get(), fortune, false);
 			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, this.harvesters.get());
@@ -415,6 +408,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		return false;
 	}
 	
+	/**
+	 * Get CreativeTabs that block will display in.
+	 * @return
+	 */
 	public CreativeTabs[] getCreativeTabs()
 	{
 		return new CreativeTabs[] { getCreativeTabToDisplayOn() };
@@ -431,6 +428,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, this.item.getMetadata(stackIn), placer);
 	}
 	
+	/**
+	 * Use {@link #onBlockPlacedBy(World, BlockPos, IBlockState, EntityLivingBase, EnumFacing, ItemStack)} instead.
+	 */
 	@Override
 	@Deprecated
 	public final void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
@@ -438,6 +438,15 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}
 	
+	/**
+	 * Called by ItemBlocks after a block is set in the world, to allow post-place logic.
+	 * @param worldIn
+	 * @param pos
+	 * @param state
+	 * @param placer
+	 * @param facing
+	 * @param stack
+	 */
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
 	{
 		onBlockPlacedBy(worldIn, pos, state, placer, stack);

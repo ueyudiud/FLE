@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.fluid;
 
 import javax.annotation.Nullable;
@@ -37,7 +40,6 @@ public class FluidBlockEvent extends Event
 	 * The drain action will be prevent if the event is canceled.
 	 * 
 	 * @author ueyudiud
-	 *
 	 */
 	@Cancelable
 	public static class FluidDrainToWorldEvent extends FluidBlockEvent

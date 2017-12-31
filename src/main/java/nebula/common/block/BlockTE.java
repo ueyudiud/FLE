@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * data, or only 4 bit instead.
  * 
  * @author ueyudiud
- * @see net.minecraft.tileentity.TileEntity
+ * @see net.minecraft.tileentity.TileEntity TileEntity
  */
 public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBlock
 {
@@ -227,7 +227,8 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		if (tile instanceof ITP_Drops) return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
+		if (tile instanceof ITP_Drops)
+			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
 		List<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(this, 1, damageDropped(state)));
 		return list;

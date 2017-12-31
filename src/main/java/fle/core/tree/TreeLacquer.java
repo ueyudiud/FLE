@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.tree;
 
 import java.util.Random;
@@ -109,7 +108,7 @@ public class TreeLacquer extends Tree
 				c++;
 				tryFillLacquer(world, pos, state);
 			}
-				break;
+			break;
 			case 4:
 			case 5:
 			case 6:

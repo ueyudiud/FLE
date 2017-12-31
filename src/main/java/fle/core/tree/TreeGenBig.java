@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.tree;
 
 import java.util.Random;
@@ -16,7 +19,7 @@ import net.minecraft.world.World;
 public class TreeGenBig extends TreeGenAbstract
 {
 	static final byte[]	otherCoordPairs		= { 2, 0, 0, 1, 2, 1 };
-	int[]				basePos				= new int[] { 0, 0, 0 };
+	int[]				basePos				= { 0, 0, 0 };
 	float				generateCoreLeavesChance;
 	Random				rand;
 	World				world;

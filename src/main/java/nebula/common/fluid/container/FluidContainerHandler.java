@@ -24,11 +24,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  * The fluid container function helper.
  * 
  * @author ueyudiud
- * @see net.minecraftforge.fluids.capability.IFluidHandler
- * @see nebula.common.fluid.container.IItemFluidContainer
+ * @see net.minecraftforge.fluids.capability.IFluidHandler IFluidHandler
+ * @see nebula.common.fluid.container.IItemFluidContainer IItemFluidContainer
  */
 public class FluidContainerHandler
 {
+	/**
+	 * Get stack contained fluid, or <code>null</code> if stack is not a fluid container.
+	 * @param stack the stack.
+	 * @return the fluid in container.
+	 */
 	public static FluidStack getContain(ItemStack stack)
 	{
 		if (stack.getItem() instanceof IItemFluidContainer)
@@ -45,6 +50,17 @@ public class FluidContainerHandler
 		return null;
 	}
 	
+	/**
+	 * Try drain fluid from stack to fluidIO.
+	 * @param stack the stack, the container predicated.
+	 * @param maxDrain the max drain amount.
+	 * @param io the fluidIO.
+	 * @param from the from facing.
+	 * @param fullyDrain the fluid will only if when container fluid can fully drained into IO without
+	 *                   remained fluid, if this option is <code>true</code>.
+	 * @param simulate
+	 * @return
+	 */
 	public static @Nullable Entry<ItemStack, FluidStack> drainContainerToIO(ItemStack stack, int maxDrain, IFluidHandlerIO io, Direction from, boolean fullyDrain, boolean simulate)
 	{
 		FluidStack stack1;
@@ -122,10 +138,10 @@ public class FluidContainerHandler
 	 * The <tt>drain</tt> action will be handled with follows rules:
 	 * <li>The stack should be non-null and the item should implements
 	 * <code>IItemFluidContainer</code> or has
-	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
+	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY FLUID_HANDLER_CAPABILITY}
 	 * capability, or action will not process.
 	 * <li>If item implements
-	 * {@link nebula.common.fluid.container.IItemFluidContainer}, its capability
+	 * {@link nebula.common.fluid.container.IItemFluidContainer IItemFluidContainer}, its capability
 	 * will not be checked.
 	 * <li>The action will be process when output slot can insert output stack
 	 * or when item implements <code>IItemFluidContainer</code> and stack not
@@ -196,10 +212,10 @@ public class FluidContainerHandler
 	 * The <tt>drain</tt> action will be handled with follows rules:
 	 * <li>The stack should be non-null and the item should implements
 	 * <code>IItemFluidContainer</code> or has
-	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
+	 * {@link net.minecraftforge.fluids.capability.CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY FLUID_HANDLER_CAPABILITY}
 	 * capability, or action will not process.
 	 * <li>If item implements
-	 * {@link nebula.common.fluid.container.IItemFluidContainer}, its capability
+	 * {@link nebula.common.fluid.container.IItemFluidContainer IItemFluidContainer}, its capability
 	 * will not be checked.
 	 * <li>The action will be process when output slot can insert output stack
 	 * or when item implements <code>IItemFluidContainer</code> and stack not

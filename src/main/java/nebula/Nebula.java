@@ -159,15 +159,10 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	static
 	{
 		// For bootstrap takes too long time to initialize...
-		new Thread(() -> {
-			try
-			{
-				new Bootstrap().clone();
-			}
-			catch (Throwable t)
-			{
-			}
-		}, "Bootstrap Initalizer").start();
+		Thread thread = new Thread(Bootstrap::new, "Bootstrap Initalizer");
+		// Any exception thrown needn't be print.
+		thread.setUncaughtExceptionHandler((t, e)-> {});
+		thread.start();
 	}
 	
 	/** The language manager. */

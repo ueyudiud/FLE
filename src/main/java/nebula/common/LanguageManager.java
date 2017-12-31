@@ -68,7 +68,7 @@ public class LanguageManager
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 * @param formats the formats to string.
-	 * @see String#format(String, Object...)
+	 * @see String#format(String, Object...) String.format
 	 * @see #registerLocal(String, String)
 	 */
 	public static void registerLocal(String unlocalized, String localized, Object...formats)
@@ -111,7 +111,7 @@ public class LanguageManager
 	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element, use
-	 *            {@link java.lang.String#format(String, Object...)} to format
+	 *            {@link java.lang.String#format(String, Object...) String.format} to format
 	 *            localized string.
 	 * @return the formated localized string, or unlocalized string direct if
 	 *         nothing found.
@@ -175,7 +175,7 @@ public class LanguageManager
 	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element, use
-	 *            {@link java.lang.String#format(String, Object...)} to format
+	 *            {@link java.lang.String#format(String, Object...) String.format} to format
 	 *            localized string.
 	 * @return the formated localized string, or <tt>null</tt> if nothing found.
 	 * @see #translateToLocal(String, Object...)
@@ -288,14 +288,14 @@ public class LanguageManager
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
 			{
 				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);// Use
-																							// sorted
-																							// map
-																							// for
-																							// easier
-																							// to
-																							// search
-																							// translated
-																							// word.
+				// sorted
+				// map
+				// for
+				// easier
+				// to
+				// search
+				// translated
+				// word.
 				for (Entry<String, String> entry : sortedMap.entrySet())
 					if (!map.containsKey(entry.getKey()))
 					{

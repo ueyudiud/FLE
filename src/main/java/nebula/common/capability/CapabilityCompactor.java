@@ -4,6 +4,7 @@
 package nebula.common.capability;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
@@ -48,7 +49,7 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			}
 			else
 			{
-				cache = Applicable.to(appliable);
+				cache = Applicable.to(Objects.requireNonNull(appliable));
 			}
 			builder.put(capability, cache);
 		}
