@@ -35,9 +35,9 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 	
 	public ModelPartItemLayerConvert(ModelPartItemLayer layer, String convert)
 	{
-		super.icon = layer.icon;
-		super.index = layer.index;
-		super.zOffset = layer.zOffset;
+		this.icon = layer.icon;
+		this.index = layer.index;
+		this.zOffset = layer.zOffset;
 		this.convert = convert;
 	}
 	

@@ -27,7 +27,7 @@ public class TemplateIconHandler implements IIconCollection
 	
 	public static TemplateIconHandler fromJson(String json)
 	{
-		return new TemplateIconHandler(Maps.transformValues(new Gson().<Map<String, String>> fromJson(json, Map.class), s -> new ResourceLocation(s)));
+		return new TemplateIconHandler(Maps.transformValues(new Gson().<Map<String, String>> fromJson(json, Map.class), ResourceLocation::new));
 	}
 	
 	public TemplateIconHandler(Map<String, ResourceLocation> textures)

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
@@ -94,14 +95,12 @@ public class WorldPropHandler
 		WORLD_PROPERTIES.put(dimID, provider);
 	}
 	
-	@Nonnull
-	public static IWorldPropProvider getWorldProperty(World world)
+	@Nonnull public static IWorldPropProvider getWorldProperty(@Nullable World world)
 	{
-		return getWorldProperty(world.provider.getDimension());
+		return world == null || world.provider == null ? DEFAULT : getWorldProperty(world.provider.getDimension());
 	}
 	
-	@Nonnull
-	public static IWorldPropProvider getWorldProperty(int dimID)
+	@Nonnull public static IWorldPropProvider getWorldProperty(int dimID)
 	{
 		return WORLD_PROPERTIES.getOrDefault(dimID, DEFAULT);
 	}

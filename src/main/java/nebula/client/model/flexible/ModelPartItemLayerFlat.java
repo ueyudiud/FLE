@@ -23,9 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelPartItemLayerFlat extends ModelPartItemLayer
 {
-	@Deprecated
-	boolean renderSide = false;
-	
 	ModelPartItemLayerFlat(ModelPartItemLayer layer)
 	{
 		super.icon = layer.icon;

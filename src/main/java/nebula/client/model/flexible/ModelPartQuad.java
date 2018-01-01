@@ -45,8 +45,7 @@ public class ModelPartQuad implements INebulaModelPart
 		JsonElement json1 = object.get("pos");
 		if (json1.isJsonArray())
 		{
-			if (json1.getAsJsonArray().get(0).isJsonArray())// Full position
-															// data
+			if (json1.getAsJsonArray().get(0).isJsonArray())// Full position  data.
 			{
 				part.pos = Jsons.getArray(json1.getAsJsonArray(), 4, float[].class, j -> Jsons.getFloatArray(j.getAsJsonArray(), 3));
 			}
@@ -160,7 +159,7 @@ public class ModelPartQuad implements INebulaModelPart
 			builder1.color(this.red, this.green, this.blue, this.alpha);
 			for (int i = 0; i < 4; ++i)
 			{
-				int i1 = i ^ 3;
+				int i1 = i ^ 0x3;
 				builder1.pos(this.pos[i1][0] / 16.0F, this.pos[i1][1] / 16.0F, this.pos[i1][2] / 16.0F, u[i1], v[i1]);
 			}
 			builder1.endQuad();

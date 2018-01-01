@@ -6,6 +6,7 @@ package nebula.client.util;
 
 import java.util.Random;
 
+import nebula.client.model.ModelLocation;
 import nebula.client.render.FontRenderExtend;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.render.ParticleDiggingExt;
@@ -41,7 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Client
 {
-	public static final ModelResourceLocation MODEL_MISSING = new ModelResourceLocation("builtin/missing", "missing");
+	public static final ModelResourceLocation MODEL_MISSING = new ModelLocation("minecraft", "builtin/missing", "missing");
 	
 	public static int mulColor(int ARGB1, int ARGB2)
 	{
@@ -180,7 +181,7 @@ public class Client
 	
 	public static void registerModel(Item item, int meta, String domain, String path)
 	{
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(domain + ":" + path, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelLocation(domain, path, "inventory"));
 	}
 	
 	public static void registerModel(Block block, ModelResourceLocation location)
