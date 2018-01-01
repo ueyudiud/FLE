@@ -6,7 +6,6 @@ package nebula.client.model.flexible;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -178,7 +177,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		// Register allowed build item variant.
 		ModelLoader.registerItemVariants(item, location1);
 		// The real location of model.
-		location = new ResourceLocation(location.getResourceDomain(), "models/item/" + location.getResourcePath() + ".json");
+		location = new ResourceLocation(location.getResourceDomain(), "models/item/" + location.getResourcePath());
 		
 		LOCATION_TO_ITEM_MAP.put(location1, item);
 		registerModel(location1, location, NebulaModelDeserializer.ITEM);
@@ -310,25 +309,19 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		ItemColors colors2 = Minecraft.getMinecraft().getItemColors();
 		for (Entry<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> entry : map.entrySet())
 		{
+			bar.step(entry.getValue().getKey().toString());
+			this.defaultDeserializer = entry.getValue().getValue();
+			this.currentLocation = entry.getValue().getKey();
+			this.currentItem = LOCATION_TO_ITEM_MAP.get(entry.getKey());
+			IModel cache = null;
+			ResourceLocation location = entry.getValue().getKey();
 			try
 			{
-				bar.step(entry.getValue().getKey().toString());
-				this.defaultDeserializer = entry.getValue().getValue();
-				this.currentLocation = entry.getValue().getKey();
-				this.currentItem = LOCATION_TO_ITEM_MAP.get(entry.getKey());
-				byte[] code = IO.copyResource(manager, entry.getValue().getKey());
-				IModel cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(code)), IModel.class);
-				this.models.put(entry.getKey(), cache);
-				if (cache instanceof IRecolorableModel && colors1 != null && colors2 != null)
-				{
-					((IRecolorableModel) cache).registerColorMultiplier(colors1);
-					((IRecolorableModel) cache).registerColorMultiplier(colors2);
-				}
-				this.currentItem = null;
-				this.currentLocation = null;
-				this.defaultDeserializer = null;
+				location = new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json");
+				byte[] code = IO.copyResource(manager, location);
+				cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(code)), IModel.class);
 			}
-			catch (FileNotFoundException exception)
+			catch (IOException exception)
 			{
 				Log.cache(new ResourceLocation(exception.getMessage()));
 			}
@@ -336,6 +329,18 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			{
 				Log.cache(new RuntimeException("Fail to load model of name \"" + entry.getKey() + "\"=>\"" + entry.getValue().getKey() + "\"", exception));
 			}
+			if (cache != null)
+			{
+				this.models.put(entry.getKey(), cache);
+				if (cache instanceof IRecolorableModel && colors1 != null && colors2 != null)
+				{
+					((IRecolorableModel) cache).registerColorMultiplier(colors1);
+					((IRecolorableModel) cache).registerColorMultiplier(colors2);
+				}
+			}
+			this.currentItem = null;
+			this.currentLocation = null;
+			this.defaultDeserializer = null;
 		}
 		ProgressManager.pop(bar);
 		Log.logCachedInformations(this.stream, Level.WARN, ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
@@ -446,7 +451,10 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	public static IIconCollection loadIconHandler(String location)
 	{
 		// TODO
-		if (location.charAt(0) == '[') return new TemplateIconHandler(getTextureSet(new ResourceLocation(location.substring(1))));
+		if (location.charAt(0) == '[')
+		{
+			return new TemplateIconHandler(getTextureSet(new ResourceLocation(location.substring(1))));
+		}
 		return new SimpleIconHandler(NORMAL, new ResourceLocation(location));// Default loader instead.
 	}
 	

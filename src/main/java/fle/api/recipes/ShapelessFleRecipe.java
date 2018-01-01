@@ -51,10 +51,7 @@ public class ShapelessFleRecipe implements IRecipe
 			this.inputs = new ArrayList<>();
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
 			
-			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack -> {
-				for (int j = 0; j < stack.size; this.inputs.add(stack.element), ++j)
-					;
-			});
+			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack -> stack.repeat(this.inputs::add));
 		}
 		catch (Exception exception)
 		{

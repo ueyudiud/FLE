@@ -442,28 +442,31 @@ public class IdAllocatableRegister<T extends IRegisterElement<T>> extends Abstra
 		final int length = buf.readInt();
 		for (int i = 0; i < length; ++i)
 		{
-			String key = buf.readString(128);
-			int id = buf.readInt();
-			IdAllocatableDelegate delegate = values.remove(key);
-			if (delegate != null && delegate.value != null)
+			if (buf.readBoolean())
 			{
-				if (delegate.fixedID)
-					throw new IOException("The delegate " + delegate.name + " has fixed id.");
-				delegate.changeID(id);
-				this.idMap.put(id, delegate.value);
-				usedSlots.add(id);
-			}
-			else
-			{
-				if (missingIDCallback != null)
+				String key = buf.readString(128);
+				int id = buf.readVarInt();
+				IdAllocatableDelegate delegate = values.remove(key);
+				if (delegate != null && delegate.value != null)
 				{
-					missingIDCallback.accept(key);
+					if (delegate.fixedID)
+						throw new IOException("The delegate " + delegate.name + " has fixed id.");
+					delegate.changeID(id);
+					this.idMap.put(id, delegate.value);
+					usedSlots.add(id);
 				}
-				if (this.createEmptyKey)
+				else
 				{
-					(delegate != null ? delegate : getOrCreateDelegate(key)).changeID(id);
+					if (missingIDCallback != null)
+					{
+						missingIDCallback.accept(key);
+					}
+					if (this.createEmptyKey)
+					{
+						(delegate != null ? delegate : getOrCreateDelegate(key)).changeID(id);
+					}
+					usedSlots.add(id);
 				}
-				usedSlots.add(id);
 			}
 		}
 		if (!values.isEmpty())

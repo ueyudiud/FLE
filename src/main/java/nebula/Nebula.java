@@ -218,8 +218,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void check(FMLConstructionEvent event)
 	{
-		Log.info("Injecting Nebula proxy...");// Forge does not let Dummy Mod
-		// Container auto inject proxy.
+		Log.info("Injecting Nebula proxy...");// Forge does not let Dummy Mod Container auto inject proxy.
 		try
 		{
 			SidedProxy proxy = getClass().getField("proxy").getAnnotation(SidedProxy.class);
