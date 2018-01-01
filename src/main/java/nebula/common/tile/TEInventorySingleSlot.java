@@ -57,7 +57,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -203,7 +203,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stack = ItemStack.copyItemStack(stack);
 		onInventoryChanged();
@@ -216,7 +216,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}
@@ -226,5 +226,23 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	{
 		super.onBlockBreak(state);
 		TileEntities.dropItemStacks(this);
+	}
+	
+	@Override
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public final int getInventoryStackLimit()
+	{
+		return getStackLimit();
+	}
+	
+	@Override
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
 	}
 }

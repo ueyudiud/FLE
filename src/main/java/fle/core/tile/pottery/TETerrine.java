@@ -90,7 +90,7 @@ public class TETerrine extends TEInventoryTankSingleAbstract implements ITP_Bloc
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return 64;
 	}

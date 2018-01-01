@@ -22,6 +22,11 @@ public class ModelLocation extends ModelResourceLocation
 		super(0, dormain, path, variant);
 	}
 	
+	public ModelLocation(String location, String variant)
+	{
+		this(new ResourceLocation(location), variant);
+	}
+	
 	public ModelLocation(String path)
 	{
 		super(path);

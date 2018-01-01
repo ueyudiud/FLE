@@ -165,7 +165,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		if (this.stacks == null)
 		{

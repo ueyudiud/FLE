@@ -52,7 +52,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -186,7 +186,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		stacks()[index] = ItemStack.copyItemStack(stack);
 		onInventoryChanged(index);
@@ -199,7 +199,7 @@ public abstract class TEInventoryDynamicSize extends TESynchronization implement
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}

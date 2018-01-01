@@ -55,7 +55,13 @@ public class TEInventoryBasic extends TESynchronization implements IBasicInvento
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -189,7 +195,13 @@ public class TEInventoryBasic extends TESynchronization implements IBasicInvento
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
+	}
+	
+	@Override
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stacks[index] = ItemStack.copyItemStack(stack);
 		onInventoryChanged(index);
@@ -202,7 +214,13 @@ public class TEInventoryBasic extends TESynchronization implements IBasicInvento
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public final int getInventoryStackLimit()
+	{
+		return getStackLimit();
+	}
+	
+	@Override
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}

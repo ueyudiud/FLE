@@ -47,7 +47,7 @@ public class InventoryHelper
 	{
 		if (target == null || !inventory.hasStackInSlot(index)) return type != MATCH_STACK_CONTAIN && type != MATCH_STACK_CONTAIN_WITHOUTNBT;
 		int max, size;
-		int limit = inventory.getInventoryStackLimit();
+		int limit = inventory.getStackLimit();
 		ItemStack stack = inventory.getStack(index);
 		switch (type)
 		{
@@ -89,13 +89,13 @@ public class InventoryHelper
 			int result;
 			if (!inventory.hasStackInSlot(index))
 			{
-				result = Math.min(stack.stackSize, inventory.getInventoryStackLimit());
-				inventory.setInventorySlotContents(index, stack.splitStack(result));
+				result = Math.min(stack.stackSize, inventory.getStackLimit());
+				inventory.setSlotContents(index, stack.splitStack(result));
 				return stack.stackSize <= 0 ? null : stack;
 			}
 			else
 			{
-				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
+				result = L.min(stack.stackSize, inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
 				stack.stackSize -= result;
 				inventory.getStack(index).stackSize += result;
 				return stack.stackSize <= 0 ? null : stack;
@@ -145,30 +145,30 @@ public class InventoryHelper
 			if (onlyFullyInsert)
 				return matchStack(MATCH_STACK_FULLY_INSERT, inventory, index, stack) ? stack.stackSize : 0;
 			else
-				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getInventoryStackLimit())
-						: ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
+				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getStackLimit())
+						: ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
 		}
 		else
 		{
 			int result;
 			if (!inventory.hasStackInSlot(index))
 			{
-				result = Math.min(stack.stackSize, inventory.getInventoryStackLimit());
+				result = Math.min(stack.stackSize, inventory.getStackLimit());
 				if (affectOnSourceStack)
 				{
-					inventory.setInventorySlotContents(index, stack.splitStack(result));
+					inventory.setSlotContents(index, stack.splitStack(result));
 				}
 				else
 				{
 					ItemStack stack1 = stack.copy();
 					stack1.stackSize = result;
-					inventory.setInventorySlotContents(index, stack1);
+					inventory.setSlotContents(index, stack1);
 				}
 				return result;
 			}
 			else if (ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack))
 			{
-				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
+				result = L.min(stack.stackSize, inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
 				if (affectOnSourceStack)
 				{
 					stack.stackSize -= result;
@@ -205,7 +205,7 @@ public class InventoryHelper
 					entry = FluidContainerHandler.fillContainerFromIO(stack, maxFill, io, Direction.Q, false);
 					if (entry != null)
 					{
-						inventory.setInventorySlotContents(in, entry.getKey());
+						inventory.setSlotContents(in, entry.getKey());
 						return true;
 					}
 				}
@@ -241,7 +241,7 @@ public class InventoryHelper
 					entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, false);
 					if (entry != null)
 					{
-						inventory.setInventorySlotContents(in, entry.getKey());
+						inventory.setSlotContents(in, entry.getKey());
 						return true;
 					}
 				}
@@ -424,7 +424,7 @@ public class InventoryHelper
 	{
 		if (stacks == null || stacks.length == 0) return false;
 		ItemStack[] array = inventory.toArray();
-		int limit = inventory.getInventoryStackLimit();
+		int limit = inventory.getStackLimit();
 		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
 		A.executeAll(stacks, stack -> list.add(ItemStack.copyItemStack(stack)));
 		for (int i = from; i < to; ++i)

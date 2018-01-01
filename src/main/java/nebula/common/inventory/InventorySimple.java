@@ -53,7 +53,7 @@ public class InventorySimple implements IBasicInventory
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return this.limit;
 	}
@@ -83,7 +83,7 @@ public class InventorySimple implements IBasicInventory
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stacks[index] = ItemStack.copyItemStack(stack);
 	}

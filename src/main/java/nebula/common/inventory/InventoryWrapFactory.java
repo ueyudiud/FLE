@@ -37,15 +37,15 @@ public final class InventoryWrapFactory
 	public static interface I1 extends IBasicInventory, IInventory, IItemHandler
 	{
 		@Override
-		default boolean isItemValidForSlot(int index, ItemStack stack)
+		default boolean isValidForSlot(int index, ItemStack stack)
 		{
-			return IBasicInventory.super.isItemValidForSlot(index, stack);
+			return IBasicInventory.super.isValidForSlot(index, stack);
 		}
 		
 		@Override
-		default int getInventoryStackLimit()
+		default int getStackLimit()
 		{
-			return IBasicInventory.super.getInventoryStackLimit();
+			return IBasicInventory.super.getStackLimit();
 		}
 		
 		@Override
@@ -114,9 +114,9 @@ public final class InventoryWrapFactory
 		{
 		}
 		
-		public boolean isItemValidForSlot(int index, ItemStack stack)
+		public boolean isValidForSlot(int index, ItemStack stack)
 		{
-			return this.inventory.isItemValidForSlot(index, stack);
+			return this.inventory.isValidForSlot(index, stack);
 		}
 		
 		public int getField(int id)
@@ -172,14 +172,14 @@ public final class InventoryWrapFactory
 			return this.inventory.removeStackFromSlot(index);
 		}
 		
-		public void setInventorySlotContents(int index, @Nullable ItemStack stack)
+		public void setSlotContents(int index, @Nullable ItemStack stack)
 		{
-			this.inventory.setInventorySlotContents(index, stack);
+			this.inventory.setSlotContents(index, stack);
 		}
 		
-		public int getInventoryStackLimit()
+		public int getStackLimit()
 		{
-			return this.inventory.getInventoryStackLimit();
+			return this.inventory.getStackLimit();
 		}
 		
 		public int getSlots()
@@ -189,7 +189,7 @@ public final class InventoryWrapFactory
 		
 		public ItemStack insertItem(int slot, @Nullable ItemStack stack, boolean simulate)
 		{
-			if (!this.inventory.isItemValidForSlot(slot, stack) || stack == null) return stack;
+			if (!this.inventory.isValidForSlot(slot, stack) || stack == null) return stack;
 			stack = stack.copy();
 			int size = this.inventory.incrItem(slot, stack, simulate);
 			stack.stackSize -= size;
@@ -199,6 +199,24 @@ public final class InventoryWrapFactory
 		public ItemStack extractItem(int slot, int amount, boolean simulate)
 		{
 			return this.inventory.decrItem(slot, amount, simulate);
+		}
+		
+		@Override
+		public final boolean isItemValidForSlot(int index, ItemStack stack)
+		{
+			return isValidForSlot(index, stack);
+		}
+		
+		@Override
+		public final int getInventoryStackLimit()
+		{
+			return getStackLimit();
+		}
+		
+		@Override
+		public final void setInventorySlotContents(int index, ItemStack stack)
+		{
+			setSlotContents(index, stack);
 		}
 	}
 	
@@ -213,9 +231,9 @@ public final class InventoryWrapFactory
 		}
 		
 		@Override
-		public void setInventorySlotContents(int index, ItemStack stack)
+		public void setSlotContents(int index, ItemStack stack)
 		{
-			super.setInventorySlotContents(index, stack);
+			super.setSlotContents(index, stack);
 			this.container.onCraftMatrixChanged(this);
 		}
 		

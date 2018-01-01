@@ -72,7 +72,7 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return 1;
 	}

@@ -45,7 +45,7 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		ModelResourceLocation location = new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal");
+		ModelResourceLocation location = new ModelLocation(this.material.modid, "plant/" + this.material.name, "normal");
 		ModelLoader.setCustomStateMapper(this.block, block -> ImmutableMap.of(block.getDefaultState(), location));
 		Client.registerModel(this.block.getItemBlock(), new ModelLocation(location, "inventory"));
 		if (this.withColor) Renders.registerBiomeColorMultiplier(this.block);

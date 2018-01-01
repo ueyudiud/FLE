@@ -3,11 +3,17 @@
  */
 package fle.core.items;
 
+import com.google.common.collect.Maps;
+
 import farcore.lib.solid.SolidStack;
 import farcore.lib.solid.container.SolidContainerManager;
 import fle.core.FLE;
 import fle.loader.IBFS;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.item.ItemSubBehavior;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -38,5 +44,15 @@ public class ItemSack extends ItemSubBehavior
 		SolidContainerManager.addContainerItem(this, 0, 2, new SolidStack(IBFS.sWholemealMillet, 1000));
 		SolidContainerManager.addContainerItem(this, 0, 3, new SolidStack(IBFS.sWheat, 1000));
 		SolidContainerManager.addContainerItem(this, 0, 4, new SolidStack(IBFS.sWholemealWheat, 1000));
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/sack"));
+		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerTextureSet(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/sack/" + key)));
 	}
 }

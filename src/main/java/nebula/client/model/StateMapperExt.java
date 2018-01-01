@@ -111,7 +111,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		
 		map = ImmutableSortedMap.copyOf(map, PROPERTY_COMPARATOR);
 		
-		ModelResourceLocation location = new ModelResourceLocation(path, getPropertyKey(map));
+		ModelResourceLocation location = new ModelLocation(path, getPropertyKey(map));
 		return location;
 	}
 	

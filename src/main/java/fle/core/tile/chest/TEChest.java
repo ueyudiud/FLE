@@ -129,7 +129,7 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -328,5 +328,23 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 	public void onBlockBreak(IBlockState state)
 	{
 		if (!this.portable) TileEntities.dropItemStacks(this);
+	}
+	
+	@Override
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public final int getInventoryStackLimit()
+	{
+		return getStackLimit();
+	}
+	
+	@Override
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
 	}
 }

@@ -81,7 +81,7 @@ public interface IBasicInventory
 	 * <li>The slot is empty or the item and tag from stack in slot is equal to
 	 * resource.
 	 * <li>The new stack size in slot is no greater than the size get from
-	 * {@link #getInventoryStackLimit()}.</li>
+	 * {@link #getStackLimit()}.</li>
 	 * <p>
 	 * If input stack is <tt>null</tt>, the method will return <tt>true</tt>. To
 	 * be convince, using <br>
@@ -115,7 +115,7 @@ public interface IBasicInventory
 	 * <li>The slot is empty or the item and tag from stack in slot is equal to
 	 * resource.
 	 * <li>The current stack size in slot is less than the size get from
-	 * {@link #getInventoryStackLimit()}.</li>
+	 * {@link #getStackLimit()}.</li>
 	 * <p>
 	 * If input stack is <tt>null</tt>, the method will return <tt>0</tt>.
 	 * 
@@ -151,13 +151,13 @@ public interface IBasicInventory
 	 * Sets the given item stack to the specified slot in the inventory (can be
 	 * crafting or armor sections).
 	 */
-	void setInventorySlotContents(int index, @Nullable ItemStack stack);
+	void setSlotContents(int index, @Nullable ItemStack stack);
 	
 	/**
 	 * Returns the maximum stack size for a inventory slot. Seems to always be
 	 * 64, possibly will be extended.
 	 */
-	default int getInventoryStackLimit()
+	default int getStackLimit()
 	{
 		return 64;
 	}
@@ -169,7 +169,7 @@ public interface IBasicInventory
 	 * @param stack
 	 * @return
 	 */
-	default boolean isItemValidForSlot(int index, ItemStack stack)
+	default boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}

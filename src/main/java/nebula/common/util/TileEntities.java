@@ -139,7 +139,7 @@ public final class TileEntities
 	{
 		if (inventory.getStack(idx) == null)
 		{
-			inventory.setInventorySlotContents(idx, stack.instance());
+			inventory.setSlotContents(idx, stack.instance());
 		}
 		else
 		{
@@ -211,7 +211,7 @@ public final class TileEntities
 		ItemStacks.damageTool(stack, amount, user, type);
 		if (stack.stackSize <= 0)
 		{
-			inventory.setInventorySlotContents(index, null);
+			inventory.setSlotContents(index, null);
 			if (user != null)
 			{
 				user.renderBrokenItemStack(stack);

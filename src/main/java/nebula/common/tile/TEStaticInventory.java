@@ -66,7 +66,13 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -200,7 +206,13 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
+	}
+	
+	@Override
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stacks[index] = ItemStack.copyItemStack(stack);
 		onInventoryChanged(index);
@@ -213,7 +225,13 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public final int getInventoryStackLimit()
+	{
+		return getInventoryStackLimit();
+	}
+	
+	@Override
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}
