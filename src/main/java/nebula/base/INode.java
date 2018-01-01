@@ -4,7 +4,11 @@
 package nebula.base;
 
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,6 +66,44 @@ public interface INode<T> extends Iterable<T>
 	default Iterator<T> iterator()
 	{
 		return new NodeIterator<>(this);
+	}
+	
+	default Stream<T> stream()
+	{
+		return StreamSupport.<T>stream(new Spliterator<T>()
+		{
+			INode<T> node = INode.this;
+			
+			@Override
+			public boolean tryAdvance(Consumer<? super T> action)
+			{
+				if (node != null)
+				{
+					action.accept(node.value());
+					node = node.next();
+					return true;
+				}
+				return false;
+			}
+			
+			@Override
+			public Spliterator<T> trySplit()
+			{
+				return null;
+			}
+			
+			@Override
+			public long estimateSize()
+			{
+				return Long.MAX_VALUE;
+			}
+			
+			@Override
+			public int characteristics()
+			{
+				return 0;
+			}
+		}, false);
 	}
 	
 	/**

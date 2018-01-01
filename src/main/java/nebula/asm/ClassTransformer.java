@@ -26,11 +26,11 @@ import net.minecraft.launchwrapper.IClassTransformer;
  */
 public class ClassTransformer implements IClassTransformer
 {
-	static final Map<String, OpInformation> informations = new HashMap<>();
+	static final Map<String, OpInfo> informations = new HashMap<>();
 	
-	OpInformation create(String name)
+	OpInfo create(String name)
 	{
-		return new OpInformation(name);
+		return new OpInfo(name);
 	}
 	
 	private int numInsertions = 0;
@@ -45,12 +45,12 @@ public class ClassTransformer implements IClassTransformer
 		{
 			NebulaASMLogHelper.keyOutputStream.println(name + "=" + transformedName);
 		}
-		OpInformation information;
+		OpInfo information;
 		if ((information = informations.remove(transformedName)) != null) return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
 	
-	public byte[] modifyClass(String clazzName, OpInformation information, byte[] basicClass)
+	public byte[] modifyClass(String clazzName, OpInfo information, byte[] basicClass)
 	{
 		try
 		{

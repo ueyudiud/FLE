@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.item;
 
 import nebula.common.foodstat.EnumNutrition;
@@ -26,9 +25,9 @@ public class FoodStatBase implements IFoodStat
 	
 	public FoodStatBase(float foodAmount, float saturationAmount, float drinkAmount)
 	{
-		foodAmt = foodAmount;
-		saturationAmt = saturationAmount;
-		drinkAmt = drinkAmount;
+		this.foodAmt = foodAmount;
+		this.saturationAmt = saturationAmount;
+		this.drinkAmt = drinkAmount;
 	}
 	
 	public FoodStatBase setEffect(PotionEffect effect)
@@ -45,11 +44,11 @@ public class FoodStatBase implements IFoodStat
 	
 	public FoodStatBase setNutrition(EnumNutrition nutrition, float amount)
 	{
-		if (nutritionAmt == null)
+		if (this.nutritionAmt == null)
 		{
-			nutritionAmt = new float[] { 0, 0, 0, 0, 0, 0 };
+			this.nutritionAmt = new float[] { 0, 0, 0, 0, 0, 0 };
 		}
-		nutritionAmt[nutrition.ordinal()] = amount;
+		this.nutritionAmt[nutrition.ordinal()] = amount;
 		return this;
 	}
 	
@@ -61,70 +60,70 @@ public class FoodStatBase implements IFoodStat
 	
 	public FoodStatBase setWolfEdible()
 	{
-		isWolfEdible = true;
+		this.isWolfEdible = true;
 		return this;
 	}
 	
 	public FoodStatBase setAlwaysEdible()
 	{
-		isAlwaysEdible = true;
+		this.isAlwaysEdible = true;
 		return this;
 	}
 	
 	@Override
 	public float[] getNutritionAmount(ItemStack stack)
 	{
-		return nutritionAmt;
+		return this.nutritionAmt;
 	}
 	
 	@Override
 	public float getFoodAmount(ItemStack stack)
 	{
-		return foodAmt;
+		return this.foodAmt;
 	}
 	
 	@Override
 	public float getSaturation(ItemStack stack)
 	{
-		return saturationAmt;
+		return this.saturationAmt;
 	}
 	
 	@Override
 	public float getDrinkAmount(ItemStack stack)
 	{
-		return drinkAmt;
+		return this.drinkAmt;
 	}
 	
 	@Override
 	public boolean isEdible(ItemStack stack, EntityPlayer player)
 	{
-		return player.canEat(isAlwaysEdible);
+		return player.canEat(this.isAlwaysEdible);
 	}
 	
 	@Override
 	public boolean isWolfEdible(ItemStack stack)
 	{
-		return isWolfEdible;
+		return this.isWolfEdible;
 	}
 	
 	@Override
 	public boolean isDrink(ItemStack stack)
 	{
-		return isDrink;
+		return this.isDrink;
 	}
 	
 	@Override
 	public int getEatDuration(ItemStack stack)
 	{
-		return eatDuration;
+		return this.eatDuration;
 	}
 	
 	@Override
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
-		if (effect != null)
+		if (this.effect != null)
 		{
-			player.addPotionEffect(new PotionEffect(effect));
+			player.addPotionEffect(new PotionEffect(this.effect));
 		}
 		stack.stackSize--;
 		return stack;

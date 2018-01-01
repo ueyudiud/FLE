@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tree;
 
 import farcore.lib.bio.GeneticMaterial;

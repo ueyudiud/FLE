@@ -312,7 +312,7 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 	{
 		EnumSet<PathNodeType> enumset = EnumSet.<PathNodeType> noneOf(PathNodeType.class);
 		PathNodeType pathnodetype = PathNodeType.BLOCKED;
-		double d0 = entitylivingIn.width / 2.0D;
+		//		double d0 = entitylivingIn.width / 2.0D;
 		BlockPos blockpos = new BlockPos(entitylivingIn);
 		
 		for (int i = 0; i < xSize; ++i)

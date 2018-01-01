@@ -64,7 +64,7 @@ public final class DitchBlockHandler implements Judgable<Mat>
 	}
 	
 	@Override
-	public boolean isTrue(Mat target)
+	public boolean test(Mat target)
 	{
 		return DITCH_ALLOWED_MATERIALS.contains(target);
 	}

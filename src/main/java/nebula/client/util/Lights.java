@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class Lights
+public final class Lights
 {
 	public static int get256Light(World world, BlockPos pos, EnumSkyBlock type)
 	{

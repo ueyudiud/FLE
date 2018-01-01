@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.tile.instance.wire;
 
 import java.util.Arrays;
@@ -21,9 +20,9 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author ueyudiud
  */
 public class TEThermalWire extends TESynchronization// TEWiring? No, you can't
-													// transfer heat through
-													// dimension :D.
-		implements IThermalHandler, IDebugableTile
+// transfer heat through
+// dimension :D.
+implements IThermalHandler, IDebugableTile
 {
 	private Mat material;
 	

@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.handler;
 
 import net.minecraft.client.Minecraft;

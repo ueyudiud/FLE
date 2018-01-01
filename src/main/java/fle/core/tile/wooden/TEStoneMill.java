@@ -5,7 +5,6 @@ package fle.core.tile.wooden;
 
 import java.io.IOException;
 
-import farcore.data.Keys;
 import farcore.lib.solid.container.SolidContainerHelper;
 import farcore.lib.solid.container.SolidTank;
 import fle.api.recipes.IRecipeMap;
@@ -14,7 +13,6 @@ import fle.api.recipes.instance.RecipeMaps;
 import fle.api.tile.TEITSRecipe;
 import fle.core.client.gui.wooden.GuiStoneMill;
 import fle.core.common.gui.wooden.ContainerStoneMill;
-import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.inventory.InventoryHelper;
@@ -43,7 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>> implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
-	private SolidTank	tank1	= new SolidTank(1000);
+	public SolidTank	tank1	= new SolidTank(1000);
 	public FluidTankN	tank2	= new FluidTankN(4000);
 	private int			buffer;
 	@SideOnly(Side.CLIENT)
@@ -52,6 +50,7 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	public TEStoneMill()
 	{
 		super(3);
+		this.syncTankState = false;
 	}
 	
 	@Override
@@ -124,7 +123,7 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	{
 		if (tileGUICheck(hand))
 		{
-			if (NebulaKeyHandler.get(player, Keys.ROTATE))
+			if (side.horizontal)
 			{
 				onRotateMill(player);
 				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);

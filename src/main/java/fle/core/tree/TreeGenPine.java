@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.tree;
 
 import java.util.Random;
@@ -28,6 +27,7 @@ public class TreeGenPine extends TreeGenAbstract
 		super(tree, generateCoreLeavesChance);
 	}
 	
+	@Override
 	public void setHeight(int minHeight, int randHeight)
 	{
 		this.minHeight = minHeight;

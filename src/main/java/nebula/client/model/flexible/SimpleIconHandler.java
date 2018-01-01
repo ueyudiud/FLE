@@ -44,10 +44,8 @@ public class SimpleIconHandler implements IIconCollection
 	@Override
 	public IIconCollection retexture(Map<String, String> map)
 	{
-		return map.containsKey(this.key) ? new SimpleIconHandler(this.key, new ResourceLocation(map.get(this.key))) : this;// No
-																															// retexture
-																															// will
-																															// allowed.
+		return map.containsKey(this.key) ?
+				new SimpleIconHandler(this.key, new ResourceLocation(map.get(this.key))) : this;// No allowed.
 	}
 	
 	@Override

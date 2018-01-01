@@ -1,20 +1,22 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.fluid;
 
 import java.io.IOException;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import nebula.base.function.Applicable;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
+import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.world.ICoord;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,11 +25,13 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 /**
- * Nebula fluid tank, include temperature option.
+ * Nebula improved fluid tank, include temperature option.
+ * <p>
+ * It implements more useful interfaces.
  * 
  * @author ueyudiud
  */
-public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundReaderAndWritter<FluidTankN>
+public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundReaderAndWritter<FluidTankN>, IBasicTanks
 {
 	protected boolean								floatCapacity		= false;
 	protected boolean								enableTemperature	= false;
@@ -319,5 +323,68 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	{
 		this.stack = buf.readFluidStack();
 		this.temperature = buf.readFloat();
+	}
+	
+	@Override
+	public FluidStack[] toFluidArray()
+	{
+		return new FluidStack[] { FluidStacks.copy(this.stack) };
+	}
+	
+	@Override
+	public void fromFluidArray(FluidStack[] stacks)
+	{
+		if (stacks.length != 1)
+			throw new IllegalArgumentException("Wrong stack array size.");
+		this.stack = FluidStacks.copy(stacks[0]);
+	}
+	
+	@Override
+	public int getFluidSlots()
+	{
+		return 1;
+	}
+	
+	@Override
+	public int getMaxFluidAmount(int id)
+	{
+		return this.capacity;
+	}
+	
+	@Override
+	public FluidStack getStackInFluidTank(int id)
+	{
+		return this.stack;
+	}
+	
+	@Override
+	public void setFluid(int id, FluidStack stack)
+	{
+		this.stack = FluidStacks.copy(stack);
+	}
+	
+	@Override
+	public FluidStack descFluid(int id, int maxAmount, boolean process)
+	{
+		return drain(maxAmount, process);
+	}
+	
+	@Override
+	public int incrFluid(int id, FluidStack stack, boolean process)
+	{
+		return fill(stack, process);
+	}
+	
+	@Override
+	public <T> T insertAllFluid(int from, int to, FluidStack[] stacks, Supplier<T> supplier)
+	{
+		if (!L.inRange(from, to - 1, 0))
+			return null;
+		switch (stacks.length)
+		{
+		case 0 : return supplier.get();
+		case 1 : return insertFluid(0, this.stack, false) ? Applicable.orApply(supplier, null) : null;
+		default: return null;
+		}
 	}
 }

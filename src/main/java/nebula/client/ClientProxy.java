@@ -68,22 +68,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientProxy extends CommonProxy implements IResourceManagerReloadListener
 {
 	public static final IBlockColor	BIOME_COLOR			= (state, worldIn, pos, tintIndex) -> {
-															boolean flag = worldIn == null || pos == null;
-															// Biome biome =
-															// flag ? null :
-															// worldIn.getBiome(pos);
-															switch (tintIndex)
-															{
-															case 0:
-																return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
-															case 1:
-																return flag ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
-															case 2:
-																return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
-															default:
-																return -1;
-															}
-														};
+		boolean flag = worldIn == null || pos == null;
+		// Biome biome =  flag ? null : worldIn.getBiome(pos);
+		switch (tintIndex)
+		{
+		case 0:
+			return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
+		case 1:
+			return flag ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
+		case 2:
+			return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
+		default:
+			return -1;
+		}
+	};
 	public static final IItemColor	ITEM_BIOME_COLOR	= (stack, index) -> BIOME_COLOR.colorMultiplier(null, null, null, index);
 	
 	private static Map<String, List<IRenderRegister>>	registers		= new HashMap<>();

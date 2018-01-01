@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.energy.thermal;
 
 import static nebula.common.util.Direction.DIRECTIONS_3D;
@@ -552,24 +551,24 @@ public class ThermalNet implements IEnergyNet
 						{
 							IThermalHandler tile1 = this.map.get(this.cachedPos);
 							if (!tile1.canConnectTo(direction.getOpposite()) || this.cachedList.contains(tile1))// To
-																												// check
-																												// if
-																												// this
-																												// current
-																												// is
-																												// already
-																												// calculated.
+								// check
+								// if
+								// this
+								// current
+								// is
+								// already
+								// calculated.
 								continue;
 							T2 = getRealHandlerTemperature(tile1, direction.getOpposite());
 							if (!L.similar(T1, T2))// Ignore small temperature
-													// difference.
+								// difference.
 								tile1.onHeatChange(direction.getOpposite(), -(current[i] = (long) (Maths.log_average(k1, k2) * (T2 - T1))));
 						}
 						else
 						{
 							T2 = getTemperature(this.world, this.cachedPos, false);
 							if (!L.similar(T1, T2))// Ignore small temperature
-													// difference.
+								// difference.
 							{
 								current[i] = (long) (Maths.log_average(k1, k2) * (T2 - T1));
 								if (current[i] != 0)

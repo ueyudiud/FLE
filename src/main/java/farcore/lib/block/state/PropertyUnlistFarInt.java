@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.block.state;
 
 import net.minecraftforge.common.property.IUnlistedProperty;

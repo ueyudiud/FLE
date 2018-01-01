@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
+import nebula.base.function.IntFunction;
 import nebula.base.function.SequenceFunction;
 
 /**
@@ -191,7 +192,7 @@ public final class Jsons
 		else
 		{
 			T[] a = ObjectArrays.newArray(clazz, len);
-			A.fill(a, i -> function.apply(array.get(i)));
+			A.fill(a, ((IntFunction<JsonElement>) array::get).andThen(function));
 			return a;
 		}
 	}
@@ -252,8 +253,7 @@ public final class Jsons
 	{
 		JsonArray result = new JsonArray();
 		float value;
-		for (int i = start; i < end; value = array[i++], result.add(new JsonPrimitive(value)))
-			;
+		for (int i = start; i < end; value = array[i++], result.add(new JsonPrimitive(value)));
 		return result;
 	}
 	

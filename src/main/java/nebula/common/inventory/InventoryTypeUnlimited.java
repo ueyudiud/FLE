@@ -93,7 +93,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		if (this.size == this.limit) return 0;
 		if (index < this.slots)
@@ -132,7 +132,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		return null;
 	}
@@ -165,7 +165,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		if (this.stacks == null)
 		{

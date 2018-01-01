@@ -21,14 +21,12 @@ import net.minecraft.util.IStringSerializable;
 @EnumStateName("facing")
 public enum EnumSlabState implements IStringSerializable
 {
-	DOWN(
-			"down",
-			EnumFacing.DOWN),
-	UP("up", EnumFacing.UP),
-	SOUTH("south", EnumFacing.SOUTH),
-	NORTH("north", EnumFacing.NORTH),
-	WEST("west", EnumFacing.WEST),
-	EAST("east", EnumFacing.EAST),
+	DOWN	("down"	, EnumFacing.DOWN),
+	UP		("up"	, EnumFacing.UP),
+	SOUTH	("south", EnumFacing.SOUTH),
+	NORTH	("north", EnumFacing.NORTH),
+	WEST	("west"	, EnumFacing.WEST),
+	EAST	("east"	, EnumFacing.EAST),
 	DOUBLE_UD("d_ud", EnumFacing.Axis.Y),
 	DOUBLE_NS("d_ns", EnumFacing.Axis.Z),
 	DOUBLE_WE("d_we", EnumFacing.Axis.X);

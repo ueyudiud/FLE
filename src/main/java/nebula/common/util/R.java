@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.lang.reflect.Constructor;
@@ -29,35 +28,28 @@ public final class R
 	}
 	
 	static final Map<String, Field>	FIELD_CACHE	= new HashMap();
-	private static Field			modifiersField;
+	private static final Field		MODIFIER_FIELD;
 	
 	public static void resetFieldCache()
 	{
 		FIELD_CACHE.clear();
 	}
 	
-	private static void initModifierField()
+	static
 	{
 		try
 		{
-			if (modifiersField == null)
-			{
-				modifiersField = Field.class.getDeclaredField("modifiers");
-				modifiersField.setAccessible(true);
-			}
+			MODIFIER_FIELD = Field.class.getDeclaredField("modifiers");
+			MODIFIER_FIELD.setAccessible(true);
 		}
-		catch (Throwable e)
+		catch (Exception exception)
 		{
-			throw new InternalError(e);
+			throw new RuntimeException("Failed to initalize modifier field.", exception);
 		}
 	}
 	
 	private static Field getField(Class<?> clazz, String mcpName, String obfName, boolean isPrivate, boolean isFinal, boolean alwaysInit) throws ReflectiveOperationException
 	{
-		if (isFinal)
-		{
-			initModifierField();
-		}
 		String key = NebulaLoadingPlugin.runtimeDeobf ? obfName : mcpName;
 		String key1 = clazz.getName() + "|" + key;
 		if (!alwaysInit && FIELD_CACHE.containsKey(key1)) return FIELD_CACHE.get(key1);
@@ -65,9 +57,9 @@ public final class R
 		{
 			Field field = isPrivate ? clazz.getDeclaredField(key) : clazz.getField(key);
 			if (isFinal)// Remove final modifier.
-				modifiersField.setInt(field,
+				MODIFIER_FIELD.setInt(field,
 						field.getModifiers() & 0xFFFFFFEF/** ~Modifier.FINAL */
-				);
+						);
 			if (field != null)
 			{
 				field.setAccessible(true);

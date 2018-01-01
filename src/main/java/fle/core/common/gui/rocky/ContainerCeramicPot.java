@@ -25,8 +25,11 @@ public class ContainerCeramicPot extends ContainerTileInventory<TECeramicPot>
 		addSlotToContainer(new SlotBase(tile, 4, 117, 19));
 		addSlotToContainer(new SlotBase(tile, 5, 117, 44));
 		addSlotToContainer(new FluidSlotN(tile.tank(), 66, 15, 8, 20));
-		TL tl1 = new TL(id).appendTransferLocate(this.locationPlayer).addToList(), tl2 = new TL(id + 1).appendTransferLocate(this.locationPlayer).addToList(), tl3 = new TLFluidContainerOnly(id + 2).appendTransferLocate(this.locationPlayer).addToList(),
-				tl5 = new TL(id + 5).appendTransferLocate(this.locationPlayer).addToList();
+		TL
+		tl1 = new TL(id).appendTransferLocate(this.locationPlayer).addToList(),
+		tl3 = new TLFluidContainerOnly(id + 2).appendTransferLocate(this.locationPlayer).addToList();
+		new TL(id + 1).appendTransferLocate(this.locationPlayer).addToList();
+		new TL(id + 5).appendTransferLocate(this.locationPlayer).addToList();
 		this.locationBag.appendTransferLocate(tl3).appendTransferLocate(tl1).appendTransferLocate(this.locationHand);
 		this.locationHand.appendTransferLocate(tl3).appendTransferLocate(tl1).appendTransferLocate(this.locationBag);
 	}

@@ -39,6 +39,7 @@ public abstract class PacketGui extends PacketAbstract
 	protected ContainerBase container()
 	{
 		EntityPlayer player = getPlayer();
+		//		Log.info("{} ? {}, ({})", this.guiid, player.openContainer.windowId, player.openContainer);
 		return player.openContainer.windowId == this.guiid && (player.openContainer instanceof ContainerBase) ? (ContainerBase) player.openContainer : null;
 	}
 }

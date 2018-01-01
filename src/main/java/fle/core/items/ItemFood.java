@@ -3,11 +3,15 @@
  */
 package fle.core.items;
 
+import com.google.common.collect.Maps;
+
 import fle.core.FLE;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.item.FoodStatBase;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IFoodStat;
 import nebula.common.item.ItemSubEdible;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,5 +48,8 @@ public class ItemFood extends ItemSubEdible
 	public void registerRender()
 	{
 		super.registerRender();
+		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/food"));
+		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerTextureSet(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/food/" + key)));
 	}
 }

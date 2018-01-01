@@ -8,13 +8,12 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
+import nebula.base.register.IRegisterDelegate;
+import nebula.common.data.IBufferSerializer;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraftforge.fml.common.registry.RegistryDelegate;
 
 /**
  * Solid stack. Like fluid stack, this type provide stack of solid.
@@ -29,40 +28,34 @@ public class SolidStack
 	/**
 	 * Solid stack serializer.
 	 */
-	public static final DataSerializer<SolidStack> SERIALIZER = new DataSerializer<SolidStack>()
+	public static final IBufferSerializer<PacketBuffer, SolidStack> BS = new IBufferSerializer<PacketBuffer, SolidStack>()
 	{
 		@Override
-		public void write(PacketBuffer buf, SolidStack value)
+		public void write(PacketBuffer buffer, SolidStack value)
 		{
 			if (value == null)
-				buf.writeBoolean(false);
+				buffer.writeBoolean(false);
 			else
 			{
-				buf.writeBoolean(true);
-				buf.writeShort(SolidAbstract.REGISTRY.getId(value.getSolid()));
-				buf.writeInt(value.amount);
-				buf.writeCompoundTag(value.tag);
+				buffer.writeBoolean(true);
+				buffer.writeShort(value.delegate.id());
+				buffer.writeInt(value.amount);
+				buffer.writeCompoundTag(value.tag);
 			}
 		}
 		
 		@Override
-		public SolidStack read(PacketBuffer buf) throws IOException
+		public SolidStack read(PacketBuffer buffer) throws IOException
 		{
-			if (buf.readBoolean())
-			{
-				SolidAbstract solid = SolidAbstract.REGISTRY.getObjectById(buf.readShort());
-				if (solid != null)
-				{
-					return new SolidStack(solid, buf.readInt(), buf.readCompoundTag());
-				}
-			}
-			return null;
+			return buffer.readBoolean() ?
+					new SolidStack(Solid.REGISTRY.getDelegete(buffer.readShort()), buffer.readInt(), buffer.readCompoundTag()) :
+						null;
 		}
 		
 		@Override
-		public DataParameter<SolidStack> createKey(int id)
+		public Class<SolidStack> getTargetClass()
 		{
-			return new DataParameter<>(id, this);
+			return SolidStack.class;
 		}
 	};
 	
@@ -84,9 +77,9 @@ public class SolidStack
 		}
 	};
 	
-	public int								amount;
-	public NBTTagCompound					tag;
-	private RegistryDelegate<SolidAbstract>	solidDelegate;
+	public int							amount;
+	public NBTTagCompound				tag;
+	private IRegisterDelegate<Solid>	delegate;
 	
 	public static SolidStack sizeOf(SolidStack stack, int amount)
 	{
@@ -98,7 +91,7 @@ public class SolidStack
 	public static SolidStack loadFromNBT(NBTTagCompound nbt)
 	{
 		SolidStack stack;
-		return (stack = new SolidStack()).readFromNBT(nbt).solidDelegate == null ? null : stack;
+		return (stack = new SolidStack()).readFromNBT(nbt).delegate == null ? null : stack;
 	}
 	
 	public static boolean areStackEqual(SolidStack stack1, SolidStack stack2)
@@ -112,34 +105,32 @@ public class SolidStack
 	{
 	}
 	
-	public SolidStack(SolidAbstract solid, int amount)
+	protected SolidStack(IRegisterDelegate<Solid> delegate, int amount, NBTTagCompound nbt)
 	{
-		this.solidDelegate = solid.delegate;
+		this.delegate = delegate;
+		this.amount = amount;
+		this.tag = nbt != null ? nbt.copy() : null;
+	}
+	
+	public SolidStack(Solid solid, int amount)
+	{
+		this.delegate = solid.delegate;
 		this.amount = amount;
 	}
 	
-	public SolidStack(SolidAbstract solid, int amount, NBTTagCompound nbt)
+	public SolidStack(Solid solid, int amount, NBTTagCompound nbt)
 	{
-		this(solid, amount);
-		if (nbt != null)
-		{
-			this.tag = nbt.copy();
-		}
+		this(solid.delegate, amount, nbt);
 	}
 	
 	SolidStack(SolidStack stack)
 	{
-		this.solidDelegate = stack.solidDelegate;
-		this.amount = stack.amount;
-		if (stack.tag != null)
-		{
-			this.tag = stack.tag.copy();
-		}
+		this(stack.delegate, stack.amount, stack.tag);
 	}
 	
-	public final SolidAbstract getSolid()
+	public final Solid getSolid()
 	{
-		return this.solidDelegate.get();
+		return this.delegate.get();
 	}
 	
 	public SolidStack splitStack(int amount)
@@ -148,19 +139,23 @@ public class SolidStack
 		return sizeOf(this, amount);
 	}
 	
-	public SolidStack readFromNBT(NBTTagCompound nbt)
+	private SolidStack readFromNBT(NBTTagCompound nbt)
 	{
-		this.amount = nbt.getInteger("Amount");
-		if (nbt.hasKey("Tag"))
+		if (nbt.hasKey("SolidName"))
 		{
-			this.tag = nbt.getCompoundTag("Tag");
+			this.delegate = Solid.REGISTRY.getDelegate(nbt.getString("SolidName"));
+			this.amount = nbt.getInteger("Amount");
+			if (nbt.hasKey("Tag"))
+			{
+				this.tag = nbt.getCompoundTag("Tag");
+			}
 		}
 		return this;
 	}
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setString("SolidName", this.solidDelegate.get().getRegistryName().toString());
+		nbt.setString("SolidName", this.delegate.name());
 		nbt.setInteger("Amount", this.amount);
 		if (this.tag != null)
 		{
@@ -175,7 +170,7 @@ public class SolidStack
 	 */
 	public boolean isSoildEqual(SolidStack other)
 	{
-		return other == null ? false : other.getSolid() == getSolid() && ItemStacks.areTagEqual(this.tag, other.tag);
+		return other == null ? false : this.delegate.equals(other.delegate) && ItemStacks.areTagEqual(this.tag, other.tag);
 	}
 	
 	/**

@@ -42,7 +42,15 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	private final Function<IBlockState, String>[]					blockDataGen;
 	private final int[]												itemLoadingData;
 	private final int[]												blockLoadingData;
+	/**
+	 * The transformers of different camera type.
+	 * @see #handlePerspective(TransformType)
+	 */
 	private final ImmutableMap<TransformType, TRSRTransformation>	transforms;
+	/**
+	 * Is model used ambient occlusion.
+	 * @see #isAmbientOcclusion()
+	 */
 	private final boolean											ao;
 	/**
 	 * The model state marked, if model has crashed during loading quad, the

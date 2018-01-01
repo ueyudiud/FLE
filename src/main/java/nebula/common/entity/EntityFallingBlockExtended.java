@@ -33,9 +33,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * The improved falling block.
  * 
  * @author ueyudiud
- * @see net.minecraft.entity.item.EntityFallingBlock
- * @see nebula.common.block.IHitByFallenBehaviorBlock
- * @see nebula.common.block.ISmartFallableBlock
+ * @see net.minecraft.entity.item.EntityFallingBlock EntityFallingBlock
+ * @see nebula.common.block.IHitByFallenBehaviorBlock IHitByFallenBehaviorBlock
+ * @see nebula.common.block.ISmartFallableBlock ISmartFallableBlock
  */
 public class EntityFallingBlockExtended extends Entity
 {

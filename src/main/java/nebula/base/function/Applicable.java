@@ -61,9 +61,14 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 		return new ApplicableCached<>(applicable);
 	}
 	
-	static <V> Applicable<V> or(@Nonnull BooleanSupplier supplier, @Nonnull Applicable<V> a1, @Nonnull Applicable<V> a2)
+	static <V> Applicable<V> or(@Nonnull BooleanSupplier supplier, @Nonnull Supplier<V> a1, @Nonnull Supplier<V> a2)
 	{
-		return () -> supplier.getAsBoolean() ? a1.apply() : a2.apply();
+		return () -> supplier.getAsBoolean() ? a1.get() : a2.get();
+	}
+	
+	static <V> V orApply(@Nullable Supplier<? extends V> supplier, V value)
+	{
+		return supplier == null ? value : supplier.get();
 	}
 	
 	default <V> Applicable<V> andThen(@Nonnull Function<? super T, ? extends V> function)
@@ -111,6 +116,5 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 *             provide in time, etc.
 	 * @return the applied value.
 	 */
-	@Nullable
-	T apply();
+	@Nullable T apply();
 }

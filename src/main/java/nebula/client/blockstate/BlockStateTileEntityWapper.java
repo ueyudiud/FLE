@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.blockstate;
 
 import net.minecraft.block.state.IBlockState;

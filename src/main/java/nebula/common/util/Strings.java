@@ -1,10 +1,11 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,11 +60,9 @@ public final class Strings
 	 * @param string the validated string.
 	 * @return the non-null string.
 	 */
-	@Nonnull
-	public static String validate(@Nullable String string)
+	@Nonnull public static String validate(@Nullable String string)
 	{
-		if (string == null) return "";
-		return string.trim();
+		return string != null ? string.trim() : "";
 	}
 	
 	/**
@@ -81,7 +80,7 @@ public final class Strings
 	 * @return the replaced string, if <tt>replacement</tt> not exist, return
 	 *         <tt>source</tt> directly.
 	 */
-	public static String replace(String source, char replacement, String insert)
+	public static String replace(@Nonnull String source, char replacement, @Nonnull String insert)
 	{
 		int i = source.indexOf(replacement);
 		if (i == -1) return source;
@@ -91,19 +90,33 @@ public final class Strings
 	public static String validateProperty(@Nullable String string)
 	{
 		if (string == null) return "";
-		String newString = "";
-		for (char chr : string.toCharArray())
+		char[] builder = new char[string.length()];
+		int idx = 0;
+		int i = 0;
+		while (string.charAt(i) == ' ')
+			i++;
+		int j;
+		for (j = 0; i < string.length(); ++i)
 		{
-			if (chr == '-' || chr == '\\' || chr == '/' || chr == '.' || chr == ' ')
+			char chr = string.charAt(i);
+			switch (chr)
 			{
-				newString += '_';
-			}
-			else
-			{
-				newString += chr;
+			case '-' :
+			case '\\':
+			case '/' :
+			case '.' :
+				builder[idx ++] = '_';
+				j = idx;
+				continue;
+			default  :
+				builder[idx ++ ] = chr;
+				continue;
+			case ' ' :
+				builder[idx ++] = '_';
+				continue;
 			}
 		}
-		return newString.trim();
+		return idx == j ? "" : new String(builder, 0, j);
 	}
 	
 	/**
@@ -113,11 +126,11 @@ public final class Strings
 	 * @param name
 	 * @return Upper cased string.
 	 */
-	public static String upcaseFirst(@Nullable String name)
+	public static @Nonnull String upcaseFirst(@Nullable String name)
 	{
 		String s = validate(name);
-		if (s.length() == 0) return "";
-		return new StringBuilder(s.length()).append(Character.toUpperCase(name.charAt(0))).append(s, 1, s.length()).toString();
+		return s.length() == 0 ? "" :
+			new StringBuilder(s.length()).append(Character.toUpperCase(name.charAt(0))).append(s, 1, s.length()).toString();
 	}
 	
 	/**
@@ -179,16 +192,29 @@ public final class Strings
 	 * For split string may throw an exception if split key is not exist in
 	 * split string, return the full string if it is no words exist.
 	 * 
-	 * @param str The split string.
-	 * @param split The split character.
-	 * @return
+	 * @param str the split String.
+	 * @param split the split character.
+	 * @return the split String array.
 	 */
 	public static String[] split(@Nullable String str, char split)
 	{
 		if (str == null)
 			return new String[0];
 		else if (str.indexOf(split) != -1)
-			return str.split(Character.toString(split));
+		{
+			List<String> list = new ArrayList<>(4);
+			int start = 0, idx = 0, length = str.length();
+			for (; idx < length; ++idx)
+			{
+				if (str.charAt(idx) == split)
+				{
+					list.add(str.substring(start, idx));
+					start = idx + 1;
+				}
+			}
+			list.add(str.substring(start));
+			return list.toArray(new String[list.size()]);
+		}
 		else
 			return new String[] { str };
 	}

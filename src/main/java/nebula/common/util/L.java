@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -516,20 +517,20 @@ public class L
 	// =====================================Functional method
 	// end===================================
 	
-	public static <T> boolean contain(Collection<? extends T> collection, Judgable<T> checker)
+	public static <T> boolean contain(@Nullable Collection<? extends T> collection, @Nonnull Predicate<T> checker)
 	{
 		if (collection == null || collection.isEmpty()) return false;
 		for (T target : collection)
-			if (checker.isTrue(target)) return true;
+			if (checker.test(target)) return true;
 		return false;
 	}
 	
 	@Nullable
-	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Judgable<T> predicate)
+	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Predicate<T> predicate)
 	{
 		if (collection == null || collection.isEmpty()) return null;
 		for (T target : collection)
-			if (predicate.isTrue(target)) return target;
+			if (predicate.test(target)) return target;
 		return null;
 	}
 	

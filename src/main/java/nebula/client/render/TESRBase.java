@@ -47,7 +47,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	protected boolean			enableColor		= true;
 	protected boolean			diffuseLight	= true;
 	protected boolean			flip			= false;
-	protected RenderHelper		helper			= RenderHelper.instance;
+	protected Drawer		helper			= Drawer.INSTANCE;
 	protected float				red				= 1.0F;
 	protected float				green			= 1.0F;
 	protected float				blue			= 1.0F;
@@ -128,7 +128,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 				u2 = getU(icon, (float) xMax);
 				v1 = getV(icon, (float) zMin);
 				v2 = getV(icon, (float) zMax);
-				this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR).face(this.red, this.green, this.blue, this.alpha, xMin, y1, zMin, u1, v1, xMin, y2, zMax, u1, v2, xMax, y3, zMax, u2, v2, xMax, y4, zMin, u2, v1).draw();
+				this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR).face_ptc(this.red, this.green, this.blue, this.alpha, xMin, y1, zMin, u1, v1, xMin, y2, zMax, u1, v2, xMax, y3, zMax, u2, v2, xMax, y4, zMin, u2, v1).draw();
 			}
 			// FIXME
 			// else
@@ -172,7 +172,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	{
 		float u1, u2;
 		float v1, v2;
-		this.helper.setIcon(null);
+		this.helper.bindIcon(null);
 		this.helper.setIconCoordScale(1.0F);
 		if (this.renderUp)
 		{
@@ -300,11 +300,11 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	{
 		if (!this.flip)
 		{
-			this.helper.face(icon, x1, y1, z1, u1, v1, x2, y2, z2, u2, v2, x3, y3, z3, u3, v3, x4, y4, z4, u4, v4, nx, ny, nz);
+			this.helper.face_ptn(icon, x1, y1, z1, u1, v1, x2, y2, z2, u2, v2, x3, y3, z3, u3, v3, x4, y4, z4, u4, v4, nx, ny, nz);
 		}
 		else
 		{
-			this.helper.face(icon, x1, y1, z1, u1, v1, x4, y4, z4, u4, v4, x3, y3, z3, u3, v3, x2, y2, z2, u2, v2, -nx, -ny, -nz);
+			this.helper.face_ptn(icon, x1, y1, z1, u1, v1, x4, y4, z4, u4, v4, x3, y3, z3, u3, v3, x2, y2, z2, u2, v2, -nx, -ny, -nz);
 		}
 	}
 	

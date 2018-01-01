@@ -7,6 +7,6 @@
  * The Solid Container is the container to collect solid. Such as
  * Fluid Container.
  * 
- * @see farcore.lib.solid.Solid
+ * @see farcore.lib.solid.SolidBase
  */
 package farcore.lib.solid;

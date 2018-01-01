@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.layer.abstracts;
 
 import fargen.core.layer.Layer;

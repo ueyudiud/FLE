@@ -70,7 +70,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	 * @param stack the source stack.
 	 * @param simulate do stack in tank <i>not</i> changed in <tt>insert</tt>
 	 *            action, if argument is <tt>true</tt>, the tank will only give
-	 *            similate result.
+	 *            simulate result.
 	 * @return return <tt>true</tt> if stack fully insert into tank.
 	 * @see #fill(SolidStack, boolean)
 	 */
@@ -152,7 +152,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	@Override
 	public void readFromNBT1(NBTTagCompound nbt)
 	{
-		this.stack = SolidStack.loadFromNBT(nbt.getCompoundTag("stack"));
+		this.stack = SolidStack.loadFromNBT(nbt);
 	}
 	
 	@Override
@@ -160,7 +160,7 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	{
 		if (this.stack != null)
 		{
-			this.stack.writeToNBT(nbt.getCompoundTag("stack"));
+			this.stack.writeToNBT(nbt);
 		}
 		return nbt;
 	}

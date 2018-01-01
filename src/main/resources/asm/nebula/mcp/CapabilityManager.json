@@ -1,0 +1,34 @@
+{
+	"name": "net.minecraftforge.common.capabilities.CapabilityManager",
+	"modification": [
+		{
+			"name": "register|(Ljava/lang/Class;Lnet/minecraftforge/common/capabilities/Capability$IStorage;Ljava/util/concurrent/Callable;)V",
+			"labels": [
+				{
+					"type": "insert_before",
+					"owner": "java/util/IdentityHashMap",
+					"name": "put",
+					"desc": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+					"off": -4,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 5
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/common/CommonOverride",
+							"name": "registerCapabilityType",
+							"desc": "(Ljava/lang/Class;Lnet/minecraftforge/common/capabilities/Capability;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

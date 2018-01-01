@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.util;
 
 import net.minecraft.entity.Entity;
@@ -18,6 +21,6 @@ public class DamageSourceEntityAttack extends EntityDamageSource
 	@Override
 	public ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)
 	{
-		return message != null ? message : super.getDeathMessage(entityLivingBaseIn);
+		return this.message != null ? this.message : super.getDeathMessage(entityLivingBaseIn);
 	}
 }

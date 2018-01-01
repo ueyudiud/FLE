@@ -297,13 +297,13 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 				if (facing == null)
 				{
 					List<BakedQuad> list = ArrayListAddWithCheck.requireNonnull();
-					A.executeAll(this.quads, m -> {
-						if (m != null) list.add(m.get(key));
-					});
+					A.executeAll(this.quads, m -> { if (m != null) list.add(m.get(key)); });
 					return list;
 				}
 				else
+				{
 					return ImmutableList.of();
+				}
 			}
 		}
 	}

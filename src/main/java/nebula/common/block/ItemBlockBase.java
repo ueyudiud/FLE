@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.block;
 
 import nebula.common.LanguageManager;
@@ -66,14 +69,14 @@ public class ItemBlockBase extends ItemBlock
 		 * The block will be offset if the target block is not replaceable.
 		 */
 		if (!block.isReplaceable(worldIn, pos) || playerIn.isSneaking())// But
-																		// will
-																		// force
-																		// to
-																		// offset
-																		// if
-																		// player
-																		// is
-																		// sneaking.
+			// will
+			// force
+			// to
+			// offset
+			// if
+			// player
+			// is
+			// sneaking.
 		{
 			pos = pos.offset(facing);
 		}

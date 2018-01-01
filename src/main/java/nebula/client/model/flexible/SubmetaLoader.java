@@ -60,7 +60,8 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 	};
 	
 	@Override
-	public Function<?, String> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+	public Function<?, String> deserialize(JsonElement json, Type typeOfT,
+			JsonDeserializationContext context) throws JsonParseException
 	{
 		return null;
 	}

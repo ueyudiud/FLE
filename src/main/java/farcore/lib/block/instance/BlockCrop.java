@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.block.instance;
 
 import java.util.ArrayList;
@@ -130,7 +133,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 				state = state.withProperty(PROP_CROP_TYPE, ((TECrop) tile).getStateName());
 			}
 			catch (Exception exception)// If client out of synch, the crop type
-										// might lost, use default instead.
+			// might lost, use default instead.
 			{
 				return state;
 			}

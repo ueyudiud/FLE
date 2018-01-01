@@ -14,6 +14,7 @@
 		},
 		"inventory": {
 			"model": "item/generated",
+			"transform": "forge:default-item",
 			"textures": { 
 				"layer0": "farcore:blocks/plants/inula",
 				"layer1": "farcore:blocks/plants/inula_flower"

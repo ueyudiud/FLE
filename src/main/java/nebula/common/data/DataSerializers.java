@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.data;
 
 import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
@@ -27,25 +26,25 @@ public class DataSerializers
 	public static final DataSerializer<Boolean>	BOOLEAN	= net.minecraft.network.datasync.DataSerializers.BOOLEAN;
 	public static final DataSerializer<Byte>	BYTE	= net.minecraft.network.datasync.DataSerializers.BYTE;
 	public static final DataSerializer<Short>	SHORT	= new DataSerializer<Short>()
-														{
-															@Override
-															public void write(PacketBuffer buf, Short value)
-															{
-																buf.writeShort(value);
-															}
-															
-															@Override
-															public Short read(PacketBuffer buf)
-															{
-																return buf.readShort();
-															}
-															
-															@Override
-															public DataParameter<Short> createKey(int id)
-															{
-																return new DataParameter<>(id, this);
-															}
-														};
+	{
+		@Override
+		public void write(PacketBuffer buf, Short value)
+		{
+			buf.writeShort(value);
+		}
+		
+		@Override
+		public Short read(PacketBuffer buf)
+		{
+			return buf.readShort();
+		}
+		
+		@Override
+		public DataParameter<Short> createKey(int id)
+		{
+			return new DataParameter<>(id, this);
+		}
+	};
 	
 	public static final DataSerializer<Integer>		VARINT		= net.minecraft.network.datasync.DataSerializers.VARINT;
 	public static final DataSerializer<String>		STRING		= net.minecraft.network.datasync.DataSerializers.STRING;

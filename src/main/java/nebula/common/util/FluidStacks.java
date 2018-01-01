@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.util.function.UnaryOperator;
@@ -137,9 +136,9 @@ public final class FluidStacks
 	{
 		if (result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return 0;
 		int amount = drainFluidToWorld(world, result.getBlockPos(), stack, doDrain);// For
-																					// smart
-																					// fluid
-																					// block.
+		// smart
+		// fluid
+		// block.
 		if (amount > 0) return amount;
 		return drainFluidToWorld(world, result.getBlockPos().offset(result.sideHit), stack, doDrain);
 	}
@@ -175,7 +174,7 @@ public final class FluidStacks
 			}
 		}
 		else if (blockRaw instanceof BlockLiquid)// Use for vanilla water and
-													// lava.
+			// lava.
 		{
 			if (stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
 			{

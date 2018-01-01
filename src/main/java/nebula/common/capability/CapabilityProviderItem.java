@@ -3,14 +3,9 @@
  */
 package nebula.common.capability;
 
-import java.lang.reflect.ParameterizedType;
-
-import com.google.common.reflect.TypeToken;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 /**
@@ -29,15 +24,10 @@ public class CapabilityProviderItem implements ICapabilityProvider
 		this.stack = stack;
 	}
 	
-	private static <T> Class<T> getType(IStorage<T> storage)
-	{
-		return (Class<T>) TypeToken.of(((ParameterizedType) TypeToken.of(storage.getClass()).getSupertype(IStorage.class).getType()).getActualTypeArguments()[0]).getRawType();
-	}
-	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		return getType(capability.getStorage()).isInstance(this) && facing == null;
+		return CapabilityHelper.getCapabilityType(capability).isInstance(this) && facing == null;
 	}
 	
 	@Override

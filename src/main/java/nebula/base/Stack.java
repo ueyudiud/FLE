@@ -4,6 +4,7 @@
 package nebula.base;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * The stack instance.
@@ -48,6 +49,11 @@ public class Stack<E> implements Serializable
 	public Stack<E> clone()
 	{
 		return new Stack<>(this.element, this.size);
+	}
+	
+	public void repeat(Consumer<? super E> consumer)
+	{
+		for (long i = this.size; i > 0; consumer.accept(this.element), i--);
 	}
 	
 	@Override

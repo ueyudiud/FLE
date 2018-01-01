@@ -75,7 +75,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	public boolean isEmpty()
 	{
 		return false;// The range will always not empty, with initializer
-						// checking.
+		// checking.
 	}
 	
 	@Override

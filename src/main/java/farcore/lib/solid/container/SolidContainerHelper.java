@@ -56,7 +56,7 @@ public class SolidContainerHelper
 							tank.drain(SolidStack.sizeOf(o1, handler.fill(o1, true)), true);
 							if (inputRaw.stackSize == 1 || input.stackSize == 0)
 							{
-								inventory.setInventorySlotContents(in, ItemStacks.valid(input));
+								inventory.setSlotContents(in, ItemStacks.valid(input));
 								return true;
 							}
 						}
@@ -73,7 +73,7 @@ public class SolidContainerHelper
 								if ((inputRaw.stackSize == 1 || input.stackSize == 0) &&
 										tank.insertSolid(i1, false))
 								{
-									inventory.setInventorySlotContents(in, ItemStacks.valid(input));
+									inventory.setSlotContents(in, ItemStacks.valid(input));
 									return true;
 								}
 							}
@@ -84,7 +84,7 @@ public class SolidContainerHelper
 								if (inputRaw.stackSize == 1 || input.stackSize == 0)
 								{
 									tank.fill(i2, true);
-									inventory.setInventorySlotContents(in, ItemStacks.valid(input));
+									inventory.setSlotContents(in, ItemStacks.valid(input));
 									return true;
 								}
 							}
@@ -98,7 +98,7 @@ public class SolidContainerHelper
 						SolidContainerData data = SolidContainerManager.getFilledContainer(input, tank.drain(Integer.MAX_VALUE, false));
 						if (data != null)
 						{
-							inventory.setInventorySlotContents(in, data.filled);
+							inventory.setSlotContents(in, data.filled);
 							tank.drain(data.contain, true);
 							return true;
 						}
@@ -112,7 +112,7 @@ public class SolidContainerHelper
 							{
 								if (tank.insertSolid(data.contain, false))
 								{
-									inventory.setInventorySlotContents(in, data.empty);
+									inventory.setSlotContents(in, data.empty);
 									return true;
 								}
 							}
@@ -120,7 +120,7 @@ public class SolidContainerHelper
 							{
 								if (tank.fill(data.contain, true) != 0)
 								{
-									inventory.setInventorySlotContents(in, data.empty);
+									inventory.setSlotContents(in, data.empty);
 									return true;
 								}
 							}
@@ -146,7 +146,7 @@ public class SolidContainerHelper
 						if (o1 != null && handler.fill(o1, false) > 0)
 						{
 							SolidStack o2 = SolidStack.sizeOf(o1, handler.fill(o1, true));
-							if (input.stackSize == 0 || inventory.insertStack(out, input, true))
+							if (input.stackSize == 0 || inventory.instItem(out, input, true))
 							{
 								tank.drain(o2, true);
 								inventory.decrStackSize(in, 1);
@@ -161,7 +161,7 @@ public class SolidContainerHelper
 						{
 							SolidStack i2 = SolidStack.sizeOf(i1, tank.fill(i1, false));
 							handler.drain(i2, true);
-							if (inventory.insertStack(out, input, true))
+							if (inventory.instItem(out, input, true))
 							{
 								tank.fill(i2, true);
 								inventory.decrStackSize(in, 1);
@@ -175,9 +175,9 @@ public class SolidContainerHelper
 					if ((fdType & FD_DRAIN) != 0)
 					{
 						SolidContainerData data = SolidContainerManager.getFilledContainer(input, tank.drain(Integer.MAX_VALUE, false));
-						if (data != null && inventory.insertStack(out, data.filled, true))
+						if (data != null && inventory.instItem(out, data.filled, true))
 						{
-							inventory.decrStack(in, 1, true);
+							inventory.decrItem(in, 1, true);
 							tank.drain(data.contain, true);
 							return true;
 						}
@@ -187,18 +187,18 @@ public class SolidContainerHelper
 						SolidContainerData data = SolidContainerManager.getDrainedContainer(input);
 						if (data != null)
 						{
-							if ((fdType & FD_FILL_ONLYFULL) != 0 && inventory.insertStack(out, data.empty, false)
+							if ((fdType & FD_FILL_ONLYFULL) != 0 && inventory.instItem(out, data.empty, false)
 									&& tank.insertSolid(data.contain, false))
 							{
-								inventory.decrStack(in, 1, true);
+								inventory.decrItem(in, 1, true);
 								return true;
 							}
 							else
 							{
-								if (tank.fill(data.contain, false) > 0 && inventory.insertStack(out, data.empty, true))
+								if (tank.fill(data.contain, false) > 0 && inventory.instItem(out, data.empty, true))
 								{
 									tank.fill(data.contain, true);
-									inventory.decrStack(in, 1, true);
+									inventory.decrItem(in, 1, true);
 									return true;
 								}
 							}
@@ -230,7 +230,7 @@ public class SolidContainerHelper
 							io.extractSolid(SolidStack.sizeOf(o1, handler.fill(o1, true)), direction, false);
 							if (inputRaw.stackSize == 1 || input.stackSize == 0)
 							{
-								inventory.setInventorySlotContents(in, ItemStacks.valid(input));
+								inventory.setSlotContents(in, ItemStacks.valid(input));
 								return true;
 							}
 						}
@@ -243,7 +243,7 @@ public class SolidContainerHelper
 							handler.drain(SolidStack.sizeOf(i1, io.insertSolid(i1, direction, false)), true);
 							if (inputRaw.stackSize == 1 || input.stackSize == 0)
 							{
-								inventory.setInventorySlotContents(in, ItemStacks.valid(input));
+								inventory.setSlotContents(in, ItemStacks.valid(input));
 								return true;
 							}
 						}
@@ -256,7 +256,7 @@ public class SolidContainerHelper
 						SolidContainerData data = SolidContainerManager.getFilledContainer(input, io.extractSolid(Integer.MAX_VALUE, direction, true));
 						if (data != null)
 						{
-							inventory.setInventorySlotContents(in, data.filled);
+							inventory.setSlotContents(in, data.filled);
 							io.extractSolid(data.contain, direction, false);
 							return true;
 						}
@@ -266,7 +266,7 @@ public class SolidContainerHelper
 						SolidContainerData data = SolidContainerManager.getDrainedContainer(input);
 						if (data != null && io.insertSolid(data.contain, direction, true) == data.contain.amount)
 						{
-							inventory.setInventorySlotContents(in, data.empty);
+							inventory.setSlotContents(in, data.empty);
 							io.insertSolid(data.contain, direction, false);
 							return true;
 						}
@@ -291,7 +291,7 @@ public class SolidContainerHelper
 						if (o1 != null && handler.fill(o1, false) > 0)
 						{
 							io.extractSolid(SolidStack.sizeOf(o1, handler.fill(o1, true)), direction, false);
-							if (input.stackSize == 0 || inventory.insertStack(out, input, true))
+							if (input.stackSize == 0 || inventory.instItem(out, input, true))
 							{
 								inventory.decrStackSize(in, 1);
 								return true;
@@ -304,7 +304,7 @@ public class SolidContainerHelper
 						if (i1 != null && io.insertSolid(i1, direction, true) != 0)
 						{
 							handler.drain(SolidStack.sizeOf(i1, io.insertSolid(i1, direction, false)), true);
-							if (inventory.insertStack(out, input, true))
+							if (inventory.instItem(out, input, true))
 							{
 								inventory.decrStackSize(in, 1);
 								return true;
@@ -317,9 +317,9 @@ public class SolidContainerHelper
 					if ((fdType & FD_DRAIN) != 0)
 					{
 						SolidContainerData data = SolidContainerManager.getFilledContainer(input, io.extractSolid(Integer.MAX_VALUE, direction, true));
-						if (data != null && inventory.insertStack(out, data.filled, true))
+						if (data != null && inventory.instItem(out, data.filled, true))
 						{
-							inventory.decrStack(in, 1, true);
+							inventory.decrItem(in, 1, true);
 							io.extractSolid(data.contain, direction, false);
 							return true;
 						}
@@ -332,9 +332,9 @@ public class SolidContainerHelper
 							if ((fdType & FD_FILL_ONLYFULL) != 0)
 							{
 								if (io.insertSolid(data.contain, direction, true) == data.contain.amount &&
-										inventory.insertStack(out, data.empty, true))
+										inventory.instItem(out, data.empty, true))
 								{
-									inventory.decrStack(in, 1, true);
+									inventory.decrItem(in, 1, true);
 									io.insertSolid(data.contain, direction, false);
 									return true;
 								}
@@ -342,9 +342,9 @@ public class SolidContainerHelper
 							else
 							{
 								if (io.insertSolid(data.contain, direction, true) > 0 &&
-										inventory.insertStack(out, data.empty, true))
+										inventory.instItem(out, data.empty, true))
 								{
-									inventory.decrStack(in, 1, true);
+									inventory.decrItem(in, 1, true);
 									io.insertSolid(data.contain, direction, false);
 									return true;
 								}

@@ -37,20 +37,22 @@ public class GuiBarGrizzly extends GuiContainerBase
 	@Override
 	protected void drawOther(int mouseX, int mouseY)
 	{
+		boolean mark = startTranslate();
 		super.drawOther(mouseX, mouseY);
 		int max = ((ContainerBarGrizzly) this.container).getMaxProgress();
 		int pro = ((ContainerBarGrizzly) this.container).getProgress();
 		int pow = ((ContainerBarGrizzly) this.container).getPower();
 		if (max > 1)
 		{
-			drawTexturedModalRect(this.guiLeft + 57, this.guiTop + 34, 176, 22, 29, 9);
-			drawProgressScaleUTD(this.guiLeft + 59, this.guiTop + 50, 176, 0, 28, 21, pro, max);
+			drawTexturedModalRect(57, 34, 176, 22, 29, 9);
+			drawProgressScaleUTD(59, 50, 176, 0, 28, 21, pro, max);
 		}
 		if (pow > 0)
 		{
-			drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 60, 176, 50, 11, 11);
-			drawProgressScaleDTU(this.guiLeft + 26, this.guiTop + 16, 176, 61, 8, 54, pow, 400);
+			drawTexturedModalRect(35, 60, 176, 50, 11, 11);
+			drawProgressScaleDTU(26, 16, 176, 61, 8, 54, pow, 400);
 		}
+		endTranslate(mark);
 	}
 	
 	@Override

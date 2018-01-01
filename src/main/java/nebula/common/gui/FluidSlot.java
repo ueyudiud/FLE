@@ -97,7 +97,9 @@ public abstract class FluidSlot<T extends IFluidTank>
 	{
 		if (this.shouldRender)
 		{
+			boolean flag = gui.startTranslate();
 			gui.drawFluid(this.x, this.y, this.tank.getInfo(), this.u, this.v, this.renderHorizontal);
+			gui.endTranslate(flag);
 		}
 	}
 	

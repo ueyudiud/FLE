@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -32,7 +33,7 @@ import nebula.common.util.A;
  * 
  * @author ueyudiud
  */
-public class ObjArrayParseHelper
+public class ObjArrayParseHelper implements Spliterator<Object>
 {
 	/** The read offset. */
 	private int			off;
@@ -309,5 +310,34 @@ public class ObjArrayParseHelper
 	public String toString()
 	{
 		return Arrays.toString(this.array);
+	}
+	
+	@Override
+	public boolean tryAdvance(Consumer<? super Object> action)
+	{
+		if (hasNext())
+		{
+			accept1(action);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public Spliterator<Object> trySplit()
+	{
+		return null;
+	}
+	
+	@Override
+	public long estimateSize()
+	{
+		return this.array.length - this.off;
+	}
+	
+	@Override
+	public int characteristics()
+	{
+		return SIZED;
 	}
 }

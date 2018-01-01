@@ -4,7 +4,7 @@
 
 package fle.api.tile;
 
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import farcore.lib.material.Mat;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public interface IDitchTile extends IModifiableCoord, IFluidHandler
+public interface IDitchTile extends IModifiableCoord, IFluidHandlerHelper
 {
 	default Fluid getFluidContain()
 	{
@@ -67,7 +67,7 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	@Override
 	default SidedFluidIOProperty getProperty(Direction direction)
 	{
-		return new IFluidHandler.SidedFluidIOTankNPropertyWrapper(getTank());
+		return new IFluidHandlerHelper.SidedFluidIOTankNPropertyWrapper(getTank());
 	}
 	
 	@Override

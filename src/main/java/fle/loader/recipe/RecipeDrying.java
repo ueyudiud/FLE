@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.loader.recipe;
 
 import static fle.api.recipes.instance.RecipeAdder.addDringRecipe;

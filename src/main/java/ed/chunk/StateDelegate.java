@@ -196,8 +196,7 @@ abstract class StateDelegate
 						List<IBlockState> states = new ArrayList<>(map.keySet());
 						states.sort((s1, s2) -> A.compare(A.transform(properties, s1::getValue), A.transform(properties, s2::getValue)));
 						
-						for (int i = 0; i < states.size(); registerStateMap(state = states.get(i++), map.get(state)))
-							;
+						for (int i = 0; i < states.size(); registerStateMap(state = states.get(i++), map.get(state)));
 					}
 				}
 				
@@ -220,8 +219,7 @@ abstract class StateDelegate
 					{
 						IProperty property = properties1[id++];
 						IBlockState state2 = state;
-						do
-							forEach1(id, properties1, properties2, state2, map);
+						do forEach1(id, properties1, properties2, state2, map);
 						while ((state2 = state2.cycleProperty(property)) != state);
 					}
 				}
@@ -236,8 +234,7 @@ abstract class StateDelegate
 					{
 						IProperty property = properties[id++];
 						IBlockState state2 = state;
-						do
-							forEach2(id, properties, state2, list);
+						do forEach2(id, properties, state2, list);
 						while ((state2 = state2.cycleProperty(property)) != state);
 					}
 				}

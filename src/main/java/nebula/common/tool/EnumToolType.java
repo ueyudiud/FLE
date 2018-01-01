@@ -27,16 +27,8 @@ public class EnumToolType
 {
 	public static final IRegister<EnumToolType>	REGISTER	= new Register<>();
 	/** The player hand. */
-	public static final EnumToolType			HAND		= new EnumToolType("hand", "Hand");		// The
-																									// player
-																									// hand
-																									// current,
-																									// do
-																									// not
-																									// register
-																									// tool
-																									// with
-																									// this.
+	public static final EnumToolType			HAND		= new EnumToolType("hand", "Hand");
+	// The player hand current, do not register tool with this.
 	
 	/**
 	 * The general 5 vanilla types of tools exist in Minecraft.

@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.material.behavior;
 
 import farcore.lib.material.Mat;
@@ -9,6 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The material property.
+ * 
+ * @author ueyudiud
+ */
 public interface IItemMatProp
 {
 	String DEFAULT_SAVE_TAG = "matprop";
@@ -29,6 +37,16 @@ public interface IItemMatProp
 		return getMetaOffset(stack, material, condition, DEFAULT_SAVE_TAG);
 	}
 	
+	/**
+	 * Get offset meta.
+	 * 
+	 * @param stack
+	 * @param material
+	 * @param condition
+	 * @param saveTag
+	 * @return
+	 * @see nebula.common.item.ItemBase#getStackMetaOffset(ItemStack)
+	 */
 	int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag);
 	
 	default ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment)
@@ -54,6 +72,15 @@ public interface IItemMatProp
 		addInformation(stack, material, condition, list, DEFAULT_SAVE_TAG);
 	}
 	
+	/**
+	 * Add extra information (For material property specific) to tool tips.
+	 * 
+	 * @param stack
+	 * @param material
+	 * @param condition
+	 * @param list
+	 * @param saveTag
+	 */
 	@SideOnly(Side.CLIENT)
 	void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag);
 	

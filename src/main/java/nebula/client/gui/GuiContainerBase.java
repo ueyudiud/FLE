@@ -46,6 +46,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	private ResourceLocation	location;
 	protected Slot				lastClickSlot;
 	protected ContainerBase		container;
+	protected boolean			translated = false;
 	
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location)
 	{
@@ -90,13 +91,43 @@ public abstract class GuiContainerBase extends GuiContainer
 		}
 	}
 	
+	public float getZLevel()
+	{
+		return this.zLevel;
+	}
+	
+	public boolean startTranslate()
+	{
+		if (!this.translated)
+		{
+			GL11.glPushMatrix();
+			GL11.glTranslatef(this.guiLeft, this.guiTop, 0);
+			return true;
+		}
+		return false;
+	}
+	
+	public void endTranslate(boolean mark)
+	{
+		if (mark)
+		{
+			GL11.glPopMatrix();
+			this.translated = false;
+		}
+	}
+	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindDefaultTexture();
-		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(this.guiLeft, this.guiTop, 0);
+		this.translated = true;
+		drawTexturedModalRect(0, 0, 0, 0, this.xSize, this.ySize);
 		drawOtherSlots();
+		GL11.glPopMatrix();
+		this.translated = false;
 		bindDefaultTexture();
 		drawOther(mouseX, mouseY);
 	}
@@ -195,7 +226,7 @@ public abstract class GuiContainerBase extends GuiContainer
 		Nebula.network.sendToServer(new PacketGuiTickUpdate(this.container));
 	}
 	
-	protected void bindDefaultTexture()
+	public void bindDefaultTexture()
 	{
 		bindTexture(this.location);
 	}
@@ -246,11 +277,11 @@ public abstract class GuiContainerBase extends GuiContainer
 				int color = info.fluid.getFluid().getColor(info.fluid);
 				if (lay)
 				{
-					drawRepeated(fluidIcon, this.guiLeft + x, this.guiTop + y, (double) (info.fluid.amount * width) / (double) info.capacity, height, this.zLevel, color);
+					drawRepeated(fluidIcon, x, y, (double) (info.fluid.amount * width) / (double) info.capacity, height, this.zLevel, color);
 				}
 				else
 				{
-					drawRepeated(fluidIcon, this.guiLeft + x, this.guiTop + y + height - (double) (info.fluid.amount * height) / (double) info.capacity, width, (double) (info.fluid.amount * height) / (double) info.capacity, this.zLevel, color);
+					drawRepeated(fluidIcon, x, y + height - (double) (info.fluid.amount * height) / (double) info.capacity, width, (double) (info.fluid.amount * height) / (double) info.capacity, this.zLevel, color);
 				}
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				bindTexture(this.location);
@@ -269,7 +300,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	 * @param z the z level.
 	 * @param color the rendering color.
 	 */
-	protected void drawRepeated(TextureAtlasSprite icon, double x, double y, double width, double height, double z, int color)
+	public void drawRepeated(TextureAtlasSprite icon, double x, double y, double width, double height, double z, int color)
 	{
 		double iconWidthStep = (icon.getMaxU() - icon.getMinU()) / 16.0;
 		double iconHeightStep = (icon.getMaxV() - icon.getMinV()) / 16.0;
@@ -391,9 +422,9 @@ public abstract class GuiContainerBase extends GuiContainer
 	{
 		int scale = (int) ((float) p / (float) mp * w);
 		if (scale <= 0) return;
-		if (scale > h)
+		if (scale > w)
 		{
-			scale = h;
+			scale = w;
 		}
 		drawTexturedModalRect(x, y, u, v, scale, h);
 	}
@@ -414,9 +445,9 @@ public abstract class GuiContainerBase extends GuiContainer
 	{
 		int scale = (int) ((float) p / (float) mp * w);
 		if (scale <= 0) return;
-		if (scale > h)
+		if (scale > w)
 		{
-			scale = h;
+			scale = w;
 		}
 		drawTexturedModalRect(x + w - scale, y, u + w - scale, v, scale, h);
 	}
@@ -427,8 +458,8 @@ public abstract class GuiContainerBase extends GuiContainer
 	 * @param mouseX the mouse x position.
 	 * @param mouseY the mouse y position.
 	 * @param tooltip the tool tip.
-	 * @param x the start x pos for area.
-	 * @param y the start y pos for area.
+	 * @param x the start x position for area.
+	 * @param y the start y position for area.
 	 * @param u the width for area.
 	 * @param v the height for area.
 	 */

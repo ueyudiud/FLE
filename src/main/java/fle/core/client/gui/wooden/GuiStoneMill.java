@@ -3,10 +3,10 @@
  */
 package fle.core.client.gui.wooden;
 
+import farcore.lib.gui.GuiContainerTIF;
 import fle.core.FLE;
 import fle.core.common.gui.wooden.ContainerStoneMill;
 import fle.core.tile.wooden.TEStoneMill;
-import nebula.client.gui.GuiContainerTileInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class GuiStoneMill extends GuiContainerTileInventory<TEStoneMill>
+public class GuiStoneMill extends GuiContainerTIF<TEStoneMill>
 {
 	private static final ResourceLocation LOCATION = new ResourceLocation(FLE.MODID, "textures/gui/stone_mill.png");
 	

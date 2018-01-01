@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.api.event;
 
 import farcore.lib.tree.ITreeGenerator;

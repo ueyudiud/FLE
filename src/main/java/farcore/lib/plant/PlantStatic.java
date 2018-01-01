@@ -8,6 +8,7 @@ import java.util.Random;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.lib.material.Mat;
+import nebula.client.model.ModelLocation;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
@@ -44,9 +45,9 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		ModelResourceLocation location = new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal");
+		ModelResourceLocation location = new ModelLocation(this.material.modid, "plant/" + this.material.name, "normal");
 		ModelLoader.setCustomStateMapper(this.block, block -> ImmutableMap.of(block.getDefaultState(), location));
-		Client.registerModel(this.block.getItemBlock(), new ModelResourceLocation(location, "inventory"));
+		Client.registerModel(this.block.getItemBlock(), new ModelLocation(location, "inventory"));
 		if (this.withColor) Renders.registerBiomeColorMultiplier(this.block);
 	}
 	

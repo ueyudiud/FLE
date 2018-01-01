@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.block.state;
 
 import java.util.Collection;
@@ -37,7 +40,6 @@ public class ImmutableState implements IFarBlockState
 	@Override
 	public <T extends Comparable<T>> T getValue(IProperty<T> property)
 	{
-		@SuppressWarnings("unchecked")
 		T value = (T) this.extraValues.get(property);
 		return value == null ? this.state.getValue(property) : value;
 	}

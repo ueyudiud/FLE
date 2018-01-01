@@ -86,7 +86,7 @@ public final class SubTag implements Judgable<ISubTagContainer>
 	}
 	
 	@Override
-	public boolean isTrue(ISubTagContainer container)
+	public boolean test(ISubTagContainer container)
 	{
 		return container.contain(this);
 	}

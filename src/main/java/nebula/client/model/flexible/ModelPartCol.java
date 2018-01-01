@@ -447,7 +447,7 @@ public class ModelPartCol implements INebulaModelPart
 			if (parts.size() == 1 && parts.get(0) instanceof ModelPartCol.BakedModelPart && (((ModelPartCol.BakedModelPart) parts.get(0)).map.isEmpty() || !this.extendData))
 			{
 				return ((ModelPartCol.BakedModelPart) parts.get(0)).defaultPart;// Part
-																				// extends.
+				// extends.
 			}
 			return parts.size() == 0 ? NONE : Selector.single(parts);
 		default:

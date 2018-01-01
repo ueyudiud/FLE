@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.tree;
 
 import java.util.Random;
@@ -23,6 +26,7 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 		super(tree, generateCoreLeavesChance);
 	}
 	
+	@Override
 	public void setHeight(int baseHeight, int randHeight)
 	{
 		this.baseHeight = baseHeight;

@@ -57,7 +57,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -160,7 +160,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
@@ -171,7 +171,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		ItemStack result = ItemStacks.copyNomoreThan(this.stack, count);
 		if (result != null)
@@ -203,7 +203,7 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stack = ItemStack.copyItemStack(stack);
 		onInventoryChanged();
@@ -212,11 +212,11 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		return decrStack(index, count, true);
+		return decrItem(index, count, true);
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}
@@ -226,5 +226,23 @@ public class TEInventorySingleSlot extends TESynchronization implements IBasicIn
 	{
 		super.onBlockBreak(state);
 		TileEntities.dropItemStacks(this);
+	}
+	
+	@Override
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public final int getInventoryStackLimit()
+	{
+		return getStackLimit();
+	}
+	
+	@Override
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
 	}
 }

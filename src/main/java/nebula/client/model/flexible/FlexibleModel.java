@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -96,9 +97,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
-		List<ResourceLocation> list = new ArrayList<>();
-		this.parts.forEach(part -> list.addAll(part.getDependencies()));
-		return list;
+		return this.parts.stream().flatMap(p->p.getDependencies().stream()).collect(Collectors.toSet());
 	}
 	
 	public void loadResources()

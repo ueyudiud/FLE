@@ -66,7 +66,13 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
+	public final boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return isValidForSlot(index, stack);
+	}
+	
+	@Override
+	public boolean isValidForSlot(int index, ItemStack stack)
 	{
 		return true;
 	}
@@ -157,7 +163,7 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public int incrStack(int index, ItemStack resource, boolean process)
+	public int incrItem(int index, ItemStack resource, boolean process)
 	{
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
@@ -168,7 +174,7 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public ItemStack decrStack(int index, int count, boolean process)
+	public ItemStack decrItem(int index, int count, boolean process)
 	{
 		ItemStack result = ItemStacks.copyNomoreThan(this.stacks[index], count);
 		if (result != null)
@@ -200,7 +206,13 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	}
 	
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
+	public final void setInventorySlotContents(int index, ItemStack stack)
+	{
+		setSlotContents(index, stack);
+	}
+	
+	@Override
+	public void setSlotContents(int index, ItemStack stack)
 	{
 		this.stacks[index] = ItemStack.copyItemStack(stack);
 		onInventoryChanged(index);
@@ -209,11 +221,17 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		return decrStack(index, count, true);
+		return decrItem(index, count, true);
 	}
 	
 	@Override
-	public int getInventoryStackLimit()
+	public final int getInventoryStackLimit()
+	{
+		return getInventoryStackLimit();
+	}
+	
+	@Override
+	public int getStackLimit()
 	{
 		return V.GENERAL_MAX_STACK_SIZE;
 	}

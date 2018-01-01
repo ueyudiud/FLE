@@ -32,18 +32,20 @@ public class GuiLeverOilMill extends GuiContainerTileInventory<TELeverOilMill>
 	@Override
 	protected void drawOther(int mouseX, int mouseY)
 	{
+		boolean mark = startTranslate();
 		super.drawOther(mouseX, mouseY);
 		int pow = this.tile.getField(2);
 		if (pow > 0)
 		{
-			drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 60, 176, 24, 11, 11);
-			drawProgressScaleDTU(this.guiLeft + 26, this.guiTop + 16, 176, 35, 8, 54, pow, 100);
+			drawTexturedModalRect(35, 60, 176, 24, 11, 11);
+			drawProgressScaleDTU(26, 16, 176, 35, 8, 54, pow, 100);
 		}
 		if (this.tile.getMaxProgress() > 0)
 		{
-			drawProgressScaleUTD(this.guiLeft + 63, this.guiTop + 38, 176, 0, 10, 16, this.tile.getProgress(), this.tile.getMaxProgress());
+			drawProgressScaleUTD(63, 38, 176, 0, 10, 16, this.tile.getProgress(), this.tile.getMaxProgress());
 		}
-		drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 56, 176, 16, 20, 8);
+		drawTexturedModalRect(60, 56, 176, 16, 20, 8);
+		endTranslate(mark);
 	}
 	
 	@Override

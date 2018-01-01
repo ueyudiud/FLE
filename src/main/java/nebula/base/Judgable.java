@@ -10,7 +10,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import nebula.common.util.A;
-import nebula.common.util.L;
 
 @FunctionalInterface
 public interface Judgable<T> extends Predicate<T>
@@ -75,13 +74,13 @@ public interface Judgable<T> extends Predicate<T>
 		};
 	}
 	
-	@Override
-	default boolean test(T t)
-	{
-		return isTrue(t);
-	}
+	boolean test(T t);
 	
-	boolean isTrue(T target);
+	@Deprecated
+	default boolean isTrue(T target)
+	{
+		return test(target);
+	}
 	
 	@Override
 	default Judgable<T> or(Predicate<? super T> other)
@@ -95,14 +94,14 @@ public interface Judgable<T> extends Predicate<T>
 		return and(this, other);
 	}
 	
-	default <K> Judgable<K> from(Function<K, T> function)
+	default <K> Judgable<K> from(Function<K, ? extends T> function)
 	{
-		return key -> isTrue(function.apply(key));
+		return key -> test(function.apply(key));
 	}
 	
 	default Judgable<T> not()
 	{
-		return target -> !isTrue(target);
+		return new Not<>(this);
 	}
 	
 	@Override
@@ -121,10 +120,10 @@ public interface Judgable<T> extends Predicate<T>
 		}
 		
 		@Override
-		public boolean isTrue(O target)
+		public boolean test(O target)
 		{
 			for (Judgable<O> tCondition : this.checks)
-				if (tCondition.isTrue(target)) return false;
+				if (tCondition.test(target)) return false;
 			return true;
 		}
 		
@@ -157,10 +156,10 @@ public interface Judgable<T> extends Predicate<T>
 		}
 		
 		@Override
-		public boolean isTrue(O target)
+		public boolean test(O target)
 		{
 			for (Judgable<O> tCondition : this.checks)
-				if (!tCondition.isTrue(target)) return true;
+				if (!tCondition.test(target)) return true;
 			return false;
 		}
 		
@@ -190,32 +189,32 @@ public interface Judgable<T> extends Predicate<T>
 		
 		public Xor(Judgable<O> check1, Judgable<O> check2)
 		{
-			this.check1 = check1;
-			this.check2 = check2;
+			this.check1 = Objects.requireNonNull(check1);
+			this.check2 = Objects.requireNonNull(check2);
 		}
 		
 		@Override
-		public boolean isTrue(O target)
+		public boolean test(O target)
 		{
-			return this.check1.isTrue(target) != this.check2.isTrue(target);
+			return this.check1.test(target) != this.check2.test(target);
 		}
 		
 		@Override
 		public String toString()
 		{
-			return check1.toString() + "^" + check2.toString();
+			return check1.toString() + "!=" + check2.toString();
 		}
 		
 		@Override
 		public int hashCode()
 		{
-			return check1.hashCode() + check2.hashCode();
+			return check1.hashCode() ^ check2.hashCode();
 		}
 		
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Xor)) ? false : (L.equal(((Xor) obj).check1, check1) && L.equal(((Xor) obj).check2, check2)) || (L.equal(((Xor) obj).check1, check2) && L.equal(((Xor) obj).check2, check1));
+			return obj == this ? true : obj instanceof Xor && (check1.equals(((Xor) obj).check1) && check2.equals(((Xor) obj).check2)) || (check2.equals(((Xor) obj).check1) && check1.equals(((Xor) obj).check2));
 		}
 	}
 	
@@ -226,14 +225,14 @@ public interface Judgable<T> extends Predicate<T>
 		
 		public Equal(Judgable<O> check1, Judgable<O> check2)
 		{
-			this.check1 = check1;
-			this.check2 = check2;
+			this.check1 = Objects.requireNonNull(check1);
+			this.check2 = Objects.requireNonNull(check2);
 		}
 		
 		@Override
-		public boolean isTrue(O target)
+		public boolean test(O target)
 		{
-			return this.check1.isTrue(target) == this.check2.isTrue(target);
+			return this.check1.test(target) == this.check2.test(target);
 		}
 		
 		@Override
@@ -251,7 +250,41 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this ? true : (obj == null || this == null) ? false : (!(obj instanceof Equal)) ? false : (L.equal(((Equal) obj).check1, check1) && L.equal(((Equal) obj).check2, check2)) || (L.equal(((Equal) obj).check1, check2) && L.equal(((Equal) obj).check2, check1));
+			return obj == this ? true : obj instanceof Equal && (check1.equals(((Equal) obj).check1) && check2.equals(((Equal) obj).check2)) || (check1.equals(((Equal) obj).check2) && check2.equals(((Equal) obj).check1));
+		}
+	}
+	
+	class Not<O> implements Judgable<O>
+	{
+		private final Judgable<O>	check;
+		
+		public Not(Judgable<O> check)
+		{
+			this.check = Objects.requireNonNull(check);
+		}
+		
+		@Override
+		public boolean test(O target)
+		{
+			return !check.test(target);
+		}
+		
+		@Override
+		public String toString()
+		{
+			return "!" + check.toString();
+		}
+		
+		@Override
+		public int hashCode()
+		{
+			return check.hashCode() ^ -295759375;
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			return obj == this ? true : obj instanceof Not && check.equals(((Not) obj).check);
 		}
 	}
 }

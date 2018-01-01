@@ -4,7 +4,7 @@
 package nebula.common.tile;
 
 import farcore.data.Capabilities;
-import farcore.lib.capability.IFluidHandler;
+import farcore.lib.capability.IFluidHandlerHelper;
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public abstract class TESingleTank extends TESynchronization implements IFluidHandler, IFluidHandlerIO
+public abstract class TESingleTank extends TESynchronization implements IFluidHandlerHelper, IFluidHandlerIO
 {
 	public abstract FluidTankN getTank();
 	
