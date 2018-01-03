@@ -186,7 +186,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	public static void registerModel(Block block, IStateMapperExt mapper, IBlockState state, ResourceLocation location)
 	{
 		if (block != null) LOCATION_TO_ITEM_MAP.put(location, Item.getItemFromBlock(block));
-		registerModel(mapper.getLocationFromState(state), new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath() + ".json"), NebulaModelDeserializer.BLOCK);
+		registerModel(mapper.getLocationFromState(state), new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath()), NebulaModelDeserializer.BLOCK);
 	}
 	
 	public static void registerModel(ResourceLocation location, ResourceLocation location2)
@@ -286,7 +286,12 @@ public enum NebulaModelLoader implements ICustomModelLoader
 					{
 						String[] split = Strings.split(line, ',');
 						if (split.length <= 1 || split.length >= 4) throw new RuntimeException();
-						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(split[0].trim()) : new ResourceLocation(split[0].trim()), new Ety<>(new ResourceLocation(split[1].trim()), split.length == 2 ? NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
+						String source = split[0].trim();
+						String[] path = Strings.splitFirst(split[1].trim(), ':');
+						
+						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(source) : new ResourceLocation(source),
+								new Ety<>(path.length == 1 ? new ResourceLocation(container.getModId(), path + ".json") : new ResourceLocation(path[0], path[1] + ".json"),
+										split.length == 2 ? NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
 						++l;
 					}
 				}

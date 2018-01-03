@@ -40,7 +40,7 @@ public class TemplateIconHandler implements IIconCollection
 	{
 		this.retextures = new HashMap<>(handler.retextures);
 		this.retextures.putAll(retexture);
-		this.textures = ImmutableMap.<String, ResourceLocation> copyOf(Maps.transformEntries(handler.textures, this::get));
+		this.textures = ImmutableMap.copyOf(Maps.transformEntries(handler.textures, this::get));
 	}
 	
 	private ResourceLocation get(String key, ResourceLocation location)

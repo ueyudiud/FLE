@@ -3,6 +3,8 @@
  */
 package nebula.client.model.flexible;
 
+import static nebula.client.model.ItemTextureQuadConverterExt.convertTexture;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-import nebula.client.model.ItemTextureQuadConverterExt;
 import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -63,8 +64,8 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 			for (Entry<String, ResourceLocation> entry : collection1.build().entrySet())
 			{
 				ImmutableList.Builder<BakedQuad> builder1 = ImmutableList.builder();
-				builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
-				builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
+				builder1.addAll(convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
+				builder1.addAll(convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
 				builder.put(entry.getKey(), builder1.build());
 			}
 			return new INebulaBakedModelPart.BakedModelPart(builder.build());
@@ -78,8 +79,8 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 				for (Entry<String, TextureAtlasSprite> entry2 : map1.entrySet())
 				{
 					ImmutableList.Builder<BakedQuad> builder1 = ImmutableList.builder();
-					builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
-					builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
+					builder1.addAll(convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
+					builder1.addAll(convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
 					builder.put(entry2.getKey() + "," + entry1.getKey(), builder1.build());
 				}
 			}
