@@ -137,8 +137,9 @@ public final class SolidContainerManager
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")
-	public static SolidContainerData getFilledContainer(ItemStack empty, SolidStack stack)
+	public static SolidContainerData getFilledContainer(@Nonnull ItemStack empty, @Nullable SolidStack stack)
 	{
+		if (stack == null) return null;
 		SolidContainerData data = MAP2.get(new SolidContainerKeySearching(empty, stack.getSolid()));
 		return data != null && data.contain.amount <= stack.amount ? data : null;
 	}
