@@ -132,7 +132,7 @@ public class BlockOre extends BlockSingleTE
 		});
 		ModelResourceLocation location2 = new ModelResourceLocation(location, "inventory");
 		ModelLoader.setCustomMeshDefinition(this.item, stack -> location2);
-		NebulaModelLoader.registerModel(location, new ResourceLocation(FarCore.ID, "models/block1/ore.json"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(location, new ResourceLocation(FarCore.ID, "models/block1/ore"), NebulaModelDeserializer.BLOCK);
 	}
 	
 	@Override
@@ -209,10 +209,10 @@ public class BlockOre extends BlockSingleTE
 		// for(EnumOreAmount amount : EnumOreAmount.values())
 		{
 			EnumOreAmount amount = EnumOreAmount.normal;// Only provide normal
-														// amount ore in
-														// creative tab or it is
-														// too many ore to
-														// display.
+			// amount ore in
+			// creative tab or it is
+			// too many ore to
+			// display.
 			for (Mat ore : Mat.filt(SubTags.ORE))
 			{
 				// for(Mat rock : Mat.filt(SubTag.ROCK))

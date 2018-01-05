@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.Level;
@@ -267,6 +268,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		this.models = new HashMap<>();
 		this.cacheLocations = new HashMap<>();
 		this.parts = new HashMap<>();
+		this.loadingTextureSets.clear();
 		
 		Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> map = new HashMap<>(MODEL_PROVIDERS);
 		this.stream.println("Load replace loading model locations from resource.");
@@ -290,7 +292,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 						String[] path = Strings.splitFirst(split[1].trim(), ':');
 						
 						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(source) : new ResourceLocation(source),
-								new Ety<>(path.length == 1 ? new ResourceLocation(container.getModId(), path + ".json") : new ResourceLocation(path[0], path[1] + ".json"),
+								new Ety<>(path.length == 1 ? new ResourceLocation(container.getModId(), path[0]) : new ResourceLocation(path[0], path[1]),
 										split.length == 2 ? NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
 						++l;
 					}
@@ -453,9 +455,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 * @param location
 	 * @return
 	 */
-	public static IIconCollection loadIconHandler(String location)
+	public static IIconCollection loadIconHandler(@Nonnull String location)
 	{
-		// TODO
 		if (location.charAt(0) == '[')
 		{
 			return new TemplateIconHandler(getTextureSet(new ResourceLocation(location.substring(1))));
@@ -505,16 +506,17 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	private Map<String, ResourceLocation> loadTextureSet$(ResourceLocation location)
 	{
-		if (this.loadingTextureSets.contains(location)) throw new InternalError();
+		if (this.loadingTextureSets.contains(location))
+			throw new InternalError();
 		this.loadingTextureSets.addLast(location);
 		Map<String, ResourceLocation> result;
 		try
 		{
 			result = loadTextureSet(location);
 		}
-		catch (Exception e)
+		catch (Exception exception)
 		{
-			throw e;
+			throw exception;
 		}
 		finally
 		{

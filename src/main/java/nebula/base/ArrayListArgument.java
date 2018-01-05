@@ -5,6 +5,7 @@ package nebula.base;
 
 import java.util.AbstractList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import nebula.common.util.A;
 
@@ -52,6 +53,27 @@ class ArrayListArgument<E> extends AbstractList<E>
 			throw new ArrayIndexOutOfBoundsException(index);
 		}
 		return (E) this.array[index];
+	}
+	
+	@Override
+	public Iterator<E> iterator()
+	{
+		return new Iterator<E>()
+		{
+			private int idx;
+			
+			@Override
+			public boolean hasNext()
+			{
+				return this.idx < ArrayListArgument.this.array.length;
+			}
+			
+			@Override
+			public E next()
+			{
+				return (E) ArrayListArgument.this.array[this.idx ++];
+			}
+		};
 	}
 	
 	@Override

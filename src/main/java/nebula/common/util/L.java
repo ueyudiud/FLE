@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -326,6 +327,7 @@ public class L
 	 */
 	public static <K, V> void putAll(@Nonnull Map<K, V> map, @Nonnull Collection<? extends K> collection, @Nonnull Function<? super K, ? extends V> function)
 	{
+		Objects.requireNonNull(function);
 		collection.forEach(k -> map.put(k, function.apply(k)));
 	}
 	
@@ -334,7 +336,7 @@ public class L
 		collection.forEach(k -> map.put(k, constant));
 	}
 	
-	public static <K, V> void put(Map<K, List<V>> map, K key, V value)
+	public static <K, V> void put(@Nonnull Map<K, List<V>> map, K key, V value)
 	{
 		List<V> list = map.get(key);
 		if (list == null)
@@ -344,18 +346,17 @@ public class L
 		list.add(value);
 	}
 	
-	// =============================Fake multimap method
-	// start================================
+	// =============================Fake multimap method start================================
 	
 	/**
 	 * Put numerous values into fake Multimap.
 	 * 
 	 * @param <K> key type.
 	 * @param <V> value type.
-	 * @param map a fake multimap.
+	 * @param map a fake Multimap.
 	 * @param key
 	 * @param values
-	 * @see com.google.common.collect.Multimap
+	 * @see com.google.common.collect.Multimap Multimap
 	 */
 	public static <K, V> void put(@Nonnull Map<K, List<V>> map, @Nullable K key, V...values)
 	{
@@ -380,7 +381,7 @@ public class L
 	 * @param map a fake multimap.
 	 * @param key
 	 * @param values
-	 * @see com.google.common.collect.Multimap#putAll(com.google.common.collect.Multimap)
+	 * @see com.google.common.collect.Multimap#putAll(com.google.common.collect.Multimap) Multimap.putAll
 	 */
 	public static <K, V> void put(@Nonnull Map<K, List<V>> map, @Nullable K key, Collection<? extends V> values)
 	{
@@ -404,7 +405,7 @@ public class L
 	 * @param key
 	 * @param value
 	 * @return
-	 * @see com.google.common.collect.Multimap#remove(Object, Object)
+	 * @see com.google.common.collect.Multimap#remove(Object, Object) Multimap.remove
 	 */
 	public static <K, V> boolean remove(@Nonnull Map<K, List<V>> map, @Nullable K key, @Nullable V value)
 	{
@@ -421,15 +422,14 @@ public class L
 	 * @param key key.
 	 * @param value value in values collection.
 	 * @return
-	 * @see com.google.common.collect.Multimap#containsEntry(Object, Object)
+	 * @see com.google.common.collect.Multimap#containsEntry(Object, Object) Multimap.containsEntry
 	 */
 	public static <K, V> boolean contain(@Nonnull Map<K, List<V>> map, @Nullable K key, @Nullable V value)
 	{
 		return map.containsKey(key) && map.get(key).contains(value);
 	}
 	
-	// ==============================Fake multimap method
-	// end=================================
+	// ==============================Fake Multimap method end=================================
 	
 	/**
 	 * Put a value into two-layer map.
@@ -438,7 +438,7 @@ public class L
 	 * @param key first key of map.
 	 * @param value1 second key of map (The key in value map of first map).
 	 * @param value2 value of map (The value in value map of first map).
-	 * @see com.google.common.collect.Table#put(Object, Object, Object)
+	 * @see com.google.common.collect.Table#put(Object, Object, Object) Table.put
 	 */
 	public static <K, V1, V2> void put(Map<K, Map<V1, V2>> map, K key, V1 value1, V2 value2)
 	{

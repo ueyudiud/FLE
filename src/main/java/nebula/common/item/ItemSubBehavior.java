@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -47,9 +50,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemSubBehavior extends ItemBase
 {
 	/** The number ID to name map. */
-	protected final Map<Integer, String>		nameMap		= new HashMap<>();
+	protected final BiMap<Integer, String>		nameMap		= HashBiMap.create();
 	/** The name to number ID map. */
-	protected final Map<String, Integer>		idMap		= new HashMap<>();
+	protected final BiMap<String, Integer>		idMap		= this.nameMap.inverse();
 	/**
 	 * The map contain behaviors of sub items. Use
 	 * {@link #getBehavior(ItemStack)} to get behaviors.
@@ -74,7 +77,7 @@ public class ItemSubBehavior extends ItemBase
 	/**
 	 * Add a sub item to item collection.
 	 * 
-	 * @param id the number id of item.
+	 * @param id the number id of item, it should be range in [0, 32768).
 	 * @param name the string id of item.
 	 * @param localName the localize name for item in English(US). If input is
 	 *            <tt>null</tt>, the initializer will not register local name.
@@ -82,10 +85,10 @@ public class ItemSubBehavior extends ItemBase
 	 *            {@link #initCapabilities(ItemStack, NBTTagCompound)}
 	 * @param behaviors the behaviors list of sub item.
 	 */
-	public void addSubItem(int id, String name, @Nullable String localName, IBehavior...behaviors)
+	public void addSubItem(int id, @Nonnull String name, @Nullable String localName, IBehavior...behaviors)
 	{
-		if (this.idMap.containsKey(name) || this.idMap.containsValue(id)) throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
-		this.idMap.put(name, id);
+		if (this.idMap.containsKey(name) || this.idMap.containsValue(id))
+			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
 		this.nameMap.put(id, name);
 		if (behaviors.length > 0)
 		{

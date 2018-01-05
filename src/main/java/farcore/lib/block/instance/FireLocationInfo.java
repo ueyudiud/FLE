@@ -15,6 +15,7 @@ import farcore.lib.block.IThermalCustomBehaviorBlock;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
+import nebula.common.util.Worlds;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -36,9 +37,9 @@ class FireLocationInfo implements IModifiableCoord
 	
 	/**
 	 * The information for fire update. The elementary list length is 13. 0 for
-	 * boolean type prop
+	 * boolean type prop.
 	 *
-	 * 1-6 for spread speed 7-12 for flammability
+	 * 1-6 for spread speed 7-12 for flammability.
 	 */
 	int[][][][] values;
 	
@@ -108,7 +109,10 @@ class FireLocationInfo implements IModifiableCoord
 			if (inRange((byte) x, (byte) y, (byte) z))
 			{
 				int[] list = this.values[x + this.range][y + this.range][z + this.range];
-				if (list != null) refresh(list, state);
+				if (list != null)
+				{
+					refresh(list, state);
+				}
 			}
 			return true;
 		}
@@ -241,7 +245,7 @@ class FireLocationInfo implements IModifiableCoord
 		list[0] = 2;
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
-			boolean isCatchingRaining = nebula.common.util.Worlds.isCatchingRain(this.world, this.pos1, true);
+			boolean isCatchingRaining = Worlds.isCatchingRain(this.world, this.pos1, true);
 			if ((state.getBlock() instanceof IThermalCustomBehaviorBlock && ((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(this.world, this.pos1, facing, isCatchingRaining)) || state.getBlock().isFlammable(this.world, this.pos1, facing))
 			{
 				list[0] |= 1 << (8 + facing.ordinal());
