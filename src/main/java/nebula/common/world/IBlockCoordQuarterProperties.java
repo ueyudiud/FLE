@@ -11,20 +11,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IBlockCoordQuarterProperties extends ICoordableBrightnessProvider, ICoord
 {
-	default boolean canSeeSky(int x, int z)
-	{
-		if (x >= 0 && x < 4 && z >= 0 && z < 4)
-			return canSeeSkyLocal(x, z);
-		int X = x >> 2;
-		int Z = z >> 2;
-		TileEntity tile = getTE(X, 0, Z);
-		if (tile instanceof IBlockCoordQuarterProperties)
-			return ((IBlockCoordQuarterProperties) tile).canSeeSkyLocal(x & 0x3, z & 0x3);
-		return world().canSeeSky(pos().add(X, 0, Z));
-	}
-	
-	boolean canSeeSkyLocal(int x, int z);
-	
 	@Override
 	@SideOnly(Side.CLIENT)
 	default float getAmbientOcclusionLightValue(int x, int y, int z)

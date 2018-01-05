@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class BrightnessUtil implements ICoordLightBlender
+public class BrightnessUtil
 {
 	public static enum BrightnessSideInformation
 	{
@@ -31,12 +31,8 @@ public class BrightnessUtil implements ICoordLightBlender
 			return INFORMATIONS[direction.ordinal()];
 		}
 		
-		int	directionUX;
-		int	directionUY;
-		int	directionUZ;
-		int	directionVX;
-		int	directionVY;
-		int	directionVZ;
+		final int directionUX, directionUY, directionUZ;
+		final int directionVX, directionVY, directionVZ;
 		
 		BrightnessSideInformation(Direction u, Direction v)
 		{
@@ -49,23 +45,16 @@ public class BrightnessUtil implements ICoordLightBlender
 		}
 	}
 	
-	private static final int[][]	INDEXS1	= { { 1, 0, -1 }, { 3, -1, 0 }, { 5, 1, 0 }, { 7, 0, 1 } };
-	private static final int[][]	INDEXS	= { { 4, 5, 7, 8, 1, 1 }, { 4, 5, 1, 2, 1, -1 }, { 4, 3, 1, 0, -1, -1 }, { 4, 3, 7, 6, -1, 1 } };
-	
-	private ICoordableBrightnessProvider provider;
+	protected static final int[][]	INDEXS1	= { { 1, 0, -1 }, { 3, -1, 0 }, { 5, 1, 0 }, { 7, 0, 1 } };
+	protected static final int[][]	INDEXS	= { { 4, 5, 7, 8, 1, 1 }, { 4, 5, 1, 2, 1, -1 }, { 4, 3, 1, 0, -1, -1 }, { 4, 3, 7, 6, -1, 1 } };
 	
 	public static BrightnessUtil instance()
 	{
 		return new BrightnessUtil();
 	}
 	
-	public void setProvider(ICoordableBrightnessProvider provider)
-	{
-		this.provider = provider;
-	}
-	
 	@SideOnly(Side.CLIENT)
-	private static int blend4Brightness(int c, int c1, int c2, int c3)
+	static int blend4Brightness(int c, int c1, int c2, int c3)
 	{
 		if (c  == 0) c  = Math.max(c1, c2) & 0xFF0000 | Math.max(c1 & 0xFF, c2 & 0xFF);
 		if (c1 == 0) c1 = Math.max(0, c - 0x10000) & 0xFF0000 | Math.max(0, (c & 0xFF) - 1);
@@ -74,7 +63,7 @@ public class BrightnessUtil implements ICoordLightBlender
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static int blend2Brightness(int c1, int c2)
+	static int blend2Brightness(int c1, int c2)
 	{
 		return (c1 + c2) >> 1 & 0x00FF00FF;
 	}
@@ -130,7 +119,7 @@ public class BrightnessUtil implements ICoordLightBlender
 	 * @param z
 	 * @param direction
 	 */
-	private void caculateBrightness(ICoordableBrightnessProvider provider, int x, int y, int z, Direction direction)
+	public void caculateBrightness(ICoordableBrightnessProvider provider, int x, int y, int z, Direction direction)
 	{
 		if (!Minecraft.isAmbientOcclusionEnabled())
 		{
@@ -185,30 +174,12 @@ public class BrightnessUtil implements ICoordLightBlender
 		}
 	}
 	
-	private void caculateBrightness(float[] aos, int[] bs)
+	void caculateBrightness(float[] aos, int[] bs)
 	{
 		for (int I = 0; I < 4; ++I)
 		{
 			this.color[I] = (aos[INDEXS[I][0]] + aos[INDEXS[I][1]] + aos[INDEXS[I][2]] + aos[INDEXS[I][3]]) / 4F;
 			this.brightness[I] = blend4Brightness(bs[INDEXS[I][0]], bs[INDEXS[I][1]], bs[INDEXS[I][2]], bs[INDEXS[I][3]]);
 		}
-	}
-	
-	@Override
-	public void blendBrightness(int x, int y, int z, Direction direction)
-	{
-		caculateBrightness(this.provider, x, y, z, direction);
-	}
-	
-	@Override
-	public int[] getBlentBrightness()
-	{
-		return this.brightness;
-	}
-	
-	@Override
-	public float[] getBlentColor()
-	{
-		return this.color;
 	}
 }

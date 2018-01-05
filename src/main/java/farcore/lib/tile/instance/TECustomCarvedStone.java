@@ -5,10 +5,8 @@ package farcore.lib.tile.instance;
 
 import static nebula.common.util.L.index8i;
 
-import java.util.Arrays;
 import java.util.List;
 
-import farcore.data.Config;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
@@ -18,7 +16,6 @@ import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
-import nebula.client.util.Lights;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
@@ -32,7 +29,6 @@ import nebula.common.tile.IToolableTile;
 import nebula.common.tile.TEStatic;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.Server;
 import nebula.common.world.IBlockCoordQuarterProperties;
@@ -49,7 +45,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -83,10 +78,10 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	private boolean			neighbourChanged	= false;
 	private boolean			modified			= true;
 	private AxisAlignedBB	box					= null;
-	private byte[]			lightmapSky			= new byte[64];
-	private byte[]			lightmapBlock		= new byte[64];
 	
-	private long carvedState = 0x0;
+	long carvedState = 0x0;
+	
+	BrightnessProviderCarvedStone brightnessProvider;
 	
 	private RockBehavior property()
 	{
@@ -345,167 +340,18 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 		if (this.neighbourChanged)
 		{
 			generateLightmap();
+			markBlockRenderUpdate();
 			this.neighbourChanged = false;
 		}
 	}
 	
 	private void generateLightmap()
 	{
-		if (!Config.splitBrightnessOfSmallBlock) return;
-		Arrays.fill(this.lightmapBlock, (byte) 0);
-		Arrays.fill(this.lightmapSky, (byte) 0);
-		generateLightmap(EnumSkyBlock.SKY, this.lightmapSky);
-		generateLightmap(EnumSkyBlock.BLOCK, this.lightmapBlock);
-	}
-	
-	private void generateLightmap(EnumSkyBlock type, byte[] lightmap)
-	{
-		byte l1 = (byte) (getLight(0, 1, 0, type) << 4 & 0xFF);
-		int idx;
-		if (l1 != 0)
+		if (this.brightnessProvider == null)
 		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (type == EnumSkyBlock.SKY)
-					{
-						int k = 4;
-						while (k > 0 && isCarved(i, --k, j))
-						{
-							lightmap[index8i(i, k, j)] = l1;
-						}
-					}
-					else if (lightmap[idx = index8i(i, 3, j)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
+			this.brightnessProvider = new BrightnessProviderCarvedStone(this);
 		}
-		l1 = (byte) (getLight(0, -1, 0, type) << 4 & 0xFF);
-		if (l1 != 0)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (lightmap[idx = index8i(i, 0, j)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
-		}
-		l1 = (byte) (getLight(1, 0, 0, type) << 4 & 0xFF);
-		if (l1 != 0)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (lightmap[idx = index8i(3, i, j)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
-		}
-		l1 = (byte) (getLight(-1, 0, 0, type) << 4 & 0xFF);
-		if (l1 != 0)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (lightmap[idx = index8i(0, i, j)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
-		}
-		l1 = (byte) (getLight(0, 0, -1, type) << 4 & 0xFF);
-		if (l1 != 0)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (lightmap[idx = index8i(i, j, 0)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
-		}
-		l1 = (byte) (getLight(0, 0, 1, type) << 4 & 0xFF);
-		if (l1 != 0)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					if (lightmap[idx = index8i(i, j, 3)] < l1)
-					{
-						lightmap[idx] = l1;
-					}
-				}
-			}
-		}
-		for (int i = 0; i < 4; ++i)
-		{
-			for (int j = 0; j < 4; ++j)
-			{
-				for (int k = 0; k < 4; ++k)
-				{
-					scanLight(i, j, k, (byte) 0x2F, -1, lightmap);
-				}
-			}
-		}
-	}
-	
-	private void scanLight(int x, int y, int z, byte side, int light, byte[] lightmap)
-	{
-		if (!isCarved(x, y, z)) return;
-		int idx = index8i(x, y, z);
-		if (light < 0)
-		{
-			light = L.castPositive(lightmap[idx]);
-		}
-		else
-		{
-			if (lightmap[idx] >= light) return;
-			lightmap[idx] = (byte) light;
-		}
-		if (light >= 4)
-		{
-			light -= 4;
-			if ((side & 0x1) != 0 && x > 0 && L.castPositive(lightmap[idx - 0x1]) < light)
-			{
-				scanLight(x - 1, y, z, (byte) (side & ~0x2), light, lightmap);
-			}
-			if ((side & 0x2) != 0 && x < 3 && L.castPositive(lightmap[idx + 0x1]) < light)
-			{
-				scanLight(x + 1, y, z, (byte) (side & ~0x1), light, lightmap);
-			}
-			if ((side & 0x4) != 0 && y > 0 && L.castPositive(lightmap[idx - 0x4]) < light)
-			{
-				scanLight(x, y - 1, z, (byte) (side & ~0x8), light, lightmap);
-			}
-			if ((side & 0x8) != 0 && y < 3 && L.castPositive(lightmap[idx + 0x4]) < light)
-			{
-				scanLight(x, y + 1, z, (byte) (side & ~0x4), light, lightmap);
-			}
-			if ((side & 0x10) != 0 && z > 0 && L.castPositive(lightmap[idx - 0x10]) < light)
-			{
-				scanLight(x, y, z - 1, (byte) (side & ~0x20), light, lightmap);
-			}
-			if ((side & 0x20) != 0 && z < 3 && L.castPositive(lightmap[idx + 0x10]) < light)
-			{
-				scanLight(x, y, z + 1, (byte) (side & ~0x10), light, lightmap);
-			}
-		}
+		this.brightnessProvider.generateLightmap();
 	}
 	
 	@Override
@@ -544,9 +390,12 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if (tool == EnumToolTypes.CHISEL)
+		if (tool == EnumToolTypes.CHISEL_CARVE)
 		{
-			if (player.canPlayerEdit(this.pos, side.of(), stack)) return carveRock(player, hitX, hitY, hitZ);
+			if (player.canPlayerEdit(this.pos, side.of(), stack))
+			{
+				return carveRock(player, hitX, hitY, hitZ);
+			}
 		}
 		return IToolableTile.DEFAULT_RESULT;
 	}
@@ -582,24 +431,32 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBrightnessLocal(int x, int y, int z)
+	public int getLightValue(IBlockState state)
 	{
-		int idx = index8i(x, y, z);
-		return Config.splitBrightnessOfSmallBlock ? Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) : this.world.getCombinedLight(this.pos, 0);
+		return property().getLightValue(property().block, state, this.world, this.pos);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getAmbientOcclusionLightValueLocal(int x, int y, int z)
 	{
-		return isCarved(x, y, z) ? 1.0F : 0.3F;
+		checkModified();
+		return this.brightnessProvider.getAmbientOcclusionLightValueLocal(x, y, z);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getBrightnessLocal(int x, int y, int z)
+	{
+		checkModified();
+		return this.brightnessProvider.getBrightnessLocal(x, y, z);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getOpaquenessLocal(int x, int y, int z)
 	{
-		return isCarved(x, y, z) ? 0.0F : 1.0F;
+		checkModified();
+		return this.brightnessProvider.getOpaquenessLocal(x, y, z);
 	}
 }
