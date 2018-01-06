@@ -107,11 +107,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	@Override
 	protected int getPower()
 	{
-		if (this.cache.<Integer> get(0) <= ThermalNet.getTemperature(this))
-		{
-			return 1;
-		}
-		return 0;
+		return this.cache.<Integer> get(0) <= ThermalNet.getTemperature(this) ? 1 : 0;
 	}
 	
 	@Override

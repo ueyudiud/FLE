@@ -1,12 +1,12 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes.instance;
 
 import static fle.api.recipes.instance.RecipeMaps.POLISHING;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -33,7 +33,8 @@ public class PolishRecipe
 	public static void addPolishRecipe(AbstractStack input, String map, ItemStack output)
 	{
 		if (map == null || map.length() != 9 || output == null || input == null) throw new IllegalArgumentException("Invalid recipe elements.");
-		POLISHING.addRecipe(new TemplateRecipe<IPolishRecipeHandler>(handler -> input.similar(handler.getPolishingInput()) && map.equals(new String(handler.getPolishingMatrix())), Misc.anyTo(output)).setData(input, map, output));
+		final char[] map1 = map.toCharArray();
+		POLISHING.addRecipe(new TemplateRecipe<IPolishRecipeHandler>(handler -> input.similar(handler.getPolishingInput()) && Arrays.equals(map1, handler.getPolishingMatrix()), Misc.anyTo(output)).setData(input, map, output));
 	}
 	
 	public static boolean isPolishable(ItemStack stack)

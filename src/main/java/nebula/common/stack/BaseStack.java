@@ -116,7 +116,7 @@ public class BaseStack implements AbstractStack
 	public boolean similar(ItemStack stack)
 	{
 		return this.item == null ? stack == null : (stack != null && stack.getItem() == this.item &&
-				(this.meta == -1 || stack.getItemDamage() == this.meta) && L.equal(stack.getTagCompound(), this.nbt));
+				(this.meta == -1 || stack.getItemDamage() == this.meta) && L.equals(stack.getTagCompound(), this.nbt));
 	}
 	
 	@Override
@@ -183,6 +183,6 @@ public class BaseStack implements AbstractStack
 			return false;
 		BaseStack stack = (BaseStack) obj;
 		return this.item == stack.item && this.size == stack.size &&
-				this.meta == stack.meta && L.equal(this.nbt, stack.nbt);
+				this.meta == stack.meta && L.equals(this.nbt, stack.nbt);
 	}
 }

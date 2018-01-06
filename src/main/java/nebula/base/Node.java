@@ -257,21 +257,21 @@ public class Node<T> implements INode<T>
 		if (!(obj instanceof INode<?>)) return false;
 		
 		INode<?> node = (INode<?>) obj;
-		if (!L.equal(value(), node.value())) return false;
+		if (!L.equals(value(), node.value())) return false;
 		
 		INode<?>
 		
 		node1 = this, node2 = node;
 		while (node1.hasLast() || node2.hasLast())
 		{
-			if (node1.hasLast() != node2.hasLast() || !L.equal((node1 = node1.last()).value(), (node2 = node2.last()).value())) return false;
+			if (node1.hasLast() != node2.hasLast() || !L.equals((node1 = node1.last()).value(), (node2 = node2.last()).value())) return false;
 		}
 		
 		node1 = this;
 		node2 = node;
 		while (node1.hasNext() || node2.hasNext())
 		{
-			if (node1.hasNext() != node2.hasNext() || !L.equal((node1 = node1.next()).value(), (node2 = node2.next()).value())) return false;
+			if (node1.hasNext() != node2.hasNext() || !L.equals((node1 = node1.next()).value(), (node2 = node2.next()).value())) return false;
 		}
 		
 		return true;

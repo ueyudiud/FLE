@@ -273,66 +273,45 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 		return !(isCarved(1, 3, 1) || isCarved(2, 3, 1) || isCarved(1, 3, 2) || isCarved(2, 3, 2));
 	}
 	
+	private static int indexOf(long state, long[] array, boolean invert)
+	{
+		int i;
+		if (invert)
+		{
+			for (i = 0; i < 4; ++i)
+			{
+				if ((state & X_LAYER[i]) != 0L)
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			for (i = 3; i >= 0; --i)
+			{
+				if ((state & X_LAYER[i]) != 0L)
+				{
+					break;
+				}
+			}
+			i ++;
+		}
+		return i;
+	}
+	
 	private void checkModified()
 	{
 		if (this.modified)
 		{
 			long negS = ~this.carvedState;
-			int minX = 0;
-			int minY = 0;
-			int minZ = 0;
-			int maxX = 4;
-			int maxY = 4;
-			int maxZ = 4;
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & X_LAYER[i]) != 0L)
-				{
-					minX = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & X_LAYER[i - 1]) != 0L)
-				{
-					maxX = i;
-					break;
-				}
-			}
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & Y_LAYER[i]) != 0L)
-				{
-					minY = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & Y_LAYER[i - 1]) != 0L)
-				{
-					maxY = i;
-					break;
-				}
-			}
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & Z_LAYER[i]) != 0L)
-				{
-					minZ = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & Z_LAYER[i - 1]) != 0L)
-				{
-					maxZ = i;
-					break;
-				}
-			}
-			this.box = new AxisAlignedBB(minX * BLOCK_SCALE, minY * BLOCK_SCALE, minZ * BLOCK_SCALE, maxX * BLOCK_SCALE, maxY * BLOCK_SCALE, maxZ * BLOCK_SCALE);
+			this.box = new AxisAlignedBB(
+					indexOf(negS, X_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, Y_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, Z_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, X_LAYER, true ) * BLOCK_SCALE,
+					indexOf(negS, Y_LAYER, true ) * BLOCK_SCALE,
+					indexOf(negS, Z_LAYER, true ) * BLOCK_SCALE);
 			generateLightmap();
 			this.modified = false;
 			this.neighbourChanged = false;
@@ -347,10 +326,6 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	
 	private void generateLightmap()
 	{
-		if (this.brightnessProvider == null)
-		{
-			this.brightnessProvider = new BrightnessProviderCarvedStone(this);
-		}
 		this.brightnessProvider.generateLightmap();
 	}
 	

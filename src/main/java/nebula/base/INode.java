@@ -199,7 +199,7 @@ public interface INode<T> extends Iterable<T>
 	 */
 	default boolean contain(Object arg)
 	{
-		return L.equal(arg, value()) || (containBefore(arg) || containAfter(arg));
+		return L.equals(arg, value()) || (containBefore(arg) || containAfter(arg));
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public interface INode<T> extends Iterable<T>
 	{
 		if (!hasLast()) return false;
 		INode<T> node = last();
-		return L.equal(arg, node.value()) || node.containBefore(arg);
+		return L.equals(arg, node.value()) || node.containBefore(arg);
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public interface INode<T> extends Iterable<T>
 	{
 		if (!hasNext()) return false;
 		INode<T> node = next();
-		return L.equal(arg, node.value()) || node.containAfter(arg);
+		return L.equals(arg, node.value()) || node.containAfter(arg);
 	}
 	
 	/**

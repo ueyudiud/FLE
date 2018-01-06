@@ -33,11 +33,74 @@ public class SolidContainerHelper
 	
 	public static boolean drainFromItem(IBasicInventory inventory, int amount, int in, int out)
 	{
-		return false;// TODO when solid container system finished.
+		if (in == out)
+		{
+			ItemStack inputRaw = inventory.getStack(in);
+			if (inputRaw != null)
+			{
+				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				if (input.hasCapability(CAPABILITY_SOLID, null))
+				{
+					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
+					SolidStack i1 = handler.drain(Integer.MAX_VALUE, false);
+					handler.drain(i1, true);
+					if (input.stackSize == 0)
+					{
+						inventory.setSlotContents(in, ItemStacks.valid(input));
+						return true;
+					}
+				}
+				else if (inputRaw.stackSize == 1)
+				{
+					SolidContainerData data = SolidContainerManager.getDrainedContainer(input);
+					if (data != null)
+					{
+						inventory.setSlotContents(in, data.empty);
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		else
+		{
+			ItemStack inputRaw = inventory.getStack(in);
+			if (inputRaw != null)
+			{
+				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				if (input.hasCapability(CAPABILITY_SOLID, null))
+				{
+					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
+					SolidStack i1 = handler.drain(amount, false);
+					if (i1 != null && i1.amount == amount && inventory.instItem(out, input, true))
+					{
+						inventory.decrStackSize(in, 1);
+						return true;
+					}
+				}
+				else
+				{
+					SolidContainerData data = SolidContainerManager.getDrainedContainer(input);
+					if (data != null)
+					{
+						if (inventory.instItem(out, data.empty, true))
+						{
+							inventory.decrItem(in, 1, true);
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
 	}
 	
 	public static boolean drainOrFillTank(IBasicInventory inventory, SolidTank tank, int in, int out, byte fdType)
 	{
+		if ((fdType & FD_FILL_ANY) == 0 && tank.getSolidAmount() == 0)
+		{
+			return false;
+		}
 		if (in == out)
 		{
 			ItemStack inputRaw = inventory.getStack(in);

@@ -16,7 +16,7 @@ public interface IBufferSerializer<B, T>
 {
 	default boolean changed(T oldValue, T newValue)
 	{
-		return L.equal(oldValue, newValue);
+		return L.equals(oldValue, newValue);
 	}
 	
 	void write(B buffer, T value);

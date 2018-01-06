@@ -83,7 +83,7 @@ public final class SolidContainerManager
 		public boolean equals(Object obj)
 		{
 			return obj instanceof SolidContainerKey &&
-					L.equal(((SolidContainerKey) obj).solid, this.solid) &&
+					L.equals(((SolidContainerKey) obj).solid, this.solid) &&
 					((SolidContainerKey) obj).item == this.stack.getItem() &&
 					((SolidContainerKey) obj).meta == this.stack.getItemDamage();
 		}
@@ -139,6 +139,7 @@ public final class SolidContainerManager
 	@SuppressWarnings("unlikely-arg-type")
 	public static SolidContainerData getFilledContainer(ItemStack empty, SolidStack stack)
 	{
+		if (stack == null) return null;
 		SolidContainerData data = MAP2.get(new SolidContainerKeySearching(empty, stack.getSolid()));
 		return data != null && data.contain.amount <= stack.amount ? data : null;
 	}
