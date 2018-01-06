@@ -50,7 +50,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
- * All recipe registeration helper method are here.
+ * All recipe registration helper method are here.
  * <p>
  * 
  * @author ueyudiud
@@ -196,9 +196,7 @@ public final class RecipeAdder
 		if (stack == null) return Misc.TO_NULL;
 		final FluidStack s = stack.copy();
 		final int l = max - min;
-		return l == 0 ? anyTo(s) : any -> {
-			return FluidStacks.sizeOf(s, min + L.nextInt(l));
-		};
+		return l == 0 ? anyTo(s) : any -> FluidStacks.sizeOf(s, min + L.nextInt(l));
 	}
 	
 	private static class Range<E>

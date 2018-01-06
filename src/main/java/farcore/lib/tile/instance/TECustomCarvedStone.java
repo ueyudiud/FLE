@@ -273,66 +273,45 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 		return !(isCarved(1, 3, 1) || isCarved(2, 3, 1) || isCarved(1, 3, 2) || isCarved(2, 3, 2));
 	}
 	
+	private static int indexOf(long state, long[] array, boolean invert)
+	{
+		int i;
+		if (invert)
+		{
+			for (i = 0; i < 4; ++i)
+			{
+				if ((state & X_LAYER[i]) != 0L)
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			for (i = 3; i >= 0; --i)
+			{
+				if ((state & X_LAYER[i]) != 0L)
+				{
+					break;
+				}
+			}
+			i ++;
+		}
+		return i;
+	}
+	
 	private void checkModified()
 	{
 		if (this.modified)
 		{
 			long negS = ~this.carvedState;
-			int minX = 0;
-			int minY = 0;
-			int minZ = 0;
-			int maxX = 4;
-			int maxY = 4;
-			int maxZ = 4;
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & X_LAYER[i]) != 0L)
-				{
-					minX = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & X_LAYER[i - 1]) != 0L)
-				{
-					maxX = i;
-					break;
-				}
-			}
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & Y_LAYER[i]) != 0L)
-				{
-					minY = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & Y_LAYER[i - 1]) != 0L)
-				{
-					maxY = i;
-					break;
-				}
-			}
-			for (int i = 0; i < 4; ++i)
-			{
-				if ((negS & Z_LAYER[i]) != 0L)
-				{
-					minZ = i;
-					break;
-				}
-			}
-			for (int i = 4; i > 0; --i)
-			{
-				if ((negS & Z_LAYER[i - 1]) != 0L)
-				{
-					maxZ = i;
-					break;
-				}
-			}
-			this.box = new AxisAlignedBB(minX * BLOCK_SCALE, minY * BLOCK_SCALE, minZ * BLOCK_SCALE, maxX * BLOCK_SCALE, maxY * BLOCK_SCALE, maxZ * BLOCK_SCALE);
+			this.box = new AxisAlignedBB(
+					indexOf(negS, X_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, Y_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, Z_LAYER, false) * BLOCK_SCALE,
+					indexOf(negS, X_LAYER, true ) * BLOCK_SCALE,
+					indexOf(negS, Y_LAYER, true ) * BLOCK_SCALE,
+					indexOf(negS, Z_LAYER, true ) * BLOCK_SCALE);
 			generateLightmap();
 			this.modified = false;
 			this.neighbourChanged = false;
@@ -347,11 +326,161 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	
 	private void generateLightmap()
 	{
-		if (this.brightnessProvider == null)
+		if (!Config.splitBrightnessOfSmallBlock) return;
+		Arrays.fill(this.lightmapBlock, (byte) 0);
+		Arrays.fill(this.lightmapSky, (byte) 0);
+		generateLightmap(EnumSkyBlock.SKY, this.lightmapSky);
+		generateLightmap(EnumSkyBlock.BLOCK, this.lightmapBlock);
+	}
+	
+	private void generateLightmap(EnumSkyBlock type, byte[] lightmap)
+	{
+		byte l1 = (byte) (getLight(0, 1, 0, type) << 4 & 0xFF);
+		int idx;
+		if (l1 != 0)
 		{
-			this.brightnessProvider = new BrightnessProviderCarvedStone(this);
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (type == EnumSkyBlock.SKY)
+					{
+						int k = 4;
+						while (k > 0 && isCarved(i, --k, j))
+						{
+							lightmap[index8i(i, k, j)] = l1;
+						}
+					}
+					else if (lightmap[idx = index8i(i, 3, j)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
 		}
-		this.brightnessProvider.generateLightmap();
+		l1 = (byte) (getLight(0, -1, 0, type) << 4 & 0xFF);
+		if (l1 != 0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (lightmap[idx = index8i(i, 0, j)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
+		}
+		l1 = (byte) (getLight(1, 0, 0, type) << 4 & 0xFF);
+		if (l1 != 0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (lightmap[idx = index8i(3, i, j)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
+		}
+		l1 = (byte) (getLight(-1, 0, 0, type) << 4 & 0xFF);
+		if (l1 != 0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (lightmap[idx = index8i(0, i, j)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
+		}
+		l1 = (byte) (getLight(0, 0, -1, type) << 4 & 0xFF);
+		if (l1 != 0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (lightmap[idx = index8i(i, j, 0)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
+		}
+		l1 = (byte) (getLight(0, 0, 1, type) << 4 & 0xFF);
+		if (l1 != 0)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if (lightmap[idx = index8i(i, j, 3)] < l1)
+					{
+						lightmap[idx] = l1;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < 4; ++i)
+		{
+			for (int j = 0; j < 4; ++j)
+			{
+				for (int k = 0; k < 4; ++k)
+				{
+					scanLight(i, j, k, (byte) 0x2F, -1, lightmap);
+				}
+			}
+		}
+	}
+	
+	private void scanLight(int x, int y, int z, byte side, int light, byte[] lightmap)
+	{
+		if (!isCarved(x, y, z)) return;
+		int idx = index8i(x, y, z);
+		if (light < 0)
+		{
+			light = L.uint(lightmap[idx]);
+		}
+		else
+		{
+			if (lightmap[idx] >= light) return;
+			lightmap[idx] = (byte) light;
+		}
+		if (light >= 4)
+		{
+			light -= 4;
+			if ((side & 0x1) != 0 && x > 0 && L.uint(lightmap[idx - 0x1]) < light)
+			{
+				scanLight(x - 1, y, z, (byte) (side & ~0x2), light, lightmap);
+			}
+			if ((side & 0x2) != 0 && x < 3 && L.uint(lightmap[idx + 0x1]) < light)
+			{
+				scanLight(x + 1, y, z, (byte) (side & ~0x1), light, lightmap);
+			}
+			if ((side & 0x4) != 0 && y > 0 && L.uint(lightmap[idx - 0x4]) < light)
+			{
+				scanLight(x, y - 1, z, (byte) (side & ~0x8), light, lightmap);
+			}
+			if ((side & 0x8) != 0 && y < 3 && L.uint(lightmap[idx + 0x4]) < light)
+			{
+				scanLight(x, y + 1, z, (byte) (side & ~0x4), light, lightmap);
+			}
+			if ((side & 0x10) != 0 && z > 0 && L.uint(lightmap[idx - 0x10]) < light)
+			{
+				scanLight(x, y, z - 1, (byte) (side & ~0x20), light, lightmap);
+			}
+			if ((side & 0x20) != 0 && z < 3 && L.uint(lightmap[idx + 0x10]) < light)
+			{
+				scanLight(x, y, z + 1, (byte) (side & ~0x10), light, lightmap);
+			}
+		}
 	}
 	
 	@Override

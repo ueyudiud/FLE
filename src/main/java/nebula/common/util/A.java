@@ -110,7 +110,7 @@ public final class A
 	public static <E> boolean contain(@Nonnull E[] list, @Nullable E arg)
 	{
 		for (E element : list)
-			if (L.equal(element, arg)) return true;
+			if (L.equals(element, arg)) return true;
 		return false;
 	}
 	
@@ -293,7 +293,7 @@ public final class A
 		{
 			try
 			{
-				if (L.equal(array[i], arg))
+				if (L.equals(array[i], arg))
 					return i;
 			}
 			catch (ClassCastException exception)
@@ -329,9 +329,20 @@ public final class A
 	 */
 	public static <K> Object[] transform(K[] array, Function<? super K, ?> function)
 	{
-		final int length = array.length;
-		Object[] result = new Object[length];
-		for (int i = 0; i < length; result[i] = function.apply(array[i]), ++i);
+		return transform(array, 0, array.length, function);
+	}
+	
+	/**
+	 * Transform key array to object array.
+	 * 
+	 * @param array the source array.
+	 * @param function transform function.
+	 * @return the transformed array.
+	 */
+	public static <K> Object[] transform(K[] array, int from, int to, Function<? super K, ?> function)
+	{
+		Object[] result = new Object[to - from];
+		for (int i = from; i < to; result[i - from] = function.apply(array[i]), ++i);
 		return result;
 	}
 	

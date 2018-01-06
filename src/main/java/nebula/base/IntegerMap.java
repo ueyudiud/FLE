@@ -394,7 +394,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			do
 			{
 				node0 = node0.next();
-				if (L.equal(node0.value().key, key))
+				if (L.equals(node0.value().key, key))
 				{
 					return removeAt(i, node0);
 				}

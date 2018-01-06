@@ -198,11 +198,10 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	@Override
 	public TemplateRecipeCache<H> findRecipe(H handler)
 	{
-		TemplateRecipeMap.TemplateRecipe recipe = L.get(this.recipes, r -> r.judgable.isTrue(handler));
+		TemplateRecipeMap.TemplateRecipe recipe = L.get(this.recipes, r -> r.judgable.test(handler));
 		if (recipe == null) return null;
 		Object[] stores = new Object[this.handlers.length];
-		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i)
-			;
+		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i);
 		return new TemplateRecipeCache<>(this, recipe, stores);
 	}
 	
@@ -227,6 +226,6 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	@Override
 	public void removeRecipeByHandler(H handler)
 	{
-		this.recipes.removeIf(r -> r.judgable.isTrue(handler));
+		this.recipes.removeIf(r -> r.judgable.test(handler));
 	}
 }

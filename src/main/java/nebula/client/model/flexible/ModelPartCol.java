@@ -294,7 +294,7 @@ public class ModelPartCol implements INebulaModelPart
 		@Override
 		public boolean equals(Object obj)
 		{
-			return obj == this || (!(obj instanceof Retextures) ? false : this.map.equals(((Retextures) obj).map) && L.equal(this.parent, ((Retextures) obj).parent));
+			return obj == this || (!(obj instanceof Retextures) ? false : this.map.equals(((Retextures) obj).map) && L.equals(this.parent, ((Retextures) obj).parent));
 		}
 	}
 	
