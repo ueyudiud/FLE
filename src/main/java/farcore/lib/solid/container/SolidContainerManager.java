@@ -83,7 +83,7 @@ public final class SolidContainerManager
 		public boolean equals(Object obj)
 		{
 			return obj instanceof SolidContainerKey &&
-					L.equal(((SolidContainerKey) obj).solid, this.solid) &&
+					L.equals(((SolidContainerKey) obj).solid, this.solid) &&
 					((SolidContainerKey) obj).item == this.stack.getItem() &&
 					((SolidContainerKey) obj).meta == this.stack.getItemDamage();
 		}

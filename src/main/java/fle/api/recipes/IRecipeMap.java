@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes;
 
 import java.util.Collection;
@@ -64,7 +63,7 @@ public interface IRecipeMap<R, C, H> extends INBTCompoundReaderAndWritter<C>, IR
 	/**
 	 * Remove recipe by match handler, the all recipe matched will be removed.
 	 * 
-	 * @param handler
+	 * @param handler the simulated recipe handler.
 	 * @throws UnsupportedOperationException when recipe map is unmodifiable or
 	 *             can not remove recipe.
 	 * @throws IllegalArgumentException when handler is invalid.

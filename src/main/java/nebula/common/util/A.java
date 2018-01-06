@@ -110,7 +110,7 @@ public final class A
 	public static <E> boolean contain(@Nonnull E[] list, @Nullable E arg)
 	{
 		for (E element : list)
-			if (L.equal(element, arg)) return true;
+			if (L.equals(element, arg)) return true;
 		return false;
 	}
 	
@@ -293,7 +293,7 @@ public final class A
 		{
 			try
 			{
-				if (L.equal(array[i], arg))
+				if (L.equals(array[i], arg))
 					return i;
 			}
 			catch (ClassCastException exception)

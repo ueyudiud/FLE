@@ -23,13 +23,12 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Table;
 
@@ -77,13 +76,11 @@ public class L
 	 */
 	public static int bitCounts(byte value)
 	{
-		int c = 0;
-		while (value != 0)
-		{
-			if ((value & 0x1) != 0) ++c;
-			value >>= 1;
-		}
-		return c;
+		int count = value;
+		count = (count & 0b01010101) + ((count & 0b10101010) >>> 1);
+		count = (count & 0b00110011) + ((count & 0b11001100) >>> 2);
+		count =  count               + ( count               >>> 4);
+		return count;
 	}
 	
 	/**
@@ -114,7 +111,7 @@ public class L
 	 */
 	public static int uint(byte value)
 	{
-		return (value & 0xFF);
+		return Byte.toUnsignedInt(value);
 	}
 	
 	/**
@@ -248,17 +245,6 @@ public class L
 	}
 	
 	/**
-	 * Cast value as <tt>unsigned byte</tt> to <tt>int</tt>.
-	 * 
-	 * @param val
-	 * @return the unsigned byte value.
-	 */
-	public static int castPositive(byte val)
-	{
-		return (val & 0xFF);
-	}
-	
-	/**
 	 * Get default random number generator.
 	 * 
 	 * @return random number generator.
@@ -301,8 +287,7 @@ public class L
 	 */
 	public static <T> T[] cast(@Nonnull Collection<? extends T> collection, @Nonnull Class<T> clazz)
 	{
-		T[] ret = (T[]) Array.newInstance(clazz, collection.size());
-		return collection.toArray(ret);
+		return collection.toArray((T[]) Array.newInstance(clazz, collection.size()));
 	}
 	
 	/**
@@ -313,8 +298,7 @@ public class L
 	 */
 	public static <T> ArrayList<T> castArray(T...list)
 	{
-		if (list == null || list.length == 0) return new ArrayList();
-		return new ArrayList(Arrays.asList(list));
+		return list == null || list.length == 0 ? new ArrayList() : new ArrayList(Arrays.asList(list));
 	}
 	
 	/**
@@ -428,8 +412,7 @@ public class L
 		return map.containsKey(key) && map.get(key).contains(value);
 	}
 	
-	// ==============================Fake multimap method
-	// end=================================
+	// ==============================Fake multimap method end=================================
 	
 	/**
 	 * Put a value into two-layer map.
@@ -528,10 +511,8 @@ public class L
 	@Nullable
 	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Predicate<T> predicate)
 	{
-		if (collection == null || collection.isEmpty()) return null;
-		for (T target : collection)
-			if (predicate.test(target)) return target;
-		return null;
+		return collection == null || collection.isEmpty() ? null :
+			collection.stream().filter(predicate).findFirst().orElse(null);
 	}
 	
 	/**
@@ -544,7 +525,8 @@ public class L
 	@Nullable
 	public static <K, V> V get(@Nullable Map<K, V> map, @Nonnull Judgable<K> predicate)
 	{
-		return map == null ? null : getFromEntries(map.entrySet(), predicate);
+		return map == null || map.isEmpty() ? null :
+			getFromEntries(map.entrySet(), predicate);
 	}
 	
 	/**
@@ -558,17 +540,15 @@ public class L
 	@Nullable
 	public static <K, V> V getFromEntries(@Nullable Collection<? extends Entry<K, V>> collection, @Nonnull Judgable<K> predicate)
 	{
-		Entry<K, V> entry = get(collection, e -> predicate.isTrue(e.getKey()));
+		Entry<K, V> entry = get(collection, predicate.from(Entry::getKey));
 		return entry == null ? null : entry.getValue();
 	}
 	
 	public static <T> Set<T> containSet(Collection<? extends T> collection, Judgable<T> checker)
 	{
 		if (collection == null || collection.isEmpty()) return ImmutableSet.of();
-		Builder<T> builder = ImmutableSet.builder();
-		collection.forEach(t -> {
-			if (checker.isTrue(t)) builder.add(t);
-		});
+		ImmutableSet.Builder<T> builder = ImmutableSet.builder();
+		collection.stream().filter(checker).forEach(builder::add);
 		return builder.build();
 	}
 	
@@ -635,7 +615,7 @@ public class L
 			case 0:
 				return null;
 			case 1:
-				return Iterables.getOnlyElement(collection);
+				return collection.iterator().next();
 			default:
 				return Iterators.get(collection.iterator(), random.nextInt(collection.size()));
 			}
@@ -645,7 +625,7 @@ public class L
 	/**
 	 * Match two element.
 	 * <p>
-	 * Return {@code true} if two argument are equal. Different from
+	 * Return <code>true</code> if two argument are equal. Different from
 	 * {@link java.util.Objects#equals(Object, Object)}, the argument input that
 	 * method will be non-null.
 	 * 
@@ -654,7 +634,7 @@ public class L
 	 * @return
 	 * @see java.util.Objects#equals(Object, Object)
 	 */
-	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
+	public static boolean equals(@Nullable Object arg1, @Nullable Object arg2)
 	{
 		return arg1 == arg2 ? true :
 			(arg1 == null || arg2 == null) ? false :
@@ -662,7 +642,7 @@ public class L
 	}
 	
 	/**
-	 * Get minimum values from {@code int} array.
+	 * Get minimum values from <tt>int</tt> array.
 	 * 
 	 * @param values a int array.
 	 * @return if array length is 0, the result will be
@@ -670,28 +650,40 @@ public class L
 	 */
 	public static int min(int...values)
 	{
-		int ret = Integer.MAX_VALUE;
-		for (int i : values)
-			if (i < ret) ret = i;
-		return ret;
+		switch (values.length)
+		{
+		case 0 : return Integer.MAX_VALUE;
+		case 1 : return values[0];
+		default:
+			int ret = Integer.MAX_VALUE;
+			for (int i : values)
+				if (i < ret) ret = i;
+			return ret;
+		}
 	}
 	
 	/**
-	 * Get minimum values from {@code float} array.
+	 * Get minimum values from <tt>float</tt> array.
 	 * 
-	 * @param values a int array.
+	 * @param values a float array.
 	 * @return if array length is 0, the result will be {@link Float#MAX_VALUE}
 	 */
 	public static float min(float...values)
 	{
-		float ret = Float.MAX_VALUE;
-		for (float i : values)
-			if (i < ret) ret = i;
-		return ret;
+		switch (values.length)
+		{
+		case 0 : return Float.MAX_VALUE;
+		case 1 : return values[0];
+		default:
+			float ret = Float.MAX_VALUE;
+			for (float i : values)
+				if (i < ret) ret = i;
+			return ret;
+		}
 	}
 	
 	/**
-	 * Get max values from {@code int} array.
+	 * Get max values from <tt>int</tt> array.
 	 * 
 	 * @param values a int array.
 	 * @return if array length is 0, the result will be
@@ -699,28 +691,40 @@ public class L
 	 */
 	public static int max(int...values)
 	{
-		int ret = Integer.MIN_VALUE;
-		for (int i : values)
-			if (i > ret) ret = i;
-		return ret;
+		switch (values.length)
+		{
+		case 0 : return Integer.MIN_VALUE;
+		case 1 : return values[0];
+		default:
+			int ret = Integer.MIN_VALUE;
+			for (int i : values)
+				if (i > ret) ret = i;
+			return ret;
+		}
 	}
 	
 	/**
-	 * Get max values from {@code float} array.
+	 * Get max values from <tt>float</tt> array.
 	 * 
 	 * @param values a float array.
 	 * @return if array length is 0, the result will be {@link Float#MIN_VALUE}
 	 */
 	public static float max(float...values)
 	{
-		float ret = Float.MIN_VALUE;
-		for (float i : values)
-			if (i > ret) ret = i;
-		return ret;
+		switch (values.length)
+		{
+		case 0 : return Float.MIN_VALUE;
+		case 1 : return values[0];
+		default:
+			float ret = Float.MIN_VALUE;
+			for (float i : values)
+				if (i > ret) ret = i;
+			return ret;
+		}
 	}
 	
 	/**
-	 * Get {@code int} ranged in a and b (include a and b).
+	 * Get <tt>int</tt> ranged in a and b (include a and b).
 	 * <p>
 	 * If number is out of bound, return minimum number if value is lower than
 	 * minimum number or return max number if value is higher than max number.
@@ -732,12 +736,11 @@ public class L
 	 */
 	public static int range(int m1, int m2, int target)
 	{
-		int v;
-		return target > (v = Math.max(m1, m2)) ? v : target < (v = Math.min(m1, m2)) ? v : target;
+		return m1 >= m2 ? m1 < target ? m1 : target < m2 ? m2 : target : range(m2, m1, target);
 	}
 	
 	/**
-	 * Get {@code long} value ranged in a and b (include a and b).
+	 * Get <tt>long</tt> value ranged in a and b (include a and b).
 	 * <p>
 	 * If number is out of bound, return minimum number if value is lower than
 	 * minimum number or return max number if value is higher than max number.
@@ -749,12 +752,11 @@ public class L
 	 */
 	public static long range(long m1, long m2, long target)
 	{
-		long v;
-		return target > (v = Math.max(m1, m2)) ? v : target < (v = Math.min(m1, m2)) ? v : target;
+		return m1 >= m2 ? m1 < target ? m1 : target < m2 ? m2 : target : range(m2, m1, target);
 	}
 	
 	/**
-	 * Get {@code float} ranged in a and b (include a and b).
+	 * Get <tt>float</tt> ranged in a and b (include a and b).
 	 * <p>
 	 * If number is out of bound, return minimum number if value is lower than
 	 * minimum number or return max number if value is higher than max number.
@@ -813,8 +815,7 @@ public class L
 	public static void consume(int start, int end, IntConsumer consumer)
 	{
 		if (start > end) throw new IllegalArgumentException(start + " to " + end + " does not contain any number.");
-		for (int i = start; i < end; consumer.accept(i++))
-			;
+		for (int i = start; i < end; consumer.accept(i++));
 	}
 	
 	/**
@@ -889,9 +890,10 @@ public class L
 	 * @return the random number.
 	 * @see java.util.Random#nextInt(int)
 	 */
-	public static int nextInt(int bound, Random rand)
+	public static int nextInt(@Nonnegative int bound, @Nonnull Random rand)
 	{
-		if (bound < 0) throw new IllegalArgumentException("The bound must be possitive number!");
+		if (bound < 0)
+			throw new IllegalArgumentException("The bound must be possitive number!");
 		switch (bound)
 		{
 		case 0:
@@ -965,11 +967,11 @@ public class L
 	 * @param func The transform function.
 	 * @return the {@link java.util.HashSet} collected elements.
 	 */
-	@SuppressWarnings("hiding")
-	public static <R, T> Set<R> collect(@Nullable Iterable<? extends T> iterable, BiConsumer<T, Collection<R>> consumer)
+	public static <E, T> Set<E> collect(@Nullable Iterable<? extends T> iterable, BiConsumer<T, Collection<E>> consumer)
 	{
-		if (iterable == null) return new HashSet<>();
-		Set<R> set = new HashSet<>();
+		Set<E> set = new HashSet<>();
+		if (iterable == null)
+			return set;
 		for (T t : iterable)
 		{
 			consumer.accept(t, set);

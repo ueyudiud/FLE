@@ -61,7 +61,7 @@ public class Ety<K, V> implements Entry<K, V>, Serializable
 	public boolean equals(Object obj)
 	{
 		return (obj == this) || ((obj instanceof Entry) &&
-				L.equal(this.key, ((Entry) obj).getKey()));
+				L.equals(this.key, ((Entry) obj).getKey()));
 	}
 	
 	@Override
