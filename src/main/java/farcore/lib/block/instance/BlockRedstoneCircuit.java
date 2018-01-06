@@ -156,10 +156,10 @@ public class BlockRedstoneCircuit extends BlockTE
 			return 0xFF0000;
 		});
 		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex) -> tintIndex < 0 ? -1 : 0x400000);
-		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/cross_base.json"), NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/integrator_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base.json"), NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/d"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_d.json"), NebulaModelDeserializer.BLOCK);
-		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/e"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_e.json"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/cross_base"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/integrator_base"), new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/d"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_d"), NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/invert/e"), new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_e"), NebulaModelDeserializer.BLOCK);
 	}
 	
 	public static ItemStack createItemStack(int meta, Mat material)

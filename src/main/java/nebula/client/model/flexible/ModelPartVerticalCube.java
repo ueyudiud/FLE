@@ -5,9 +5,11 @@ package nebula.client.model.flexible;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
@@ -25,9 +27,9 @@ import nebula.client.util.BakedQuadRetex;
 import nebula.client.util.CoordTransformer;
 import nebula.client.util.IIconCollection;
 import nebula.client.util.IModelModifier;
-import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.Jsons;
+import nebula.common.util.L;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -191,35 +193,113 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 		return list;
 	}
 	
-	private float[][][] datas()
+	private float[][] datas(int side)
 	{
-		return new float[][][] { { { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][1] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][1] } }, { { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][1] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][3] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][3] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][1] } }, { { this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][1] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][3] }, { this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][3] }, { this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][1] } }, { { this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][1] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][3] }, { this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][3] }, { this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][1] } } };
+		switch (side)
+		{
+		case 0 :
+			return new float[][] {
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][1] },
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][3] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][3] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][1] }
+			};
+		case 1 :
+			return new float[][] {
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][1] },
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][3] },
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][3] },
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][1] }
+			};
+		case 2 :
+			return new float[][] {
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][1] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][3] },
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][3] },
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][2], this.uvPos[2][1] }
+			};
+		case 3 :
+			return new float[][] {
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][1] },
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][0], this.uvPos[3][3] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][3] },
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[3][2], this.uvPos[3][1] }
+			};
+		case 4 :
+			return new float[][] {
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][1] },
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[4][0], this.uvPos[4][3] },
+				{ this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][3] },
+				{ this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[4][2], this.uvPos[4][1] }
+			};
+		case 5 :
+			return new float[][] {
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][1] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[5][0], this.uvPos[5][3] },
+				{ this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][3] },
+				{ this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[5][2], this.uvPos[5][1] }
+			};
+		default :
+			return null;
+		}
+	}
+	
+	private void putValue(VertexFormat format, IModelModifier modifier, EnumFacing facing,
+			float[][] data, TextureAtlasSprite baseIcon, Consumer<BakedQuad> consumer)
+	{
+		BakedQuadBuilder builder = new BakedQuadBuilder(format, modifier, consumer);
+		builder.startQuad(facing, this.tint, baseIcon);
+		builder.normal(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
+		builder.color(this.red, this.green, this.blue, this.alpha);
+		for (float[] array : data)
+		{
+			builder.pos(array[0] / 16.0F, array[1] / 16.0F, array[2] / 16.0F, array[3], array[4]);
+		}
+		builder.endQuad();
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
+			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
+		final TextureAtlasSprite baseIcon = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		IModelModifier modifier = new ModelModifierByCoordTransformer(transformation, this.transformer);
-		float[][][] datas = datas();
-		Map<String, BakedQuad>[] quadMaps = new Map[6];
-		for (int i = 0; i < 6; ++i)
+		if (this.fullCube)
 		{
-			final int i0 = i;
-			BakedQuadBuilder builder = new BakedQuadBuilder(format, modifier, quad -> {
-				quadMaps[i0] = ImmutableMap.copyOf(Maps.transformValues(iconHandlerGetter.apply(this.icons[i0]).build(), loc -> new BakedQuadRetex(quad, bakedTextureGetter.apply(loc))));
-			});
-			if ((this.renderFlag & (1 << i)) != 0 && this.icons[i] != null)
+			Map<String, BakedQuad>[] quadMaps = new Map[6];
+			for (int i = 0; i < 6; ++i)
 			{
-				EnumFacing facing;
-				builder.startQuad(facing = EnumFacing.VALUES[i], this.tint, Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
-				builder.normal(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
-				builder.color(this.red, this.green, this.blue, this.alpha);
-				for (float[] array : datas[i])
-					builder.pos(array[0] / 16.0F, array[1] / 16.0F, array[2] / 16.0F, array[3], array[4]);
-				builder.endQuad();
+				if ((this.renderFlag & (1 << i)) != 0 && this.icons[i] != null)
+				{
+					final int i0 = i;
+					IIconCollection collection = iconHandlerGetter.apply(this.icons[i0]);
+					putValue(format, modifier, EnumFacing.VALUES[i], datas(i), baseIcon, quad ->
+					quadMaps[i0] = ImmutableMap.copyOf(Maps.transformValues(collection.build(),
+							loc -> new BakedQuadRetex(quad, bakedTextureGetter.apply(loc)))));
+				}
+				else
+				{
+					quadMaps[i] = ImmutableMap.of();
+				}
 			}
+			return new BakedModelPartFullCube(quadMaps);
 		}
-		return new BakedModelPartFullCube(this.fullCube, quadMaps);
+		else
+		{
+			Map<String, List<BakedQuad>> quadMap = new HashMap<>();
+			for (int i = 0; i < 6; ++i)
+			{
+				if ((this.renderFlag & (1 << i)) != 0 && this.icons[i] != null)
+				{
+					IIconCollection collection = iconHandlerGetter.apply(this.icons[i]);
+					putValue(format, modifier, EnumFacing.VALUES[i], datas(i), baseIcon, quad ->
+					collection.build().forEach((key, loc) ->
+					L.put(quadMap, key, new BakedQuadRetex(quad, bakedTextureGetter.apply(loc)))));
+				}
+			}
+			quadMap.replaceAll((name, list) -> ImmutableList.copyOf(list));
+			return new INebulaBakedModelPart.BakedModelPart(ImmutableMap.copyOf(quadMap));
+		}
 	}
 	
 	@Override
@@ -276,35 +356,19 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 	
 	static class BakedModelPartFullCube implements INebulaBakedModelPart
 	{
-		final boolean					fullCube;
 		final Map<String, BakedQuad>[]	quads;
 		
-		BakedModelPartFullCube(boolean fullCube, Map<String, BakedQuad>[] quadMaps)
+		BakedModelPartFullCube(Map<String, BakedQuad>[] quadMaps)
 		{
-			this.fullCube = fullCube;
 			this.quads = quadMaps;
 		}
 		
 		@Override
 		public List<BakedQuad> getQuads(EnumFacing facing, String key)
 		{
-			if (this.fullCube)
-			{
-				return facing == null || this.quads[facing.getIndex()] == null || !this.quads[facing.getIndex()].containsKey(key) ? ImmutableList.of() : ImmutableList.of(this.quads[facing.getIndex()].get(key));
-			}
-			else
-			{
-				if (facing == null)
-				{
-					List<BakedQuad> list = ArrayListAddWithCheck.requireNonnull();
-					A.executeAll(this.quads, m -> { if (m != null) list.add(m.get(key)); });
-					return list;
-				}
-				else
-				{
-					return ImmutableList.of();
-				}
-			}
+			BakedQuad quad;
+			return facing == null ||
+					(quad = this.quads[facing.getIndex()].get(key)) == null ? ImmutableList.of() : ImmutableList.of(quad);
 		}
 	}
 }

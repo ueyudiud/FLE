@@ -6,7 +6,7 @@ package farcore.lib.tesr;
 import org.lwjgl.opengl.GL11;
 
 import farcore.lib.tile.instance.TECustomCarvedStone;
-import nebula.client.render.BrightnessUtil;
+import nebula.client.render.BrightnessProviderQuarterCoord;
 import nebula.client.render.TESRBase;
 import nebula.common.util.Direction;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,8 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 {
-	private static final float	off		= 0.25F;
-	private BrightnessUtil		util	= BrightnessUtil.instance();
+	private static final float off = 0x1.0p-2F;
+	
+	private BrightnessProviderQuarterCoord util = new BrightnessProviderQuarterCoord();
 	
 	@Override
 	public void renderTileEntityAt(TECustomCarvedStone tile, double x, double y, double z, float partialTicks, int destroyStage)
@@ -47,6 +48,7 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 					this.renderEast = tile.shouldSideRender(i, j, k, Direction.E);
 					this.renderDown = tile.shouldSideRender(i, j, k, Direction.D);
 					this.renderUp = tile.shouldSideRender(i, j, k, Direction.U);
+					this.util.initalizeValue(tile);
 					renderCubeWithLight(x1, y1, z1, x2, y2, z2, this.util, tile, i, j, k, icon);
 				}
 			}

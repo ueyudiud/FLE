@@ -137,7 +137,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 			DELEGATES.put(block, delegate);
 			delegate.id = this.capacity;
 			this.capacity += delegate.capacity();
-			Log.trace("#{}#", block.getRegistryName());
+			//			Log.trace("#{}#", block.getRegistryName());
 			delegate.logInformation();
 		}
 		Log.info("Remapping finished.");
@@ -162,7 +162,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 			delegate.id = this.capacity;
 			INT_TO_DELEGATE.put(delegate.id, delegate);
 			this.capacity += delegate.capacity();
-			Log.trace("#{}#", block.getRegistryName());
+			//			Log.trace("#{}#", block.getRegistryName());
 			delegate.logInformation();
 		}
 		Log.info("Remapping finished.");

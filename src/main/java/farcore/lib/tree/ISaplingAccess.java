@@ -8,6 +8,11 @@ import farcore.lib.bio.IBiology;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.world.biome.Biome;
 
+/**
+ * The sapling access.
+ * 
+ * @author ueyudiud
+ */
 public interface ISaplingAccess extends IModifiableCoord, IBiology
 {
 	@Override

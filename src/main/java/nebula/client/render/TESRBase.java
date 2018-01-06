@@ -47,7 +47,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	protected boolean			enableColor		= true;
 	protected boolean			diffuseLight	= true;
 	protected boolean			flip			= false;
-	protected Drawer		helper			= Drawer.INSTANCE;
+	protected Drawer			helper			= Drawer.INSTANCE;
 	protected float				red				= 1.0F;
 	protected float				green			= 1.0F;
 	protected float				blue			= 1.0F;
@@ -274,12 +274,12 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	{
 		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-		if (this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icons[0]);
-		if (this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icons[1]);
+		if (this.renderDown ) renderYNeg(x1, y1, z1, x2, y2, z2, icons[0]);
+		if (this.renderUp   ) renderYPos(x1, y1, z1, x2, y2, z2, icons[1]);
 		if (this.renderNorth) renderZNeg(x1, y1, z1, x2, y2, z2, icons[2]);
 		if (this.renderSouth) renderZPos(x1, y1, z1, x2, y2, z2, icons[3]);
-		if (this.renderWest) renderXNeg(x1, y1, z1, x2, y2, z2, icons[4]);
-		if (this.renderEast) renderXPos(x1, y1, z1, x2, y2, z2, icons[5]);
+		if (this.renderWest ) renderXNeg(x1, y1, z1, x2, y2, z2, icons[4]);
+		if (this.renderEast ) renderXPos(x1, y1, z1, x2, y2, z2, icons[5]);
 		this.helper.draw();
 	}
 	
@@ -287,12 +287,12 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	{
 		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-		if (this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icon);
-		if (this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderUp   ) renderYPos(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderDown ) renderYNeg(x1, y1, z1, x2, y2, z2, icon);
 		if (this.renderSouth) renderZPos(x1, y1, z1, x2, y2, z2, icon);
 		if (this.renderNorth) renderZNeg(x1, y1, z1, x2, y2, z2, icon);
-		if (this.renderEast) renderXPos(x1, y1, z1, x2, y2, z2, icon);
-		if (this.renderWest) renderXNeg(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderEast ) renderXPos(x1, y1, z1, x2, y2, z2, icon);
+		if (this.renderWest ) renderXNeg(x1, y1, z1, x2, y2, z2, icon);
 		this.helper.draw();
 	}
 	

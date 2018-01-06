@@ -16,6 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
@@ -249,6 +250,56 @@ public class ObjArrayParseHelper implements Spliterator<Object>
 	{
 		while (hasNext())
 			consumer.accept(readStack(function));
+	}
+	
+	public <C, R> C collect(@Nonnull Function<R, C> start, @Nonnull BiConsumer<C, R> consumer)
+	{
+		if (!hasNext())
+			return null;
+		else
+		{
+			C s = start.apply(read());
+			while (hasNext())
+				consumer.accept(s, read());
+			return s;
+		}
+	}
+	
+	public <C, R> C collect(@Nonnull Supplier<C> start, @Nonnull BiConsumer<C, R> consumer)
+	{
+		return collect(start.get(), consumer);
+	}
+	
+	public <C, R> C collect(@Nonnull C start, @Nonnull BiConsumer<C, R> consumer)
+	{
+		while (hasNext())
+			consumer.accept(start, read());
+		return start;
+	}
+	
+	public <C, R> C connect(@Nonnull Function<R, C> start, @Nonnull BiFunction<? super C, ? super R, ? extends C> function)
+	{
+		if (!hasNext())
+			return null;
+		else
+		{
+			C s = start.apply(read());
+			while (hasNext())
+				s = function.apply(s, read());
+			return s;
+		}
+	}
+	
+	public <C, R> C connect(@Nonnull Supplier<C> start, @Nonnull BiFunction<? super C, ? super R, ? extends C> function)
+	{
+		return connect(start.get(), function);
+	}
+	
+	public <C, R> C connect(@Nonnull C start, @Nonnull BiFunction<? super C, ? super R, ? extends C> function)
+	{
+		while (hasNext())
+			start = function.apply(start, read());
+		return start;
 	}
 	
 	/**

@@ -206,9 +206,9 @@ public class SortedRegister<T> extends AbstractRegister<T>
 			int mid = (low + high >>> 1);
 			int cmp = name.compareTo(this.sortedNames[mid].name);
 			if (cmp < 0)
-				low = mid + 1;
-			else if (cmp > 0)
 				high = mid - 1;
+			else if (cmp > 0)
+				low = mid + 1;
 			else
 				return this.sortedNames[mid];
 		}

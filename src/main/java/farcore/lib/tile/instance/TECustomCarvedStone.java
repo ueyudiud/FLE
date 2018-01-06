@@ -5,10 +5,8 @@ package farcore.lib.tile.instance;
 
 import static nebula.common.util.L.index8i;
 
-import java.util.Arrays;
 import java.util.List;
 
-import farcore.data.Config;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
@@ -18,7 +16,6 @@ import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
-import nebula.client.util.Lights;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
@@ -32,7 +29,6 @@ import nebula.common.tile.IToolableTile;
 import nebula.common.tile.TEStatic;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.Server;
 import nebula.common.world.IBlockCoordQuarterProperties;
@@ -49,7 +45,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -83,10 +78,10 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	private boolean			neighbourChanged	= false;
 	private boolean			modified			= true;
 	private AxisAlignedBB	box					= null;
-	private byte[]			lightmapSky			= new byte[64];
-	private byte[]			lightmapBlock		= new byte[64];
 	
-	private long carvedState = 0x0;
+	long carvedState = 0x0;
+	
+	BrightnessProviderCarvedStone brightnessProvider;
 	
 	private RockBehavior property()
 	{
@@ -324,6 +319,7 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 		if (this.neighbourChanged)
 		{
 			generateLightmap();
+			markBlockRenderUpdate();
 			this.neighbourChanged = false;
 		}
 	}
@@ -523,9 +519,12 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if (tool == EnumToolTypes.CHISEL)
+		if (tool == EnumToolTypes.CHISEL_CARVE)
 		{
-			if (player.canPlayerEdit(this.pos, side.of(), stack)) return carveRock(player, hitX, hitY, hitZ);
+			if (player.canPlayerEdit(this.pos, side.of(), stack))
+			{
+				return carveRock(player, hitX, hitY, hitZ);
+			}
 		}
 		return IToolableTile.DEFAULT_RESULT;
 	}
@@ -561,24 +560,32 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBrightnessLocal(int x, int y, int z)
+	public int getLightValue(IBlockState state)
 	{
-		int idx = index8i(x, y, z);
-		return Config.splitBrightnessOfSmallBlock ? Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) : this.world.getCombinedLight(this.pos, 0);
+		return property().getLightValue(property().block, state, this.world, this.pos);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getAmbientOcclusionLightValueLocal(int x, int y, int z)
 	{
-		return isCarved(x, y, z) ? 1.0F : 0.3F;
+		checkModified();
+		return this.brightnessProvider.getAmbientOcclusionLightValueLocal(x, y, z);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getBrightnessLocal(int x, int y, int z)
+	{
+		checkModified();
+		return this.brightnessProvider.getBrightnessLocal(x, y, z);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getOpaquenessLocal(int x, int y, int z)
 	{
-		return isCarved(x, y, z) ? 0.0F : 1.0F;
+		checkModified();
+		return this.brightnessProvider.getOpaquenessLocal(x, y, z);
 	}
 }

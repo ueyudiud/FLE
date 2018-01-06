@@ -49,6 +49,7 @@ public class ModelPartItemLayer implements INebulaModelPart
 	@Override
 	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
-		return new BakedModelPart(Maps.transformValues(iconHandlerGetter.apply(this.icon).build(), location -> ItemLayerModel.getQuadsForSprite(this.index, bakedTextureGetter.apply(location), format, Optional.of(transformation))));
+		Optional<TRSRTransformation> optional = Optional.of(transformation);
+		return new BakedModelPart(Maps.transformValues(iconHandlerGetter.apply(this.icon).build(), location -> ItemLayerModel.getQuadsForSprite(this.index, bakedTextureGetter.apply(location), format, optional)));
 	}
 }
