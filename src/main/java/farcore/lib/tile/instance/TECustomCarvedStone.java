@@ -81,7 +81,7 @@ public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterP
 	
 	long carvedState = 0x0;
 	
-	BrightnessProviderCarvedStone brightnessProvider;
+	BrightnessProviderCarvedStone brightnessProvider = new BrightnessProviderCarvedStone(this);
 	
 	private RockBehavior property()
 	{
