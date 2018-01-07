@@ -18,7 +18,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import io.netty.bootstrap.Bootstrap;
 import nebula.client.CreativeTabBase;
 import nebula.common.CommonProxy;
 import nebula.common.LanguageManager;
@@ -155,15 +154,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	 */
 	@SidedProxy(modId = MODID, serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
 	public static CommonProxy proxy;
-	
-	static
-	{
-		// For bootstrap takes too long time to initialize...
-		Thread thread = new Thread(Bootstrap::new, "Bootstrap Initalizer");
-		// Any exception thrown needn't be print.
-		thread.setUncaughtExceptionHandler((t, e)-> {});
-		thread.start();
-	}
 	
 	/** The language manager. */
 	private LanguageManager	lang;

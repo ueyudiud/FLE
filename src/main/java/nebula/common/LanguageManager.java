@@ -47,6 +47,7 @@ public class LanguageManager
 	
 	/**
 	 * Register localization source on Github.
+	 * 
 	 * @param name the key of this localization.
 	 * @see #registerNetworkSource(String, String)
 	 */
@@ -177,7 +178,9 @@ public class LanguageManager
 			translate = MAP2.get(unlocalized);
 		}
 		else
+		{
 			return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
+		}
 		return translate == null ? unlocalized : translate;
 	}
 	
@@ -324,32 +327,34 @@ public class LanguageManager
 			map = ImmutableMap.of();
 			Log.catching(exception);
 		}
-		if (flag && !locale.equals(LanguageManager.ENGLISH) && NebulaConfig.downloadLocalizationFileIfNecessary)
+		if (NebulaConfig.downloadLocalizationFileIfNecessary && flag && !locale.equals(LanguageManager.ENGLISH))
 		{
-			int size = map.size();
-			final Map<String, String> builder = map;
-			LIST.forEach(entry->entry.loadLocalization(this, map1, locale, builder));
-			if (builder.size() != size)
+			flag = false;
+			for (INetworkLocalizationEntry entry : LIST)
 			{
-				write1(map1, builder, locale);
+				flag |= entry.loadLocalization(this, map1, locale, map);
+			}
+			if (flag)
+			{
+				write1(map1, map, locale);
 			}
 		}
 		return map;
 	}
 	
-	private void write1(Map<String, String> properties, Map<String, String> builder, String locale)
+	private void write1(Map<String, String> properties, Map<String, String> map, String locale)
 	{
 		if (!initalizeLangFile())
 		{
 			return;
 		}
-		Log.info("Detected " + locale + " dose not exist in local path, start to saving action.");
+		Log.info("Detected {} dose not exist in local path, start to saving action.", locale);
 		int keyCount = 0;
 		try
 		{
 			File file = new File(this.file, locale + ".lang");
 			file.createNewFile();
-			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8")))
 			{
 				writer.write("#CONTROL LINE");
 				writer.newLine();
@@ -362,7 +367,7 @@ public class LanguageManager
 					writer.newLine();
 				}
 				writer.newLine();
-				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(builder);
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(map);
 				// Use sorted map for easier to search translated word.
 				for (Entry<String, String> entry : sortedMap.entrySet())
 				{
@@ -373,12 +378,14 @@ public class LanguageManager
 			}
 			catch (IOException exception)
 			{
-				Log.warn("Fail to save language file.", exception);
+				Log.warn("Fail to save language file.");
+				Log.catching(exception);
 			}
 		}
 		catch (Exception exception)
 		{
-			Log.warn("Fail to write language file.", exception);
+			Log.warn("Fail to write language file.");
+			Log.catching(exception);
 		}
 		Log.info("Wrote " + keyCount + " keys to file.");
 	}
@@ -427,12 +434,14 @@ public class LanguageManager
 			}
 			catch (IOException exception)
 			{
-				Log.warn("Fail to save language file.", exception);
+				Log.warn("Fail to save language file.");
+				Log.catching(exception);
 			}
 		}
 		catch (Exception exception)
 		{
-			Log.warn("Fail to write language file.", exception);
+			Log.warn("Fail to write language file.");
+			Log.catching(exception);
 		}
 		Log.info("Wrote " + keyCount + " keys to file.");
 	}

@@ -10,6 +10,6 @@ import java.util.Map;
  */
 public interface INetworkLocalizationEntry
 {
-	void loadLocalization(LanguageManager manager, Map<String, String> properties,
+	boolean loadLocalization(LanguageManager manager, Map<String, String> properties,
 			String locale, Map<String, String> localization);
 }
