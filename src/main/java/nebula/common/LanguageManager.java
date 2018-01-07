@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common;
 
 import java.io.BufferedReader;
@@ -12,8 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,11 +36,29 @@ import scala.actors.threadpool.Arrays;
 public class LanguageManager
 {
 	/** The default locale of manager. */
-	public static final String					ENGLISH	= "en_US";
+	public static final String			ENGLISH	= "en_US";
 	/** Localization map loaded from language file. */
-	private static final Map<String, String>	MAP1	= new HashMap<>();
+	static final Map<String, String>	MAP1	= new HashMap<>();
 	/** Localization map loaded from byte code. */
-	private static final Map<String, String>	MAP2	= new HashMap<>();
+	static final Map<String, String>	MAP2	= new HashMap<>();
+	
+	/** The network localization locations. */
+	private static final List<INetworkLocalizationEntry> LIST = new ArrayList<>();
+	
+	/**
+	 * Register localization source on Github.
+	 * @param name the key of this localization.
+	 * @see #registerNetworkSource(String, String)
+	 */
+	public static void registerGitSource(String name, String user, String repository, String branch)
+	{
+		registerNetworkSource(new GitLocalizationEntry(name, user + "/" + repository, branch));
+	}
+	
+	public static void registerNetworkSource(INetworkLocalizationEntry entry)
+	{
+		LIST.add(entry);
+	}
 	
 	/**
 	 * Register tool tips (List of localize string) to localization map.
@@ -207,7 +226,7 @@ public class LanguageManager
 	}
 	
 	// Internal part start, do not use these method.
-	private File file;
+	File file;
 	
 	public LanguageManager(File file)
 	{
@@ -220,43 +239,148 @@ public class LanguageManager
 		MAP1.clear();
 	}
 	
-	private Map<String, String> read(String locale)
+	Map<String, String> read(BufferedReader reader, Map<String, String> map) throws IOException
 	{
-		if (!this.file.canRead()) return ImmutableMap.of();
-		File file = new File(this.file, locale + ".lang");
-		if (!file.exists()) return ImmutableMap.of();
-		String name = file.getName();
-		Log.info("Loading " + name + " language file.");
-		int keyCount = 0;
-		Map<String, String> map = new HashMap<>();
-		
-		int l = 0;
-		try (
-				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
+		String line;
+		while ((line = reader.readLine()) != null)
 		{
-			String line;
-			while ((line = reader.readLine()) != null)
+			if (line.length() != 0)
 			{
-				if (line.length() != 0 && line.charAt(0) != '#')
+				if (line.charAt(0) != '#')
 				{
 					int idx = line.indexOf('=');
 					if (idx == -1) throw new RuntimeException();
-					map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
-					++keyCount;
+					final String line1 = line;
+					map.computeIfAbsent(line.substring(0, idx).trim(), any -> line1.substring(idx + 1));
 				}
-				++l;
 			}
-			Log.info("Wrote " + keyCount + " keys to language manager.");
 		}
-		catch (RuntimeException exception)
+		return map;
+	}
+	
+	private Map<String, String> read(String locale)
+	{
+		if (!this.file.canRead())
+			return ImmutableMap.of();
+		File file = new File(this.file, locale + ".lang");
+		boolean flag = false;
+		Map<String, String> map1 = new HashMap<>();
+		Map<String, String> map;
+		try
 		{
-			Log.warn("Invalid language file " + file.getName() + ". line: " + l, exception);
+			if (!file.createNewFile())
+			{
+				String name = file.getName();
+				Log.info("Loading {} language file.", name);
+				int l = 0;
+				try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
+				{
+					reader.mark(64);
+					if (reader.read() == '#')
+					{
+						if (reader.readLine().equals("CONTROL LINE"))
+						{
+							flag = true;
+							reader.mark(64);
+							while (reader.read() == '#')
+							{
+								String propPair = reader.readLine();
+								String[] split = Strings.splitFirst(propPair, ' ');
+								map1.put(split[0], split[1]);
+								reader.mark(64);
+							}
+							reader.reset();
+						}
+					}
+					else
+					{
+						reader.reset();
+					}
+					map = read(reader, new HashMap<>());
+				}
+				catch (RuntimeException exception)
+				{
+					Log.warn("Invalid language file {}. line: {}", file.getName(), l);
+					Log.catching(exception);
+					map = ImmutableMap.of();
+				}
+				catch (IOException exception)
+				{
+					Log.warn("Fail to load language file {}", file.getName());
+					Log.catching(exception);
+					flag = true;
+					map = new HashMap<>();
+				}
+			}
+			else
+			{
+				flag = true;
+				map = new HashMap<>();
+			}
 		}
 		catch (IOException exception)
 		{
-			Log.warn("Fail to load language file " + file.getName(), exception);
+			flag = false;
+			map = ImmutableMap.of();
+			Log.catching(exception);
+		}
+		if (flag && !locale.equals(LanguageManager.ENGLISH) && NebulaConfig.downloadLocalizationFileIfNecessary)
+		{
+			int size = map.size();
+			final Map<String, String> builder = map;
+			LIST.forEach(entry->entry.loadLocalization(this, map1, locale, builder));
+			if (builder.size() != size)
+			{
+				write1(map1, builder, locale);
+			}
 		}
 		return map;
+	}
+	
+	private void write1(Map<String, String> properties, Map<String, String> builder, String locale)
+	{
+		if (!initalizeLangFile())
+		{
+			return;
+		}
+		Log.info("Detected " + locale + " dose not exist in local path, start to saving action.");
+		int keyCount = 0;
+		try
+		{
+			File file = new File(this.file, locale + ".lang");
+			file.createNewFile();
+			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+			{
+				writer.write("#CONTROL LINE");
+				writer.newLine();
+				for (Entry<String, String> entry : properties.entrySet())
+				{
+					writer.write('#');
+					writer.write(entry.getKey());
+					writer.write(' ');
+					writer.write(entry.getValue());
+					writer.newLine();
+				}
+				writer.newLine();
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(builder);
+				// Use sorted map for easier to search translated word.
+				for (Entry<String, String> entry : sortedMap.entrySet())
+				{
+					writer.write(entry.getKey() + "=" + entry.getValue());
+					writer.newLine();
+					++keyCount;
+				}
+			}
+			catch (IOException exception)
+			{
+				Log.warn("Fail to save language file.", exception);
+			}
+		}
+		catch (Exception exception)
+		{
+			Log.warn("Fail to write language file.", exception);
+		}
+		Log.info("Wrote " + keyCount + " keys to file.");
 	}
 	
 	public void read()
@@ -266,13 +390,18 @@ public class LanguageManager
 		MAP1.putAll(read(Strings.locale()));
 	}
 	
-	public void write()
+	private boolean initalizeLangFile()
 	{
 		if (!this.file.exists())
 		{
 			this.file.mkdirs();
 		}
-		if (!this.file.canWrite())
+		return this.file.canWrite();
+	}
+	
+	public void write()
+	{
+		if (!initalizeLangFile())
 		{
 			Log.info("Fail to write language file because can not write lang in.");
 			return;
@@ -282,25 +411,18 @@ public class LanguageManager
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");
-			if (!file.exists()) file.createNewFile();
+			file.createNewFile();
 			Map<String, String> map = read(ENGLISH);
-			try (
-					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
 			{
-				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);// Use
-				// sorted
-				// map
-				// for
-				// easier
-				// to
-				// search
-				// translated
-				// word.
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);
+				// Use sorted map for easier to search translated word.
 				for (Entry<String, String> entry : sortedMap.entrySet())
 					if (!map.containsKey(entry.getKey()))
 					{
-						writer.write(entry.getKey() + "=" + entry.getValue() + "\r");
-						++keyCount;
+						writer.write(entry.getKey() + "=" + entry.getValue());
+						writer.newLine();
+						keyCount ++;
 					}
 			}
 			catch (IOException exception)

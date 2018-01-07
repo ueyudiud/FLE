@@ -66,6 +66,7 @@ import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
+import nebula.common.LanguageManager;
 import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.fluid.FluidBase;
@@ -200,6 +201,7 @@ public class CommonLoader
 		bar.step("Network Registring");
 		ContainerDataHandlerManager.registerSerializer(SolidStack.BS);
 		FarCoreIdSynchHandler.initialize();
+		LanguageManager.registerGitSource("fle", "ueyudiud", "FLE-Localization", "master");
 		pop(bar);
 	}
 	

@@ -28,4 +28,7 @@ public class NebulaConfig
 	@ConfigProperty(category = "client", defValue = "true")
 	@ConfigComment("Disable this option will let quad data be caculated during rendering, this will release some memory, but take more time to rendering.")
 	public static boolean	storeModelTransformedData;
+	@ConfigProperty(category = "client", defValue = "true")
+	@ConfigComment("The mod will try to download missing localization file when this option is enabled.")
+	public static boolean	downloadLocalizationFileIfNecessary;
 }
