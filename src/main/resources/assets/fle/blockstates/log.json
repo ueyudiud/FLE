@@ -27,6 +27,12 @@
 					"side": "fle:blocks/logs/citrus_side",
 					"top": "fle:blocks/logs/citrus_top"
 				}
+			},
+			"apple": {
+				"textures": {
+					"side": "fle:blocks/logs/apple_side",
+					"top": "fle:blocks/logs/apple_top"
+				}
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 package fle.loader;
 
 import static farcore.data.M.acacia;
+import static farcore.data.M.apple;
 import static farcore.data.M.aspen;
 import static farcore.data.M.birch;
 import static farcore.data.M.ceiba;
@@ -16,6 +17,7 @@ import static farcore.data.M.spruce;
 import static farcore.data.M.willow;
 
 import fle.core.tree.TreeAcacia;
+import fle.core.tree.TreeApple;
 import fle.core.tree.TreeAspen;
 import fle.core.tree.TreeBirch;
 import fle.core.tree.TreeCeiba;
@@ -45,5 +47,6 @@ public class Trees
 		willow.builder().setTree(new TreeWillow(willow).setDefFamily());
 		lacquer.builder().setTree(new TreeLacquer(lacquer).setDefFamily());
 		citrus.builder().setTree(new TreeCitrus(citrus).setDefFamily());
+		apple.builder().setTree(new TreeApple(apple).setDefFamily());
 	}
 }

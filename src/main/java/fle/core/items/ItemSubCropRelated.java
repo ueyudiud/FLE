@@ -75,6 +75,10 @@ public class ItemSubCropRelated extends ItemSubEdible
 		addSubItem(1017, "lime", "Lime", new FoodStatBase(1.0F, 0.5F, 2.0F).setNutrition(EnumNutrition.FRUIT, 4.0F));
 		addSubItem(1018, "orange", "Orange", new FoodStatBase(1.0F, 0.5F, 3.0F).setNutrition(EnumNutrition.FRUIT, 4.5F));
 		addSubItem(1019, "grapefruit", "Grapefruit", new FoodStatBase(1.0F, 0.5F, 2.5F).setNutrition(EnumNutrition.FRUIT, 4.5F));
+		addSubItem(1020, "apple", "Apple", new FoodStatBase(1.0F, 0.5F, 1.0F).setNutrition(EnumNutrition.FRUIT, 2.5F));
+		addSubItem(1021, "green_apple", "Green Apple", new FoodStatBase(1.0F, 0.5F, 1.0F).setNutrition(EnumNutrition.FRUIT, 2.5F));
+		addSubItem(1022, "wild_apple", "Wild Apple", new FoodStatBase(0.5F, 0.0F, 1.0F).setNutrition(EnumNutrition.FRUIT, 1.5F));
+		addSubItem(1101, "acorn", "Acorn");
 		addSubItem(1501, "parsley", "Parsley", NFS);
 		addSubItem(1502, "sage", "Sage", NFS);
 		addSubItem(1503, "rosemary", "Rosemary", NFS);

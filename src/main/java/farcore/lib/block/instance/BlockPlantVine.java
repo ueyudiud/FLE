@@ -71,7 +71,7 @@ public class BlockPlantVine extends BlockBase
 	
 	private Mat				material;
 	private @Nullable Block	baseBlock;
-	private byte			growDir	= -1;		// -1 or 1
+	private byte			growDir	= -1;// -1 or 1
 	
 	public BlockPlantVine(Mat material)
 	{

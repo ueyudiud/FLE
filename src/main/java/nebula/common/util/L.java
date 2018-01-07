@@ -868,6 +868,22 @@ public class L
 	}
 	
 	/**
+	 * Match is number in range(Include left and right bound).
+	 * <p>
+	 * Return <code>long</code> if target is less equal than max value and great
+	 * equal than minimum value.
+	 * 
+	 * @param max a max <code>long</code> value.
+	 * @param min a minimum <code>long</code> value.
+	 * @param target value to be check.
+	 * @return
+	 */
+	public static boolean inRange(long max, long min, long target)
+	{
+		return target <= max && target >= min;
+	}
+	
+	/**
 	 * Generate a random {@code int} value by general random number generator.
 	 * <p>
 	 * If bound is zero or one, it will always return 0 as result.

@@ -77,6 +77,6 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 	public T getSpecieFromGM(GeneticMaterial gm)
 	{
 		INode<Entry<Judgable<GeneticMaterial>, T>> entry;
-		return this.judgables == null ? this.baseType : (entry = this.judgables.find(ety -> ety.getKey().isTrue(gm))) != null ? entry.value().getValue() : this.baseType;
+		return this.judgables == null ? this.baseType : (entry = this.judgables.find(ety -> ety.getKey().test(gm))) != null ? entry.value().getValue() : this.baseType;
 	}
 }

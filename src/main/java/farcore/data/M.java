@@ -106,27 +106,28 @@ public class M
 	// "salty_sand" , "SaltySand" , "Salty Sand"
 	// ).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.2F).build();
 	// Clay
-	public static final Mat	chlorite	= new Mat(7301, FarCore.ID, "chlorite", "Chlorite", "Chlorite").builder().setRGBa(0x939691FF).setClay(1.0F, 2.3F).build();
-	public static final Mat	illite		= new Mat(7302, FarCore.ID, "illite", "Illite", "Illite").builder().setRGBa(0x96958BFF).setClay(1.0F, 2.3F).build();
-	public static final Mat	kaolinite	= new Mat(7303, FarCore.ID, "kaolinite", "Kaolinite", "Kaolinite").builder().setRGBa(0xAFABA5FF).setClay(1.0F, 2.3F).build();
-	public static final Mat	smectite	= new Mat(7304, FarCore.ID, "smectite", "Smectite", "Smectite").builder().setRGBa(0x86898AFF).setClay(1.0F, 2.3F).build();
+	public static final Mat	chlorite	= new Mat(7301, FarCore.ID	, "chlorite"	, "Chlorite"	, "Chlorite"	).builder().setRGBa(0x939691FF).setClay(1.0F, 2.3F).build();
+	public static final Mat	illite		= new Mat(7302, FarCore.ID	, "illite"		, "Illite"		, "Illite"		).builder().setRGBa(0x96958BFF).setClay(1.0F, 2.3F).build();
+	public static final Mat	kaolinite	= new Mat(7303, FarCore.ID	, "kaolinite"	, "Kaolinite"	, "Kaolinite"	).builder().setRGBa(0xAFABA5FF).setClay(1.0F, 2.3F).build();
+	public static final Mat	smectite	= new Mat(7304, FarCore.ID	, "smectite"	, "Smectite"	, "Smectite"	).builder().setRGBa(0x86898AFF).setClay(1.0F, 2.3F).build();
 	// Miscellaneous terria
-	public static final Mat	flint	= new Mat(7601, "minecraft", "flint", "Flint", "Flint").builder().setRGBa(0x2D2D2DFF).setToolProp(10, 8, 1.1F, 1.0F, 5.0F, -0.4F).build();
-	public static final Mat	gravel	= new Mat(7602, "minecraft", "gravel", "Gravel", "Gravel").builder().setRGBa(0xAEB1BFFF).build();
-	public static final Mat	quartz	= new Mat(7603, FarCore.ID, "quartz", "Quartz", "Quartz").builder().setRGBa(0xDADBE5FF).setToolProp(12, 11, 1.9F, 1.0F, 4.0F, -0.5F).build();
-	public static final Mat	wood	= new Mat(7604, FarCore.ID, "wood", "Wood", "Wood").builder().setRGBa(0xA08155FF).setHandable(1.0F).build();
+	public static final Mat	flint		= new Mat(7601, "minecraft"	, "flint"		, "Flint"		, "Flint"		).builder().setRGBa(0x2D2D2DFF).setToolProp(10, 8, 1.1F, 1.0F, 5.0F, -0.4F).build();
+	public static final Mat	gravel		= new Mat(7602, "minecraft"	, "gravel"		, "Gravel"		, "Gravel"		).builder().setRGBa(0xAEB1BFFF).build();
+	public static final Mat	quartz		= new Mat(7603, FarCore.ID	, "quartz"		, "Quartz"		, "Quartz"		).builder().setRGBa(0xDADBE5FF).setToolProp(12, 11, 1.9F, 1.0F, 4.0F, -0.5F).build();
+	public static final Mat	wood		= new Mat(7604, FarCore.ID	, "wood"		, "Wood"		, "Wood"		).builder().setRGBa(0xA08155FF).setHandable(1.0F).build();
 	// Trees
-	public static final Mat	oak			= new Mat(8001, "minecraft", "oak", "Oak", "Oak").builder().setToolProp(7, 4, 1.2F, 0.1F, 2.0F, -0.2F).setWood(5.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 42, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	spruce		= new Mat(8002, "minecraft", "spruce", "Spruce", "Spruce").builder().setWood(2.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 28, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	birch		= new Mat(8003, "minecraft", "birch", "Birch", "Birch").builder().setToolProp(6, 3, 1.0F, 0.1F, 1.6F, -0.2F).setWood(4.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 35, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	ceiba		= new Mat(8004, "minecraft", "ceiba", "Ceiba", "Ceiba").builder().setWood(1.1F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 19, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	acacia		= new Mat(8005, "minecraft", "acacia", "Acacia", "Acacia").builder().setToolProp(5, 2, 0.8F, 0.1F, 1.0F, -0.2F).setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 30, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	oak_black	= new Mat(8006, "minecraft", "oak-black", "DarkOak", "Dark Oak").builder().setToolProp(7, 4, 1.3F, 0.1F, 2.0F, -0.2F).setWood(5.4F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 42, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	aspen		= new Mat(8011, FarCore.ID, "aspen", "Aspen", "Aspen").builder().setWood(1.6F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 23, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	morus		= new Mat(8012, FarCore.ID, "morus", "Morus", "Morus").builder().setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 34, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	willow		= new Mat(8013, FarCore.ID, "willow", "Willow", "Willow").builder().setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 34, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	lacquer		= new Mat(8014, "fle", "lacquer", "Lacquer", "Lacquer").builder().setWood(1.8F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 24, 2.5F, 3.32E4F, 3.0F).build();
-	public static final Mat	citrus		= new Mat(8015, "fle", "citrus", "Citrus", "Citrus").builder().setWood(1.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 20, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	oak			= new Mat(8001, "minecraft"	, "oak"			, "Oak"			, "Oak"			).builder().setToolProp(7, 4, 1.2F, 0.1F, 2.0F, -0.2F).setWood(5.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 42, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	spruce		= new Mat(8002, "minecraft"	, "spruce"		, "Spruce"		, "Spruce"		).builder()                                           .setWood(2.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 28, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	birch		= new Mat(8003, "minecraft"	, "birch"		, "Birch"		, "Birch"		).builder().setToolProp(6, 3, 1.0F, 0.1F, 1.6F, -0.2F).setWood(4.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 35, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	ceiba		= new Mat(8004, "minecraft"	, "ceiba"		, "Ceiba"		, "Ceiba"		).builder()                                           .setWood(1.1F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 19, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	acacia		= new Mat(8005, "minecraft"	, "acacia"		, "Acacia"		, "Acacia"		).builder().setToolProp(5, 2, 0.8F, 0.1F, 1.0F, -0.2F).setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 30, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	oak_black	= new Mat(8006, "minecraft"	, "oak-black"	, "DarkOak"		, "Dark Oak"	).builder().setToolProp(7, 4, 1.3F, 0.1F, 2.0F, -0.2F).setWood(5.4F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 42, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	aspen		= new Mat(8011, FarCore.ID	, "aspen"		, "Aspen"		, "Aspen"		).builder()                                           .setWood(1.6F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 23, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	morus		= new Mat(8012, FarCore.ID	, "morus"		, "Morus"		, "Morus"		).builder()                                           .setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 34, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	willow		= new Mat(8013, FarCore.ID	, "willow"		, "Willow"		, "Willow"		).builder()                                           .setWood(3.0F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 34, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	lacquer		= new Mat(8014, "fle"		, "lacquer"		, "Lacquer"		, "Lacquer"		).builder()                                           .setWood(1.8F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 24, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	citrus		= new Mat(8015, "fle"		, "citrus"		, "Citrus"		, "Citrus"		).builder()                                           .setWood(1.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 20, 2.5F, 3.32E4F, 3.0F).build();
+	public static final Mat	apple		= new Mat(8016, "fle"		, "apple"		, "Apple"		, "Apple"		).builder()                                           .setWood(2.3F, 1.0F, 20.0F).setGeneralProp(8.5E3F, 1.8F, 49, 19, 2.5F, 3.32E4F, 3.0F).build();
 	// Plants
 	public static final Mat	vine		= new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").builder().setRGBa(0x867C50FF).build();
 	public static final Mat	ivy			= new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").builder().setRGBa(0x867C50FF).build();
@@ -233,7 +234,9 @@ public class M
 			}
 			catch (Exception exception)
 			{
-				Log.warn("Caught an exception during {} is registering materials, " + "this exception might not cause by Far Core, please report " + "this execpion to creator.", register.toString());
+				Log.warn("Caught an exception during {} is registering materials, " +
+						"this exception might not cause by Far Core, please report " +
+						"this execpion to creator.", register);
 				throw exception;
 			}
 		}

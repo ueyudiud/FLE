@@ -3,11 +3,18 @@
  */
 package fle.core.tree;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
+import fle.loader.IBFS;
+import nebula.common.util.L;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class TreeOak extends Tree
@@ -18,6 +25,17 @@ public class TreeOak extends Tree
 	public TreeOak(Mat material)
 	{
 		super(material);
+	}
+	
+	@Override
+	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList list)
+	{
+		super.getLeavesDrops(world, pos, state, fortune, silkTouching, list);
+		if (L.nextInt(12) == 0)
+		{
+			list.add(IBFS.iCropRelated.getSubItem("acorn"));
+		}
+		return list;
 	}
 	
 	@Override

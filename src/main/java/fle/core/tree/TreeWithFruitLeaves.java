@@ -62,7 +62,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 	@Override
 	public IBlockState initLeavesState(IBlockState state)
 	{
-		return super.initLeavesState(state).withProperty(FRUIT_STAGE, 0);
+		return state.withProperty(FRUIT_STAGE, 0);
 	}
 	
 	@Override

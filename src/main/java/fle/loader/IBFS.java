@@ -27,7 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Item, Block, Fluid, Soild.s
+ * Item, Block, Fluid, Solid
  * 
  * @author ueyudiud
  */
@@ -55,10 +55,17 @@ public class IBFS
 		fLacquer = new FluidBase("lacquer", "Lacquer").setDensity(1200).setViscosity(5000);
 		fLacquerDried = new FluidBase("dried_lacquer", "Dried Lacquer").setDensity(1180).setViscosity(12000);
 		ResourceLocation loc = new ResourceLocation("fle", "fluids/juice");
-		fsJuice = new FluidBase[] { new FluidBase("sugarcane_juice", "Sugarcane Juice", loc, loc).setColor(0xFF8D8F67).setDensity(1250), new FluidBase("citrus_juice", "Citrus Juice", loc, loc).setColor(0xFFE5F35A)
-				.setDensity(1250), new FluidBase("bitter_orange_juice", "Bitter Orange Juice", loc, loc).setColor(0xFFECB447).setDensity(1250), new FluidBase("lemon_juice", "Lemon Juice", loc, loc).setColor(0xFFFFEB7F).setDensity(1250), new FluidBase("tangerine_juice", "Tangerine Juice", loc, loc)
-				.setColor(0xFFFFA830).setDensity(1250), new FluidBase("pomelo_juice", "Pomelo Juice", loc, loc).setColor(0xFFECF376).setDensity(1250), new FluidBase("lime_juice", "Lime Juice", loc, loc).setColor(0xFFF69500)
-				.setDensity(1250), new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250), new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250), };
+		fsJuice = new FluidBase[] {
+				new FluidBase("sugarcane_juice", "Sugarcane Juice", loc, loc).setColor(0xFF8D8F67).setDensity(1250),
+				new FluidBase("citrus_juice", "Citrus Juice", loc, loc).setColor(0xFFE5F35A).setDensity(1250),
+				new FluidBase("bitter_orange_juice", "Bitter Orange Juice", loc, loc).setColor(0xFFECB447).setDensity(1250),
+				new FluidBase("lemon_juice", "Lemon Juice", loc, loc).setColor(0xFFFFEB7F).setDensity(1250),
+				new FluidBase("tangerine_juice", "Tangerine Juice", loc, loc).setColor(0xFFFFA830).setDensity(1250),
+				new FluidBase("pomelo_juice", "Pomelo Juice", loc, loc).setColor(0xFFECF376).setDensity(1250),
+				new FluidBase("lime_juice", "Lime Juice", loc, loc).setColor(0xFFF69500).setDensity(1250),
+				new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250),
+				new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250)
+		};
 		fLimeMortar = new FluidBase("lime_mortar", "Lime Mortar").setDensity(1400).setViscosity(1100);
 		fAnimalOil = new FluidBase("animal_oil", "Animal Oil").setDensity(800).setViscosity(900);
 		fNaturalGas = new FluidBase("natural_gas", "Natural Gas").setDensity(-20).setViscosity(20).setBurning().setGaseous(true);
@@ -101,12 +108,12 @@ public class IBFS
 	public static FluidBase					fLimeMortar;
 	public static FluidBase					fAnimalOil;
 	public static FluidBase					fNaturalGas;
-	public static SolidBase						sMillet;
-	public static SolidBase						sWholemealMillet;
-	public static SolidBase						sWheat;
-	public static SolidBase						sWholemealWheat;
-	public static SolidBase						sBlackPepper;
-	public static SolidBase						sTurmericRhizome;
-	public static SolidBase						sPricklyAsh;
-	public static SolidBase						sCinnamon;
+	public static SolidBase					sMillet;
+	public static SolidBase					sWholemealMillet;
+	public static SolidBase					sWheat;
+	public static SolidBase					sWholemealWheat;
+	public static SolidBase					sBlackPepper;
+	public static SolidBase					sTurmericRhizome;
+	public static SolidBase					sPricklyAsh;
+	public static SolidBase					sCinnamon;
 }
