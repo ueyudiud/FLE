@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * For some custom render.<br>
@@ -17,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * 
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class ClientEvent extends Event
 {
 	public final Minecraft mc = Minecraft.getMinecraft();

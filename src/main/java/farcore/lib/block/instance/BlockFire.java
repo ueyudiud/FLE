@@ -417,12 +417,12 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		info.setMainPos(pos = face.offset(pos));
 		IBlockState state;
-		if (info.isCustomed(face.x, face.y, face.z) && ((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos).getBlock()).onBurningTick(info, random, face.getOpposite(), fireState))
+		if (info.isCustomed(face.x, face.y, face.z) && ((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos).getBlock()).onBurningTick(info, random, face.opposite(), fireState))
 		{
 			info.resetMainPos();
 			return;
 		}
-		int i = info.getFlammability(face.x, face.y, face.z, face.getOpposite());
+		int i = info.getFlammability(face.x, face.y, face.z, face.opposite());
 		if (random.nextInt(chance) < i)
 		{
 			if (random.nextInt(age + 10) < 5 && !Worlds.isCatchingRain(worldIn, pos, true))

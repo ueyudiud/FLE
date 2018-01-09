@@ -11,12 +11,15 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The {@link net.minecraft.client.renderer.Tessellator} wrapper type.
  * 
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class Drawer
 {
 	public static final Drawer INSTANCE = new Drawer();

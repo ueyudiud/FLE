@@ -28,7 +28,7 @@ public interface IThermalHandler extends ICoord
 	/**
 	 * This method is only get machine delta temperature.
 	 * <p>
-	 * DO NOT GET WORLD TEMPERATURE IN THIS METHOD!
+	 * DO NOT GET TILE TEMPERATURE FROM THERMAL NET IN THIS METHOD!
 	 * 
 	 * @param direction
 	 * @return
@@ -45,7 +45,7 @@ public interface IThermalHandler extends ICoord
 	 * @param direction
 	 * @return
 	 */
-	// double getHeatCapacity(Direction direction);
+	double getHeatCapacity(Direction direction);
 	
 	/**
 	 * An basic constant of heat conduct. Called by thermal net.<br>

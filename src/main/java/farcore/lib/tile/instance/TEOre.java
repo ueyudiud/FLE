@@ -371,19 +371,25 @@ implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_Entit
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return (float) (this.heat / this.ore.getProperty(MP.property_basic).heatCap);
+		return (float) (this.heat / this.rock.heatCapacity);
 	}
 	
 	@Override
 	public double getThermalConductivity(Direction direction)
 	{
-		return this.ore.getProperty(MP.property_basic).thermalConduct * 0.3F + this.rock.getProperty(MP.property_basic).thermalConduct * 0.7F;
+		return this.ore.thermalConductivity * 0.3F + this.rock.thermalConductivity * 0.7F;
 	}
 	
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
 		this.heat += value;
+	}
+	
+	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		return this.rock.heatCapacity;
 	}
 	
 	@Override

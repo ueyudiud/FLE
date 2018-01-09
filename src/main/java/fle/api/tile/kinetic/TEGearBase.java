@@ -169,7 +169,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 				if (tile instanceof IGearHandler)
 				{
 					IGearHandler handler = (IGearHandler) tile;
-					Direction oppisite = direction.getOpposite();
+					Direction oppisite = direction.opposite();
 					Axis axis = handler.getGearAxis(oppisite);
 					if (axis != this.axis) continue;
 					float g11 = getGearSize(direction);
@@ -193,7 +193,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 			}
 			else
 			{
-				pkg1 = new KineticPackageGearEdgeRotate(pkg.direction.getOpposite(), pkg.torque / count, pkg.speed).setGearProperty(this, direction);
+				pkg1 = new KineticPackageGearEdgeRotate(pkg.direction.opposite(), pkg.torque / count, pkg.speed).setGearProperty(this, direction);
 			}
 			access.sendEnergyTo(direction, pkg1);
 		}

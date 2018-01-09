@@ -7,15 +7,16 @@ import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MP;
 import farcore.energy.thermal.IThermalHandler;
+import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
-import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author ueyudiud
@@ -29,13 +30,14 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	private Mat					material;
 	private long				remainEnergy	= 10000000L;
 	private int					carbonateProgress;
-	private ThermalEnergyHelper	helper			= new ThermalEnergyHelper();
+	
+	private long energy;
 	
 	private TimeMarker recheckingStructure = new TimeMarker(20, this::recheckStructure);
 	
 	public TEFirewood()
 	{
-		setMaterial(M.oak);
+		this.material = M.oak;
 	}
 	
 	@Override
@@ -43,9 +45,9 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	{
 		super.writeToNBT(nbt);
 		nbt.setString("material", this.material.name);
-		nbt.setLong("energy", this.remainEnergy);
+		nbt.setLong("energyRem", this.remainEnergy);
 		nbt.setInteger("progress", this.carbonateProgress);
-		this.helper.writeToNBT(nbt, "thermal");
+		nbt.setLong("energy", this.energy);
 		return nbt;
 	}
 	
@@ -53,9 +55,9 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		setMaterial(Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID));
-		this.remainEnergy = nbt.getLong("energy");
-		this.helper.readFromNBT(nbt, "thermal");
+		this.material = Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
+		this.remainEnergy = nbt.getLong("energyRem");
+		this.energy = nbt.getLong("energy");
 		this.carbonateProgress = nbt.getInteger("progress");
 	}
 	
@@ -75,12 +77,6 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 			this.material = Mat.getMaterialByIDOrDefault(nbt, "m", this.material);
 			markBlockRenderUpdate();
 		}
-	}
-	
-	private void setMaterial(Mat material)
-	{
-		this.material = material;
-		this.helper = new ThermalEnergyHelper(0, material.heatCapacity, 50F, 2E-2F);
 	}
 	
 	private void recheckStructure()
@@ -183,7 +179,7 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 		{
 			long value = Math.min(this.remainEnergy, (long) (800 * this.material.getProperty(MP.property_wood).burnHeat));
 			this.remainEnergy -= value;
-			this.helper.addInternalEnergy(value);
+			this.energy += value;
 			if (this.remainEnergy == 0)
 			{
 				removeBlock();
@@ -193,10 +189,29 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 		super.updateServer();
 	}
 	
+	private float getCurrentTemperature(float Tenv, float Tmax)
+	{
+		return (float) - Math.expm1(- ((this.energy / this.material.heatCapacity + Tenv) / Tmax)) * Tmax;
+	}
+	
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return this.helper.getTemperature();
+		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
+		float Tbase = 600.0F;//TODO
+		float Tmax = MathHelper.sqrt(Tenv * Tenv + Tbase * Tbase);
+		
+		return getCurrentTemperature(Tenv, Tmax) - Tenv;
+	}
+	
+	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
+		float Tbase = 600.0F;//TODO
+		float Tmax = MathHelper.sqrt(Tenv * Tenv + Tbase * Tbase);
+		
+		return this.material.heatCapacity / (1 - getCurrentTemperature(Tenv, Tmax) / Tmax);
 	}
 	
 	@Override
@@ -208,7 +223,7 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		this.helper.addInternalEnergy(value);
+		this.energy += value;
 	}
 	
 	public Mat getMaterial()

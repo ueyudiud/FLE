@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.model;
 
 import java.util.List;
@@ -49,9 +52,9 @@ public class ModelFluidBlock
 			{
 			case "inventory":
 				return ModelHelper.makeItemModel(fluid.getStill());// Make still
-																	// icon for
-																	// item in
-																	// inventory.
+				// icon for
+				// item in
+				// inventory.
 			default:
 				return new ModelFluid(fluid);
 			}

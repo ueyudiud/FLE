@@ -12,10 +12,13 @@ import com.google.common.collect.ImmutableMap;
 import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 class MissingnoIconHandler implements IIconCollection
 {
 	private static final ImmutableMap<String, ResourceLocation> BUILD = ImmutableMap.of(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE);

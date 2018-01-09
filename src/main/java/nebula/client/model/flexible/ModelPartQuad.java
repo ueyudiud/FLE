@@ -26,10 +26,13 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class ModelPartQuad implements INebulaModelPart
 {
 	private static final float[][] ATTACH_UP = { { 0.0F, 15.2F, 0.0F }, { 0.0F, 15.2F, 16.0F }, { 16.0F, 15.2F, 16.0F }, { 16.0F, 15.2F, 0.0F } }, ATTACH_DOWN = { { 0.0F, 0.8F, 0.0F }, { 0.0F, 0.8F, 16.0F }, { 16.0F, 0.8F, 16.0F }, { 16.0F, 0.8F, 0.0F } },

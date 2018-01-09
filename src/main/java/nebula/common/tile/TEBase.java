@@ -447,7 +447,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	
 	public int sendItemStackTo(ItemStack stack, Direction side, boolean fullStackTransfer, boolean dropToWorld, boolean process)
 	{
-		if (dropToWorld && Worlds.isItemDropable(this.world, this.pos.offset(side.of()), side.getOpposite()))
+		if (dropToWorld && Worlds.isItemDropable(this.world, this.pos.offset(side.of()), side.opposite()))
 		{
 			if (process)
 			{
@@ -465,12 +465,12 @@ public class TEBase extends TileEntity implements IModifiableCoord
 			if (tile instanceof IItemHandlerIO)
 			{
 				IItemHandlerIO handler = (IItemHandlerIO) tile;
-				if (handler.canInsertItem(side.getOpposite(), stack))
+				if (handler.canInsertItem(side.opposite(), stack))
 				{
-					int size = handler.insertItem(stack, side.getOpposite(), true);
+					int size = handler.insertItem(stack, side.opposite(), true);
 					if (fullStackTransfer ? stack.stackSize == size : size > 0)
 					{
-						return process ? handler.insertItem(stack, side.getOpposite(), false) : size;
+						return process ? handler.insertItem(stack, side.opposite(), false) : size;
 					}
 				}
 				return 0;
@@ -478,7 +478,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 			else if (tile instanceof ISidedInventory)
 			{
 				ISidedInventory handler = (ISidedInventory) tile;
-				EnumFacing facing = side.getOpposite().of();
+				EnumFacing facing = side.opposite().of();
 				int[] slots = handler.getSlotsForFace(facing);
 				for (int i : slots)
 				{
@@ -493,9 +493,9 @@ public class TEBase extends TileEntity implements IModifiableCoord
 				}
 				return 0;
 			}
-			else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite().of()))
+			else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.opposite().of()))
 			{
-				IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite().of());
+				IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.opposite().of());
 				for (int i = 0; i < handler.getSlots(); ++i)
 				{
 					ItemStack remain = handler.insertItem(i, stack, true);
@@ -518,15 +518,15 @@ public class TEBase extends TileEntity implements IModifiableCoord
 		if (tile instanceof IFluidHandlerIO)
 		{
 			IFluidHandlerIO handler = (IFluidHandlerIO) tile;
-			if (handler.canInsertFluid(side.getOpposite(), stack))
+			if (handler.canInsertFluid(side.opposite(), stack))
 			{
-				return handler.insertFluid(stack, side.getOpposite(), process);
+				return handler.insertFluid(stack, side.opposite(), process);
 			}
 			return 0;
 		}
-		else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()))
+		else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.opposite().of()))
 		{
-			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of());
+			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.opposite().of());
 			return handler.fill(stack, process);
 		}
 		return 0;

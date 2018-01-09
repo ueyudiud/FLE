@@ -8,11 +8,14 @@ import nebula.common.entity.EntityProjectileItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
 @HasResult
+@SideOnly(Side.CLIENT)
 public class EntityProjectileItemRenderEvent extends RenderEvent
 {
 	private float					partialTicks;

@@ -115,13 +115,13 @@ public class TECircuitSpatial extends TECircuitCompacted
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side.horizontal ? (side == this.facing || side == this.facing.getOpposite() ? this.powerFB : this.powerLR) : 0;
+		return side.horizontal ? (side == this.facing || side == this.facing.opposite() ? this.powerFB : this.powerLR) : 0;
 	}
 	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side.horizontal ? (side == this.facing || side == this.facing.getOpposite() ? this.powerFB : this.powerLR) : 0;
+		return side.horizontal ? (side == this.facing || side == this.facing.opposite() ? this.powerFB : this.powerLR) : 0;
 	}
 	
 	@Override

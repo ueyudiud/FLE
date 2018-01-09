@@ -14,10 +14,13 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class GuiIconButton extends GuiButton
 {
 	private static final ResourceLocation	VOID		= new ResourceLocation(Nebula.MODID, "textures/gui/void.png");

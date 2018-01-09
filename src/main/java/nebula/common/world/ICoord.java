@@ -179,14 +179,14 @@ public interface ICoord
 	default boolean isPlantable(IPlantable plantable, Direction offset)
 	{
 		IBlockState state = world().getBlockState(offset.offset(pos()));
-		return state.getBlock().canSustainPlant(state, world(), pos(), offset.getOpposite().of(), plantable);
+		return state.getBlock().canSustainPlant(state, world(), pos(), offset.opposite().of(), plantable);
 	}
 	
 	default boolean isPlantable(IPlantable plantable, int x, int y, int z, Direction offset)
 	{
 		BlockPos pos = pos().add(x, y, z);
 		IBlockState state = world().getBlockState(offset.offset(pos));
-		return state.getBlock().canSustainPlant(state, world(), pos, offset.getOpposite().of(), plantable);
+		return state.getBlock().canSustainPlant(state, world(), pos, offset.opposite().of(), plantable);
 	}
 	
 	default int getBlockLightOpacity()
@@ -256,7 +256,7 @@ public interface ICoord
 	
 	default boolean isNearbySolid(Direction offset)
 	{
-		return world().isSideSolid(offset.offset(pos()), offset.getOpposite().of());
+		return world().isSideSolid(offset.offset(pos()), offset.opposite().of());
 	}
 	
 	default IFluidHandler getFluidHandler(Direction offset)
@@ -264,7 +264,7 @@ public interface ICoord
 		World world = world();
 		BlockPos pos = offset.offset(pos());
 		TileEntity tile = world.getTileEntity(pos);
-		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
+		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.opposite().of()) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offset.opposite().of()) : null;
 	}
 	
 	default IItemHandler getItemHandler(Direction offset)
@@ -272,7 +272,7 @@ public interface ICoord
 		World world = world();
 		BlockPos pos = offset.offset(pos());
 		TileEntity tile = world.getTileEntity(pos);
-		return tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.getOpposite().of()) : null;
+		return tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.opposite().of()) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offset.opposite().of()) : null;
 	}
 	
 	// default IItemHandlerIO getItemIOHandler(Direction offset)

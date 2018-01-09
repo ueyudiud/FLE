@@ -10,7 +10,6 @@ import farcore.energy.thermal.IThermalHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
-import fle.api.energy.thermal.ThermalEnergyHelper;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,14 +18,13 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class TEThermalWire extends TESynchronization// TEWiring? No, you can't
-// transfer heat through
-// dimension :D.
+public class TEThermalWire extends TESynchronization
+// TEWiring? No, you can't transfer heat through dimension :D.
 implements IThermalHandler, IDebugableTile
 {
 	private Mat material;
 	
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper();
+	private long energy;
 	
 	long[] currentChangingHeat = new long[6], lastChangedHeat = new long[6];
 	
@@ -35,7 +33,7 @@ implements IThermalHandler, IDebugableTile
 	{
 		super.writeToNBT(nbt);
 		nbt.setString("material", this.material.name);
-		this.helper.writeToNBT(nbt, "energy");
+		nbt.setLong("energy", this.energy);
 		return nbt;
 	}
 	
@@ -44,7 +42,7 @@ implements IThermalHandler, IDebugableTile
 	{
 		super.readFromNBT(nbt);
 		setThermalProperty(Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID));
-		this.helper.readFromNBT(nbt, "energy");
+		this.energy = nbt.getLong("energy");
 	}
 	
 	@Override
@@ -64,7 +62,6 @@ implements IThermalHandler, IDebugableTile
 	private void setThermalProperty(Mat material)
 	{
 		this.material = material;
-		this.helper.setProperties(0, material.heatCapacity, 1000, material.thermalConductivity);
 	}
 	
 	@Override
@@ -79,7 +76,7 @@ implements IThermalHandler, IDebugableTile
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return this.helper.getTemperature();
+		return (this.energy / (float) this.material.heatCapacity);
 	}
 	
 	@Override
@@ -89,9 +86,15 @@ implements IThermalHandler, IDebugableTile
 	}
 	
 	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		return this.material.heatCapacity;
+	}
+	
+	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		this.helper.addInternalEnergy(value);
+		this.energy += value;
 		this.currentChangingHeat[direction.ordinal()] += value;
 	}
 	

@@ -234,7 +234,7 @@ implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, 
 	protected int getRedstonePower(Facing offset)
 	{
 		Direction direction = offset.toDirection(this.facing);
-		return getRedstonePower(direction.getOpposite().of(), direction);
+		return getRedstonePower(direction.opposite().of(), direction);
 	}
 	
 	@Override

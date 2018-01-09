@@ -289,9 +289,19 @@ public final class Maths
 		}
 	}
 	
-	public static double log_average(double a, double b)
+	public static double logarithmicMean(double a, double b)
 	{
-		return L.similar(a, b) ? a : a == 0 || b == 0 ? 0 : (a - b) / (Math.log(a) - Math.log(b));
+		return a >= b ?
+				b == 0.0 ? 0.0 : logarithmicMean$(a / b - 1.0) * b :
+					logarithmicMean$(b / a - 1.0) * a;
+	}
+	
+	private static double logarithmicMean$(double x)
+	{
+		return x < 1.0E-3 ?
+				//When value is too small, use second one may return NaN.
+				1.0 + x * 0.5 :
+					x / Math.log1p(x);
 	}
 	
 	public static int    sq(int    i) { return i * i; }

@@ -20,13 +20,13 @@ public class TECircuitFrontBack extends TECircuitCompacted
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == this.facing ? this.power : 0;
+		return side.opposite() == this.facing ? this.power : 0;
 	}
 	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == this.facing ? this.power : 0;
+		return side.opposite() == this.facing ? this.power : 0;
 	}
 	
 	@Override

@@ -9,10 +9,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonDeserializer;
 
 import nebula.common.util.Jsons;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class ModelPartCollection
 {
 	private ImmutableMap<String, INebulaModelPart> variants;

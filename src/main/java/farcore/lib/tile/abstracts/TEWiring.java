@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.abstracts;
 
 import nebula.common.tile.TESynchronization;
@@ -96,7 +99,7 @@ public abstract class TEWiring extends TESynchronization
 		else
 		{
 			this.nextWorldDim = nextWorld;// Might the world already not
-											// deleted.
+			// deleted.
 			this.next = nextPos;
 		}
 	}
@@ -127,7 +130,7 @@ public abstract class TEWiring extends TESynchronization
 		else
 		{
 			this.lastWorldDim = lastWorld;// Might the world already not
-											// deleted.
+			// deleted.
 			this.last = lastPos;
 		}
 	}
@@ -179,7 +182,7 @@ public abstract class TEWiring extends TESynchronization
 			}
 			else
 				return false;// I don't know what uses can take this option
-								// affect in client world.
+			// affect in client world.
 		}
 		else
 			return canConnectWith(this.world, direction.offset(this.pos));

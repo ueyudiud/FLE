@@ -131,7 +131,7 @@ public class LanguageManager
 	 * 
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element, use
-	 *            {@link java.lang.String#format(String, Object...) String.format} to format
+	 *            {@link java.lang.String#format(String, Object...)} to format
 	 *            localized string.
 	 * @return the formated localized string, or unlocalized string direct if
 	 *         nothing found.

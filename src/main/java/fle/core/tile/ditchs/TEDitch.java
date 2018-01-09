@@ -267,7 +267,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 			Fluid fluid1 = ditch.getFluidContain();
 			if (fluid != null && fluid1 != null && fluid != fluid1)
 			{
-				ditch.setLink(direction.getOpposite(), false);
+				ditch.setLink(direction.opposite(), false);
 				setLink(direction, false);
 				return -1;
 			}
@@ -294,7 +294,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		{
 			int speed = getFlowSpeed(buffer, limit, viscosity);
 			int result;
-			if ((result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
+			if ((result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.opposite(), speed, true)) != -1)
 			{
 				return result;
 			}
@@ -311,7 +311,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 				}
 				else
 				{
-					result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true);
+					result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.opposite(), speed, true);
 					return result;
 				}
 			}
@@ -338,7 +338,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	
 	public boolean canLink(Direction face, TileEntity tile)
 	{
-		EnumFacing facing = face.getOpposite().of();
+		EnumFacing facing = face.opposite().of();
 		return tile == null ? false : tile instanceof IDitchTile || tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
 	}
 	

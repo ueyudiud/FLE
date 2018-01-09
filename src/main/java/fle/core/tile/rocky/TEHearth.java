@@ -10,7 +10,6 @@ import farcore.energy.thermal.IThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
-import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.FuelHandler;
 import fle.api.tile.IBellowsAccepter;
@@ -26,6 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,11 +35,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 {
 	private static final byte	IsBurining	= 3;
+	private static final Mat material = M.argil;
+	
 	private int					burningPower;
 	private int					normalBurningPower;
 	private long				fuelValue;
 	
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 10.0F, 3.6E-3F);
+	private long energy;
+	private float maxTemp;
 	
 	public TEHearth()
 	{
@@ -51,7 +54,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 		compound.setInteger("power1", this.burningPower);
 		compound.setInteger("power2", this.normalBurningPower);
 		compound.setLong("fuelValue", this.fuelValue);
-		this.helper.writeToNBT(compound, "energy");
+		compound.setLong("energy", this.energy);
 		return super.writeToNBT(compound);
 	}
 	
@@ -62,7 +65,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 		this.burningPower = compound.getInteger("power1");
 		this.normalBurningPower = compound.getInteger("power2");
 		this.fuelValue = compound.getLong("fuelValue");
-		this.helper.readFromNBT(compound, "energy");
+		this.energy = compound.getLong("energy");
 	}
 	
 	@Override
@@ -116,7 +119,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 			if (!is(IsBurining))
 			{
 				enable(IsBurining);
-				this.helper.setTemperatureNotLessThan(200F);
+				this.maxTemp = 200F;
 				tryBuringItem();
 				return new ActionResult<>(EnumActionResult.SUCCESS, 1.0F);
 			}
@@ -162,11 +165,11 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 				decrStackSize(0, key.fuel);
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
-				this.helper.setBaseMaxTemperature(key.normalTemperature);
+				this.maxTemp = key.normalTemperature;
 				return;
 			}
 		}
-		this.helper.setBaseMaxTemperature(0F);
+		this.maxTemp = 0.0F;
 		disable(IsBurining);
 	}
 	
@@ -188,10 +191,27 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 		return true;
 	}
 	
+	private float getCurrentTemperature(float Tenv, float Tmax)
+	{
+		return (float) - Math.expm1(- ((this.energy / material.heatCapacity + Tenv) / Tmax)) * Tmax;
+	}
+	
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return this.helper.getTemperature();
+		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
+		float Tmax = MathHelper.sqrt(Tenv * Tenv + this.maxTemp * this.maxTemp);
+		
+		return Tmax - Tenv;
+	}
+	
+	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
+		float Tmax = MathHelper.sqrt(Tenv * Tenv + this.maxTemp * this.maxTemp);
+		
+		return material.heatCapacity / (1 - getCurrentTemperature(Tenv, Tmax) / Tmax);
 	}
 	
 	@Override
@@ -203,6 +223,6 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		this.helper.addInternalEnergy(value);
+		this.energy += value;
 	}
 }

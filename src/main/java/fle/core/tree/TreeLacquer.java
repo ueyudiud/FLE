@@ -135,7 +135,7 @@ public class TreeLacquer extends Tree
 		if (tile instanceof ILogProductionCollector)
 		{
 			ILogProductionCollector collector = (ILogProductionCollector) tile;
-			collector.collectLogProductFrom(direction.getOpposite(), new FluidStack(IBFS.fLacquer, 75));
+			collector.collectLogProductFrom(direction.opposite(), new FluidStack(IBFS.fLacquer, 75));
 		}
 	}
 	

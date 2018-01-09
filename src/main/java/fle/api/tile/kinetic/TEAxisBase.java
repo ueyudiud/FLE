@@ -98,7 +98,7 @@ public class TEAxisBase extends TEGearBoxBase implements IAxisHandler
 				{
 					if (((KineticPackageExt) pkg).direction.isNegative())
 					{
-						pkg = new KineticPackageAxisRotate(((KineticPackageExt) pkg).direction.getOpposite(), pkg.torque, -pkg.speed);
+						pkg = new KineticPackageAxisRotate(((KineticPackageExt) pkg).direction.opposite(), pkg.torque, -pkg.speed);
 					}
 					if (this.speed != 0)
 					{

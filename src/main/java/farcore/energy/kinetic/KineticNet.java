@@ -121,12 +121,12 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 					if (this.map.containsKey(this.cachedPos))
 					{
 						IKineticHandler tile = this.map.get(this.cachedPos);
-						if (!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
+						if (!tile.canAccessKineticEnergyFromDirection(direction.opposite()))
 						{
 							this.cachedTile = source;
 							source.emitKineticEnergy(this, null, direction, pkg);
 						}
-						else if (!tile.isRotatable(direction.getOpposite(), pkg))
+						else if (!tile.isRotatable(direction.opposite(), pkg))
 						{
 							this.cachedTile = source;
 							source.onStuck(direction, pkg);
@@ -136,7 +136,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 						{
 							double speed = pkg.speed;
 							this.cachedTile = tile;
-							double send = tile.receiveKineticEnergy(this, source, direction.getOpposite(), pkg);
+							double send = tile.receiveKineticEnergy(this, source, direction.opposite(), pkg);
 							this.cachedTile = source;
 							if (!L.similar(speed, send))
 							{

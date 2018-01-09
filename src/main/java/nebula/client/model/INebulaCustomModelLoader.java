@@ -1,10 +1,16 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.model;
 
 import nebula.Nebula;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public interface INebulaCustomModelLoader extends ICustomModelLoader
 {
 	@Override

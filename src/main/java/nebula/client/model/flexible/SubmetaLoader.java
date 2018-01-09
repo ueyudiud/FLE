@@ -19,10 +19,13 @@ import nebula.common.util.L;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object, String>>
 {
 	BLOCK_LOADER

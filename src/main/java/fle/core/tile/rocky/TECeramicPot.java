@@ -13,8 +13,8 @@ import farcore.data.M;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
+import farcore.lib.material.Mat;
 import farcore.lib.solid.container.SolidContainerHelper;
-import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap;
 import fle.api.recipes.instance.interfaces.IRecipeInput;
@@ -42,9 +42,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
-	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
+	public static final Mat material = M.argil;
 	
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
+	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
+	private long energy;
 	
 	public TECeramicPot()
 	{
@@ -69,7 +70,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		this.helper.writeToNBT(compound, "energy");
+		compound.setLong("energy", this.energy);
 		return compound;
 	}
 	
@@ -77,7 +78,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.helper.readFromNBT(compound, "energy");
+		this.energy = compound.getLong("energy");
 	}
 	
 	@Override
@@ -168,7 +169,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	{
 		if (instItem(1, this.cache.get(2), false) && instItem(5, this.cache.get(3), true))
 		{
-			return instItem(1, this.cache.get(2), true);// always true.
+			return instItem(1, this.cache.get(2), true);//Always true.
 		}
 		return false;
 	}
@@ -176,20 +177,26 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return this.helper.getTemperature();
+		return (float) (this.energy / material.heatCapacity);
+	}
+	
+	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		return material.heatCapacity;
 	}
 	
 	@Override
 	public double getThermalConductivity(Direction direction)
 	{
 		int multiplier = getTE(direction) instanceof IThermalHandler ? 4 : 1;
-		return M.argil.thermalConductivity * multiplier;
+		return material.thermalConductivity * multiplier;
 	}
 	
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		this.helper.addInternalEnergy(value);
+		this.energy += value;
 	}
 	
 	@Override

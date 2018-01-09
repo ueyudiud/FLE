@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.model;
 
 import java.util.Arrays;
@@ -211,18 +214,18 @@ public class ItemTextureHelper
 			throw new IllegalArgumentException("can't handle z-oriented side");
 		}
 		return buildQuad(format, transform, side.getOpposite(), sprite, tint, // getOpposite
-																				 // is
-																				 // related
-																				 // either
-																				 // to
-																				 // the
-																				 // swapping
-																				 // of
-																				 // V
-																				 // direction,
-																				 // or
-																				 // something
-																				 // else
+				// is
+				// related
+				// either
+				// to
+				// the
+				// swapping
+				// of
+				// V
+				// direction,
+				// or
+				// something
+				// else
 				x0, y0, z1, sprite.getInterpolatedU(u0), sprite.getInterpolatedV(v0), x1, y1, z1, sprite.getInterpolatedU(u1), sprite.getInterpolatedV(v1), x1, y1, z2, sprite.getInterpolatedU(u1), sprite.getInterpolatedV(v1), x0, y0, z2, sprite.getInterpolatedU(u0), sprite.getInterpolatedV(v0));
 	}
 	
@@ -437,8 +440,8 @@ public class ItemTextureHelper
 					
 					// create the quad
 					quads.add(genQuad(format, transform, x * wScale, start * hScale, endX * wScale, y * hScale, z, sprite, facing, pixel));// Blind
-																																			// convert
-																																			// color.
+					// convert
+					// color.
 					
 					// update X if all the columns match. no need to rescan
 					if (endX - x > 1)

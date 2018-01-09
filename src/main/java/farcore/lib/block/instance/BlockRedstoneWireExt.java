@@ -117,10 +117,10 @@ public class BlockRedstoneWireExt extends BlockBase implements IExtendedDataBloc
 		Direction direction = facing.toDirection(base);
 		BlockPos pos2 = direction.offset(pos);
 		IBlockState state2;
-		EnumFacing recieve = direction.getOpposite().of();
+		EnumFacing recieve = direction.opposite().of();
 		if (!canConnectTo(state, state2 = world.getBlockState(pos2), world, pos2, recieve))
 		{
-			if (state2.isSideSolid(world, pos2, direction.getOpposite().of()))
+			if (state2.isSideSolid(world, pos2, direction.opposite().of()))
 			{
 				if (!canConnectTo(state, state2 = world.getBlockState(pos2 = pos2.offset(base, 1)), world, pos2, null))
 				{

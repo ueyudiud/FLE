@@ -122,7 +122,7 @@ public class TESRDitch extends TESRBase<TEDitch>
 		{
 			return ((IDitchTile) t1).getFlowHeight();
 		}
-		else if (t1.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()) && t1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()).getTankProperties().length > 0)
+		else if (t1.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.opposite().of()) && t1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.opposite().of()).getTankProperties().length > 0)
 		{
 			return Math.max(base - 0.0625F, base * .25F);
 		}

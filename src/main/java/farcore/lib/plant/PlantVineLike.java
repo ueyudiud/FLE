@@ -97,7 +97,7 @@ public class PlantVineLike extends PlantNormal
 				}
 				else
 				{
-					IBlockState down = world.getBlockState(pos2 = direction.getOpposite().offset(pos.down()));
+					IBlockState down = world.getBlockState(pos2 = direction.opposite().offset(pos.down()));
 					if (down.getBlock().isAir(down, world, pos2) && down.getBlock().canPlaceBlockOnSide(world, pos2, direction.of()))
 					{
 						world.setBlockState(pos2, this.vine.getDefaultState().withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true));

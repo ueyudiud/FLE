@@ -16,10 +16,13 @@ import com.google.gson.Gson;
 import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class TemplateIconHandler implements IIconCollection
 {
 	final Map<String, ResourceLocation>	textures;

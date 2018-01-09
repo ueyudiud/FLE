@@ -21,6 +21,9 @@ import nebula.Log;
  */
 class GitLocalizationEntry implements INetworkLocalizationEntry
 {
+	/**
+	 * The Gson used to parse SHA of localization files.
+	 */
 	static final Gson GSON = new GsonBuilder().registerTypeAdapter(String.class, SHAAdapter.INSTANCE).create();
 	
 	String key;

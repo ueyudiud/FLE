@@ -116,7 +116,7 @@ public enum Direction implements IStringSerializable
 		this.axis = x != 0 ? Axis.X : y != 0 ? Axis.Y : z != 0 ? Axis.Z : null;
 	}
 	
-	public Direction getOpposite()
+	public Direction opposite()
 	{
 		return this == Q ? Q : DIRECTIONS_3D[ordinal() ^ 1];
 	}

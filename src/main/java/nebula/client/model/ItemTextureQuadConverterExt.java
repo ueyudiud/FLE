@@ -15,12 +15,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ItemTextureQuadConverter;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Added index, advanced version of {@link ItemTextureQuadConverter}.
  * 
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public final class ItemTextureQuadConverterExt
 {
 	private static int idx = -1;
