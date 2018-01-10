@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.base;
+package nebula.base.register;
 
 import java.lang.reflect.Array;
 import java.util.AbstractSet;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import nebula.base.AbstractRegister;
 import nebula.common.util.A;
 
 /**

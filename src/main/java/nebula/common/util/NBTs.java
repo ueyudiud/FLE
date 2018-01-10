@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import nebula.Log;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.common.nbt.INBTCompoundReader;
 import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.INBTReaderAndWritter;

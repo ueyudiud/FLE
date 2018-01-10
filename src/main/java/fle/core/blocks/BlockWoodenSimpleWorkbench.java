@@ -7,7 +7,7 @@ package fle.core.blocks;
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.tile.wooden.workbench.TEWoodenPolishTable;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;

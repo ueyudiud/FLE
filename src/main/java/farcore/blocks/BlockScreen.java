@@ -9,7 +9,7 @@ import static farcore.data.Materials.METALIC;
 import farcore.data.CT;
 import farcore.lib.tesr.TESRScreenLineChart;
 import farcore.lib.tile.instance.screen.TEScreenTemperature;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.common.block.BlockTE;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;

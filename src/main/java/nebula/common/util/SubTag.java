@@ -6,9 +6,9 @@ package nebula.common.util;
 import java.util.Collection;
 import java.util.HashSet;
 
-import nebula.base.IRegister;
 import nebula.base.Judgable;
-import nebula.base.Register;
+import nebula.base.register.IRegister;
+import nebula.base.register.Register;
 
 /**
  * The sub tag, use to mark a item for tags.

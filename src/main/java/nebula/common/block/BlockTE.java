@@ -6,8 +6,8 @@ package nebula.common.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import nebula.base.IRegister;
-import nebula.base.Register;
+import nebula.base.register.IRegister;
+import nebula.base.register.Register;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.StateMapperExt;
 import nebula.client.model.flexible.NebulaModelLoader;

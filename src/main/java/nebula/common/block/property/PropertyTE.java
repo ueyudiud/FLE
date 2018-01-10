@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import nebula.base.IRegister;
-import nebula.base.Register;
+import nebula.base.register.IRegister;
+import nebula.base.register.Register;
 import nebula.common.block.property.PropertyTE.TETag;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;

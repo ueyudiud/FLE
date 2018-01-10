@@ -6,7 +6,7 @@ package fle.core.blocks;
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.tile.pottery.TETerrine;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Client;
 import nebula.common.LanguageManager;

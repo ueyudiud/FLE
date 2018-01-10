@@ -15,7 +15,7 @@ import fle.core.client.render.TESRStoneMill;
 import fle.core.tile.wooden.TEDryingTable;
 import fle.core.tile.wooden.TELeverOilMill;
 import fle.core.tile.wooden.TEStoneMill;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.NebulaRenderHandler;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;

@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.base;
+package nebula.base.register;
 
 import java.util.Map.Entry;
 import java.util.Set;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * @author ueyudiud
  * @param <T> the element type in register.
  * @see java.lang.Iterable
- * @see nebula.base.Register
+ * @see nebula.base.register.Register
  */
 public interface IRegister<T> extends Iterable<T>
 {

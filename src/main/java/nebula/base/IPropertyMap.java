@@ -45,7 +45,7 @@ public interface IPropertyMap
 		class ToNull implements IProperty
 		{
 			@Override
-			public Object defValue()
+			public Object get()
 			{
 				return null;
 			}
@@ -53,7 +53,8 @@ public interface IPropertyMap
 		
 		static <V> IProperty<V> to(Class<? extends V> constructor)
 		{
-			return () -> {
+			return () ->
+			{
 				try
 				{
 					return constructor.newInstance();
@@ -64,13 +65,5 @@ public interface IPropertyMap
 				}
 			};
 		}
-		
-		@Override
-		default V apply()
-		{
-			return defValue();
-		}
-		
-		V defValue();
 	}
 }

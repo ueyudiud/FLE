@@ -19,7 +19,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
 import nebula.Log;
-import nebula.base.Register;
+import nebula.base.register.Register;
 import nebula.common.network.packet.PacketLarge;
 import nebula.common.util.Players;
 import nebula.common.util.Sides;

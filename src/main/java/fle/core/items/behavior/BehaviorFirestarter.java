@@ -8,7 +8,7 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import fle.api.recipes.instance.FlamableRecipes;
-import nebula.base.IntegerMap;
+import nebula.base.HashIntMap;
 import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.item.ITool;
 import nebula.common.util.Worlds;
@@ -62,7 +62,7 @@ public class BehaviorFirestarter extends BehaviorTool
 	
 	public static class FirestarterCache extends CapabilityProviderItem
 	{
-		IntegerMap<EntityItem> map = new IntegerMap<>();
+		HashIntMap<EntityItem> map = new HashIntMap<>();
 	}
 	
 	@Override

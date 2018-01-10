@@ -17,7 +17,7 @@ import farcore.lib.block.BlockMaterial;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.base.IntegerMap;
+import nebula.base.HashIntMap;
 import nebula.base.ObjArrayParseHelper;
 import nebula.base.function.Selector;
 import nebula.client.model.StateMapperExt;
@@ -80,9 +80,9 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 			return state1.getMaterial().isReplaceable();
 	}
 	
-	protected static @Nullable IntegerMap<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
+	protected static @Nullable HashIntMap<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
 	{
-		IntegerMap<EnumFacing> result = new IntegerMap<>(6);
+		HashIntMap<EnumFacing> result = new HashIntMap<>(6);
 		for (EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			BlockPos pos2;
@@ -221,7 +221,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		}
 		else
 		{
-			IntegerMap<EnumFacing> map = canFallNearby(world, pos, state);
+			HashIntMap<EnumFacing> map = canFallNearby(world, pos, state);
 			if (!map.isEmpty())
 			{
 				final int j = state.getValue(LAYER) - 4;

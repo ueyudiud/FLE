@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.base;
+package nebula.base.register;
 
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.function.ToIntFunction;
 
 import javax.annotation.Nullable;
 
+import nebula.base.AbstractRegister;
 import nebula.common.util.L;
 
 /**

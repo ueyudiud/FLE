@@ -3,7 +3,7 @@
  */
 package farcore.lib.knowledge;
 
-import nebula.base.Register;
+import nebula.base.register.Register;
 import nebula.common.util.IRegisteredNameable;
 import net.minecraft.entity.player.EntityPlayer;
 

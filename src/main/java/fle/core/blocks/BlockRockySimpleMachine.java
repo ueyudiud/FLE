@@ -7,7 +7,7 @@ import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.tile.rocky.TECeramicPot;
 import fle.core.tile.rocky.TEHearth;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;

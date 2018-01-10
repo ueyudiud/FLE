@@ -6,7 +6,7 @@ package farcore.lib.crop;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
 import nebula.base.IntegerEntry;
-import nebula.base.IntegerMap;
+import nebula.base.HashIntMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -21,7 +21,7 @@ public class CropInfo
 	public int	vitality;
 	public int	saving;
 	
-	public IntegerMap<String> map = new IntegerMap<>();
+	public HashIntMap<String> map = new HashIntMap<>();
 	
 	public GeneticMaterial gamete = null;
 	

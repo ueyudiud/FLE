@@ -15,7 +15,7 @@ import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.biome.layer.surface.BLGSurfaceStandard;
 import fargen.core.util.ClimaticZone;
 import nebula.base.IPropertyMap;
-import nebula.base.Register;
+import nebula.base.register.Register;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.L;
 import nebula.common.world.IBiomeExtended;

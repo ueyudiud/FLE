@@ -5,17 +5,17 @@ package nebula.base.function;
 
 import java.util.Random;
 
+import nebula.base.IntMap;
 import nebula.base.IntegerEntry;
-import nebula.base.IntegerMap;
 
 /**
  * @author ueyudiud
  */
 class IntMapSelector<E> implements Selector<E>
 {
-	final IntegerMap<? extends E> map;
+	final IntMap<? extends E> map;
 	
-	public IntMapSelector(IntegerMap<? extends E> map)
+	public IntMapSelector(IntMap<? extends E> map)
 	{
 		this.map = map;
 	}
@@ -23,7 +23,7 @@ class IntMapSelector<E> implements Selector<E>
 	@Override
 	public E next(Random random)
 	{
-		int i = random.nextInt(this.map.getSum());
+		int i = random.nextInt(this.map.sum());
 		for (IntegerEntry<? extends E> entry : this.map)
 		{
 			if ((i -= entry.getValue()) < 0)

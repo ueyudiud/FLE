@@ -13,6 +13,8 @@ import java.util.stream.StreamSupport;
 
 import com.google.common.collect.Iterators;
 
+import nebula.base.register.IRegister;
+
 /**
  * @author ueyudiud
  */

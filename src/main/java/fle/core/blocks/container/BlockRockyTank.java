@@ -12,7 +12,7 @@ import farcore.lib.material.Mat;
 import fle.core.client.model.ModelSmallRockyTank;
 import fle.core.client.render.TESRFluidFase;
 import fle.core.tile.tanks.TESmallRockyTank;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.util.Client;

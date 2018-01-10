@@ -4,7 +4,7 @@
 
 package nebula.common.block.property;
 
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import net.minecraft.block.state.IBlockState;
 
 /**

@@ -16,7 +16,7 @@ import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import fle.core.FLE;
 import fle.core.tile.TEFirewood;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.StateMapperExt;
 import nebula.client.model.flexible.NebulaModelLoader;

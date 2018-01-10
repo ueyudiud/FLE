@@ -6,8 +6,8 @@ package fle.api.research;
 import java.util.List;
 
 import nebula.base.Cache;
-import nebula.base.IntegerMap;
-import nebula.base.Register;
+import nebula.base.HashIntMap;
+import nebula.base.register.Register;
 import nebula.common.LanguageManager;
 import nebula.common.util.IRegisteredNameable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ public class ResearchCategory implements IRegisteredNameable
 	private static final Register<ResearchCategory> RESEARCHS = new Register<>();
 	
 	protected List<ResearchCategory>		requiredBefore;
-	protected IntegerMap<ResearchObject>	objects;
+	protected HashIntMap<ResearchObject>	objects;
 	protected int							minAvailableWeight	= 1;
 	private final String					name;
 	

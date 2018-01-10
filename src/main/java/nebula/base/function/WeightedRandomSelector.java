@@ -9,6 +9,7 @@ import java.util.Random;
 import com.google.common.collect.Iterators;
 
 import nebula.base.INode;
+import nebula.base.IntMap;
 import nebula.base.IntegerEntry;
 import nebula.base.Node;
 import nebula.base.Stack;
@@ -24,11 +25,19 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	{
 	}
 	
-	public WeightedRandomSelector(Stack<T>...stacks)
+	public WeightedRandomSelector(Stack<? extends T>...stacks)
 	{
-		for (Stack<T> stack : stacks)
+		for (Stack<? extends T> stack : stacks)
 		{
 			add(stack.element, (int) stack.size);
+		}
+	}
+	
+	public WeightedRandomSelector(IntMap<? extends T> map)
+	{
+		for (IntegerEntry<? extends T> entry : map)
+		{
+			add(entry.getKey(), entry.getValue());
 		}
 	}
 	
@@ -75,8 +84,7 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		int i = random.nextInt(this.allWeight);
 		INode<IntegerEntry<T>> node;
 		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();
-				// The weight is still more than random number,
-				// or it has no node any more.
+				// The weight is still more than random number, or it has no node any more.
 				node = node.next());
 		return node.value().getKey();
 	}
@@ -92,9 +100,9 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		if (this.first == null || this.allWeight == 0) return null;
 		int i = Maths.mod(random, this.allWeight);
 		INode<IntegerEntry<T>> node;
-		for (node = this.first; (i -= node.value().getValue()) >= 0 && node.hasNext();
-				// The weight is still more than random number,
-				// or it has no node any more.
+		for (node = this.first;
+				(i -= node.value().getValue()) >= 0 && node.hasNext();
+				// The weight is still more than random number, or it has no node any more.
 				node = node.next());
 		return node.value().getKey();
 	}

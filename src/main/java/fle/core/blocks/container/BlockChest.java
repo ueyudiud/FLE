@@ -15,7 +15,7 @@ import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.client.render.TESRChest1;
 import fle.core.tile.chest.TEChest1;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;

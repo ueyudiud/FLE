@@ -9,8 +9,8 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import nebula.base.IRegister;
-import nebula.base.Register;
+import nebula.base.register.IRegister;
+import nebula.base.register.Register;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.OreStack;
 import net.minecraft.item.Item;

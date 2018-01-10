@@ -19,7 +19,7 @@ class ApplicableCached<T> implements Applicable<T>
 		this.supplier = supplier;
 	}
 	
-	private void apply$1()
+	private void get$()
 	{
 		if (this.cache == null)
 		{
@@ -28,16 +28,16 @@ class ApplicableCached<T> implements Applicable<T>
 	}
 	
 	@Override
-	public T apply()
+	public T get()
 	{
-		apply$1();
+		get$();
 		return this.cache.isPresent() ? this.cache.get() : null;
 	}
 	
 	@Override
 	public Optional<T> applyOptional()
 	{
-		apply$1();
+		get$();
 		return this.cache;
 	}
 }

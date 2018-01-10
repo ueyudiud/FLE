@@ -11,7 +11,7 @@ import fle.core.client.render.TESRFluidFase;
 import fle.core.tile.tools.TEAdobeDrying;
 import fle.core.tile.tools.TEOilLamp;
 import fle.core.tile.tools.TEWoodenBowl;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.StateMapperExt;
 import nebula.client.model.flexible.NebulaModelLoader;

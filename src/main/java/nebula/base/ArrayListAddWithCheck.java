@@ -50,7 +50,9 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 			return super.add(e);
 		}
 		else
+		{
 			return false;
+		}
 	}
 	
 	@Override

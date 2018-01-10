@@ -33,9 +33,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import nebula.base.HashIntMap;
 import nebula.base.INode;
+import nebula.base.IntMap;
 import nebula.base.IntegerEntry;
-import nebula.base.IntegerMap;
 import nebula.base.Node;
 import nebula.base.function.Selector;
 import nebula.base.function.WeightedRandomSelector;
@@ -66,8 +67,8 @@ public class ModelPartCol implements INebulaModelPart
 			if (object.has("variants"))
 			{
 				Variant def = object.has("default") ? loadVariant(object.get("default"), context) : defaultVariant();
-				Map<String, Map<String, IntegerMap<Variant>>> map = Jsons.getAsMap(object.getAsJsonObject("variants"), j -> Jsons.getAsMap(j.getAsJsonObject(), j1 -> {
-					IntegerMap<Variant> m1 = new IntegerMap();
+				Map<String, Map<String, IntMap<Variant>>> map = Jsons.getAsMap(object.getAsJsonObject("variants"), j -> Jsons.getAsMap(j.getAsJsonObject(), j1 -> {
+					HashIntMap<Variant> m1 = new HashIntMap();
 					if (j1.isJsonArray())
 					{
 						for (JsonElement json1 : j1.getAsJsonArray())
@@ -85,7 +86,7 @@ public class ModelPartCol implements INebulaModelPart
 						return m1;
 					}
 				}));
-				IntegerMap<Variant> m1 = new IntegerMap();
+				HashIntMap<Variant> m1 = new HashIntMap();
 				m1.put(def, 1);
 				return new ModelPartCol(compose(map, def), m1, Jsons.getOrDefault(object, "extendData", false));
 			}
@@ -96,7 +97,7 @@ public class ModelPartCol implements INebulaModelPart
 		}
 		else if (json.isJsonArray())
 		{
-			IntegerMap<Variant> map = new IntegerMap();
+			HashIntMap<Variant> map = new HashIntMap();
 			for (JsonElement json1 : json.getAsJsonArray())
 			{
 				Variant variant = loadVariant(json1, context);
@@ -115,17 +116,17 @@ public class ModelPartCol implements INebulaModelPart
 	
 	private static final Selector<List<INebulaBakedModelPart>> NONE = Selector.single(ImmutableList.of());
 	
-	private static Map<Map<String, String>, IntegerMap<Variant>> compose(Map<String, Map<String, IntegerMap<Variant>>> map, Variant def)
+	private static Map<Map<String, String>, IntMap<Variant>> compose(Map<String, Map<String, IntMap<Variant>>> map, Variant def)
 	{
-		INode<Entry<String, Map<String, IntegerMap<Variant>>>> node = Node.chain(map.entrySet());
-		Map<Map<String, String>, IntegerMap<Variant>> states = new HashMap<>();
-		IntegerMap<Variant> base = new IntegerMap<>();
+		INode<Entry<String, Map<String, IntMap<Variant>>>> node = Node.chain(map.entrySet());
+		Map<Map<String, String>, IntMap<Variant>> states = new HashMap<>();
+		HashIntMap<Variant> base = new HashIntMap<>();
 		base.put(def, 1);
 		put(node, ImmutableMap.of(), base, states);
 		return ImmutableMap.copyOf(states);
 	}
 	
-	private static void put(INode<Entry<String, Map<String, IntegerMap<Variant>>>> node, Map<String, String> base, IntegerMap<Variant> parent, Map<Map<String, String>, IntegerMap<Variant>> states)
+	private static void put(INode<Entry<String, Map<String, IntMap<Variant>>>> node, Map<String, String> base, IntMap<Variant> parent, Map<Map<String, String>, IntMap<Variant>> states)
 	{
 		if (node == null)
 		{
@@ -135,10 +136,10 @@ public class ModelPartCol implements INebulaModelPart
 		{
 			String key = node.value().getKey();
 			Map<String, String> base1 = new HashMap<>(base);
-			for (Entry<String, IntegerMap<Variant>> e : node.value().getValue().entrySet())
+			for (Entry<String, IntMap<Variant>> e : node.value().getValue().entrySet())
 			{
 				base1.put(key, e.getKey());
-				IntegerMap<Variant> next = new IntegerMap<>();
+				HashIntMap<Variant> next = new HashIntMap<>();
 				for (IntegerEntry<Variant> e1 : parent)
 				{
 					for (IntegerEntry<Variant> e2 : e.getValue())
@@ -234,10 +235,8 @@ public class ModelPartCol implements INebulaModelPart
 			}
 		};
 		
-		@Nullable
-		Retextures			parent;
-		@Nonnull
-		Map<String, String>	map;
+		@Nullable Retextures			parent;
+		@Nonnull Map<String, String>	map;
 		
 		Retextures(Map<String, String> map, Retextures parent)
 		{
@@ -338,17 +337,17 @@ public class ModelPartCol implements INebulaModelPart
 		}
 	}
 	
-	Map<Map<String, String>, IntegerMap<Variant>>	function;
-	IntegerMap<Variant>								def;
-	boolean											extendData;
+	Map<Map<String, String>, IntMap<Variant>>	function;
+	IntMap<Variant>								def;
+	boolean										extendData;
 	
-	public ModelPartCol(Map<Map<String, String>, IntegerMap<Variant>> function, Variant def, boolean extendData)
+	public ModelPartCol(Map<Map<String, String>, IntMap<Variant>> function, Variant def, boolean extendData)
 	{
-		this(function, new IntegerMap<>(), extendData);
+		this(function, IntMap.empty(), extendData);
 		this.def.put(def, 1);
 	}
 	
-	public ModelPartCol(Map<Map<String, String>, IntegerMap<Variant>> function, IntegerMap<Variant> def, boolean extendData)
+	public ModelPartCol(Map<Map<String, String>, IntMap<Variant>> function, IntMap<Variant> def, boolean extendData)
 	{
 		this.function = function;
 		this.def = def;
@@ -412,7 +411,7 @@ public class ModelPartCol implements INebulaModelPart
 		// Builds id->variant logic.
 		List<Variant> list = new ArrayList<>();
 		list.addAll(this.def.keySet());
-		for (IntegerMap<Variant> key : this.function.values())
+		for (IntMap<Variant> key : this.function.values())
 		{
 			for (IntegerEntry<Variant> variant : key)
 			{
@@ -426,11 +425,10 @@ public class ModelPartCol implements INebulaModelPart
 		}
 		
 		List<INebulaBakedModelPart>[] cachedParts = new List[list.size()];
-		for (int i = 0; i < list.size(); cachedParts[i] = bakeVariant(list.get(i), format, iconHandlerGetter, bakedTextureGetter, transformation), ++i)
-			;
+		for (int i = 0; i < list.size(); cachedParts[i] = bakeVariant(list.get(i), format, iconHandlerGetter, bakedTextureGetter, transformation), ++i);
 		
 		ImmutableMap.Builder<Map<String, String>, Selector<List<INebulaBakedModelPart>>> builder = ImmutableMap.builder();
-		for (Entry<Map<String, String>, IntegerMap<Variant>> entry : this.function.entrySet())
+		for (Entry<Map<String, String>, IntMap<Variant>> entry : this.function.entrySet())
 		{
 			builder.put(entry.getKey(), packBakedParts(entry.getValue(), list, cachedParts));
 		}
@@ -438,7 +436,7 @@ public class ModelPartCol implements INebulaModelPart
 		return new BakedModelPart(builder.build(), packBakedParts(this.def, list, cachedParts), this.extendData);
 	}
 	
-	private Selector<List<INebulaBakedModelPart>> packBakedParts(IntegerMap<Variant> variants, List<Variant> idxList, List<INebulaBakedModelPart>[] cachedParts)
+	private Selector<List<INebulaBakedModelPart>> packBakedParts(IntMap<Variant> variants, List<Variant> idxList, List<INebulaBakedModelPart>[] cachedParts)
 	{
 		switch (variants.size())
 		{
@@ -489,8 +487,8 @@ public class ModelPartCol implements INebulaModelPart
 	@Override
 	public INebulaModelPart retexture(Map<String, String> retexture)
 	{
-		return new ModelPartCol(ImmutableMap.copyOf(Maps.<Map<String, String>, IntegerMap<Variant>, IntegerMap<Variant>> transformValues(this.function, map -> {
-			IntegerMap<Variant> map1 = new IntegerMap<>(map.size(), 1.0F);
+		return new ModelPartCol(ImmutableMap.copyOf(Maps.<Map<String, String>, IntMap<Variant>, IntMap<Variant>> transformValues(this.function, map -> {
+			HashIntMap<Variant> map1 = new HashIntMap<>(map.size(), 1.0F);
 			map.forEach(e -> {
 				Variant variant = new Variant(e.getKey());
 				variant.retextures = new Retextures(retexture, variant.retextures);

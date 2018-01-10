@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * {@link java.util.function.Supplier} both to improved the compatibility in
  * some other methods casting.
  * 
- * @param <T> the type of result applied by {@link #apply()}.
+ * @param <T> the type of result applied by {@link #get()}.
  * 
  * @author ueyudiud
  */
@@ -74,7 +74,7 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	default <V> Applicable<V> andThen(@Nonnull Function<? super T, ? extends V> function)
 	{
 		Objects.requireNonNull(function);
-		return () -> function.apply(apply());
+		return () -> function.apply(get());
 	}
 	
 	/**
@@ -83,29 +83,12 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 */
 	default void consumeIfPresent(Consumer<? super T> consumer)
 	{
-		this.<T> applyOptional().ifPresent(consumer);
+		this.<T>applyOptional().ifPresent(consumer);
 	}
 	
 	default <E> Function<E, T> anyTo()
 	{
-		return a -> apply();
-	}
-	
-	@Override
-	default T get()
-	{
-		return apply();
-	}
-	
-	@Override
-	default T call() throws IllegalStateException
-	{
-		return apply();
-	}
-	
-	default <T1> Optional<T1> applyOptional()
-	{
-		return this == NULL ? Optional.empty() : Optional.ofNullable((T1) apply());
+		return a -> get();
 	}
 	
 	/**
@@ -116,5 +99,23 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 *             provide in time, etc.
 	 * @return the applied value.
 	 */
-	@Nullable T apply();
+	@Override
+	@Nullable T get();
+	
+	@Override
+	default T call() throws IllegalStateException
+	{
+		return get();
+	}
+	
+	default <T1> Optional<T1> applyOptional()
+	{
+		return this == NULL ? Optional.empty() : Optional.ofNullable((T1) apply());
+	}
+	
+	@Deprecated
+	@Nullable default T apply()
+	{
+		return get();
+	}
 }

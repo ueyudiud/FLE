@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 /**
  * The integer array, used when needed add array to collection.
@@ -68,5 +69,10 @@ public class IntegerArray implements Serializable
 	public IntegerArray copy()
 	{
 		return new IntegerArray(this.array.clone());
+	}
+	
+	public IntStream stream()
+	{
+		return Arrays.stream(this.array);
 	}
 }

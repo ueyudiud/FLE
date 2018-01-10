@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import nebula.Nebula;
-import nebula.base.IRegister;
-import nebula.base.Register;
+import nebula.base.register.IRegister;
+import nebula.base.register.Register;
 import nebula.common.network.packet.PacketKey;
 import nebula.common.util.Game;
 import nebula.common.util.Players;

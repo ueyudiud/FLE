@@ -37,7 +37,7 @@ import farcore.lib.tile.instance.circuit.TECircuitTicking;
 import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
 import nebula.Nebula;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.flexible.NebulaModelDeserializer;
 import nebula.client.model.flexible.NebulaModelLoader;

@@ -10,7 +10,7 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import nebula.base.IntegerMap;
+import nebula.base.IntMap;
 import nebula.common.util.L;
 
 /**
@@ -67,7 +67,7 @@ public interface Selector<E> extends Function<Random, E>
 	
 	/**
 	 * Return a <tt>Selector</tt> with weight map from
-	 * {@link nebula.base.IntegerMap}. the data will be not copied to selector,
+	 * {@link nebula.base.IntMap}. the data will be not copied to selector,
 	 * the modification of map can still affect the result of selecting.
 	 * 
 	 * @param map the integer map, each key in map may can be returned by
@@ -75,7 +75,7 @@ public interface Selector<E> extends Function<Random, E>
 	 *            return.
 	 * @return the selector.
 	 */
-	static <E> Selector<E> of(IntegerMap<? extends E> map)
+	static <E> Selector<E> of(IntMap<? extends E> map)
 	{
 		return new IntMapSelector<>(map);
 	}

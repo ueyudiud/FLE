@@ -49,10 +49,10 @@ import farcore.lib.tree.Tree;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
 import nebula.base.IPropertyMap.IProperty;
-import nebula.base.IRegister;
-import nebula.base.IntegerMap;
+import nebula.base.HashIntMap;
 import nebula.base.Judgable;
-import nebula.base.SortedRegister;
+import nebula.base.register.IRegister;
+import nebula.base.register.SortedRegister;
 import nebula.common.LanguageManager;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.A;
@@ -304,7 +304,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	private IPropertyMap propertyMap = new HashPropertyMap();
 	// Reused now.
-	private IntegerMap<String>	properties	= new IntegerMap<>();
+	private HashIntMap<String>	properties	= new HashIntMap<>();
 	private Set<SubTag>			subTags		= new HashSet<>();
 	
 	public class Builder
@@ -634,7 +634,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public <V> V getProperty(IProperty<V> property)
 	{
-		return getProperty(property, property.defValue());
+		return getProperty(property, property.get());
 	}
 	
 	public <V> Optional<? extends V> getPropertyOptional(IProperty<V> property)

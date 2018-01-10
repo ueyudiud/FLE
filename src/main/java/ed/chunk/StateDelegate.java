@@ -16,7 +16,7 @@ import ed.EDConfig;
 import nebula.Log;
 import nebula.base.ArrayListAddWithCheck;
 import nebula.base.IntegerEntry;
-import nebula.base.IntegerMap;
+import nebula.base.HashIntMap;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.A;
@@ -166,7 +166,7 @@ abstract class StateDelegate
 		private static void build(final StateDelegateExt delegate, final Block block)
 		{
 			delegate.id_to_state = new ArrayList<>();
-			delegate.state_to_id = new IntegerMap<>();
+			delegate.state_to_id = new HashIntMap<>();
 			IBlockStateRegister register = new IBlockStateRegister()
 			{
 				@Override
@@ -265,7 +265,7 @@ abstract class StateDelegate
 		}
 		
 		List<IBlockState>		id_to_state;
-		IntegerMap<IBlockState>	state_to_id;
+		HashIntMap<IBlockState>	state_to_id;
 		
 		StateDelegateExt(Block block)
 		{

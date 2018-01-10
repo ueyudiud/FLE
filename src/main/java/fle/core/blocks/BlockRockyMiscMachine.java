@@ -5,7 +5,7 @@ package fle.core.blocks;
 
 import farcore.data.Materials;
 import fle.core.FLE;
-import nebula.base.IRegister;
+import nebula.base.register.IRegister;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;

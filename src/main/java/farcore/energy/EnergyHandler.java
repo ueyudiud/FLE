@@ -3,7 +3,7 @@
  */
 package farcore.energy;
 
-import nebula.base.Register;
+import nebula.base.register.Register;
 import nebula.common.util.Strings;
 
 /**
