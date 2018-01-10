@@ -267,6 +267,10 @@ public class ThermalNet implements IEnergyNet
 		{
 			getNet(((IThermalHandler) tile).world(), false).add((IThermalHandler) tile);
 		}
+		else if (tile instanceof IThermalProvider)
+		{
+			getNet(((IThermalProvider) tile).world(), false).add(((IThermalProvider) tile).getThermalHandler());
+		}
 		if (tile instanceof IThermalHandlerBox)
 		{
 			getNet(((IThermalHandlerBox) tile).world(), false).add((IThermalHandlerBox) tile);
@@ -279,6 +283,10 @@ public class ThermalNet implements IEnergyNet
 		if (tile instanceof IThermalHandler)
 		{
 			getNet(((IThermalHandler) tile).world(), false).remove((IThermalHandler) tile);
+		}
+		else if (tile instanceof IThermalProvider)
+		{
+			getNet(((IThermalProvider) tile).world(), false).remove(((IThermalProvider) tile).getThermalHandler());
 		}
 		if (tile instanceof IThermalHandlerBox)
 		{
@@ -298,6 +306,10 @@ public class ThermalNet implements IEnergyNet
 		if (tile instanceof IThermalHandler)
 		{
 			getNet(((IThermalHandler) tile).world(), false).reload((IThermalHandler) tile);
+		}
+		else if (tile instanceof IThermalProvider)
+		{
+			getNet(((IThermalProvider) tile).world(), false).reload(((IThermalProvider) tile).getThermalHandler());
 		}
 		if (tile instanceof IThermalHandlerBox)
 		{
@@ -484,26 +496,36 @@ public class ThermalNet implements IEnergyNet
 		{
 			for (Entry<BlockPos, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
 			{
+				BlockPos pos = entry.getKey();
 				switch (entry.getValue())
 				{
 				case add:
-					TileEntity tile = this.world.getTileEntity(entry.getKey());
+					TileEntity tile = this.world.getTileEntity(pos);
 					if (tile instanceof IThermalHandler)
 					{
-						this.map.put(entry.getKey(), (IThermalHandler) tile);
+						this.map.put(pos, (IThermalHandler) tile);
+					}
+					else if (tile instanceof IThermalProvider)
+					{
+						this.map.put(pos, ((IThermalProvider) tile).getThermalHandler());
 					}
 					break;
 				case remove:
-					this.map.remove(entry.getKey());
+					this.map.remove(pos);
 					break;
 				case reload:
-					IThermalHandler handler = this.map.remove(entry.getKey());
-					if (handler != null)
+					this.map.remove(pos);
+					tile = this.world.getTileEntity(entry.getKey());
+					if (tile instanceof IThermalHandler)
 					{
-						this.map.put(handler.pos(), handler);
+						this.map.put(pos, (IThermalHandler) tile);
+					}
+					else if (tile instanceof IThermalProvider)
+					{
+						this.map.put(pos, ((IThermalProvider) tile).getThermalHandler());
 					}
 					break;
-				default:// case mark :
+				case mark :
 					break;
 				}
 			}

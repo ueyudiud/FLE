@@ -7,7 +7,8 @@ import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MP;
 import farcore.energy.thermal.IThermalHandler;
-import farcore.energy.thermal.ThermalNet;
+import farcore.energy.thermal.IThermalProvider;
+import farcore.energy.thermal.instance.ThermalHandlerLitmited;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.recipes.instance.FlamableRecipes;
@@ -16,38 +17,37 @@ import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.MathHelper;
 
 /**
  * @author ueyudiud
  */
-public class TEFirewood extends TESynchronization implements IThermalHandler
+public class TEFirewood extends TESynchronization implements IThermalProvider
 {
 	private static final byte	Smoldering	= 3;
 	private static final byte	Burning		= 4;
 	private static final byte	Carbonate	= 5;
 	
-	private Mat					material;
-	private long				remainEnergy	= 10000000L;
-	private int					carbonateProgress;
+	private long	remainEnergy;
+	private int		carbonateProgress;
 	
-	private long energy;
+	private ThermalHandlerLitmited thermalHandler = new ThermalHandlerLitmited(this);
 	
 	private TimeMarker recheckingStructure = new TimeMarker(20, this::recheckStructure);
 	
 	public TEFirewood()
 	{
-		this.material = M.oak;
+		this.thermalHandler.material = M.oak;
+		this.remainEnergy = (long) (4_800_000L * this.thermalHandler.material.getProperty(MP.property_wood).burnHeat);
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setString("material", this.material.name);
+		nbt.setString("material", this.thermalHandler.material.name);
 		nbt.setLong("energyRem", this.remainEnergy);
 		nbt.setInteger("progress", this.carbonateProgress);
-		nbt.setLong("energy", this.energy);
+		this.thermalHandler.writeToNBT(nbt);
 		return nbt;
 	}
 	
@@ -55,9 +55,9 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.material = Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
+		this.thermalHandler.material = Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
 		this.remainEnergy = nbt.getLong("energyRem");
-		this.energy = nbt.getLong("energy");
+		this.thermalHandler.readFromNBT(nbt);
 		this.carbonateProgress = nbt.getInteger("progress");
 	}
 	
@@ -65,7 +65,7 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setShort("m", this.material.id);
+		nbt.setShort("m", this.thermalHandler.material.id);
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 		super.readFromDescription1(nbt);
 		if (nbt.hasKey("m"))
 		{
-			this.material = Mat.getMaterialByIDOrDefault(nbt, "m", this.material);
+			this.thermalHandler.material = Mat.getMaterialByIDOrDefault(nbt, "m", this.thermalHandler.material);
 			markBlockRenderUpdate();
 		}
 	}
@@ -177,9 +177,9 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 		this.recheckingStructure.onUpdate();
 		if (is(Burning))
 		{
-			long value = Math.min(this.remainEnergy, (long) (800 * this.material.getProperty(MP.property_wood).burnHeat));
+			long value = Math.min(this.remainEnergy, 16000);
 			this.remainEnergy -= value;
-			this.energy += value;
+			this.thermalHandler.energy += value;
 			if (this.remainEnergy == 0)
 			{
 				removeBlock();
@@ -189,46 +189,15 @@ public class TEFirewood extends TESynchronization implements IThermalHandler
 		super.updateServer();
 	}
 	
-	private float getCurrentTemperature(float Tenv, float Tmax)
-	{
-		return (float) - Math.expm1(- ((this.energy / this.material.heatCapacity + Tenv) / Tmax)) * Tmax;
-	}
-	
 	@Override
-	public float getTemperatureDifference(Direction direction)
+	public IThermalHandler getThermalHandler()
 	{
-		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
-		float Tbase = 600.0F;//TODO
-		float Tmax = MathHelper.sqrt(Tenv * Tenv + Tbase * Tbase);
-		
-		return getCurrentTemperature(Tenv, Tmax) - Tenv;
-	}
-	
-	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		float Tenv = ThermalNet.getEnvironmentTemperature(this.world, this.pos);
-		float Tbase = 600.0F;//TODO
-		float Tmax = MathHelper.sqrt(Tenv * Tenv + Tbase * Tbase);
-		
-		return this.material.heatCapacity / (1 - getCurrentTemperature(Tenv, Tmax) / Tmax);
-	}
-	
-	@Override
-	public double getThermalConductivity(Direction direction)
-	{
-		return this.material.thermalConductivity;
-	}
-	
-	@Override
-	public void onHeatChange(Direction direction, long value)
-	{
-		this.energy += value;
+		return this.thermalHandler;
 	}
 	
 	public Mat getMaterial()
 	{
-		return this.material;
+		return this.thermalHandler.material;
 	}
 	
 	public void setFlammed()

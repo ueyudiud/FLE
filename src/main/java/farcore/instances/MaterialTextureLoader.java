@@ -24,6 +24,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * The material texture loader.
+ * 
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)

@@ -159,20 +159,12 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 			// Some tile maybe is a kinetic conductor, looped check.
 			while (!this.cachedSend.isEmpty());
 		}
-		catch (StackOverflowError error)
+		catch (StackOverflowError | OutOfMemoryError e)
 		{
 			updated = false;
 			if (Nebula.debug)
 			{
-				Log.warn("Stack overflow when update kinetic net.", error);
-			}
-		}
-		catch (OutOfMemoryError error)
-		{
-			updated = false;
-			if (Nebula.debug)
-			{
-				Log.warn("Out of memory when update kinetic net.", error);
+				Log.logger().warn("Catching an error or exception during update kinetic net.", e);
 			}
 		}
 		this.cachedPos = BlockPos.ORIGIN;

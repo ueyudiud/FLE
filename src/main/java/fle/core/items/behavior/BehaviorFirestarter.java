@@ -7,7 +7,6 @@ import java.util.List;
 
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
-import farcore.lib.block.instance.BlockFire;
 import fle.api.recipes.instance.FlamableRecipes;
 import nebula.base.IntegerMap;
 import nebula.common.capability.CapabilityProviderItem;
@@ -106,7 +105,7 @@ public class BehaviorFirestarter extends BehaviorTool
 						if (!world.isRemote && FlamableRecipes.isFlamable(item.getEntityItem(), tick))
 						{
 							BlockPos pos = result.getBlockPos().offset(result.sideHit);
-							if (Worlds.isAirOrReplacable(world, pos) && ((BlockFire) EnumBlock.fire.block).canBlockStayAt(world, pos))
+							//if (Worlds.isAirOrReplacable(world, pos) && ((BlockFire) EnumBlock.fire.block).canBlockStayAt(world, pos))
 							{
 								world.setBlockState(pos, EnumBlock.fire.block.getDefaultState(), 11);
 							}

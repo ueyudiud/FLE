@@ -156,9 +156,9 @@ public class EnergyHandler
 			switch (this.type)
 			{
 			case INTEGER:
-				return Integer.toString(energy.intValue()) + this.unit;
+				return energy.intValue() + this.unit;
 			case LONG:
-				return Long.toString(energy.longValue()) + this.unit;
+				return energy.longValue() + this.unit;
 			case FLOAT:
 				return Strings.getDecimalNumber(energy.floatValue(), 2) + this.unit;
 			default:
