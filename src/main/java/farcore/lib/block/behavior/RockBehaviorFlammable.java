@@ -5,7 +5,7 @@ package farcore.lib.block.behavior;
 
 import java.util.Random;
 
-import farcore.lib.block.terria.BlockRock;
+import farcore.blocks.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.common.util.Direction;
 import nebula.common.world.IModifiableCoord;

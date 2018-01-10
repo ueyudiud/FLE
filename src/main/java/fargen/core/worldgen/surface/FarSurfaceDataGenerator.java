@@ -7,13 +7,13 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import farcore.blocks.terria.BlockRock;
+import farcore.blocks.terria.BlockSand;
+import farcore.blocks.terria.BlockSoil;
+import farcore.blocks.terria.EnumCoverType;
 import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.lib.block.terria.BlockRock;
-import farcore.lib.block.terria.BlockSand;
-import farcore.lib.block.terria.BlockSoil;
-import farcore.lib.block.terria.EnumCoverType;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITreeGenerator;

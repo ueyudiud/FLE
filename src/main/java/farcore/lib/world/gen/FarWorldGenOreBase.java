@@ -3,10 +3,10 @@
  */
 package farcore.lib.world.gen;
 
+import farcore.blocks.terria.BlockOre;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;
-import farcore.lib.block.terria.BlockOre;
 import farcore.lib.material.Mat;
 import net.minecraft.block.state.IBlockState;
 

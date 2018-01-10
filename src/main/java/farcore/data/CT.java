@@ -3,7 +3,7 @@
  */
 package farcore.data;
 
-import farcore.lib.block.instance.BlockRedstoneCircuit;
+import farcore.blocks.BlockRedstoneCircuit;
 import farcore.lib.item.ItemMulti;
 import nebula.client.CreativeTabBase;
 import net.minecraft.creativetab.CreativeTabs;

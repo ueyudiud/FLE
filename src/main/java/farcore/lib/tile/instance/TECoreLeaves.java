@@ -5,9 +5,9 @@ package farcore.lib.tile.instance;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.blocks.wood.BlockLeavesCore;
 import farcore.data.EnumBlock;
 import farcore.data.V;
-import farcore.lib.block.wood.BlockLeavesCore;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;

@@ -5,7 +5,7 @@ package fle.core.recipe;
 
 import farcore.data.EnumToolTypes;
 import farcore.data.MP;
-import farcore.lib.item.instance.ItemTreeLog;
+import farcore.items.ItemTreeLog;
 import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
 import nebula.common.inventory.IBasicInventory;

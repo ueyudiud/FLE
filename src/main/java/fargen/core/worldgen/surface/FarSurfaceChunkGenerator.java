@@ -13,9 +13,9 @@ import java.util.function.DoubleUnaryOperator;
 import com.google.common.collect.ImmutableList;
 
 import farcore.FarCore;
+import farcore.blocks.BlockCrop;
 import farcore.data.EnumBlock;
 import farcore.data.V;
-import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
 import farcore.lib.crop.ICrop;
 import farcore.lib.tree.ITreeGenerator;

@@ -5,10 +5,10 @@ package farcore.util.runnable;
 
 import java.util.ArrayList;
 
+import farcore.blocks.wood.BlockLogNatural;
 import farcore.data.EnumItem;
 import farcore.data.V;
-import farcore.lib.block.wood.BlockLogNatural;
-import farcore.lib.item.instance.ItemTreeLog;
+import farcore.items.ItemTreeLog;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

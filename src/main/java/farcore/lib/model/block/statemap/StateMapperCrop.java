@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import farcore.blocks.BlockCrop;
 import farcore.data.MP;
 import farcore.data.SubTags;
-import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import nebula.common.util.L;

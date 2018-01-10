@@ -17,7 +17,7 @@ public interface IDebugableBlock
 {
 	/**
 	 * Added debugging information when player using
-	 * {@link farcore.lib.item.instance.ItemDebugger} to get debugging
+	 * {@link farcore.items.ItemDebugger} to get debugging
 	 * information. Providing information to chat message and send to player.
 	 * 
 	 * @param player the player using debugger.

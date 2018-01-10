@@ -3,8 +3,8 @@
  */
 package farcore.data;
 
-import farcore.lib.block.terria.BlockSoil;
-import farcore.lib.block.terria.EnumCoverType;
+import farcore.blocks.terria.BlockSoil;
+import farcore.blocks.terria.EnumCoverType;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.ItemTool;
 import nebula.client.ClientProxy;

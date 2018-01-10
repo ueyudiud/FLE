@@ -3,8 +3,8 @@
  */
 package farcore.lib.block.behavior;
 
+import farcore.blocks.BlockMetal;
 import farcore.data.EnumToolTypes;
-import farcore.lib.block.instance.BlockMetal;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import nebula.common.block.IBlockBehavior;

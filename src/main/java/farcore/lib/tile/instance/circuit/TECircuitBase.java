@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import farcore.blocks.BlockRedstoneCircuit;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.instances.MaterialTextureLoader;
-import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;

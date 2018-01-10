@@ -6,7 +6,7 @@ package farcore.lib.plant;
 import java.util.List;
 import java.util.Random;
 
-import farcore.lib.block.instance.BlockPlant;
+import farcore.blocks.BlockPlant;
 import farcore.lib.material.Mat;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.IMetaExtHandler;

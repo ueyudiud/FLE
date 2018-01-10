@@ -7,13 +7,13 @@ import static nebula.common.util.L.index8i;
 
 import java.util.List;
 
+import farcore.blocks.terria.BlockRock;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.data.MP;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;

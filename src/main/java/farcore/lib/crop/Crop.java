@@ -14,9 +14,9 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import farcore.data.EnumBlock;
+import farcore.items.ItemSeed;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;

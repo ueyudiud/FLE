@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.blocks.ItemOre;
+import farcore.blocks.terria.BlockRock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
@@ -14,8 +16,6 @@ import farcore.data.M;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.energy.thermal.IThermalHandler;
-import farcore.lib.block.instance.ItemOre;
-import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
 import nebula.common.network.IPacket;

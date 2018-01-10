@@ -5,10 +5,10 @@ package fargen.core.worldgen.generator;
 
 import com.google.common.base.Predicates;
 
+import farcore.blocks.terria.BlockRock;
+import farcore.blocks.terria.BlockSand;
+import farcore.blocks.terria.BlockSoil;
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.block.terria.BlockRock;
-import farcore.lib.block.terria.BlockSand;
-import farcore.lib.block.terria.BlockSoil;
 import farcore.lib.world.gen.FarWorldGenerator;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import nebula.common.data.Misc;

@@ -9,7 +9,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
-import farcore.lib.block.instance.BlockRedstoneCircuit;
+import farcore.blocks.BlockRedstoneCircuit;
 import nebula.client.model.IStateMapperExt;
 import nebula.client.model.StateMapperExt;
 import nebula.common.block.property.PropertyTE;

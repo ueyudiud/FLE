@@ -3,7 +3,7 @@
  */
 package farcore.load;
 
-import farcore.lib.block.instance.BlockFire;
+import farcore.blocks.BlockFire;
 import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.ModCompator.ICompatible;

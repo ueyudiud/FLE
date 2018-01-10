@@ -4,7 +4,7 @@
 package fle.loader;
 
 import farcore.data.CT;
-import farcore.lib.item.instance.ItemStoneChip;
+import farcore.items.ItemStoneChip;
 import farcore.lib.solid.SolidBase;
 import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;

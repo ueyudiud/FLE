@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.blocks.BlockPlant;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
-import farcore.lib.block.instance.BlockPlant;
-import farcore.lib.item.instance.ItemSeed;
+import farcore.items.ItemSeed;
 import nebula.common.util.L;
 import nebula.common.util.Players;
 import net.minecraft.block.state.IBlockState;

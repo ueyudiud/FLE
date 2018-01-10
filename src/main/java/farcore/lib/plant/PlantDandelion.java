@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.FarCore;
+import farcore.blocks.BlockPlant;
 import farcore.data.EnumItem;
 import farcore.data.M;
-import farcore.lib.block.instance.BlockPlant;
 import farcore.lib.material.Mat;
 import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendar;

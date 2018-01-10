@@ -3,19 +3,19 @@
  */
 package farcore.lib.block.behavior;
 
-import static farcore.lib.block.terria.BlockRock.HEATED;
-import static farcore.lib.block.terria.BlockRock.TYPE;
+import static farcore.blocks.terria.BlockRock.HEATED;
+import static farcore.blocks.terria.BlockRock.TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.blocks.terria.BlockRock;
 import farcore.data.EnumBlock;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.block.terria.BlockRock;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
