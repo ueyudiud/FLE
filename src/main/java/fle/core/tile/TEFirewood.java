@@ -15,6 +15,7 @@ import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
+import nebula.common.world.ICoord;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 
@@ -37,7 +38,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 	public TEFirewood()
 	{
 		this.thermalHandler.material = M.oak;
-		this.remainEnergy = (long) (4_800_000L * this.thermalHandler.material.getProperty(MP.property_wood).burnHeat);
+		this.remainEnergy = (long) (24_0000L * this.thermalHandler.material.getProperty(MP.property_wood).burnHeat);
 	}
 	
 	@Override
@@ -103,7 +104,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 				}
 				else
 				{
-					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord -> coord.isAirBlock(Direction.Q)) > 3)
+					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, ICoord::isAirBlock) > 3)
 					{
 						disable(Smoldering);
 						syncToNearby();
@@ -115,7 +116,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 						{
 							enable(Carbonate);
 							disable(Smoldering);
-							this.remainEnergy = 16000000L;
+							this.remainEnergy = 1600_0000L;
 						}
 					}
 				}
@@ -177,7 +178,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 		this.recheckingStructure.onUpdate();
 		if (is(Burning))
 		{
-			long value = Math.min(this.remainEnergy, 16000);
+			long value = Math.min(this.remainEnergy, 2000);
 			this.remainEnergy -= value;
 			this.thermalHandler.energy += value;
 			if (this.remainEnergy == 0)

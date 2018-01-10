@@ -224,6 +224,11 @@ public interface ICoord
 		return pos().distanceSq(pos);
 	}
 	
+	default boolean isAirBlock()
+	{
+		return world().isAirBlock(pos());
+	}
+	
 	default boolean isAirBlock(Direction offset)
 	{
 		return world().isAirBlock(offset.offset(pos()));

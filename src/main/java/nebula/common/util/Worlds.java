@@ -177,7 +177,7 @@ public final class Worlds
 	public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 	{
 		if (!world.isRemote) // This method have not effect in client world, it
-		// will send a packet to client.
+			// will send a packet to client.
 		{
 			if (!world.isAreaLoaded(pos, 64))
 			{
@@ -268,7 +268,7 @@ public final class Worlds
 	public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)
 	{
 		if (world.isRemote ||
-		// Debug world can drop item will crash the game...
+				// Debug world can drop item will crash the game...
 				world.getWorldType() == WorldType.DEBUG_WORLD || drop == null)
 			return;
 		float f = 0.7F;
@@ -294,7 +294,7 @@ public final class Worlds
 	public static void spawnDropInWorld(World world, BlockPos pos, Direction direction, ItemStack drop)
 	{
 		if (world.isRemote ||
-		// Debug world can drop item will crash the game...
+				// Debug world can drop item will crash the game...
 				world.getWorldType() == WorldType.DEBUG_WORLD || drop == null)
 			return;
 		float f = 0.7F;
@@ -321,7 +321,7 @@ public final class Worlds
 	public static void spawnDropsInWorld(World world, BlockPos pos, @Nullable List<ItemStack> drops)
 	{
 		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_WORLD ||
-		// Debug world can drop item will crash the game...
+				// Debug world can drop item will crash the game...
 				drops == null)
 			return;
 		for (ItemStack stack : drops)
@@ -750,7 +750,7 @@ public final class Worlds
 	 * @param world the world.
 	 * @param pos the position to start check.
 	 * @param checkItSelf should this position be checked first or start from
-	 *            its neighbous first and will ignore main position.
+	 *            its neighbours first and will ignore main position.
 	 * @param count how many block states matches can finished the checking
 	 *            task.
 	 * @param predicate the predictor to predicate if block state can be
@@ -777,8 +777,7 @@ public final class Worlds
 		list.addAll(unchecked);
 		int size = 0;
 		BlockPos pos2;
-		final int maxCheck = MathHelper.log2DeBruijn(count) * 25
-				+ count; /* Ticking required. */
+		final int maxCheck = MathHelper.log2DeBruijn(count) * 25 + count; /* Ticking required. */
 		while (!unchecked.isEmpty() && list.size() <= maxCheck)
 		{
 			BlockPos pos1 = unchecked.removeFirst();
@@ -786,11 +785,13 @@ public final class Worlds
 			{
 				if (++size == count) return true;
 				for (EnumFacing facing : EnumFacing.VALUES)
+				{
 					if (!list.contains(pos2 = pos1.offset(facing)))
 					{
 						list.add(pos2);
 						unchecked.add(pos2);
 					}
+				}
 			}
 		}
 		return false;
@@ -827,14 +828,18 @@ public final class Worlds
 			if (!predicate.test(new EnviornmentBlockPos(world, pos1)))
 			{
 				for (EnumFacing facing : EnumFacing.VALUES)
+				{
 					if (Maths.lp1Distance(pos, pos2 = pos1.offset(facing)) <= max && !list.contains(pos2))
 					{
 						unchecked.add(pos2);
 						list.add(pos2);
 					}
+				}
 			}
 			else
+			{
 				return Maths.lp1Distance(pos, pos1);
+			}
 		}
 		return Integer.MAX_VALUE;
 	}

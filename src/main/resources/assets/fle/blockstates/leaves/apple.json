@@ -7,10 +7,10 @@
 	"variants": {
 		"fruit_stage": {
 			"0": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/void" } },
-			"1": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/apple_fruit2" } },
-			"2": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/apple_fruit2" } },
-			"3": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/apple_fruit2" } },
-			"4": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/apple_fruit1" } }
+			"1": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/leaves/apple_fruit2" } },
+			"2": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/leaves/apple_fruit2" } },
+			"3": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/leaves/apple_fruit2" } },
+			"4": { "textures": { "all": "fle:blocks/leaves/apple", "overlay": "farcore:blocks/leaves/apple_fruit1" } }
 		}
 	}
 }

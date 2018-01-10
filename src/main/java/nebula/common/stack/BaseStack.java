@@ -46,7 +46,7 @@ public class BaseStack implements AbstractStack
 	
 	public BaseStack(Block block, int size)
 	{
-		this(block, size, OreDictionary.WILDCARD_VALUE);
+		this(block, size, -1);
 	}
 	
 	public BaseStack(Block block, int size, int meta)
@@ -61,7 +61,7 @@ public class BaseStack implements AbstractStack
 	
 	public BaseStack(Item item, int size)
 	{
-		this(item, size, OreDictionary.WILDCARD_VALUE);
+		this(item, size, -1);
 	}
 	
 	public BaseStack(@Nonnull Item item, int size, int meta)
