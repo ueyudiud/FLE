@@ -422,6 +422,10 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
+		if (modelLocation.getResourcePath().startsWith("models/block/"))
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath().substring("models/block/".length()));
+		else if (modelLocation.getResourcePath().startsWith("models/item/"))
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath().substring("models/item/".length()));
 		return this.models.containsKey(modelLocation) ||
 				(modelLocation instanceof ModelResourceLocation &&
 						this.models.containsKey(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath())));
@@ -586,8 +590,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Get model from model loader (For the nebula model loader will remove
-	 * provided model).
+	 * Get model from model loader.
 	 * 
 	 * @param location the model location.
 	 * @return the model.
@@ -618,21 +621,24 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Nebula model will be remove when loading model, it means this can not be
-	 * parent model directly, or use
-	 * {@link #getModel(net.minecraft.util.ResourceLocation) getModel(ResourceLocation)} instead.
+	 * Use {@link #getModel(net.minecraft.util.ResourceLocation) getModel(ResourceLocation)} instead
+	 * if want to get loaded model.
 	 * 
 	 * @return The loaded model.
 	 */
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
+		if (modelLocation.getResourcePath().startsWith("models/block/"))
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath().substring("models/block/".length()));
+		else if (modelLocation.getResourcePath().startsWith("models/item/"))
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath().substring("models/item/".length()));
 		IModel model = this.models.get(modelLocation);
 		if (model == null && modelLocation instanceof ModelResourceLocation)
 		{
 			model = this.models.get(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
 		}
-		if (this.models.isEmpty()) this.models = null;// Clean cache.
+		
 		if (model == null)// If model is null, it means the loader of location shoudn't be this loader.
 			throw new RuntimeException(String.format("The model location \"%s\" is not belong to NebulaModelLoader. There must be some wrong of other model loader.", modelLocation));
 		return model;

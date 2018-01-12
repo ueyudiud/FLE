@@ -25,6 +25,25 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 		return (IntMap<E>) ImmutableEmptyIntMap.INSTANCE;
 	}
 	
+	static <E> IntMap<E> of(E key, int value)
+	{
+		return new ImmutableSingleIntMap<>(key, value);
+	}
+	
+	static <E> IntMap<E> copyOf(@Nonnull IntMap<? extends E> map)
+	{
+		switch (map.size())
+		{
+		case 0 :
+			return empty();
+		case 1 :
+			IntegerEntry<? extends E> entry = map.iterator().next();
+			return of(entry.getKey(), entry.getValue());
+		default:
+			return new HashIntMap<>(map);
+		}
+	}
+	
 	int size();
 	
 	default boolean isEmpty()

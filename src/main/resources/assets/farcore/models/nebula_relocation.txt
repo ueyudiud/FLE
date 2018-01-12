@@ -9,6 +9,7 @@
 #Deserializer list: GENERAL, BLOCK, ITEM, VANILLA, VANILLA_ITEM
 
 #MultiPartModel list.
+farcore:models/block/fence_base,models/block1/fence,BLOCK
 farcore:vine/vine,models/block1/vine/vine,BLOCK
 #WeightRandomModel list.
 farcore:brick/greybrick#type=normal,models/block1/brick/greybrick_normal,BLOCK

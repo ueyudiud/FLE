@@ -20,6 +20,7 @@ import java.util.OptionalLong;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
@@ -456,8 +457,20 @@ public class L
 		return map2;
 	}
 	
-	// ====================================Functional method
-	// start==================================
+	// =====================Functional method start=====================
+	
+	/**
+	 * Convert function to high level function input logic, it exists a constant variable.
+	 * 
+	 * @param function the function used to combine.
+	 * @param constant the constant for input.
+	 * @return the combined function.
+	 */
+	@SuppressWarnings("hiding")
+	public static <T, R, F> Function<F, R> toFunction(BiFunction<F, T, R> function, T constant)
+	{
+		return target -> function.apply(target, constant);
+	}
 	
 	/**
 	 * Cast a map as a function, the code is like this.
@@ -984,16 +997,20 @@ public class L
 	 * @param func The transform function.
 	 * @return the {@link java.util.HashSet} collected elements.
 	 */
-	public static <E, T> Set<E> collect(@Nullable Iterable<? extends T> iterable, BiConsumer<T, Collection<E>> consumer)
+	public static <E, T> Set<E> collect(@Nullable Iterable<? extends T> iterable, BiConsumer<? super Set<E>, ? super T> consumer)
 	{
-		Set<E> set = new HashSet<>();
+		return collect(iterable, new HashSet<>(), consumer);
+	}
+	
+	public static <E, T, S> S collect(@Nullable Iterable<T> iterable, S collector, BiConsumer<? super S, ? super T> consumer)
+	{
 		if (iterable == null)
-			return set;
+			return collector;
 		for (T t : iterable)
 		{
-			consumer.accept(t, set);
+			consumer.accept(collector, t);
 		}
-		return set;
+		return collector;
 	}
 	
 	public static OptionalInt or(OptionalInt opt1, OptionalInt opt2)

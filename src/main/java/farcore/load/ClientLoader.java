@@ -44,8 +44,6 @@ public class ClientLoader extends CommonLoader
 		// Register model loaders, state mappers and item model selectors.
 		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuitplate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
 		
-		NebulaModelLoader.registerModel(new ResourceLocation(FarCore.ID, "models/block/fence_base"), new ResourceLocation(FarCore.ID, "models/block1/fence"), NebulaModelDeserializer.BLOCK);
-		
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material.sub"), stack -> "material:" + ItemMulti.getMaterial(stack).name + "." + ItemMulti.getSubMeta(stack));
 		

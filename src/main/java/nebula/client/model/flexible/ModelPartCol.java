@@ -343,8 +343,7 @@ public class ModelPartCol implements INebulaModelPart
 	
 	public ModelPartCol(Map<Map<String, String>, IntMap<Variant>> function, Variant def, boolean extendData)
 	{
-		this(function, IntMap.empty(), extendData);
-		this.def.put(def, 1);
+		this(function, IntMap.of(def, 1), extendData);
 	}
 	
 	public ModelPartCol(Map<Map<String, String>, IntMap<Variant>> function, IntMap<Variant> def, boolean extendData)
@@ -358,10 +357,7 @@ public class ModelPartCol implements INebulaModelPart
 	
 	private void retexLocations()
 	{
-		List<Variant> set = new ArrayList<>(this.def.keySet());
-		this.function.values().forEach(v -> set.addAll(v.keySet()));
-		
-		for (Variant variant : set)
+		this.function.values().stream().map(IntMap::keySet).flatMap(Set::stream).forEach(variant ->
 		{
 			if (variant.parts.isPresent())
 			{
@@ -377,12 +373,12 @@ public class ModelPartCol implements INebulaModelPart
 					variant.parts = Optional.of(parts.build());
 				}
 			}
-		}
+		});
 	}
 	
-	private <E> Collection<E> collect(BiConsumer<INebulaModelPart, Collection<E>> consumer)
+	private <E> Collection<E> collect(BiConsumer<Collection<E>, INebulaModelPart> consumer)
 	{
-		Set<E> set = L.collect(this.function.values(), (map, c) -> c.addAll(L.collect(map, (e, c1) -> e.getKey().parts.orElse(ImmutableList.of()).forEach(p -> consumer.accept(p, c1)))));
+		Set<E> set = L.collect(this.function.values(), (c, map) -> c.addAll(L.collect(map, (c1, e) -> e.getKey().parts.orElse(ImmutableList.of()).forEach(p -> consumer.accept(c1, p)))));
 		this.def.forEach(e -> set.addAll(L.collect(e.getKey().parts.orElse(ImmutableList.of()), consumer)));
 		return set;
 	}
@@ -390,19 +386,19 @@ public class ModelPartCol implements INebulaModelPart
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
-		return collect((p, c) -> c.addAll(p.getDependencies()));
+		return collect((c, p) -> c.addAll(p.getDependencies()));
 	}
 	
 	@Override
 	public Collection<String> getResources()
 	{
-		return collect((p, c) -> c.addAll(p.getResources()));
+		return collect((c, p) -> c.addAll(p.getResources()));
 	}
 	
 	@Override
 	public Collection<ResourceLocation> getDirectResources()
 	{
-		return collect((p, c) -> c.addAll(p.getDirectResources()));
+		return collect((c, p) -> c.addAll(p.getDirectResources()));
 	}
 	
 	@Override
@@ -488,11 +484,11 @@ public class ModelPartCol implements INebulaModelPart
 	public INebulaModelPart retexture(Map<String, String> retexture)
 	{
 		return new ModelPartCol(ImmutableMap.copyOf(Maps.<Map<String, String>, IntMap<Variant>, IntMap<Variant>> transformValues(this.function, map -> {
-			HashIntMap<Variant> map1 = new HashIntMap<>(map.size(), 1.0F);
-			map.forEach(e -> {
-				Variant variant = new Variant(e.getKey());
+			IntMap<Variant> map1 = new HashIntMap<>(map.size(), 1.0F);
+			map.foreach((parent, weight) -> {
+				Variant variant = new Variant(parent);
 				variant.retextures = new Retextures(retexture, variant.retextures);
-				map1.put(variant, e.getValue());
+				map1.put(variant, weight);
 			});
 			return map;
 		})), this.def, this.extendData);
@@ -516,7 +512,7 @@ public class ModelPartCol implements INebulaModelPart
 		{
 			Selector<List<INebulaBakedModelPart>> selector = this.map.get(parse(key));
 			int random = (int) (rand ^ rand >> 32);
-			return new ArrayList<>(L.collect(selector == null ? this.defaultPart.next(random) : selector.next(random), (p, c) -> c.addAll(p.getQuads(facing, this.extendData ? key : NebulaModelLoader.NORMAL))));
+			return new ArrayList<>(L.collect(selector == null ? this.defaultPart.next(random) : selector.next(random), (c, p) -> c.addAll(p.getQuads(facing, this.extendData ? key : NebulaModelLoader.NORMAL))));
 		}
 		
 		@Override

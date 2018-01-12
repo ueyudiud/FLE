@@ -4,12 +4,17 @@
 package nebula.base;
 
 import java.util.OptionalInt;
+import java.util.function.IntUnaryOperator;
 
 /**
  * @author ueyudiud
  */
 public abstract class ImmutableIntMap<E> implements IntMap<E>
 {
+	ImmutableIntMap()
+	{
+	}
+	
 	@Override
 	public int put(E key, int value)
 	{
@@ -23,7 +28,13 @@ public abstract class ImmutableIntMap<E> implements IntMap<E>
 	}
 	
 	@Override
-	public void rescale() throws IllegalStateException
+	public void rescale()
+	{
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void transformAll(IntUnaryOperator operator)
 	{
 		throw new UnsupportedOperationException();
 	}
