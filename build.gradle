@@ -94,13 +94,6 @@ task deobfJar(type: Jar) {
     }
 }
 
-task nebula(type: Jar, dependsOn: 'jar') {
-	classifier = 'nebula'
-	from (sourceSets.main.output) {
-		include "**/nebula/**"
-	}
-}
-
 jar {
     exclude "**/debug/**"
     manifest {
@@ -111,5 +104,4 @@ jar {
 
 artifacts {
 	archives deobfJar
-	archives nebula
 }

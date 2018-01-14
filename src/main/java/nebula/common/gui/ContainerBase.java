@@ -37,7 +37,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	public static boolean canAddItemToSlot(Slot slotIn, ItemStack stack, boolean stackSizeMatters)
 	{
 		return stack == null || slotIn.isItemValid(stack)
-				&& (!slotIn.getHasStack() || ((slotIn != null && slotIn.getHasStack() && ItemStacks.isItemAndTagEqual(stack, slotIn.getStack())) && (slotIn.getStack().stackSize + (stackSizeMatters ? 0 : stack.stackSize) <= Math.min(slotIn.getItemStackLimit(stack), stack.getMaxStackSize()))));
+				&& (!slotIn.getHasStack() || ((slotIn != null && slotIn.getHasStack() && ItemStacks.areItemAndTagEqual(stack, slotIn.getStack())) && (slotIn.getStack().stackSize + (stackSizeMatters ? 0 : stack.stackSize) <= Math.min(slotIn.getItemStackLimit(stack), stack.getMaxStackSize()))));
 	}
 	
 	public static ItemStack extractStackFrom(@Nullable EntityPlayer player, SlotBase slotIn, int maxSize, boolean simulate)
@@ -91,7 +91,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		if (slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if (ItemStacks.isItemAndTagEqual(stack, stack2))
+			if (ItemStacks.areItemAndTagEqual(stack, stack2))
 			{
 				int size = Math.min(stack.getMaxStackSize() - stack.stackSize, stack2.stackSize);
 				if (!simulate)
@@ -134,7 +134,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		if (slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if (!ItemStacks.isItemAndTagEqual(stack, stack2)) return 0;
+			if (!ItemStacks.areItemAndTagEqual(stack, stack2)) return 0;
 			int size = Math.min(max - stack2.stackSize, stack.stackSize);
 			if (size <= 0) return 0;
 			if (!simulate)
@@ -487,7 +487,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 			{
 				Slot slot = this.inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
-				if (itemstack != null && ItemStacks.isItemAndTagEqual(stack, itemstack))
+				if (itemstack != null && ItemStacks.areItemAndTagEqual(stack, itemstack))
 				{
 					int maxSize = Math.min(slot.getItemStackLimit(itemstack), stack.getMaxStackSize());
 					if (itemstack.stackSize >= maxSize)

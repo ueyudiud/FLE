@@ -176,10 +176,10 @@ public class M
 	public static final Mat	native_gold		= new Mat(10032, FarCore.ID, "nativeGold"	, "NativeGold"		, "Native Gold"		).builder().setChemicalFormula("Au"					).setRGBa(0xF7B32AFF).setOreProperty( 5,  6.8F,  8.3F, SubTags.ORE_NOBLE).build();
 	public static final Mat	electrum		= new Mat(10033, FarCore.ID, "electrum"		, "Electrum"		, "Electrum"		).builder().setChemicalFormula("?"					).setRGBa(0xE4B258FF).setOreProperty(11,  8.2F,  9.2F, SubTags.ORE_NOBLE).build();
 	// Building resources
-	public static final Mat	adobe		= new Mat(11001, FarCore.ID, "adobe", "Adobe", "Adobe").builder().setRGBa(0xABA798FF).setBrick(1, 3.0F, 4.0F).build();
-	public static final Mat	argil		= new Mat(11002, FarCore.ID, "argil", "Argil", "Argil").builder().setRGBa(0xCBC0BCFF).setBrick(3, 4.5F, 7.0F).setGeneralProp(5.47E4F, 14F, 283, 36, 4.7F, 1E8F, 8.4F).build();
-	public static final Mat	redbrick	= new Mat(11003, FarCore.ID, "redbrick", "RedBrick", "Red Brick").builder().setRGBa(0xB75A40FF).setBrick(4, 4.0F, 8.5F).build();
-	public static final Mat	greybrick	= new Mat(11004, FarCore.ID, "greybrick", "GreyBrick", "Grey Brick").builder().setRGBa(0xB8CAC7FF).setBrick(4, 4.0F, 8.5F).build();
+	public static final Mat	adobe			= new Mat(11001, FarCore.ID, "adobe"		, "Adobe"			, "Adobe"			).builder().setRGBa(0xABA798FF).setBrick(1, 3.0F, 4.0F).build();
+	public static final Mat	argil			= new Mat(11002, FarCore.ID, "argil"		, "Argil"			, "Argil"			).builder().setRGBa(0xCBC0BCFF).setBrick(3, 4.5F, 7.0F).setGeneralProp(11.8E3F, 36.2F, 283, 36, 4.7F, 1E8F, 8.4F).build();
+	public static final Mat	redbrick		= new Mat(11003, FarCore.ID, "redbrick"		, "RedBrick"		, "Red Brick"		).builder().setRGBa(0xB75A40FF).setBrick(4, 4.0F, 8.5F).build();
+	public static final Mat	greybrick		= new Mat(11004, FarCore.ID, "greybrick"	, "GreyBrick"		, "Grey Brick"		).builder().setRGBa(0xB8CAC7FF).setBrick(4, 4.0F, 8.5F).build();
 	
 	static
 	{

@@ -11,7 +11,9 @@ import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT3;
 
 import farcore.data.M;
 import farcore.energy.thermal.IThermalHandler;
+import farcore.energy.thermal.IThermalProvider;
 import farcore.energy.thermal.ThermalNet;
+import farcore.energy.thermal.instance.ThermalHandlerSimple;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.solid.container.SolidContainerHelper;
@@ -40,12 +42,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
+public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalProvider, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	public static final Mat material = M.argil;
 	
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
-	private long energy;
+	private ThermalHandlerSimple handler = new ThermalHandlerSimple(this);
+	
+	{
+		this.handler.material = material;
+	}
 	
 	public TECeramicPot()
 	{
@@ -70,7 +76,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		compound.setLong("energy", this.energy);
+		this.handler.writeToNBT(compound);
 		return compound;
 	}
 	
@@ -78,7 +84,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.energy = compound.getLong("energy");
+		this.handler.readFromNBT(compound);
 	}
 	
 	@Override
@@ -108,7 +114,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	@Override
 	protected int getPower()
 	{
-		return this.cache.<Integer> get(0) <= ThermalNet.getTemperature(this) ? 1 : 0;
+		return this.cache.<Integer> get(0) <= ThermalNet.getTemperature(this.world, this.pos, false) ? 1 : 0;
 	}
 	
 	@Override
@@ -175,28 +181,9 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	}
 	
 	@Override
-	public float getTemperatureDifference(Direction direction)
+	public IThermalHandler getThermalHandler()
 	{
-		return (float) (this.energy / material.heatCapacity);
-	}
-	
-	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return material.heatCapacity;
-	}
-	
-	@Override
-	public double getThermalConductivity(Direction direction)
-	{
-		int multiplier = getTE(direction) instanceof IThermalHandler ? 4 : 1;
-		return material.thermalConductivity * multiplier;
-	}
-	
-	@Override
-	public void onHeatChange(Direction direction, long value)
-	{
-		this.energy += value;
+		return this.handler;
 	}
 	
 	@Override

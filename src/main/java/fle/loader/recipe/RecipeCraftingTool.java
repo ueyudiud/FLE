@@ -110,9 +110,9 @@ public class RecipeCraftingTool
 	
 	private static final ArrayList<Entry<AbstractStack, Mat>>	LIST		= new ArrayList<>();
 	private static final BiConsumer<ItemStack, ItemStack>		CONSUMER1	= (input, output) -> {
-																				Mat material = ItemMulti.getMaterial(input);
-																				ItemTool.setMaterialToItem(output, "head", material);
-																			};
+		Mat material = ItemMulti.getMaterial(input);
+		ItemTool.setMaterialToItem(output, "head", material);
+	};
 	
 	private static final SingleInputMatch HANDLE_MATCH = new SingleInputMatch(new OreStack("stickWood"), (i, o) -> ItemToolFar.setMaterialToItem(o, "handle", M.wood), null);
 	
@@ -141,7 +141,7 @@ public class RecipeCraftingTool
 			}
 			return this.list;
 		}
-	}, (i, o) -> ItemToolFar.setMaterialToItem(o, "tie", L.getFromEntries(LIST, e -> e.similar(i))), null);
+	}, (i, o) -> ItemToolFar.setMaterialToItem(o, "tie", L.getFromEntries(LIST, L.toPredicate(AbstractStack::similar, i)).orElse(Mat.VOID)), null);
 	
 	private static SingleInputMatch matchOfMaterial(AbstractStack input, String key)
 	{

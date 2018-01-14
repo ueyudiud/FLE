@@ -25,11 +25,11 @@ import nebula.client.model.flexible.INebulaBakedModelPart;
 import nebula.client.model.flexible.INebulaModelPart;
 import nebula.client.model.flexible.ModelModifierByCoordTransformer;
 import nebula.client.util.BakedQuadBuilder;
+import nebula.client.util.BakedQuadRetex;
 import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BakedQuadRetextured;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -96,8 +96,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 	public BakedModelPartRedstoneCircuitPlate bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		TextureAtlasSprite iconDef = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-		List<BakedQuad>[] quads = bakedQuads.computeIfAbsent(this.layer, l -> {
-			TextureAtlasSprite layer = bakedTextureGetter.apply(l);
+		List<BakedQuad>[] quads = bakedQuads.computeIfAbsent(this.layer, bakedTextureGetter.andThen(layer -> {
 			List<BakedQuad>[] result = new List[4];
 			for (EnumFacing facing : EnumFacing.HORIZONTALS)
 			{
@@ -105,7 +104,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 				result[facing.getHorizontalIndex()] = buildQuads(iconDef, layer, format, transformation2);
 			}
 			return result;
-		});
+		}));
 		getTextures();
 		return new BakedModelPartRedstoneCircuitPlate(quads);
 	}
@@ -244,7 +243,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 			String[] split = key.split(",");
 			TextureAtlasSprite icon = textures.get(Mat.material(split[1]));
 			List<BakedQuad> list = this.quads[EnumFacing.valueOf(split[0]).getHorizontalIndex()];
-			return icon == null ? list : Lists.transform(list, quad -> new BakedQuadRetextured(quad, icon));
+			return icon == null ? list : Lists.transform(list, L.toFunction(BakedQuadRetex::new, icon));
 		}
 	}
 	

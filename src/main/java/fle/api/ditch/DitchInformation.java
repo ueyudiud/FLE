@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.ditch;
 
 import nebula.base.IPropertyMap;

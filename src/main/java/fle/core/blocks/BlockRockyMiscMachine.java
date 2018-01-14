@@ -5,11 +5,19 @@ package fle.core.blocks;
 
 import farcore.data.Materials;
 import fle.core.FLE;
+import fle.core.client.render.ItemRenderWithTESR;
+import fle.core.tile.rocky.TECeramicPot;
+import fle.core.tile.rocky.TESimplyKiln;
 import nebula.base.register.IRegister;
+import nebula.client.NebulaRenderHandler;
+import nebula.client.model.StateMapperExt;
+import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -25,12 +33,27 @@ public class BlockRockyMiscMachine extends BlockTE
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Ceramic Pot");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Simply Kiln");
 	}
 	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
-		return false;
+		register.register(0, "ceramic_pot", TECeramicPot.class);
+		register.register(1, "simply_klin", TESimplyKiln.class);
+		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		NebulaRenderHandler.registerRender(this.item, ItemRenderWithTESR.INSTANCE);
+		
+		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
+		registerRenderMapper(mapper);
+		registerCustomBlockRender(mapper, 0, "misc_machine/ceramic_pot");
 	}
 	
 	@Override

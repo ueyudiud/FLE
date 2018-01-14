@@ -99,7 +99,9 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 						}
 					}
 					else
+					{
 						poses[i] = -1;
+					}
 					if (object2.has("colorMultiplier"))
 					{
 						flag.set(true);
@@ -117,8 +119,10 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 					case "convert":
 						layer = new ModelPartItemLayerConvert(layer, Jsons.getOrDefault(object2, "convert", "#convert"));
 						break;
-					default:
+					case "normal":
 						break;
+					default:
+						throw new JsonParseException("Unknown item layer type of " + object2.get("type").getAsString());
 					}
 				}
 				else

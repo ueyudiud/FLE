@@ -55,7 +55,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 			{
 				Iterator<ItemStack> itr = node1.iterator();
 				itr.forEachRemaining(s -> {
-					if (ItemStacks.isItemAndTagEqual(stack, s))
+					if (ItemStacks.areItemAndTagEqual(stack, s))
 					{
 						stack.stackSize += s.stackSize;
 						itr.remove();
@@ -100,7 +100,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 		{
 			ItemStack stack = Iterators.get(this.stacks.iterator(), index);
 			assert (stack != null);
-			if (!ItemStacks.isItemAndTagEqual(stack, resource))
+			if (!ItemStacks.areItemAndTagEqual(stack, resource))
 			{
 				return 0;
 			}

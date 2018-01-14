@@ -49,7 +49,7 @@ public class ContainerDataHandlerManager
 	{
 		public boolean changed(ItemStack oldValue, ItemStack newValue)
 		{
-			return ItemStacks.isItemAndTagEqual(oldValue, newValue);
+			return ItemStacks.areItemAndTagEqual(oldValue, newValue);
 		}
 		
 		@Override

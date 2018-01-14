@@ -60,6 +60,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle");
 		addSubItem(2003, "crushed_bone", "Crushed Bone");
 		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone");
+		addSubItem(2005, "argil_plate_unsmelted", "Unsmelted Argil Plate");
+		addSubItem(2006, "argil_plate", "Argil Plate");
 		
 		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
 		

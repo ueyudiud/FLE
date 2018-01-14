@@ -17,7 +17,7 @@ class SHAAdapter extends TypeAdapter<String>
 {
 	static final SHAAdapter INSTANCE = new SHAAdapter();
 	
-	public String name;
+	String name;
 	
 	@Override
 	public void write(JsonWriter out, String value) throws IOException

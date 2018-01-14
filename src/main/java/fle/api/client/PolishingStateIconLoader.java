@@ -23,17 +23,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PolishingStateIconLoader implements IIconLoader
 {
-	private static final Map<Character, String> stateMap = new HashMap<>();
+	private static final Map<Character, String> STATE_MAP = new HashMap<>();
 	
 	public static void addState(char chr, String location)
 	{
-		if (stateMap.containsKey(chr))
+		if (STATE_MAP.containsKey(chr))
 		{
 			Log.warn("The state with character '{}' is already exist.", chr);
 		}
 		else
 		{
-			stateMap.put(chr, location);
+			STATE_MAP.put(chr, location);
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class PolishingStateIconLoader implements IIconLoader
 	public void registerIcon(IIconRegister register)
 	{
 		ImmutableMap.Builder<Character, TextureAtlasSprite> builder = ImmutableMap.builder();
-		for (Entry<Character, String> entry : stateMap.entrySet())
+		for (Entry<Character, String> entry : STATE_MAP.entrySet())
 		{
 			builder.put(entry.getKey(), register.registerIcon(entry.getValue()));
 		}

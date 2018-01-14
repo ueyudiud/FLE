@@ -18,13 +18,13 @@ public class ContainerCeramicPot extends ContainerTileInventory<TECeramicPot>
 	{
 		super(tile, player);
 		int id = this.inventorySlots.size();
-		addSlotToContainer(new SlotBase(tile, 0, 76, 19));
-		addSlotToContainer(new SlotBase(tile, 1, 94, 19));
+		addSlotToContainer(new SlotBase(tile, 0, 76, 32));
+		addSlotToContainer(new SlotBase(tile, 1, 94, 32));
 		addSlotToContainer(new SlotBase(tile, 2, 38, 19));
 		addSlotToContainer(new SlotBase(tile, 3, 38, 44));
 		addSlotToContainer(new SlotBase(tile, 4, 117, 19));
 		addSlotToContainer(new SlotBase(tile, 5, 117, 44));
-		addSlotToContainer(new FluidSlotN(tile.tank(), 66, 15, 8, 20));
+		addSlotToContainer(new FluidSlotN(tile.tank(), 66, 28, 8, 20));
 		TL
 		tl1 = new TL(id).appendTransferLocate(this.locationPlayer).addToList(),
 		tl3 = new TLFluidContainerOnly(id + 2).appendTransferLocate(this.locationPlayer).addToList();

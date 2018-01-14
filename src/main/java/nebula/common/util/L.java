@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
@@ -36,6 +37,7 @@ import com.google.common.collect.Table;
 
 import nebula.base.Judgable;
 import nebula.base.function.Applicable;
+import nebula.base.function.Func;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -467,9 +469,21 @@ public class L
 	 * @return the combined function.
 	 */
 	@SuppressWarnings("hiding")
-	public static <T, R, F> Function<F, R> toFunction(BiFunction<F, T, R> function, T constant)
+	public static <T, R, F> Func<F, R> toFunction(BiFunction<F, T, R> function, T constant)
 	{
 		return target -> function.apply(target, constant);
+	}
+	
+	/**
+	 * Convert predicate to high level function input logic, it exists a constant variable.
+	 * 
+	 * @param function the predicate used to combine.
+	 * @param constant the constant for input.
+	 * @return the combined predicate.
+	 */
+	public static <T, F> Judgable<F> toPredicate(BiPredicate<F, T> function, T constant)
+	{
+		return target -> function.test(target, constant);
 	}
 	
 	/**
@@ -485,7 +499,7 @@ public class L
 	 * @return The value store in map.
 	 * @see java.util.Map#get(Object)
 	 */
-	public static <K, V> Function<K, V> toFunction(Map<K, V> map)
+	public static <K, V> Func<K, V> toFunction(Map<K, V> map)
 	{
 		return map::get;
 	}
@@ -506,13 +520,12 @@ public class L
 	 * @return
 	 * @see java.util.Map#getOrDefault(Object, Object)
 	 */
-	public static <K, V> Function<K, V> toFunction(Map<K, V> map, V defaultValue)
+	public static <K, V> Func<K, V> toFunction(Map<K, V> map, V defaultValue)
 	{
 		return key -> map.getOrDefault(key, defaultValue);
 	}
 	
-	// =====================================Functional method
-	// end===================================
+	// ======================Functional method end==========================
 	
 	public static <T> boolean contain(@Nullable Collection<? extends T> collection, @Nonnull Predicate<T> checker)
 	{
@@ -523,10 +536,16 @@ public class L
 	}
 	
 	@Nullable
-	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Predicate<T> predicate)
+	public static <T> T get(@Nullable Collection<T> collection, @Nonnull Predicate<? super T> predicate)
 	{
-		return collection == null || collection.isEmpty() ? null :
-			collection.stream().filter(predicate).findFirst().orElse(null);
+		return getOptional(collection, predicate).orElse(null);
+	}
+	
+	@Nonnull
+	public static <T> Optional<T> getOptional(@Nullable Collection<T> collection, @Nonnull Predicate<? super T> predicate)
+	{
+		return collection == null || collection.isEmpty() ? Optional.empty() :
+			collection.stream().filter(predicate).findFirst();
 	}
 	
 	/**
@@ -539,7 +558,21 @@ public class L
 	@Nullable
 	public static <K, V> V get(@Nullable Map<K, V> map, @Nonnull Judgable<K> predicate)
 	{
-		return map == null || map.isEmpty() ? null :
+		return getOptional(map, predicate).orElse(null);
+	}
+	
+	/**
+	 * Get optional
+	 * 
+	 * @param map
+	 * @param predicate
+	 * @return
+	 * @see #getFromEntries(Collection, Judgable)
+	 */
+	@Nullable
+	public static <K, V> Optional<V> getOptional(@Nullable Map<K, V> map, @Nonnull Judgable<K> predicate)
+	{
+		return map == null || map.isEmpty() ? Optional.empty() :
 			getFromEntries(map.entrySet(), predicate);
 	}
 	
@@ -552,10 +585,9 @@ public class L
 	 *         collection is empty.
 	 */
 	@Nullable
-	public static <K, V> V getFromEntries(@Nullable Collection<? extends Entry<K, V>> collection, @Nonnull Judgable<K> predicate)
+	public static <K, V> Optional<V> getFromEntries(@Nullable Collection<? extends Entry<K, V>> collection, @Nonnull Judgable<K> predicate)
 	{
-		Entry<K, V> entry = get(collection, predicate.from(Entry::getKey));
-		return entry == null ? null : entry.getValue();
+		return getOptional(collection, predicate.from(Entry::getKey)).map(Entry::getValue);
 	}
 	
 	public static <T> Set<T> containSet(Collection<? extends T> collection, Judgable<T> checker)

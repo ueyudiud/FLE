@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import nebula.base.function.Applicable;
+import nebula.base.function.Func;
 import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.INBTWriter;
 import nebula.common.util.Direction;
@@ -93,7 +94,7 @@ public class Misc
 		}
 	};
 	
-	public static <T, R> Function<T, R> anyTo(R result)
+	public static <T, R> Func<T, R> anyTo(R result)
 	{
 		return target -> result;
 	}

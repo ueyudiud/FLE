@@ -11,6 +11,7 @@ import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGasExplosive;
 import fle.core.blocks.BlockPottery;
 import fle.core.blocks.BlockResourceMisc;
+import fle.core.blocks.BlockRockyMiscMachine;
 import fle.core.blocks.BlockRockySimpleMachine;
 import fle.core.blocks.BlockTools;
 import fle.core.blocks.BlockWoodenMiscMachine;
@@ -47,6 +48,7 @@ public class IBFS
 		bWoodenWorkbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
 		bWoodenMachine = new BlockWoodenMiscMachine().setCreativeTab(CT.MACHINE);
 		bRockyMachine = new BlockRockySimpleMachine().setCreativeTab(CT.MACHINE);
+		bRockyMachine2 = new BlockRockyMiscMachine().setCreativeTab(CT.MACHINE);
 		bPottery = new BlockPottery().setCreativeTab(CT.MACHINE);
 		bDirtMixture = new BlockDirtMixture().setCreativeTab(CT.MACHINE);
 		bRockyTank = new BlockRockyTank().setCreativeTab(CT.MACHINE);
@@ -96,6 +98,7 @@ public class IBFS
 	public static Block						bWoodenWorkbench;
 	public static Block						bWoodenMachine;
 	public static Block						bRockyMachine;
+	public static Block						bRockyMachine2;
 	public static Block						bPottery;
 	public static Block						bDirtMixture;
 	public static Block						bRockyTank;

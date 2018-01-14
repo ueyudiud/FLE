@@ -37,7 +37,7 @@ import nebula.common.util.Maths;
  * @param <K> the type of keys.
  * @see java.util.Map
  */
-public class HashIntMap<K> implements IntMap<K>
+public class HashIntMap<K> extends AbstractIntMap<K>
 {
 	private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 	

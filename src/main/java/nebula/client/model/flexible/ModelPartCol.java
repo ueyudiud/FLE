@@ -443,8 +443,7 @@ public class ModelPartCol implements INebulaModelPart
 			List<INebulaBakedModelPart> parts = cachedParts[idxList.indexOf(variant)];
 			if (parts.size() == 1 && parts.get(0) instanceof ModelPartCol.BakedModelPart && (((ModelPartCol.BakedModelPart) parts.get(0)).map.isEmpty() || !this.extendData))
 			{
-				return ((ModelPartCol.BakedModelPart) parts.get(0)).defaultPart;// Part
-				// extends.
+				return ((ModelPartCol.BakedModelPart) parts.get(0)).defaultPart;// Part extends.
 			}
 			return parts.size() == 0 ? NONE : Selector.single(parts);
 		default:

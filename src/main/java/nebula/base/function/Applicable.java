@@ -61,7 +61,7 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 		return new ApplicableCached<>(applicable);
 	}
 	
-	static <V> Applicable<V> or(@Nonnull BooleanSupplier supplier, @Nonnull Supplier<V> a1, @Nonnull Supplier<V> a2)
+	static <V> Applicable<V> or(@Nonnull BooleanSupplier supplier, @Nonnull Supplier<? extends V> a1, @Nonnull Supplier<? extends V> a2)
 	{
 		return () -> supplier.getAsBoolean() ? a1.get() : a2.get();
 	}

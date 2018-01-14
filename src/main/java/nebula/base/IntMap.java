@@ -5,8 +5,11 @@ package nebula.base;
 
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
@@ -84,6 +87,14 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 	
 	void putOrAdd(E key, int amount);
 	
+	default void putAll(IntMap<? extends E> map)
+	{
+		for (IntegerEntry<? extends E> entry : map)
+		{
+			put(entry.getKey(), entry.getValue());
+		}
+	}
+	
 	/**
 	 * Called this method when regard this collection value as probability.
 	 * <p>
@@ -102,6 +113,11 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 	
 	void clear();
 	
+	/**
+	 * Return the sum of all values.
+	 * 
+	 * @return
+	 */
 	int sum();
 	
 	Set<E> keySet();
@@ -144,5 +160,21 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 		{
 			entry.setValue(operator.applyAsInt(entry.value));
 		}
+	}
+	
+	default OptionalInt find(Predicate<E> predicate)
+	{
+		for (IntegerEntry<E> entry : this)
+		{
+			if (predicate.test(entry.getKey()))
+				return OptionalInt.of(entry.getValue());
+		}
+		return OptionalInt.empty();
+	}
+	
+	@Override
+	default Spliterator<IntegerEntry<E>> spliterator()
+	{
+		return Spliterators.spliterator(iterator(), size(), Spliterator.NONNULL | Spliterator.DISTINCT);
 	}
 }

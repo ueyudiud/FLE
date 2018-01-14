@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.TemplateRecipe<? super H>, TemplateRecipeMap.TemplateRecipeCache<H>, H>
+public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.TemplateRecipe<H>, TemplateRecipeMap.TemplateRecipeCache<H>, H>
 {
 	public static <H> Builder<H> builder(String name)
 	{
@@ -27,16 +27,16 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	public static class Builder<H>
 	{
-		final String										name;
-		List<TemplateRecipeMap.TemplateRecipe<? super H>>	list	= new ArrayList<>();
-		List<TemplateRecipeCacheEntryHandler<H, ?>>			list1	= new ArrayList<>();
+		final String								name;
+		List<TemplateRecipeMap.TemplateRecipe<H>>	list	= new ArrayList<>();
+		List<TemplateRecipeCacheEntryHandler<H, ?>>	list1	= new ArrayList<>();
 		
 		public Builder(String name)
 		{
 			this.name = name;
 		}
 		
-		public Builder<H> setList(List<TemplateRecipeMap.TemplateRecipe<? super H>> list)
+		public Builder<H> setList(List<TemplateRecipeMap.TemplateRecipe<H>> list)
 		{
 			this.list = list;
 			return this;
@@ -131,11 +131,11 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		}
 	}
 	
-	protected final String												name;
-	protected final List<TemplateRecipeMap.TemplateRecipe<? super H>>	recipes;
-	protected final TemplateRecipeCacheEntryHandler[]					handlers;
+	protected final String										name;
+	protected final List<TemplateRecipeMap.TemplateRecipe<H>>	recipes;
+	protected final TemplateRecipeCacheEntryHandler[]			handlers;
 	
-	protected TemplateRecipeMap(String name, List<TemplateRecipeMap.TemplateRecipe<? super H>> recipeList, TemplateRecipeCacheEntryHandler[] handlers)
+	protected TemplateRecipeMap(String name, List<TemplateRecipeMap.TemplateRecipe<H>> recipeList, TemplateRecipeCacheEntryHandler[] handlers)
 	{
 		this.name = name;
 		this.recipes = recipeList;
@@ -184,7 +184,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public boolean addRecipe(TemplateRecipeMap.TemplateRecipe<? super H> recipe)
+	public boolean addRecipe(TemplateRecipeMap.TemplateRecipe<H> recipe)
 	{
 		if (recipe.dataProvider.length != this.handlers.length)
 		{
@@ -212,7 +212,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public final List<TemplateRecipeMap.TemplateRecipe<? super H>> recipes()
+	public final List<TemplateRecipeMap.TemplateRecipe<H>> recipes()
 	{
 		return this.recipes;
 	}

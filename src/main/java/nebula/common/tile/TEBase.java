@@ -361,15 +361,9 @@ public class TEBase extends TileEntity implements IModifiableCoord
 	}
 	
 	@Override
-	public TileEntity getTE()
+	public final TileEntity getTE()
 	{
 		return this;
-	}
-	
-	@Deprecated
-	public TileEntity getTile(int xOffset, int yOffset, int zOffset)
-	{
-		return getTE(xOffset, yOffset, zOffset);
 	}
 	
 	public int getLight(int xOffset, int yOffset, int zOffset, EnumSkyBlock type)

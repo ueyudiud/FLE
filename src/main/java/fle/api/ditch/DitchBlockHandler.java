@@ -8,9 +8,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import farcore.FarCore;
 import farcore.lib.material.Mat;
-import nebula.Log;
-import nebula.Nebula;
 import nebula.base.Judgable;
 
 /**
@@ -46,8 +45,7 @@ public final class DitchBlockHandler implements Judgable<Mat>
 				if (select != null)
 				{
 					RuntimeException exception = new RuntimeException("The factory " + select + " and " + factory + " both want to handle material " + material.name + ".");
-					if (Nebula.debug) throw exception;
-					Log.warn("Catching an exception during getting ditch factory.", exception);
+					FarCore.catching(exception);
 				}
 				select = factory;
 			}

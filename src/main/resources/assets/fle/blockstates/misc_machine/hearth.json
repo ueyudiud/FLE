@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"normal": {
+			"transform": "forge:default-block",
+			"model": "farcore:base_ft",
+			"textures": {
+				"front": "fle:blocks/machine/calcinator_firebox",
+				"side": "fle:blocks/machine/calcinator",
+				"top": "fle:blocks/machine/boiling_heater"
+			}
+		}
+	}
+}

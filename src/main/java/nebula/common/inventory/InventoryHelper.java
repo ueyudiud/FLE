@@ -52,10 +52,10 @@ public class InventoryHelper
 		switch (type)
 		{
 		case MATCH_STACK_SAME:
-			return ItemStacks.isItemAndTagEqual(stack, target);
+			return ItemStacks.areItemAndTagEqual(stack, target);
 		case MATCH_STACK_FULLY_INSERT:
 			max = Math.min(limit, stack.getMaxStackSize());
-			if (max > 1 && ItemStacks.isItemAndTagEqual(stack, target))
+			if (max > 1 && ItemStacks.areItemAndTagEqual(stack, target))
 			{
 				size = stack.stackSize + target.stackSize;
 				return size <= max;
@@ -72,7 +72,7 @@ public class InventoryHelper
 			}
 			return false;
 		case MATCH_STACK_CONTAIN:
-			return ItemStacks.isItemAndTagEqual(stack, target) && stack.stackSize >= target.stackSize;
+			return ItemStacks.areItemAndTagEqual(stack, target) && stack.stackSize >= target.stackSize;
 		case MATCH_STACK_CONTAIN_WITHOUTNBT:
 			return stack.isItemEqual(target) && stack.stackSize >= target.stackSize;
 		case MATCH_STACK_EMPTY:
@@ -146,7 +146,7 @@ public class InventoryHelper
 				return matchStack(MATCH_STACK_FULLY_INSERT, inventory, index, stack) ? stack.stackSize : 0;
 			else
 				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getStackLimit())
-						: ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
+						: ItemStacks.areItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
 		}
 		else
 		{
@@ -166,7 +166,7 @@ public class InventoryHelper
 				}
 				return result;
 			}
-			else if (ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack))
+			else if (ItemStacks.areItemAndTagEqual(inventory.getStack(index), stack))
 			{
 				result = L.min(stack.stackSize, inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
 				if (affectOnSourceStack)
@@ -438,7 +438,7 @@ public class InventoryHelper
 				while (itr.hasNext())
 				{
 					ItemStack stack1 = itr.next();
-					if (ItemStacks.isItemAndTagEqual(stack, stack1))
+					if (ItemStacks.areItemAndTagEqual(stack, stack1))
 					{
 						if (allowSize >= stack1.stackSize)
 						{
@@ -494,7 +494,7 @@ public class InventoryHelper
 			if (process) inventory.setInventorySlotContents(i, stack);
 			return stack.stackSize;
 		}
-		else if (ItemStacks.isItemAndTagEqual(stack, inventory.getStackInSlot(i)))
+		else if (ItemStacks.areItemAndTagEqual(stack, inventory.getStackInSlot(i)))
 		{
 			ItemStack stack2 = inventory.getStackInSlot(i);
 			int size = Math.min(stack.stackSize, inventory.getInventoryStackLimit() - stack2.stackSize);

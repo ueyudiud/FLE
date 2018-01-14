@@ -50,10 +50,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockPlantVine extends BlockBase
 {
-	public static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0625D, 1.0D, 1.0D), EAST_AABB = new AxisAlignedBB(0.9375D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.0625D),
-			SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.9375D, 1.0D, 1.0D, 1.0D), AABBS[] = { SOUTH_AABB, WEST_AABB, EAST_AABB, NORTH_AABB };
+	public static final AxisAlignedBB
+	WEST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0625D, 1.0D, 1.0D),
+	EAST_AABB = new AxisAlignedBB(0.9375D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+	NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.0625D),
+	SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.9375D, 1.0D, 1.0D, 1.0D),
+	AABBS[] = { SOUTH_AABB, WEST_AABB, EAST_AABB, NORTH_AABB };
 	
-	private static final Applicable<ItemStack> DROP = () -> EnumItem.crop_related.available() ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("vine") : null;
+	private static final Applicable<ItemStack> DROP = Applicable.<ItemStack> or(() -> EnumItem.crop_related.available(), () -> ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("vine"), Applicable.to(null));
 	
 	public static void addVineBlock(World world, BlockPos pos, EnumFacing facing)
 	{
@@ -217,7 +221,8 @@ public class BlockPlantVine extends BlockBase
 	{
 		int i = 0;
 		for (IProperty<Boolean> property : Misc.PROPS_SIDE_HORIZONTALS)
-			if (state.getValue(property)) ++i;
+			if (state.getValue(property))
+				++i;
 		return i;
 	}
 	
@@ -279,7 +284,10 @@ public class BlockPlantVine extends BlockBase
 		IBlockState state = getDefaultState();
 		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
-			if ((meta & direction.flag1) != 0) state = state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
+			if ((meta & direction.flag1) != 0)
+			{
+				state = state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
+			}
 		}
 		return state;
 	}
@@ -290,7 +298,10 @@ public class BlockPlantVine extends BlockBase
 		int meta = 0;
 		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
-			if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal])) meta |= direction.flag1;
+			if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal]))
+			{
+				meta |= direction.flag1;
+			}
 		}
 		return meta;
 	}
@@ -306,7 +317,7 @@ public class BlockPlantVine extends BlockBase
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList<>();
-		list.add(DROP.apply());
+		list.add(DROP.get());
 		return list;
 	}
 	

@@ -29,6 +29,6 @@ public class GuiCeramicPot extends GuiContainerTileInventory<TECeramicPot>
 	protected void drawOther(int mouseX, int mouseY)
 	{
 		super.drawOther(mouseX, mouseY);
-		drawTexturedModalRect(this.guiLeft + 66, this.guiTop + 15, 176, 14, 8, 20);
+		drawTexturedModalRect(this.guiLeft + 66, this.guiTop + 28, 176, 14, 8, 20);
 	}
 }

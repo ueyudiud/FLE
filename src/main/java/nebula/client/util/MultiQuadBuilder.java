@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import nebula.common.util.L;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -76,7 +77,7 @@ public class MultiQuadBuilder implements Consumer<BakedQuad>
 		List<BakedQuad> bakedQuads = this.quadBuilder.build();
 		Map<String, List<BakedQuad>> map2 = Maps.<String, ResourceLocation, List<BakedQuad>> transformValues(map, (com.google.common.base.Function<ResourceLocation, List<BakedQuad>>) loc -> {
 			TextureAtlasSprite icon = bakedTextureGetter.apply(loc);
-			return ImmutableList.copyOf(Lists.transform(bakedQuads, quad -> new BakedQuadRetex(quad, icon)));
+			return ImmutableList.copyOf(Lists.transform(bakedQuads, L.toFunction(BakedQuadRetex::new, icon)));
 		});
 		return ImmutableMap.copyOf(map2);
 	}

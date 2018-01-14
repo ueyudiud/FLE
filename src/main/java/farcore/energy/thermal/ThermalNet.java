@@ -126,6 +126,10 @@ public class ThermalNet implements IEnergyNet
 		{
 			temp = getRealHandlerTemperature((IThermalHandler) tile, Direction.Q);
 		}
+		else if (tile instanceof IThermalProvider)
+		{
+			temp = getRealHandlerTemperature(((IThermalProvider) tile).getThermalHandler(), Direction.Q);
+		}
 		else
 		{
 			temp = getEnvironmentTemperature(world, pos);
@@ -205,6 +209,7 @@ public class ThermalNet implements IEnergyNet
 		double value = -1;
 		
 		if ((tile = world.getTileEntity(pos)) instanceof IThermalHandler) value = ((IThermalHandler) tile).getThermalConductivity(direction);
+		else if (tile instanceof IThermalProvider) value = ((IThermalProvider) tile).getThermalHandler().getThermalConductivity(direction);
 		state = world.getBlockState(pos);
 		if (value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock) value = ((IThermalCustomBehaviorBlock) state.getBlock()).getThermalConduct(world, pos, state);
 		
@@ -218,6 +223,8 @@ public class ThermalNet implements IEnergyNet
 		
 		if ((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
 			value = ((IThermalHandler) tile).getHeatCapacity(direction);
+		else if (tile instanceof IThermalProvider)
+			value = ((IThermalProvider) tile).getThermalHandler().getHeatCapacity(direction);
 		//		if (value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock)
 		//			value = ((IThermalCustomBehaviorBlock)
 		//					state.getBlock()).getHeatCapacity(world, pos, state);
@@ -590,7 +597,7 @@ public class ThermalNet implements IEnergyNet
 							k2 = Ht.getThermalConductivity(d2);
 							c2 = Ht.getHeatCapacity(d2);
 							sigma = logarithmicMean(k1, k2);
-							if ((W[i] = (long) (sigma * (T1 - T2) * expm1(sigma * (1 / c1 + 1 / c2)))) != 0)
+							if ((W[i] = (long) (sigma * (T2 - T1) * expm1(sigma * (1 / c1 + 1 / c2)))) != 0)
 							{
 								Ht.onHeatChange(d2, -W[i]);
 							}
@@ -602,7 +609,7 @@ public class ThermalNet implements IEnergyNet
 							k2 = getThermalConductivity(this.world, this.cachedPos, d2);
 							c2 = getHeatCapacity(this.world, this.cachedPos, d2);
 							sigma = logarithmicMean(k1, k2);
-							if ((W[i] = (long) (sigma * (T1 - T2) * expm1(sigma * (1 / c1 + 1 / c2)))) != 0)
+							if ((W[i] = (long) (sigma * (T2 - T1) * expm1(sigma * (1 / c1 + 1 / c2)))) != 0)
 							{
 								IThermalHandlerBox box = getBoxAtPos(this.cachedPos);
 								if (box == null || !box.onHeatChange(Hs.pos(), this.cachedPos, d2, -W[i]))

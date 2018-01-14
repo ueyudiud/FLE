@@ -5,6 +5,8 @@ package nebula.common.util;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import nebula.Nebula;
 import nebula.common.foodstat.FoodStatExt;
 import nebula.common.item.ITool;
@@ -53,25 +55,19 @@ public final class Players
 		}
 		if (stack == null)
 		{
-			for (EnumToolType type : types)
-				if (type == EnumToolType.HAND) return true;
-			return false;
+			return A.contain(types, EnumToolType.HAND);
 		}
-		List<EnumToolType> list;
 		if (stack.getItem() instanceof ITool)
 		{
-			list = ((ITool) stack.getItem()).getToolTypes(stack);
-			for (EnumToolType type : types)
-			{
-				if (list.contains(type)) return true;
-			}
-			return false;
+			return A.or(types, ((ITool) stack.getItem()).getToolTypes(stack)::contains);
 		}
-		final ItemStack stack2 = stack;
-		return A.or(types, type -> type.toolMatch(stack2));
+		else
+		{
+			return A.or(types, L.toPredicate(EnumToolType::toolMatch, stack));
+		}
 	}
 	
-	public static void destoryPlayerCurrentItem(EntityPlayer player)
+	public static void destoryPlayerCurrentItem(@Nullable EntityPlayer player)
 	{
 		if (player == null) return;
 		if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().stackSize <= 0)
@@ -82,6 +78,19 @@ public final class Players
 		if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().stackSize <= 0)
 		{
 			player.renderBrokenItemStack(player.getHeldItemOffhand());
+			player.setHeldItem(EnumHand.OFF_HAND, null);
+		}
+	}
+	
+	public static void validatePlayerCurrentItem(@Nullable EntityPlayer player)
+	{
+		if (player == null) return;
+		if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().stackSize <= 0)
+		{
+			player.setHeldItem(EnumHand.MAIN_HAND, null);
+		}
+		if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().stackSize <= 0)
+		{
 			player.setHeldItem(EnumHand.OFF_HAND, null);
 		}
 	}

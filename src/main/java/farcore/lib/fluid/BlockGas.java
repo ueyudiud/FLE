@@ -32,6 +32,12 @@ public class BlockGas extends BlockStreamFluid
 	}
 	
 	@Override
+	public boolean isAir(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;// For invisible for player.
+	}
+	
+	@Override
 	public boolean canCollideCheck(IBlockState state, boolean fullHit)
 	{
 		return false;//You can not collide gas, use tool instead :D

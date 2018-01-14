@@ -6,6 +6,7 @@ package fle.loader;
 import fle.api.client.PolishingStateIconLoader;
 import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
+import fle.loader.recipe.RecipeArgil;
 import fle.loader.recipe.RecipeCeramicPot;
 import fle.loader.recipe.RecipeCraftingTool;
 import fle.loader.recipe.RecipeDirtMixture;
@@ -31,6 +32,7 @@ public class Recipes
 	public static void init()
 	{
 		RecipeCraftingTool.init();
+		RecipeArgil.init();
 		RecipePolish.init();
 		RecipeWashingBarGrizzly.init();
 		RecipeDrying.init();

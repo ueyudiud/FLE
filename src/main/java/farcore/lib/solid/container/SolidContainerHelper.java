@@ -8,6 +8,8 @@ import static nebula.common.inventory.InventoryHelper.FD_DRAIN;
 import static nebula.common.inventory.InventoryHelper.FD_FILL_ANY;
 import static nebula.common.inventory.InventoryHelper.FD_FILL_ONLYFULL;
 
+import javax.annotation.Nullable;
+
 import farcore.lib.solid.SolidStack;
 import farcore.lib.solid.container.ISolidHandler.ISoildHandlerProperty;
 import farcore.lib.solid.container.SolidContainerManager.SolidContainerData;
@@ -21,8 +23,9 @@ import net.minecraft.item.ItemStack;
  */
 public class SolidContainerHelper
 {
-	public static SolidStack getSolidFromItemStack(ItemStack stack)
+	public static SolidStack getSolidFromItemStack(@Nullable ItemStack stack)
 	{
+		if (stack == null) return null;
 		if (stack.hasCapability(CAPABILITY_SOLID, null))
 		{
 			return stack.getCapability(CAPABILITY_SOLID, null).getProperty().getContents()[0];

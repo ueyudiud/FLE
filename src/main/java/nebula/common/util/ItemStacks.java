@@ -182,7 +182,7 @@ public final class ItemStacks
 	 * @param stack2
 	 * @return
 	 */
-	public static boolean isItemAndTagEqual(ItemStack stack1, ItemStack stack2)
+	public static boolean areItemAndTagEqual(ItemStack stack1, ItemStack stack2)
 	{
 		return stack1 == null || stack2 == null ? stack1 == stack2 : stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}

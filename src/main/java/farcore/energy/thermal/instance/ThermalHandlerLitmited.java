@@ -43,7 +43,8 @@ public class ThermalHandlerLitmited extends ThermalHandlerAbstract
 	
 	private float Tcurrent(float Tenv, float Tmax)
 	{
-		return (float) - Math.expm1(- ((this.energy / this.material.heatCapacity + Tenv) / Tmax)) * Tmax;
+		Tmax -= Tenv;
+		return (float) - Math.expm1(- ((this.energy / this.material.heatCapacity) / Tmax)) * Tmax;
 	}
 	
 	@Override
@@ -54,10 +55,12 @@ public class ThermalHandlerLitmited extends ThermalHandlerAbstract
 			float Tenv = ThermalNet.getEnvironmentTemperature(world(), pos());
 			float Tmax = MathHelper.sqrt(Tenv * Tenv + this.Tlimit * this.Tlimit);
 			
-			return Tcurrent(Tenv, Tmax) - Tenv;
+			return Tcurrent(Tenv, Tmax);
 		}
 		else
+		{
 			return (float) (this.energy / this.material.heatCapacity);
+		}
 	}
 	
 	@Override
@@ -71,6 +74,8 @@ public class ThermalHandlerLitmited extends ThermalHandlerAbstract
 			return this.material.heatCapacity / (1 - Tcurrent(Tenv, Tmax) / Tmax);
 		}
 		else
+		{
 			return this.material.heatCapacity;
+		}
 	}
 }

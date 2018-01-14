@@ -24,6 +24,12 @@ public interface DitchFactory
 	 */
 	boolean access(Mat material);
 	
+	/**
+	 * Apply a new fluid tank for tile.
+	 * 
+	 * @param tile
+	 * @return
+	 */
 	FluidTankN apply(IDitchTile tile);
 	
 	void onUpdate(IDitchTile tile);
