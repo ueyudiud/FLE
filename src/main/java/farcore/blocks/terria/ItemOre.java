@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package farcore.blocks;
+package farcore.blocks.terria;
 
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;

@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
-import farcore.blocks.ItemOre;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;
@@ -206,13 +205,10 @@ public class BlockOre extends BlockSingleTE
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		// for(EnumOreAmount amount : EnumOreAmount.values())
+		for (EnumOreAmount amount : EnumOreAmount.values())
 		{
-			EnumOreAmount amount = EnumOreAmount.normal;// Only provide normal
-			// amount ore in
-			// creative tab or it is
-			// too many ore to
-			// display.
+			//			EnumOreAmount amount = EnumOreAmount.normal;
+			// Only provide normal amount ore in creative tab or it is too many ore to display.
 			for (Mat ore : Mat.filt(SubTags.ORE))
 			{
 				// for(Mat rock : Mat.filt(SubTag.ROCK))

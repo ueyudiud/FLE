@@ -14,9 +14,11 @@ import farcore.lib.material.Mat;
 import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import nebula.common.util.Worlds;
 import nebula.common.world.ICoord;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumParticleTypes;
 
 /**
@@ -38,6 +40,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 	public TEFirewood()
 	{
 		this.thermalHandler.material = M.oak;
+		this.thermalHandler.Tlimit = 600;
 		this.remainEnergy = (long) (24_0000L * this.thermalHandler.material.getProperty(MP.property_wood).burnHeat);
 	}
 	
@@ -116,6 +119,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 						{
 							enable(Carbonate);
 							disable(Smoldering);
+							syncToNearby();
 							this.remainEnergy = 1600_0000L;
 						}
 					}
@@ -180,6 +184,45 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 		{
 			long value = Math.min(this.remainEnergy, 2000);
 			this.remainEnergy -= value;
+			byte side = 0;
+			float temp = this.thermalHandler.getTemperatureDifference(Direction.Q);
+			for (Direction direction : Direction.DIRECTIONS_3D)
+			{
+				Direction op = direction.opposite();
+				TileEntity te = getTE(direction);
+				if ((te instanceof IThermalHandler && ((IThermalHandler) te).canConnectTo(op) && ((IThermalHandler) te).getTemperatureDifference(op) < temp) ||
+						te instanceof IThermalProvider && ((IThermalProvider) te).getThermalHandler().canConnectTo(op) && ((IThermalProvider) te).getThermalHandler().getThermalConductivity(op) < temp)
+					side |= direction.flag;
+			}
+			if (side != 0)
+			{
+				int i = L.bitCounts(side);
+				long allocate;
+				for (Direction direction : Direction.DIRECTIONS_3D)
+				{
+					if ((side & direction.flag) != 0)
+					{
+						Direction op = direction.opposite();
+						TileEntity te = getTE(direction);
+						IThermalHandler handler;
+						if (te instanceof IThermalHandler)
+						{
+							handler = (IThermalHandler) te;
+						}
+						else
+						{
+							handler = ((IThermalProvider) te).getThermalHandler();
+						}
+						if (handler.canConnectTo(op))
+						{
+							allocate = value / (i --);
+							handler.onHeatChange(op, allocate);
+							value -= allocate;
+						}
+					}
+				}
+			}
+			
 			this.thermalHandler.energy += value;
 			if (this.remainEnergy == 0)
 			{

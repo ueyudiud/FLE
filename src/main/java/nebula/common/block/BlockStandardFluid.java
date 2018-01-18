@@ -96,10 +96,9 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	
 	public int getFluidLevel(IBlockAccess world, BlockPos pos)
 	{
-		if (world.isAirBlock(pos)) return 0;
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() != this)
-			return -1;
+			return state.getBlock().isAir(state, world, pos) ? 0 : -1;
 		else
 			return state.getValue(getLevelProperty()) + 1;
 	}

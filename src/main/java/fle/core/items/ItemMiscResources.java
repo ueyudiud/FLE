@@ -152,7 +152,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		List<IBehavior> behaviors = getBehavior(stack);
 		for (IBehavior behavior : behaviors)
 		{
-			if (behavior instanceof IIP_Containerable) return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
+			if (behavior instanceof IIP_Containerable)
+				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
 		}
 		return null;
 	}

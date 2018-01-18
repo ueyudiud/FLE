@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.blocks.ItemOre;
 import farcore.blocks.terria.BlockRock;
+import farcore.blocks.terria.ItemOre;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;

@@ -130,7 +130,7 @@ public class TESimplyKiln extends TESynchronization implements IThermalProvider,
 			syncToNearby();
 			return EnumActionResult.SUCCESS;
 		}
-		return EnumActionResult.PASS;
+		return hand == EnumHand.MAIN_HAND ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
 	}
 	
 	@Override
