@@ -261,14 +261,43 @@ public class LanguageManager
 		return map;
 	}
 	
-	private Map<String, String> read(String locale)
+	private Map<String, String> readDefault()
 	{
 		if (!this.file.canRead())
 			return ImmutableMap.of();
+		File file = new File(this.file, ENGLISH + ".lang");
+		Map<String, String> map;
+		try
+		{
+			Log.info("Loading default language file.");
+			int l = 0;
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
+			{
+				read(reader, map = new HashMap<>());
+			}
+			catch (RuntimeException exception)
+			{
+				Log.warn("Invalid language file {}. line: {}", file.getName(), l);
+				Log.catching(exception);
+				map = ImmutableMap.of();
+			}
+		}
+		catch (IOException exception)
+		{
+			Log.warn("Fail to load language file {}", file.getName());
+			Log.catching(exception);
+			map = ImmutableMap.of();
+		}
+		return map;
+	}
+	
+	private void read(String locale)
+	{
+		if (!this.file.canRead())
+			return;
 		File file = new File(this.file, locale + ".lang");
 		boolean flag = false;
 		Map<String, String> map1 = new HashMap<>();
-		Map<String, String> map;
 		try
 		{
 			if (!file.createNewFile())
@@ -299,50 +328,50 @@ public class LanguageManager
 					{
 						reader.reset();
 					}
-					map = read(reader, new HashMap<>());
+					read(reader, MAP1);
 				}
 				catch (RuntimeException exception)
 				{
 					Log.warn("Invalid language file {}. line: {}", file.getName(), l);
 					Log.catching(exception);
-					map = ImmutableMap.of();
 				}
 				catch (IOException exception)
 				{
 					Log.warn("Fail to load language file {}", file.getName());
 					Log.catching(exception);
 					flag = true;
-					map = new HashMap<>();
 				}
 			}
 			else
 			{
 				flag = true;
-				map = new HashMap<>();
 			}
 		}
 		catch (IOException exception)
 		{
 			flag = false;
-			map = ImmutableMap.of();
 			Log.catching(exception);
 		}
 		if (NebulaConfig.downloadLocalizationFileIfNecessary && flag && !locale.equals(LanguageManager.ENGLISH))
 		{
-			flag = false;
-			for (INetworkLocalizationEntry entry : LIST)
-			{
-				flag |= entry.loadLocalization(this, map1, locale, map);
-			}
-			if (flag)
-			{
-				write1(map1, map, locale);
-			}
+			new Thread(() -> {
+				synchronized (this)
+				{
+					boolean flag1 = false;
+					for (INetworkLocalizationEntry entry : LIST)
+					{
+						flag1 |= entry.loadLocalization(this, map1, locale, MAP1);
+					}
+					if (flag1)
+					{
+						writeFromNetwork(map1, MAP1, locale);
+					}
+				}
+			}).start();
 		}
-		return map;
 	}
 	
-	private void write1(Map<String, String> properties, Map<String, String> map, String locale)
+	private void writeFromNetwork(Map<String, String> properties, Map<String, String> map, String locale)
 	{
 		if (!initalizeLangFile())
 		{
@@ -394,7 +423,7 @@ public class LanguageManager
 	{
 		MAP1.clear();
 		Log.info("Start read localized file at " + this.file.getAbsolutePath());
-		MAP1.putAll(read(Strings.locale()));
+		read(Strings.locale());
 	}
 	
 	private boolean initalizeLangFile()
@@ -414,28 +443,29 @@ public class LanguageManager
 			return;
 		}
 		Log.info("Start to write localized file.");
-		int keyCount = 0;
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");
-			file.createNewFile();
-			Map<String, String> map = read(ENGLISH);
-			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+			Map<String, String> map = file.createNewFile() ? ImmutableMap.of() : readDefault();
+			Map<String, String> storedMap = new HashMap<>(MAP2);
+			storedMap.keySet().removeAll(map.keySet());
+			if (storedMap.size() > 0)
 			{
-				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);
-				// Use sorted map for easier to search translated word.
-				for (Entry<String, String> entry : sortedMap.entrySet())
-					if (!map.containsKey(entry.getKey()))
+				try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
+				{
+					// Use sorted map for easier to search translated word.
+					for (Entry<String, String> entry : ImmutableSortedMap.copyOf(storedMap).entrySet())
 					{
 						writer.write(entry.getKey() + "=" + entry.getValue());
 						writer.newLine();
-						keyCount ++;
 					}
-			}
-			catch (IOException exception)
-			{
-				Log.warn("Fail to save language file.");
-				Log.catching(exception);
+					Log.info("Wrote " + storedMap.size() + " keys to file.");
+				}
+				catch (IOException exception)
+				{
+					Log.warn("Fail to save language file.");
+					Log.catching(exception);
+				}
 			}
 		}
 		catch (Exception exception)
@@ -443,7 +473,6 @@ public class LanguageManager
 			Log.warn("Fail to write language file.");
 			Log.catching(exception);
 		}
-		Log.info("Wrote " + keyCount + " keys to file.");
 	}
 	// Internal part end.
 }

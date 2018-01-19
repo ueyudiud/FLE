@@ -3,13 +3,13 @@
  */
 package farcore.lib.material;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import farcore.lib.item.ItemMulti;
+import nebula.base.ArrayListAddWithCheck;
 import nebula.base.Judgable;
 import nebula.base.ObjArrayParseHelper;
 import nebula.base.register.Register;
@@ -86,27 +86,13 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public MatCondition addToBlackList(Mat...mats)
 	{
-		if (mats.length == 1)
-		{
-			this.blacklist.add(mats[0]);
-		}
-		else
-		{
-			this.blacklist.addAll(Arrays.asList(mats));
-		}
+		this.blacklist.addAll(ArrayListAddWithCheck.argument(mats));
 		return this;
 	}
 	
 	public MatCondition addToWhiteList(Mat...mats)
 	{
-		if (mats.length == 1)
-		{
-			this.whitelist.add(mats[0]);
-		}
-		else
-		{
-			this.whitelist.addAll(Arrays.asList(mats));
-		}
+		this.whitelist.addAll(ArrayListAddWithCheck.argument(mats));
 		return this;
 	}
 	
@@ -166,7 +152,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public boolean isBelongTo(Mat material)
 	{
-		return (this.filter.isTrue(material) && !this.blacklist.contains(material)) || this.whitelist.contains(material);
+		return (this.filter.test(material) && !this.blacklist.contains(material)) || this.whitelist.contains(material);
 	}
 	
 	String getWithOreTranslateName()
@@ -236,6 +222,6 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	@Override
 	public boolean test(ISubTagContainer target)
 	{
-		return this.filter.test(target) && (!(target instanceof Mat) || isBelongTo((Mat) target));
+		return target instanceof Mat ? isBelongTo((Mat) target) : this.filter.test(target);
 	}
 }

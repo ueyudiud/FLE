@@ -108,7 +108,6 @@ public class TESimplyKiln extends TESynchronization implements IThermalProvider,
 				{
 					if (stack.stackSize == 1)
 					{
-						this.stack = stack;
 						player.setHeldItem(hand, null);
 					}
 					else
@@ -150,26 +149,19 @@ public class TESimplyKiln extends TESynchronization implements IThermalProvider,
 	@Override
 	protected void updateServer()
 	{
+		SimplyKilnRecipe recipe;
 		super.updateServer();
-		if (!isAirNearby(true))
+		if (!isAirNearby(true) && (recipe = SimplyKilnRecipe.getRecipe(this.stack)) != null)
 		{
-			SimplyKilnRecipe recipe = SimplyKilnRecipe.getRecipe(this.stack);
-			if (recipe != null)
+			if (ThermalNet.getRealHandlerTemperature(this.handler, Direction.Q) >= recipe.minTemp)
 			{
-				if (ThermalNet.getRealHandlerTemperature(this.handler, Direction.Q) >= recipe.minTemp)
+				this.handler.energy -= 300L * this.stack.stackSize;
+				if (++ this.progress == recipe.duration)
 				{
-					this.handler.energy -= 300L * this.stack.stackSize;
-					if (++ this.progress == recipe.duration)
-					{
-						this.stack = ItemStacks.sizeOf(recipe.output.instance(), recipe.output.size(null) * this.stack.stackSize);
-						this.progress = 0;
-						syncToNearby();
-					}
+					this.stack = ItemStacks.sizeOf(recipe.output.instance(), recipe.output.size(null) * this.stack.stackSize);
+					this.progress = 0;
+					syncToNearby();
 				}
-			}
-			else
-			{
-				this.progress = 0;
 			}
 		}
 		else

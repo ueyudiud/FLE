@@ -46,10 +46,10 @@ import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
+import nebula.base.HashIntMap;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
 import nebula.base.IPropertyMap.IProperty;
-import nebula.base.HashIntMap;
 import nebula.base.Judgable;
 import nebula.base.register.IRegister;
 import nebula.base.register.SortedRegister;
@@ -60,6 +60,7 @@ import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import nebula.common.util.SubTag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -231,12 +232,19 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public static <V> Iterable<V> filtAndGet(Judgable<? super Mat> filter, IProperty<V> property)
 	{
-		return Iterables.transform(filt(filter), m -> m.getProperty(property));
+		return filtAndGet(filter, false, property);
 	}
 	
 	public static <V> Iterable<V> filtAndGet(Judgable<? super Mat> filter, boolean alwaysInit, IProperty<V> property)
 	{
-		return Iterables.transform(filt(filter, alwaysInit), m -> m.getProperty(property));
+		if (alwaysInit || !MATERIALS_CACHE.containsKey(filter))
+		{
+			return () -> REGISTER.stream().filter(filter).map(L.<IPropertyMap.IProperty<V>, V, Mat> toFunction(Mat::getProperty, property)).iterator();
+		}
+		else
+		{
+			return Iterables.transform(MATERIALS_CACHE.get(filter), L.<IPropertyMap.IProperty<V>, V, Mat> toFunction(Mat::getProperty, property));
+		}
 	}
 	
 	public static List<Mat> filt(Judgable<? super Mat> filter)
@@ -246,7 +254,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public static List<Mat> filt(Judgable<? super Mat> filter, boolean alwaysInit)
 	{
-		if (!MATERIALS_CACHE.containsKey(filter) || alwaysInit)
+		if (alwaysInit || !MATERIALS_CACHE.containsKey(filter))
 		{
 			List<Mat> ret = REGISTER.stream().filter(filter).collect(Collectors.toList());
 			if (!alwaysInit)

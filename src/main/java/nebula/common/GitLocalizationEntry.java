@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -37,6 +38,14 @@ class GitLocalizationEntry implements INetworkLocalizationEntry
 		this.branch = branch;
 	}
 	
+	private static BufferedReader openReader(URL url) throws IOException
+	{
+		URLConnection connection = url.openConnection();
+		connection.setConnectTimeout(2000);
+		connection.setReadTimeout(25000);
+		return new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+	}
+	
 	public boolean loadLocalization(LanguageManager manager, Map<String, String> properties,
 			String locale, Map<String, String> localization)
 	{
@@ -46,7 +55,7 @@ class GitLocalizationEntry implements INetworkLocalizationEntry
 			url = new URL("https://api.github.com/repos/" + this.path + "/contents/lang?ref=" + this.branch);
 			SHAAdapter.INSTANCE.name = locale + ".lang";
 			String key;
-			try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))))
+			try (JsonReader reader = new JsonReader(openReader(url)))
 			{
 				key = GSON.fromJson(reader, String.class);
 			}
@@ -54,11 +63,11 @@ class GitLocalizationEntry implements INetworkLocalizationEntry
 			{
 				url = new URL("https://raw.githubusercontent.com/" + this.path + "/" + this.branch + "/lang/" + locale + ".lang");
 				Log.info("Downloading localization file from {}, it may takes some times, please waiting...", url);
-				try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8")))
+				try (BufferedReader reader = openReader(url))
 				{
 					manager.read(reader, localization);
 				}
-				properties.put(locale, key);
+				properties.put(this.path, key);
 				return true;
 			}
 			return false;

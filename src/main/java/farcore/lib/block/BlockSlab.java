@@ -9,6 +9,7 @@ import farcore.data.EnumSlabState;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
+import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -110,7 +112,7 @@ public abstract class BlockSlab extends BlockBase
 	@Override
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(EnumSlabState.PROPERTY, placer.isSneaking() ? (hitY > .5F ? EnumSlabState.UP : EnumSlabState.DOWN) : EnumSlabState.values()[facing.getOpposite().ordinal()]);
+		return getDefaultState().withProperty(EnumSlabState.PROPERTY, placer.isSneaking() ? (facing.getAxis() == Axis.Y ? EnumSlabState.values()[Direction.OPPISITE[facing.getIndex()]] : hitY > .5F ? EnumSlabState.UP : EnumSlabState.DOWN) : EnumSlabState.values()[facing.getOpposite().ordinal()]);
 	}
 	
 	@Override

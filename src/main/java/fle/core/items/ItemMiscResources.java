@@ -12,6 +12,7 @@ import farcore.data.M;
 import farcore.data.MC;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
+import fle.core.items.behavior.BehaviorArgilBall;
 import fle.core.items.behavior.BehaviorBlockableTool;
 import fle.core.items.behavior.BehaviorResearchItems1;
 import nebula.client.model.flexible.NebulaModelLoader;
@@ -62,6 +63,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone");
 		addSubItem(2005, "argil_plate_unsmelted", "Unsmelted Argil Plate");
 		addSubItem(2006, "argil_plate", "Argil Plate");
+		addSubItem(2007, "argil_brick_unsmelted", "Unsmelted Argil Brick");
+		addSubItem(2008, "argil_ball", "Argil Ball", new BehaviorArgilBall());
 		
 		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
 		
@@ -85,6 +88,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		MC.fragment.registerOre(M.flint, new ItemStack(this, 1, 1));
 		MC.fragment.registerOre(M.quartz, new ItemStack(this, 1, 11));
 		MC.chip_rock.registerOre(M.quartz, new ItemStack(this, 1, 12));
+		MC.clayball.registerOre(M.argil, new ItemStack(this, 1, 2008));
 	}
 	
 	@Override

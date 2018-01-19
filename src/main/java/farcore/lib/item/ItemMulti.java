@@ -129,7 +129,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void postInitalizedItems()
 	{
-		for (Mat material : Mat.filt(this.condition))
+		for (Mat material : Mat.filt(this.condition, false))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			if (material.itemProp != null)
@@ -143,12 +143,8 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			}
 			else
 			{
-				LanguageManager.registerLocal(getTranslateName(templete),// If
-						// there
-						// will
-						// any
-						// replaced
-						// exist.
+				LanguageManager.registerLocal(getTranslateName(templete),
+						// If there will any replaced exist.
 						this.condition.getLocal(material));
 			}
 			if (this.registerToOreDict)

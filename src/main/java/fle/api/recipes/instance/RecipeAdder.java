@@ -4,6 +4,7 @@
 package fle.api.recipes.instance;
 
 import static farcore.lib.solid.SolidStack.COPY_SOLIDSTACK;
+import static fle.api.recipes.instance.RecipeMaps.CERAMIC;
 import static fle.api.recipes.instance.RecipeMaps.CERAMICPOT_ADD_TO_MIX;
 import static fle.api.recipes.instance.RecipeMaps.CERAMICPOT_BASE;
 import static fle.api.recipes.instance.RecipeMaps.DIRT_MIXTURE_INPUT;
@@ -21,6 +22,7 @@ import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
 import static net.minecraft.item.ItemStack.copyItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -30,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Bytes;
 
 import farcore.lib.material.Mat;
 import farcore.lib.solid.SolidStack;
@@ -147,6 +150,42 @@ public final class RecipeAdder
 		Function<Entry<SolidStack, FluidStack>, Integer> function = e -> e.getValue().amount / input2.amount;
 		CERAMICPOT_ADD_TO_MIX.addRecipe(new TemplateRecipe<>(e -> input1.isSoildEqual(e.getKey()) && input2.isFluidEqual(e.getValue()) && e.getKey().amount / input1.amount >= e.getValue().amount / input2.amount, function.andThen(i -> i * input1.amount),
 				function.andThen(i -> FluidStacks.sizeOf(output, i * output.amount))));
+	}
+	
+	public static void addCeramicRecipe(@Nonnull byte[][] range, @Nonnull ItemStack output)
+	{
+		if (range.length != 10)
+			throw new IllegalArgumentException();
+		for (byte[] value : range)
+		{
+			if (value.length == 0 || (value.length == 2 && value[0] > value[1]))
+				throw new IllegalArgumentException("Illegal range: " + Arrays.toString(value));
+		}
+		CERAMIC.addRecipe(new TemplateRecipe<byte[]>(L.toPredicate(RecipeAdder::inRange, range), Misc.anyTo(range), Misc.anyTo(output).andThen(COPY_ITEMSTACK)));
+	}
+	
+	private static boolean inRange(byte[] target, byte[][] ranges)
+	{
+		for (int i = 0; i < target.length; ++i)
+		{
+			byte[] range = ranges[i];
+			switch (range.length)
+			{
+			case 1 :
+				if (target[i] != range[0])
+					return false;
+				break;
+			case 2 :
+				if (target[i] < range[0] || target[i] > range[1])
+					return false;
+				break;
+			default:
+				if (!Bytes.contains(range, target[i]))
+					return false;
+				break;
+			}
+		}
+		return true;
 	}
 	
 	private static <E> Function<E, ItemStack[]> asShapelessChanceOutput(ItemStack[] list, int[][] chances)

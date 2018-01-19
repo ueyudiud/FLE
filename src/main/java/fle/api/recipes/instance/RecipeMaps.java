@@ -1,9 +1,9 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes.instance;
 
+import static nebula.common.data.NBTLSs.RW_BYTE_ARRAY;
 import static nebula.common.data.NBTLSs.RW_FLOAT;
 import static nebula.common.data.NBTLSs.RW_FLUIDSTACK;
 import static nebula.common.data.NBTLSs.RW_INT;
@@ -80,21 +80,15 @@ public class RecipeMaps
 	public static final VanillaSmeltingHandler SMELTING_VANILLA = new VanillaSmeltingHandler();
 	// NAME : fle.crafting
 	// NBT ENTRY : time(int), output(ItemStack)
-	// DISPLAYMENTS: materialRequired(@Nullable Material)
-	// matrix(AbstractStack[][]), toolEntries(Entry<AbstractStack,
-	// AbstractStack>[]),
-	// outputDefault(ItemStack)
+	// DISPLAYMENTS: materialRequired(@Nullable Material) matrix(AbstractStack[][]), toolEntries(Entry<AbstractStack, AbstractStack>[]), outputDefault(ItemStack)
 	public static final TemplateRecipeMap<ICraftingRecipeHandler> CRAFTING = TemplateRecipeMap.<ICraftingRecipeHandler> builder("fle.crafting").addCacheEntry("time", RW_INT).addCacheEntry("output", RW_ITEMSTACK).build();
 	// NAME : fle.washing.bar.grizzly
 	// NBT ENTRY : time(int), outputs(ItemStack[])
-	// DISPLAYMENTS: input(AbstractStack), duration(int), output(ItemStack[]),
-	// outputChances(int[][])
+	// DISPLAYMENTS: input(AbstractStack), duration(int), output(ItemStack[]), outputChances(int[][])
 	public static final TemplateRecipeMap<ItemStack> WASHING_BARGRIZZLY = TemplateRecipeMap.<ItemStack> builder("fle.washing.bar.grizzly").addCacheEntry("time", RW_INT).addCacheEntry("outputs", RW_UNORDERED_ITEMSTACKS).build();
 	// NAME : fle.oil.mill.lever
 	// NBT ENTRY : time(int), output1(ItemStack), output2(FluidStack)
-	// DISPLAYMENTS: input(AbstractStack), duration(int), output1(@Nullable
-	// ItemStack), output1Chances(int[]), output2(@Nullable FluidStack),
-	// output2Range(long)
+	// DISPLAYMENTS: input(AbstractStack), duration(int), output1(@Nullable ItemStack), output1Chances(int[]), output2(@Nullable FluidStack), output2Range(long)
 	public static final TemplateRecipeMap<ItemStack> LEVER_OIL_MILL = TemplateRecipeMap.<ItemStack> builder("fle.oil.mill.lever").addCacheEntry("time", RW_INT).addCacheEntry("output1", RW_ITEMSTACK).addCacheEntry("output2", RW_FLUIDSTACK).build();
 	// NAME : fle.portable.woodwork
 	public static final PortableWoodworkRecipeMap PORTABLE_WOODWORK = new PortableWoodworkRecipeMap();
@@ -104,18 +98,15 @@ public class RecipeMaps
 	public static final TemplateRecipeMap<IPolishRecipeHandler> POLISHING = TemplateRecipeMap.<IPolishRecipeHandler> builder("fle.polishing").addCacheEntry("output", RW_ITEMSTACK).build();
 	// NAME : fle.dring
 	// NBT ENTRY : duration(int), multiplier(float), output(ItemStack)
-	// DISPLAYMENTS: input(AbstractStack), duration(int), multiplier(float),
-	// output(ItemStack)
+	// DISPLAYMENTS: input(AbstractStack), duration(int), multiplier(float), output(ItemStack)
 	public static final TemplateRecipeMap<ItemStack> DRYING = TemplateRecipeMap.<ItemStack> builder("fle.dring").addCacheEntry("duration", RW_INT).addCacheEntry("multiplier", RW_FLOAT).addCacheEntry("output", RW_ITEMSTACK).build();
 	// NAME : fle.stone.mill
 	// NBT ENTRY : duration(int), output1(SolidStack), output2(FluidStack)
-	// DISPLAYMENTS: input(AbstractStack), duration(int), output1(@Nullable
-	// SolidStack), output2(@Nullable FluidStack)
+	// DISPLAYMENTS: input(AbstractStack), duration(int), output1(@Nullable SolidStack), output2(@Nullable FluidStack)
 	public static final TemplateRecipeMap<ItemStack> STONE_MILL = TemplateRecipeMap.<ItemStack> builder("fle.stone.mill").addCacheEntry("duration", RW_INT).addCacheEntry("output1", SolidStack.RW).addCacheEntry("output2", RW_FLUIDSTACK).build();
 	// NAME : fle.sifter.simple
 	// NBT ENTRY : duration(int), output1(SolidStack), output2(ItemStack)
-	// DISPLAYMENTS: input(SolidStack), duration(int), output1(@Nullable
-	// SolidStack), output2(ItemStack), chances(int[])
+	// DISPLAYMENTS: input(SolidStack), duration(int), output1(@Nullable SolidStack), output2(ItemStack), chances(int[])
 	public static final TemplateRecipeMap<SolidStack> SIMPLE_SIFTER = TemplateRecipeMap.<SolidStack> builder("fle.sifter.simple").addCacheEntry("duration", RW_INT).addCacheEntry("output1", SolidStack.RW).addCacheEntry("output2", RW_ITEMSTACK).build();
 	// NAME : fle.dirt.mixture.input
 	// DISPLAYMENTS: input(AbstractStack), output(List<MWCStack>)
@@ -129,12 +120,15 @@ public class RecipeMaps
 	public static final TemplateRecipeMap<Entry<SolidStack, FluidStack>> CERAMICPOT_ADD_TO_MIX = TemplateRecipeMap.<Entry<SolidStack, FluidStack>> builder("fle.ceramic.pot.add.to.mix").addCacheEntry("used", RW_INT).addCacheEntry("output", RW_FLUIDSTACK).build();
 	// NAME : fle.ceramic.pot.base
 	// INPUT TAGS : input1(ItemStack), input2(FluidStack), input3(ItemStack)
-	// NBT ENTRY : temp(int), duration(int), output1(ItemStack),
-	// output2(ItemStack)
-	// DISPLAYMENTS: input1(AbstractStack), input2(FluidStack),
-	// tool(SingleInputMatch), minTemperature(int), duration(int),
-	// output(ItemStack)
-	public static final String							TAG_CERAMICPOT_BASE_INPUT1	= "fle.ceramic.pot.base.input1", TAG_CERAMICPOT_BASE_INPUT2 = "fle.ceramic.pot.base.input2", TAG_CERAMICPOT_BASE_INPUT3 = "fle.ceramic.pot.base.input3";
-	public static final TemplateRecipeMap<IRecipeInput>	CERAMICPOT_BASE				= TemplateRecipeMap.<IRecipeInput> builder("fle.ceramic.pot.base").addCacheEntry("temp", RW_INT).addCacheEntry("duration", RW_INT).addCacheEntry("output1", RW_ITEMSTACK).addCacheEntry("output2", RW_ITEMSTACK)
-			.build();
+	// NBT ENTRY : temp(int), duration(int), output1(ItemStack), output2(ItemStack)
+	// DISPLAYMENTS: input1(AbstractStack), input2(FluidStack), tool(SingleInputMatch), minTemperature(int), duration(int), output(ItemStack)
+	public static final String
+	TAG_CERAMICPOT_BASE_INPUT1 = "fle.ceramic.pot.base.input1",
+	TAG_CERAMICPOT_BASE_INPUT2 = "fle.ceramic.pot.base.input2",
+	TAG_CERAMICPOT_BASE_INPUT3 = "fle.ceramic.pot.base.input3";
+	public static final TemplateRecipeMap<IRecipeInput>	CERAMICPOT_BASE = TemplateRecipeMap.<IRecipeInput> builder("fle.ceramic.pot.base").addCacheEntry("temp", RW_INT).addCacheEntry("duration", RW_INT).addCacheEntry("output1", RW_ITEMSTACK).addCacheEntry("output2", RW_ITEMSTACK).build();
+	// NAME : fle.ceramic
+	// NBT ENTRY : range(byte[][]), output(ItemStack)
+	// DISPLAYMENTS: range(byte[][]), output(ItemStack)
+	public static final TemplateRecipeMap<byte[]> CERAMIC = TemplateRecipeMap.<byte[]> builder("fle.ceramic").addCacheEntry("range", RW_BYTE_ARRAY).addCacheEntry("output", RW_ITEMSTACK).build();
 }

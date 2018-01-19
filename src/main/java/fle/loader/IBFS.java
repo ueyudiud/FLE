@@ -4,6 +4,8 @@
 package fle.loader;
 
 import farcore.data.CT;
+import farcore.data.M;
+import farcore.data.MC;
 import farcore.items.ItemStoneChip;
 import farcore.lib.solid.SolidBase;
 import fle.core.blocks.BlockDirtMixture;
@@ -86,6 +88,8 @@ public class IBFS
 	
 	public static void setBlocksItemsProperties()
 	{
+		MC.pile.addToWhiteList(M.limestone);
+		
 		ItemStoneChip.shootStoneChipExp = 0.7F;
 	}
 	

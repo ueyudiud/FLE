@@ -557,6 +557,12 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	}
 	
 	@Override
+	public SlotBase getSlot(int slotId)
+	{
+		return (SlotBase) this.inventorySlots.get(slotId);
+	}
+	
+	@Override
 	public void onRecieveGUIAction(byte type, long value)
 	{
 		

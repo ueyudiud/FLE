@@ -205,6 +205,13 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		return new TemplateRecipeCache<>(this, recipe, stores);
 	}
 	
+	@Nullable
+	public <V> V findRecipeValue(H handler, int id)
+	{
+		TemplateRecipeCache<H> cache = findRecipe(handler);
+		return cache != null ? cache.get(id) : null;
+	}
+	
 	@Override
 	public Class<TemplateRecipeCache> getTargetType()
 	{

@@ -110,7 +110,8 @@ public final class A
 	public static <E> boolean contain(@Nonnull E[] list, @Nullable E arg)
 	{
 		for (E element : list)
-			if (L.equals(element, arg)) return true;
+			if (L.equals(element, arg))
+				return true;
 		return false;
 	}
 	
@@ -215,6 +216,26 @@ public final class A
 		case 1 : return new int[] { value };
 		default:
 			int[] ret = new int[length];
+			for (int i = 0; i < length; ret[i++] = value);
+			return ret;
+		}
+	}
+	
+	/**
+	 * Create new <code>byte</code> array with same elements.
+	 * 
+	 * @param length the length of array.
+	 * @param value the filled value.
+	 * @return the array.
+	 */
+	public static byte[] fillByteArray(int length, byte value)
+	{
+		switch (length)
+		{
+		case 0 : return new byte[0];
+		case 1 : return new byte[] { value };
+		default:
+			byte[] ret = new byte[length];
 			for (int i = 0; i < length; ret[i++] = value);
 			return ret;
 		}
