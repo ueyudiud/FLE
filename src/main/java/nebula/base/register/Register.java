@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import nebula.base.A;
 import nebula.base.AbstractRegister;
-import nebula.common.util.A;
 
 /**
  * A register instance of IRegister. This type is not thread safe.

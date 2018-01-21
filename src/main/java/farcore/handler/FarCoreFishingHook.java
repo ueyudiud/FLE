@@ -9,7 +9,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.ArrayListConditional;
 import nebula.base.IntegerEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ public class FarCoreFishingHook
 	
 	public static List<ItemStack> getFishingResult(World world, BlockPos pos, @Nullable EntityPlayer player, float amountMultiplier, Random rand)
 	{
-		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
+		List<ItemStack> list = ArrayListConditional.requireNonnull();
 		for (IntegerEntry<FishingResultHander> hander : FISHING_RESULT_LIST)
 		{
 			float mul = amountMultiplier * (0.9F + rand.nextFloat() * .2F) * hander.getValue() / allWeight;

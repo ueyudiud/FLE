@@ -7,8 +7,6 @@ import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import nebula.common.util.A;
-
 /**
  * The helper list. It is only suggested used in wrap in constructor such as
  * <code>new ArrayList(new ArrayListArgument(array))</code>.

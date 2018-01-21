@@ -9,10 +9,12 @@ import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import fle.loader.EntityRender;
 import fle.loader.Recipes;
+import fle.loader.SpecialRender;
 import nebula.client.ClientProxy;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.util.Renders;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,5 +37,13 @@ public class ClientLoader extends CommonLoader
 		EntityRender.clientInit();
 		Recipes.addRenderStates();
 		FarCoreRegistry.registerTESR(TESRDirtMixture.class);
+	}
+	
+	@Override
+	public void init(FMLInitializationEvent event)
+	{
+		super.init(event);
+		
+		SpecialRender.init();
 	}
 }

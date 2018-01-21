@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import nebula.Log;
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.ArrayListConditional;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
@@ -185,7 +185,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@SideOnly(Side.CLIENT)
 	public final void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
-		List<ItemStack> list1 = ArrayListAddWithCheck.requireNonnull();
+		List<ItemStack> list1 = ArrayListConditional.requireNonnull();
 		addSubBlocks(itemIn, tab, list1);
 		for (ItemStack stack : list1)
 		{
@@ -319,7 +319,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		List<ItemStack> ret = ArrayListAddWithCheck.requireNonnull();
+		List<ItemStack> ret = ArrayListConditional.requireNonnull();
 		
 		if (silkTouch)
 		{

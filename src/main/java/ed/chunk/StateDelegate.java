@@ -14,12 +14,11 @@ import com.google.common.collect.ImmutableList;
 
 import ed.EDConfig;
 import nebula.Log;
-import nebula.base.ArrayListAddWithCheck;
 import nebula.base.IntegerEntry;
+import nebula.base.A;
 import nebula.base.HashIntMap;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
-import nebula.common.util.A;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -189,7 +188,7 @@ abstract class StateDelegate
 						Map<IBlockState, List<IBlockState>> map;
 						
 						List<IProperty> list = new ArrayList<>(delegate.block.getBlockState().getProperties());
-						list.removeAll(ArrayListAddWithCheck.argument(properties));
+						list.removeAll(A.argument(properties));
 						
 						forEach1(0, properties, L.cast(list, IProperty.class), delegate.block.getDefaultState(), map = new HashMap<>());
 						
@@ -246,7 +245,7 @@ abstract class StateDelegate
 				
 				public void registerStateMap(IBlockState source, IBlockState...castable)
 				{
-					registerStateMap(source, ArrayListAddWithCheck.argument(castable));
+					registerStateMap(source, A.argument(castable));
 				}
 				
 				public void registerStateMap(IBlockState source, Collection<IBlockState> castable)

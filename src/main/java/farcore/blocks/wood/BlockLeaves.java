@@ -9,7 +9,7 @@ import java.util.Random;
 
 import farcore.data.CT;
 import farcore.lib.tree.Tree;
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.ArrayListConditional;
 import nebula.client.util.Client;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
@@ -228,7 +228,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, ArrayListAddWithCheck.requireNonnull());
+		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, ArrayListConditional.requireNonnull());
 	}
 	
 	@Override

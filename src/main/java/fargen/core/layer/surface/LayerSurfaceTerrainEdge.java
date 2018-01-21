@@ -26,17 +26,17 @@ public class LayerSurfaceTerrainEdge extends LayerExpandMix
 	@Override
 	protected int getValue(int x, int y, int up, int down, int left, int right, int core)
 	{
-		if (core == _montain.biomeID)
+		if (core == _montain.id)
 		{
-			return getUnlessAbsent(core, up, down, left, right, _montain_edge.biomeID);
+			return getUnlessAbsent(core, up, down, left, right, _montain_edge.id);
 		}
-		if (core == _swamp.biomeID)
+		if (core == _swamp.id)
 		{
-			return getUnlessAbsent(core, up, down, left, right, _plains.biomeID);
+			return getUnlessAbsent(core, up, down, left, right, _plains.id);
 		}
-		if (core == _high_plains.biomeID)
+		if (core == _high_plains.id)
 		{
-			return getUnlessAbsent(core, up, down, left, right, _high_plains_edge.biomeID);
+			return getUnlessAbsent(core, up, down, left, right, _high_plains_edge.id);
 		}
 		return core;
 	}

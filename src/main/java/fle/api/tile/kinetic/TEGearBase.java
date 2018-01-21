@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import farcore.energy.kinetic.IKineticAccess;
 import farcore.energy.kinetic.IKineticHandler;
 import farcore.energy.kinetic.KineticPackage;
-import nebula.common.util.A;
+import nebula.base.A;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTTagCompound;

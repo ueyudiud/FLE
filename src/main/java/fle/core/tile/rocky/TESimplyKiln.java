@@ -58,14 +58,14 @@ public class TESimplyKiln extends TESynchronization implements IThermalProvider,
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		NBTs.setItemStack(nbt, "stack", this.stack, true);
+		NBTs.setItemStack(nbt, "s1", this.stack, true);
 	}
 	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if (this.stack != (this.stack = NBTs.getItemStackOrDefault(nbt, "s", this.stack)))
+		if (this.stack != (this.stack = NBTs.getItemStackOrDefault(nbt, "s1", this.stack)))
 		{
 			markBlockRenderUpdate();
 		}

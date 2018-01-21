@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import nebula.common.util.A;
-
 @FunctionalInterface
 public interface Judgable<T> extends Predicate<T>
 {

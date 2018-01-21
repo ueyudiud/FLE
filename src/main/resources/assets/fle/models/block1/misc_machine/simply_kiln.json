@@ -1,0 +1,24 @@
+{
+	"textures": {
+		"body": "fle:blocks/machine/kiln_simply",
+		"particle": "#body"
+	},
+	"part": [
+		{
+			"pos": [ 0, 0, 0, 2, 16, 2 ],
+			"textures": { "all": "#body" }
+		},
+		{
+			"pos": [ 14, 0, 0, 16, 16, 2 ],
+			"textures": { "all": "#body" }
+		},
+		{
+			"pos": [ 0, 0, 14, 2, 16, 16 ],
+			"textures": { "all": "#body" }
+		},
+		{
+			"pos": [ 14, 0, 14, 16, 16, 16 ],
+			"textures": { "all": "#body" }
+		}
+	]
+}

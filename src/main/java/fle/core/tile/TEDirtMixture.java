@@ -12,7 +12,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.RecipeMaps;
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.ArrayListConditional;
 import nebula.base.Stack;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
@@ -82,7 +82,7 @@ public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_B
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
-		List<ItemStack> result = ArrayListAddWithCheck.requireNonnull();
+		List<ItemStack> result = ArrayListConditional.requireNonnull();
 		ItemStack stack = RecipeMaps.DIRT_MIXTURE_OUTPUT.findRecipe(this.stacks);
 		if (stack != null)
 		{

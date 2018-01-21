@@ -5,8 +5,8 @@ package farcore.lib.capability;
 
 import javax.annotation.Nullable;
 
+import nebula.base.A;
 import nebula.common.fluid.FluidTankN;
-import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
 import net.minecraft.tileentity.TileEntity;

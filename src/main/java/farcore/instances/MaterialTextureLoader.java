@@ -84,7 +84,9 @@ public class MaterialTextureLoader implements IIconLoader
 			return new ResourceLocation(getPrefix(condition, variant) + material.name);
 		}
 		else
+		{
 			return function.apply(material);
+		}
 	}
 	
 	public static TextureAtlasSprite getIcon(Mat material, MatCondition condition)

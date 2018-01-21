@@ -7,7 +7,6 @@ import static nebula.base.Judgable.NOT_NULL;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -15,28 +14,23 @@ import javax.annotation.Nullable;
 /**
  * @author ueyudiud
  */
-public class ArrayListAddWithCheck<E> extends ArrayList<E>
+public class ArrayListConditional<E> extends ArrayList<E>
 {
 	private static final long serialVersionUID = -5656965564696895076L;
 	
-	public static <E> List<E> argument(Object[] array)
-	{
-		return new ArrayListArgument(array);
-	}
-	
 	public static <E> ArrayList<E> requireNonnull()
 	{
-		return new ArrayListAddWithCheck<>(NOT_NULL);
+		return new ArrayListConditional<>(NOT_NULL);
 	}
 	
 	transient Predicate<? super E> checker;
 	
-	public ArrayListAddWithCheck(Predicate<? super E> checker)
+	public ArrayListConditional(Predicate<? super E> checker)
 	{
 		this.checker = checker;
 	}
 	
-	public ArrayListAddWithCheck(Predicate<? super E> checker, int initicalCapacity)
+	public ArrayListConditional(Predicate<? super E> checker, int initicalCapacity)
 	{
 		super(initicalCapacity);
 		this.checker = checker;
@@ -91,7 +85,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public boolean addAll(@Nullable Collection<? extends E> c)
 	{
-		return c == null ? false : super.addAll(argument(c.stream().filter(this.checker).toArray()));
+		return c == null ? false : super.addAll(A.argument(c.stream().filter(this.checker).toArray()));
 	}
 	
 	@Override

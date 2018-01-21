@@ -33,7 +33,7 @@ public class LayerShore extends LayerExpandMix
 		{
 			if (isOceanic(up) || isOceanic(down) || isOceanic(left) || isOceanic(right))
 			{
-				return isMontain(core) ? _beach2.biomeID : _beach1.biomeID;
+				return isMontain(core) ? _beach2.id : _beach1.id;
 			}
 		}
 		return core;
@@ -41,16 +41,16 @@ public class LayerShore extends LayerExpandMix
 	
 	protected boolean isMontain(int id)
 	{
-		return id == _montain.biomeID || id == _montain_edge.biomeID;
+		return id == _montain.id || id == _montain_edge.id;
 	}
 	
 	protected boolean isOceanic(int id)
 	{
-		return id == _ocean.biomeID || id == _deep_ocean.biomeID;
+		return id == _ocean.id || id == _deep_ocean.id;
 	}
 	
 	protected boolean isWateric(int id)
 	{
-		return id == _swamp.biomeID || id == _river.biomeID || id == _lake.biomeID;
+		return id == _swamp.id || id == _river.id || id == _lake.id;
 	}
 }

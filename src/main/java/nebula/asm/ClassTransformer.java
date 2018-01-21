@@ -124,9 +124,8 @@ public class ClassTransformer implements IClassTransformer
 			{
 				if (!info.matchNode(instructions.get(idx))) break;
 				int off = info.performAnchorOperation(instructions, idx, this.numInsertions);
-				if (info.off < 0)// If offset is negative, will return to last
-					// node to check (For it may modified
-					// before)
+				if (info.off < 0)
+					// If offset is negative, will return to last node to check (For it may modified before)
 				{
 					idx += off;
 				}

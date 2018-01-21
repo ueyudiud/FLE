@@ -21,7 +21,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.A;
+import nebula.base.ArrayListConditional;
 import nebula.client.util.BakedQuadBuilder;
 import nebula.client.util.BakedQuadRetex;
 import nebula.client.util.CoordTransformer;
@@ -188,8 +189,8 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 	@Override
 	public Collection<String> getResources()
 	{
-		List<String> list = ArrayListAddWithCheck.requireNonnull();
-		list.addAll(ArrayListAddWithCheck.argument(this.icons));
+		List<String> list = ArrayListConditional.requireNonnull();
+		list.addAll(A.argument(this.icons));
 		return list;
 	}
 	

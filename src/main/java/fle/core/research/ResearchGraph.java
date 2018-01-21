@@ -5,7 +5,7 @@ package fle.core.research;
 
 import java.util.Arrays;
 
-import nebula.common.util.A;
+import nebula.base.A;
 import nebula.common.util.L;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;

@@ -88,7 +88,7 @@ public class IBFS
 	
 	public static void setBlocksItemsProperties()
 	{
-		MC.pile.addToWhiteList(M.limestone);
+		MC.pile.addToWhiteList(M.limestone, M.marble);
 		
 		ItemStoneChip.shootStoneChipExp = 0.7F;
 	}

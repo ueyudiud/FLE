@@ -9,6 +9,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import fargen.api.terrain.Terrain;
 import fargen.core.FarGenBiomes;
 import fargen.core.biome.BiomeBase;
 import fargen.core.instance.Layers;
@@ -101,41 +102,36 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		return getBiomes(oldBiomeList, x, z, width, depth, true);
 	}
 	
+	@Override
+	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
+	{
+		if (biomes == null || biomes.length < width * height)
+		{
+			biomes = new BiomeBase[width * height];
+		}
+		return biomes;
+	}
+	
 	/**
 	 * Returns an array of biomes for the location input.
 	 */
-	@Override
-	public BiomeBase[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
+	public Terrain[] getTerrainForGeneration(Terrain[] terrains, int x, int z, int width, int height)
 	{
 		IntCache.resetIntCache();
 		
-		if (biomes == null || !(biomes instanceof BiomeBase[]) || biomes.length < width * height)
+		if (terrains == null || terrains.length < width * height)
 		{
-			biomes = new BiomeBase[width * height];
+			terrains = new Terrain[width * height];
 		}
 		
 		int[] aint = this.layers[0].getInts(x, z, width, height);
 		
-		try
+		for (int i = 0; i < width * height; ++i)
 		{
-			for (int i = 0; i < width * height; ++i)
-			{
-				biomes[i] = LayerSurfaceTerrain.BIOME_TABLE[aint[i]];
-			}
-			
-			return (BiomeBase[]) biomes;
+			terrains[i] = LayerSurfaceTerrain.TERRAIN_TABLE[aint[i]];
 		}
-		catch (Throwable throwable)
-		{
-			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
-			CrashReportCategory crashreportcategory = crashreport.makeCategory("RawBiomeBlock");
-			crashreportcategory.addCrashSection("biomes[] size", Integer.valueOf(biomes.length));
-			crashreportcategory.addCrashSection("x", Integer.valueOf(x));
-			crashreportcategory.addCrashSection("z", Integer.valueOf(z));
-			crashreportcategory.addCrashSection("w", Integer.valueOf(width));
-			crashreportcategory.addCrashSection("h", Integer.valueOf(height));
-			throw new ReportedException(crashreport);
-		}
+		
+		return terrains;
 	}
 	
 	@Override
@@ -173,7 +169,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	{
 		IntCache.resetIntCache();
 		int i = x - radius >> 2;
-		int j = z - radius >> 2;
+			int j = z - radius >> 2;
 		int k = x + radius >> 2;
 		int l = z + radius >> 2;
 		int i1 = k - i + 1;

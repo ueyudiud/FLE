@@ -21,7 +21,7 @@ public class LayerRiver extends LayerExpandMix
 	{
 		if (up != core || down != core || left != core || right != core)
 		{
-			return LayerSurfaceTerrain._river.biomeID;
+			return LayerSurfaceTerrain._river.id;
 		}
 		return 0;
 	}

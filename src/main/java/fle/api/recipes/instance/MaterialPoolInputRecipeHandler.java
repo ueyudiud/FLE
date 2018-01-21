@@ -9,7 +9,7 @@ import java.util.List;
 
 import farcore.lib.material.Mat;
 import fle.api.recipes.IRecipeMap;
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.A;
 import nebula.base.ObjArrayParseHelper;
 import nebula.base.Stack;
 import nebula.common.stack.AbstractStack;
@@ -101,7 +101,7 @@ public class MaterialPoolInputRecipeHandler implements IRecipeMap<MaterialPoolIn
 		{
 			if (recipe.match.contain(stack))
 			{
-				return ArrayListAddWithCheck.argument(recipe.outputs);
+				return A.argument(recipe.outputs);
 			}
 		}
 		return null;

@@ -145,15 +145,15 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 			{
 				long i = Math.min(this.fuelValue, this.burningPower);
 				this.fuelValue -= i;
-				this.handler.energy += i;
+				this.handler.energy1 += i;
 				
 				if (this.burningPower > this.normalBurningPower)
 				{
-					this.burningPower -= (this.burningPower - this.normalBurningPower + 1) / 2;
+					this.burningPower -= (this.burningPower - this.normalBurningPower + 1) >> 1;
 				}
 				else if (this.burningPower < this.normalBurningPower)
 				{
-					this.burningPower += (this.normalBurningPower - this.burningPower + 1) / 2;
+					this.burningPower += (this.normalBurningPower - this.burningPower + 1) >> 1;
 				}
 			}
 		}
@@ -169,11 +169,11 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 				decrStackSize(0, key.fuel);
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
-				this.handler.Tlimit = key.normalTemperature;
+				this.handler.setLimitTemperature(key.normalTemperature);
 				return;
 			}
 		}
-		this.handler.Tlimit = 0.0F;
+		this.handler.unsetLimitTemperature();
 		disable(Burining);
 	}
 	

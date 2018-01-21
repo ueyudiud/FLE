@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nebula.base.A;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.util.A;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import nebula.common.util.Strings;

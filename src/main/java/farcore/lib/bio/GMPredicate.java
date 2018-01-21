@@ -5,8 +5,8 @@ package farcore.lib.bio;
 
 import java.util.function.LongPredicate;
 
+import nebula.base.A;
 import nebula.base.Judgable;
-import nebula.common.util.A;
 
 /**
  * @author ueyudiud

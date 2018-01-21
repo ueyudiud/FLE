@@ -6,7 +6,7 @@ package nebula.common.inventory;
 
 import java.util.Arrays;
 
-import nebula.common.util.A;
+import nebula.base.A;
 import net.minecraft.item.ItemStack;
 
 /**

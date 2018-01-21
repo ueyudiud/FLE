@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.reflect.TypeToken;
 
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.ArrayListConditional;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
@@ -57,7 +57,7 @@ public interface INBTReaderAndWritter<T, N extends NBTBase> extends INBTReader<T
 			@Override
 			public List<T> readFromNBT(NBTTagList tag)
 			{
-				List<T> list = ArrayListAddWithCheck.requireNonnull();
+				List<T> list = ArrayListConditional.requireNonnull();
 				for (int i = 0; i < tag.tagCount(); ++i)
 				{
 					list.add(INBTReaderAndWritter.this.readFromNBT((N) list.get(i)));

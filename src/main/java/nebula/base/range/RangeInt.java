@@ -14,7 +14,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 
-import nebula.common.util.A;
+import nebula.base.A;
 
 /**
  * @author ueyudiud

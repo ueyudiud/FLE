@@ -10,7 +10,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.A;
+import nebula.base.ArrayListConditional;
 import nebula.base.IntegerEntry;
 import nebula.base.function.Applicable;
 import nebula.common.fluid.container.FluidContainerHandler;
@@ -18,7 +19,6 @@ import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.fluid.container.IItemFluidContainerV1;
 import nebula.common.fluid.container.IItemFluidContainerV2;
 import nebula.common.tile.IFluidHandlerIO;
-import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
@@ -425,7 +425,7 @@ public class InventoryHelper
 		if (stacks == null || stacks.length == 0) return false;
 		ItemStack[] array = inventory.toArray();
 		int limit = inventory.getStackLimit();
-		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
+		List<ItemStack> list = ArrayListConditional.requireNonnull();
 		A.executeAll(stacks, stack -> list.add(ItemStack.copyItemStack(stack)));
 		for (int i = from; i < to; ++i)
 		{

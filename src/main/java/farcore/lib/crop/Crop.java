@@ -20,7 +20,7 @@ import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.material.Mat;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
-import nebula.common.util.A;
+import nebula.base.A;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import net.minecraft.block.state.IBlockState;

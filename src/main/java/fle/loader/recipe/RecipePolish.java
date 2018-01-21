@@ -6,6 +6,7 @@ package fle.loader.recipe;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import fle.api.recipes.instance.PolishRecipe;
 import fle.loader.IBFS;
@@ -32,5 +33,8 @@ public class RecipePolish
 			OreStack stack = new OreStack(MC.chip_rock.getOreName(material));
 			PolishRecipe.addPolishLevel(stack, material.getProperty(MP.property_rock).harvestLevel);
 		}
+		
+		PolishRecipe.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(M.limestone)), "ccccccccc", ItemMulti.createStack(M.limestone, MC.pile));
+		PolishRecipe.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(M.marble)), "ccccccccc", ItemMulti.createStack(M.marble, MC.pile));
 	}
 }

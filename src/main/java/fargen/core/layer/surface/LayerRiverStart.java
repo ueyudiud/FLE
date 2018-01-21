@@ -30,11 +30,11 @@ public class LayerRiverStart extends LayerReplace
 	
 	protected boolean isMontain(int id)
 	{
-		return id == _montain.biomeID || id == _montain_edge.biomeID;
+		return id == _montain.id || id == _montain_edge.id;
 	}
 	
 	protected boolean isOceanic(int id)
 	{
-		return id == _ocean.biomeID || id == _deep_ocean.biomeID;
+		return id == _ocean.id || id == _deep_ocean.id;
 	}
 }

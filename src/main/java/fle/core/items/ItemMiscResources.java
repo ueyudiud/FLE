@@ -65,6 +65,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(2006, "argil_plate", "Argil Plate");
 		addSubItem(2007, "argil_brick_unsmelted", "Unsmelted Argil Brick");
 		addSubItem(2008, "argil_ball", "Argil Ball", new BehaviorArgilBall());
+		addSubItem(2021, "quick_lime_dust", "Quick Lime Dust");
 		
 		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
 		

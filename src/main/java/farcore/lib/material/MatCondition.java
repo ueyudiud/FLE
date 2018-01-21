@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import farcore.lib.item.ItemMulti;
-import nebula.base.ArrayListAddWithCheck;
+import nebula.base.A;
 import nebula.base.Judgable;
 import nebula.base.ObjArrayParseHelper;
 import nebula.base.register.Register;
@@ -86,13 +86,13 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public MatCondition addToBlackList(Mat...mats)
 	{
-		this.blacklist.addAll(ArrayListAddWithCheck.argument(mats));
+		this.blacklist.addAll(A.argument(mats));
 		return this;
 	}
 	
 	public MatCondition addToWhiteList(Mat...mats)
 	{
-		this.whitelist.addAll(ArrayListAddWithCheck.argument(mats));
+		this.whitelist.addAll(A.argument(mats));
 		return this;
 	}
 	

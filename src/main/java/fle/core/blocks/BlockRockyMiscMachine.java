@@ -3,9 +3,12 @@
  */
 package fle.core.blocks;
 
+import static farcore.FarCoreRegistry.registerTESR;
+
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.client.render.ItemRenderWithTESR;
+import fle.core.client.render.TESRSimplyKiln;
 import fle.core.tile.rocky.TECeramicPot;
 import fle.core.tile.rocky.TESimplyKiln;
 import nebula.base.register.IRegister;
@@ -51,9 +54,12 @@ public class BlockRockyMiscMachine extends BlockTE
 	{
 		NebulaRenderHandler.registerRender(this.item, ItemRenderWithTESR.INSTANCE);
 		
+		registerTESR(TESRSimplyKiln.class, this.item, 1);
+		
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
 		registerRenderMapper(mapper);
 		registerCustomBlockRender(mapper, 0, "misc_machine/ceramic_pot");
+		registerCustomBlockRender(mapper, 1, "misc_machine/simply_kiln");
 	}
 	
 	@Override

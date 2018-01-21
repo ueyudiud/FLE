@@ -81,17 +81,17 @@ public class LayerSurfaceBiomeRemix extends Layer
 	
 	private boolean isOceanic(int ter)
 	{
-		return ter == _ocean.biomeID || ter == _deep_ocean.biomeID;
+		return ter == _ocean.id || ter == _deep_ocean.id;
 	}
 	
 	private boolean isBeachic(int ter)
 	{
-		return ter == _beach1.biomeID || ter == _beach2.biomeID;
+		return ter == _beach1.id || ter == _beach2.id;
 	}
 	
 	private boolean isDeepOcean(int ter)
 	{
-		return ter == _deep_ocean.biomeID;
+		return ter == _deep_ocean.id;
 	}
 	
 	private int getOceanicBiome(int biome, boolean flag)
@@ -116,7 +116,7 @@ public class LayerSurfaceBiomeRemix extends Layer
 	
 	private boolean isRiver(int ter)
 	{
-		return ter == _river.biomeID;
+		return ter == _river.id;
 	}
 	
 	private int getRiverBiome(int biome)

@@ -7,10 +7,10 @@ package fle.core.items.behavior;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import fle.api.item.behavior.IPolishableBehavior;
+import nebula.base.A;
 import nebula.common.item.BehaviorBase;
 import nebula.common.item.ITool;
 import nebula.common.tool.EnumToolType;
-import nebula.common.util.A;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

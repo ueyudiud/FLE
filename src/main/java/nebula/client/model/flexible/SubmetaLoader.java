@@ -12,8 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import nebula.base.A;
 import nebula.base.Cache;
-import nebula.common.util.A;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
 import net.minecraft.block.properties.IProperty;

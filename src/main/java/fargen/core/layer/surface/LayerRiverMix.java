@@ -50,7 +50,7 @@ public class LayerRiverMix extends Layer
 				{
 					if (isBeach(b))
 					{
-						result[id] = _ocean.biomeID;
+						result[id] = _ocean.id;
 					}
 					else
 					{
@@ -67,17 +67,17 @@ public class LayerRiverMix extends Layer
 	
 	protected boolean isMontain(int id)
 	{
-		return id == _montain.biomeID || id == _montain_edge.biomeID;
+		return id == _montain.id || id == _montain_edge.id;
 	}
 	
 	protected boolean isOceanic(int id)
 	{
-		return id == _ocean.biomeID || id == _deep_ocean.biomeID;
+		return id == _ocean.id || id == _deep_ocean.id;
 	}
 	
 	protected boolean isBeach(int id)
 	{
-		return id == _beach1.biomeID || id == _beach2.biomeID;
+		return id == _beach1.id || id == _beach2.id;
 	}
 	
 	@Override

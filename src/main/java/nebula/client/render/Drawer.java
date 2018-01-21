@@ -3,13 +3,10 @@
  */
 package nebula.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import nebula.common.util.Maths;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -141,12 +138,10 @@ public class Drawer
 	
 	public Drawer face_p(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4)
 	{
-		this.buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		vertex_p(x1, y1, z1);
 		vertex_p(x2, y2, z2);
 		vertex_p(x3, y3, z3);
 		vertex_p(x4, y4, z4);
-		this.buffer.endVertex();
 		return this;
 	}
 	
@@ -169,6 +164,15 @@ public class Drawer
 		vertex_ptn(x3, y3, z3, u3, v3, nx, ny, nz);
 		vertex_ptn(x4, y4, z4, u4, v4, nx, ny, nz);
 		bindIcon(null);
+		return this;
+	}
+	
+	public Drawer face_ptn(double x1, double y1, double z1, float u1, float v1, double x2, double y2, double z2, float u2, float v2, double x3, double y3, double z3, float u3, float v3, double x4, double y4, double z4, float u4, float v4, float nx, float ny, float nz)
+	{
+		vertex_ptn(x1, y1, z1, u1, v1, nx, ny, nz);
+		vertex_ptn(x2, y2, z2, u2, v2, nx, ny, nz);
+		vertex_ptn(x3, y3, z3, u3, v3, nx, ny, nz);
+		vertex_ptn(x4, y4, z4, u4, v4, nx, ny, nz);
 		return this;
 	}
 	

@@ -21,9 +21,9 @@ public class RecipeDirtMixture
 {
 	public static void init()
 	{
-		for (Mat material : Mat.filt(MC.pile, true))
+		for (Mat material : Mat.filt(MC.pile_purified, true))
 		{
-			addDirtMixtureInputRecipe(new OreStack(MC.pile.getOreName(material)), material, MC.pile.size);
+			addDirtMixtureInputRecipe(new OreStack(MC.pile.getOreName(material)), material, MC.pile_purified.size);
 		}
 		for (Mat material : Mat.filt(MC.clayball, true))
 		{

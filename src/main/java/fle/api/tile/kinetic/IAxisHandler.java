@@ -7,7 +7,7 @@ package fle.api.tile.kinetic;
 import javax.annotation.Nullable;
 
 import farcore.energy.kinetic.IKineticHandler;
-import nebula.common.util.A;
+import nebula.base.A;
 import nebula.common.util.Direction;
 import net.minecraft.util.EnumFacing.Axis;
 

@@ -4,11 +4,11 @@
 package fle.core.common.gui;
 
 import fle.api.recipes.instance.RecipeMaps;
+import nebula.base.A;
 import nebula.common.gui.ContainerBlockPosition;
 import nebula.common.gui.SlotOutput;
 import nebula.common.inventory.InventorySimple;
 import nebula.common.inventory.InventoryWrapFactory;
-import nebula.common.util.A;
 import nebula.common.util.Players;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;

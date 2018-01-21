@@ -1,10 +1,11 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.util;
+package nebula.base;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -23,6 +24,8 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
+
+import nebula.common.util.L;
 
 /**
  * Array helper methods.
@@ -599,5 +602,10 @@ public final class A
 			if ((com = ((Comparable) array1[i]).compareTo(array2[i])) != 0) return com;
 		}
 		return -Integer.compare(array1.length, array2.length);
+	}
+
+	public static <E> List<E> argument(Object[] array)
+	{
+		return new ArrayListArgument(array);
 	}
 }

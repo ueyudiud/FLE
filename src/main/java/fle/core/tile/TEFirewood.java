@@ -40,7 +40,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 	public TEFirewood()
 	{
 		this.thermalHandler.material = M.oak;
-		this.thermalHandler.Tlimit = 600;
+		this.thermalHandler.setLimitTemperature(600);
 		this.remainEnergy = (long) (24_0000L * this.thermalHandler.material.getProperty(MP.property_wood).burnHeat);
 	}
 	
@@ -223,7 +223,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 				}
 			}
 			
-			this.thermalHandler.energy += value;
+			this.thermalHandler.energy1 += value;
 			if (this.remainEnergy == 0)
 			{
 				removeBlock();
