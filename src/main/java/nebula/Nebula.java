@@ -94,7 +94,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String	MODID	= "nebula";
 	public static final String	NAME	= "Nebula";
-	public static final String	VERSION	= "2.3.5";
+	public static final String	VERSION	= "2.4.2";
 	
 	/**
 	 * The built-in render id, for prevent has location collide when naming

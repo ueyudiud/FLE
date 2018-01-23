@@ -125,10 +125,10 @@ public class M
 	public static final Mat	citrus		= new Mat(8015, "fle"		, "citrus"		, "Citrus"		, "Citrus"		).builder()                                           .setWood(1.3F, 1.0F, 20.0F).setGeneralProp(3.5E3F, 1.8E1F, 49, 20, 2.5F, 3.32E4F, 3.0F).build();
 	public static final Mat	apple		= new Mat(8016, "fle"		, "apple"		, "Apple"		, "Apple"		).builder()                                           .setWood(2.3F, 1.0F, 20.0F).setGeneralProp(3.5E3F, 1.8E1F, 49, 19, 2.5F, 3.32E4F, 3.0F).build();
 	// Plants
-	public static final Mat	vine		= new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").builder().setRGBa(0x867C50FF).build();
-	public static final Mat	ivy			= new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").builder().setRGBa(0x867C50FF).build();
-	public static final Mat	rattan		= new Mat(9203, FarCore.ID, "rattan", "Rattan", "Rattan").builder().setRGBa(0x867C50FF).build();
-	public static final Mat	ramie_dry	= new Mat(9205, FarCore.ID, "ramie_dry", "RamieDry", "Ramie").builder().setRGBa(0xCFC898FF).build();
+	public static final Mat	vine			= new Mat(9201, FarCore.ID, "vine"			, "Vine"			, "Vine"			).builder().setRGBa(0x867C50FF).build();
+	public static final Mat	ivy				= new Mat(9202, FarCore.ID, "ivy"			, "Ivy"				, "Ivy"				).builder().setRGBa(0x867C50FF).build();
+	public static final Mat	rattan			= new Mat(9203, FarCore.ID, "rattan"		, "Rattan"			, "Rattan"			).builder().setRGBa(0x867C50FF).build();
+	public static final Mat	ramie_dry		= new Mat(9205, FarCore.ID, "ramie_dry"		, "RamieDry"		, "Ramie"			).builder().setRGBa(0xCFC898FF).build();
 	
 	public static final Mat	dandelion		= new Mat(9301, FarCore.ID, "dandelion"		, "Dandelion"		, "Dandelion"		);
 	public static final Mat	bristlegrass	= new Mat(9302, FarCore.ID, "bristlegrass"	, "Bristlegrass"	, "Bristlegrass"	);

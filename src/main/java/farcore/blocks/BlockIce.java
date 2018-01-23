@@ -103,8 +103,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	{
 		if (Config.enableWaterFreezeAndIceMeltTempCheck)
 		{
-			// IWorldPropProvider properties =
-			// WorldPropHandler.getWorldProperty(worldIn);
+			// IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
 			if (!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.WATER_FREEZE_POINT_F && random.nextInt(3) == 0)
 			{
 				turnIntoWater(worldIn, pos, state, true);

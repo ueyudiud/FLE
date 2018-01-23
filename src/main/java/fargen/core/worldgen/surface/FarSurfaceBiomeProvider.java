@@ -168,8 +168,8 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public boolean areBiomesViable(int x, int z, int radius, List<Biome> allowed)
 	{
 		IntCache.resetIntCache();
-		int i = x - radius >> 2;
-			int j = z - radius >> 2;
+		int i = (x - radius >> 2);
+		int j = (z - radius >> 2);
 		int k = x + radius >> 2;
 		int l = z + radius >> 2;
 		int i1 = k - i + 1;
@@ -180,7 +180,8 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			for (int k1 = 0; k1 < i1 * j1; ++k1)
 			{
 				Biome biome = BiomeBase.getBiomeFromID(aint[k1] & 0xFF);
-				if (!allowed.contains(biome)) return false;
+				if (!allowed.contains(biome))
+					return false;
 			}
 			return true;
 		}
@@ -189,9 +190,9 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
 			CrashReportCategory crashreportcategory = crashreport.makeCategory("Layer");
 			crashreportcategory.addCrashSection("Layer", this.layers[0].toString());
-			crashreportcategory.addCrashSection("x", Integer.valueOf(x));
-			crashreportcategory.addCrashSection("z", Integer.valueOf(z));
-			crashreportcategory.addCrashSection("radius", Integer.valueOf(radius));
+			crashreportcategory.addCrashSection("x", x);
+			crashreportcategory.addCrashSection("z", z);
+			crashreportcategory.addCrashSection("radius", radius);
 			crashreportcategory.addCrashSection("allowed", allowed);
 			throw new ReportedException(crashreport);
 		}
