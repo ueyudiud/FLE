@@ -12,7 +12,7 @@ import fle.api.tile.IIDOpenableTile;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.data.NBTLSs;
-import nebula.common.enviornment.EnviornmentBlockPos;
+import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.gui.ContainerTileInventory;
 import nebula.common.inventory.InventoryWrapFactory;
 import nebula.common.item.IUpdatableItem;

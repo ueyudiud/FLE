@@ -6,7 +6,7 @@ package farcore.lib.material.behavior;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import nebula.client.util.UnlocalizedList;
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;

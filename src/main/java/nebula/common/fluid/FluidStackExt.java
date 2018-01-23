@@ -3,7 +3,7 @@
  */
 package nebula.common.fluid;
 
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import nebula.common.fluid.IFluidPropertiesAndBehaviours.IFP_Solutability;
 import nebula.common.fluid.IFluidPropertiesAndBehaviours.IFP_Temperature;
 import net.minecraft.item.ItemStack;

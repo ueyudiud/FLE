@@ -7,7 +7,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import nebula.client.util.UnlocalizedList;
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import nebula.common.util.ItemStacks;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;

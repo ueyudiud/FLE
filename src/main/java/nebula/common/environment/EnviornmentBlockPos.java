@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.enviornment;
+package nebula.common.environment;
 
 import nebula.base.IPropertyMap.IProperty;
 import nebula.common.world.ICoord;

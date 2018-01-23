@@ -12,7 +12,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import nebula.Nebula;
-import nebula.common.enviornment.EnviornmentEntity;
+import nebula.common.environment.EnviornmentEntity;
 import nebula.common.item.IProjectileItem;
 import nebula.common.item.IUpdatableItem;
 import nebula.common.network.packet.PacketEntity;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-import nebula.common.enviornment.EnviornmentBlockPos;
+import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.Direction;
 import nebula.common.util.L;

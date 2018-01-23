@@ -21,7 +21,7 @@ import nebula.base.Judgable;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.capability.CapabilityProviderItem;
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
