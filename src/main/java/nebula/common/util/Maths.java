@@ -243,6 +243,22 @@ public final class Maths
 		return a + (b - a) * x;
 	}
 	
+	/**
+	 * Take linear interpolation between two <code>double</code> value, and use a
+	 * value to measure the point, different from method {@link #lerp(double, double, double)},
+	 * this method is force x in <tt>[0.0, 1.0]</tt> if it is out of range.
+	 * 
+	 * @param a the first value.
+	 * @param b the second value.
+	 * @param x a {@code double} value which is predicated between 0.0 to 1.0.
+	 * @return if <tt>x</tt> is <tt>0.0</tt> that <tt>a</tt> predicated, and
+	 *         <tt>x</tt> is <tt>1.0</tt> that <tt>b</tt> predicated.
+	 */
+	public static double clampLerp(double a, double b, double x)
+	{
+		return x <= 0.0 ? a : x >= 1.0 ? b : a + (b - a) * x;
+	}
+	
 	public static double invsqrt_fast(double a)
 	{
 		return MathHelper.fastInvSqrt(a);

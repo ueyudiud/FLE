@@ -14,28 +14,28 @@ public abstract class Terrain
 {
 	public static final int
 	BASE_HEIGHT = 0,
-	HEIGHT_VARIATION = 1;
+	HEIGHT_VARIATION = 1,
+	VALLEY_DEPTH = 2;
 	
-	public static final int DATA_COUNT = 2;
+	public static final int DATA_COUNT = 3;
 	
-	protected static final DoubleUnaryOperator randomNoiseOperator = x -> {
+	protected static final DoubleUnaryOperator VARIATION_SUPPLIER = x -> {
 		// [0.0, 1.0]
-		x = x * 1.5 - 0.5;
-		// [-0.5, 1.0]
+		x = x * 3.0 - 1.0;
+		// [-1.0, 2.0]
 		if (x < 0)
 		{
-			x *= -0.5F;
+			x *= -1.5;
 		}
-		// [-0.25, 1.0]
-		x = x * 4.0 - 2.0;
-		// [-1.0, 2.0]
-		if (x > 0)
+		else if (x > 1.0)
 		{
-			x *= 2;
+			x = x * 2.0 - 1.0;
 		}
-		// [-1.0, 4.0]
-		return (x - 1.5) * 0.2;
-		// [-0.5, 0.5]
+		// [0.0, 3.0]
+		x = x - 1.0;
+		x /= 2.0;
+		// [-0.5, 1.0]
+		return x * 8;
 	};
 	
 	/** The index of terrain, it only use to mark in generation layer. */

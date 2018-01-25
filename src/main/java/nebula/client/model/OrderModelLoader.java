@@ -12,12 +12,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * For model which is load without resource reloading.
  * 
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public enum OrderModelLoader implements ICustomModelLoader
 {
 	INSTANCE;
