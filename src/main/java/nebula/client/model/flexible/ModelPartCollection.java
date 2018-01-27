@@ -18,6 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelPartCollection
 {
+	static final ModelPartCollection EMPTY = new ModelPartCollection(ImmutableMap.of());
+	
 	private ImmutableMap<String, INebulaModelPart> variants;
 	
 	private ModelPartCollection(Map<String, INebulaModelPart> variants)

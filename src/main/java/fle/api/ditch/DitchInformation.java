@@ -3,14 +3,14 @@
  */
 package fle.api.ditch;
 
-import nebula.base.IPropertyMap;
+import nebula.base.IPropertyMap.IProperty;
 
 /**
  * @author ueyudiud
  */
 public class DitchInformation
 {
-	public static final IPropertyMap.IProperty<DitchInformation> DITCH_INFORMATION_PROPERTY = () -> null;
+	public static final IProperty<DitchInformation> DITCH_INFORMATION_PROPERTY = IProperty.to();
 	
 	public int	tankCapacity;
 	public int	destroyTemperature;

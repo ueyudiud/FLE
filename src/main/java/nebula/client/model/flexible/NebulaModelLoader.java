@@ -6,15 +6,18 @@ package nebula.client.model.flexible;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -81,7 +84,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>
  * 
  * @author ueyudiud
- * @version 0.7
+ * @version 0.8
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -362,16 +365,12 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		try
 		{
 			File file = new File(Minecraft.getMinecraft().mcDataDir, "logs\\nebula_model.log");
-			if (file.exists())
+			if (!file.createNewFile())
 			{
 				File file1 = new File(Minecraft.getMinecraft().mcDataDir, "logs\\nebula_model_last.log");
 				file1.delete();
 				file.renameTo(file1);
 				file.delete();
-			}
-			else
-			{
-				file.createNewFile();
 			}
 			this.stream = new PrintStream(new FileOutputStream(file))
 			{
@@ -380,12 +379,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				{
 					super.print(FORMAT.format(new Date()) + s);
 					Log.info(s);
-				}
-				
-				@Override
-				protected void finalize()
-				{
-					close();
 				}
 			};
 		}
@@ -529,10 +522,9 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	{
 		ResourceLocation location2 = location;
 		location = new ResourceLocation(location.getResourceDomain(), "models/textureset/" + location.getResourcePath() + ".txt");
-		BufferedReader reader;
-		try
+		try (IResource resource = this.manager.getResource(location))
 		{
-			reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(IO.copyResource(this.manager, location))));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
 			String key;
 			Map<String, ResourceLocation> builder = new HashMap<>();
 			int line = 0;
@@ -541,47 +533,96 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				++line;
 				if (key.length() == 0 || key.charAt(0) == '#')// For annotate.
 					continue;
-				if (key.charAt(0) == '@')
+				switch (key.charAt(0))
+				{
+				case '@':
 				{
 					String[] values = Strings.split(key, ' ');
 					switch (values[0])
 					{
 					case "@include":
-						if (values.length != 2) throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
 						try
 						{
 							builder.putAll(getTextureSet(new ResourceLocation(values[1])));
 						}
-						catch (InternalError e)
+						catch (InternalError error)
 						{
-							throw new IllegalArgumentException("Looped loading. file: " + location + " line: " + line + " target: " + values[1]);
+							this.stream.println("Looped loading. file: " + location + " line: " + line + " target: " + values[1]);
+						}
+						catch (RuntimeException exception)
+						{
+							this.stream.println("Fail to load texture set. location: " + values[1]);
 						}
 						break;
 					case "@remove":
-						if (values.length != 2) throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
 						builder.remove(values[1]);
 						break;
 					default:
 						throw new IllegalArgumentException("Unknown operation, got: " + values[0] + ". file: " + location + " line: " + line);
 					}
+					break;
 				}
-				else
+				case '[':
+				{
+					List<String> list = new ArrayList<>();
+					int i = 0, j = 0, k = 0;
+					findBracket: while (k < key.length())
+					{
+						switch (key.charAt(k ++))
+						{
+						case ' ' :
+							if (i == k)
+								++ i;
+							break;
+						case ',' :
+							list.add(key.substring(i, j));
+							i = k;
+							break;
+						case ']' :
+							list.add(key.substring(i, j));
+							break findBracket;
+						case '[' :
+							throw new IllegalArgumentException("Illegal key character.");
+						default:
+							j = k - 1;
+							break;
+						}
+					}
+					if (key.charAt(k) != '=')
+						throw new IllegalArgumentException("'=' is expected.");
+					ResourceLocation value = new ResourceLocation(key.substring(k + 1).trim());
+					list.forEach(k1 -> builder.put(k1, value));
+					break;
+				}
+				default :
 				{
 					int idx;
-					if ((idx = key.indexOf('=')) == -1) throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
+					if ((idx = key.indexOf('=')) == -1)
+						throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
 					builder.put(key.substring(0, idx), new ResourceLocation(key.substring(idx + 1)));
+					break;
+				}
 				}
 			}
 			return ImmutableMap.copyOf(builder);
 		}
-		catch (IOException e)
+		catch (IOException exception)
 		{
 			Supplier<Map<String, ResourceLocation>> supplier = BUILTIN_TEXTURESET.get(location2);
 			if (supplier != null)
 			{
 				return supplier.get();
 			}
-			throw new RuntimeException(e);
+			return ImmutableMap.of();
+		}
+		catch (RuntimeException exception)
+		{
+			exception.printStackTrace(this.stream);
+			return ImmutableMap.of();
 		}
 	}
 	
@@ -618,9 +659,15 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		{
 			return GSON.fromJson(new InputStreamReader(resource.getInputStream()), ModelPartCollection.class);
 		}
-		catch (IOException e)
+		catch (FileNotFoundException exception)
 		{
-			throw new RuntimeException("Model part " + location + " not found.");
+			this.stream.println("Model part " + location + " not found.");
+			return ModelPartCollection.EMPTY;
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace(this.stream);
+			return ModelPartCollection.EMPTY;
 		}
 	}
 	

@@ -60,10 +60,10 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private final World						world;
 	private final FarSurfaceBiomeProvider	biomeProvider;
 	
-	private final NoiseBase	noise1;
-	private final NoiseBase	noise2;
-	private final NoiseBase	noise3;
-	private final NoiseBase	noise4;
+	private final NoiseBase	noiseMax;
+	private final NoiseBase	noiseMin;
+	private final NoiseBase	noiseMain;
+	private final NoiseBase	noiseBase;
 	private final NoiseBase	noise5;		// Stone noise.
 	private final NoiseBase	noise6;		// Plants noise.
 	
@@ -72,13 +72,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private Terrain[] terrains;
 	private BiomeBase[] biomes;
 	
-	private double[]	cache1;
-	private double[]	cache2;
-	private double[]	cache3;
-	private double[]	cache4;
-	private double[]	cache5;
+	private double[] cacheMax;
+	private double[] cacheMin;
+	private double[] cacheMain;
+	private double[] cacheBase;
+	private double[] cache5;
 	
-	private double[] cachea;
+	private double[] hights;
 	
 	public FarSurfaceChunkGenerator(World world, long seed)
 	{
@@ -86,10 +86,10 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.seed = seed;
 		this.biomeProvider = (FarSurfaceBiomeProvider) world.provider.getBiomeProvider();
 		Random random = new Random(seed);
-		this.noise1 = new NoisePerlin(random, 12, 1.0, 2.0, 2.0);
-		this.noise2 = new NoisePerlin(random, 12, 1.0, 2.0, 2.0);
-		this.noise3 = new NoisePerlin(random, 6, 3.0, 1.8, 1.8);
-		this.noise4 = new NoisePerlin(random, 5, 0.3, 1.8, 1.8);
+		this.noiseBase = new NoisePerlin(random,  6, 0.7, 1.8, 2.0);
+		this.noiseMax  = new NoisePerlin(random, 12, 0.5, 2.0, 2.0);
+		this.noiseMin  = new NoisePerlin(random, 12, 0.5, 2.0, 2.0);
+		this.noiseMain = new NoisePerlin(random,  6, 1.6, 2.5, 1.6);
 		this.noise5 = new NoisePerlin(random, 3, 2.5, 1.7, 1.9);
 		this.noise6 = new NoisePerlin(random, 3, 8.0, 2.5, 2.0);
 	}
@@ -105,11 +105,11 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			outArray = new double[xSize * ySize * zSize];
 		}
 		
-		this.cache4 = this.noise4.noise(this.cache4, xSize, zSize, (double) xPos, (double) zPos, 1.0, 1.0);
-		this.cache3 = this.noise3.noise(this.cache3, ySize, xSize, zSize, yPos, xPos, zPos, 0.4, 1.0, 1.0);
+		this.cacheBase = this.noiseBase.noise(this.cacheBase, xSize, zSize, (double) xPos, (double) zPos, 1.0, 1.0);
+		this.cacheMain = this.noiseMain.noise(this.cacheMain, ySize, xSize, zSize, yPos, xPos, zPos, 4.0, 1.0, 1.0);
 		
-		this.cache1 = this.noise1.noise(this.cache1, ySize, xSize, zSize, yPos, xPos, zPos, 0.3, 1.0, 1.0);
-		this.cache2 = this.noise2.noise(this.cache2, ySize, xSize, zSize, yPos, xPos, zPos, 0.3, 1.0, 1.0);
+		this.cacheMax = this.noiseMax.noise(this.cacheMax, ySize, xSize, zSize, yPos, xPos, zPos, 2.0, 1.0, 1.0);
+		this.cacheMin = this.noiseMin.noise(this.cacheMin, ySize, xSize, zSize, yPos, xPos, zPos, 2.0, 1.0, 1.0);
 		
 		int i1 = 0;
 		int i2 = 0;
@@ -136,8 +136,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				{
 					data[i] /= count[i];
 				}
-				base.mapTerrainData(outArray, i1, ySize, data,
-						this.cache4[i2], this.cache3, this.cache1, this.cache2, i2, X, Z);
+				base.mapTerrainData(outArray, i1, ySize, data, this.cacheBase[i2], this.cacheMain, this.cacheMax, this.cacheMin, i2, X, Z);
 				i1 += ySize;
 				i2++;
 			}
@@ -152,7 +151,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private void generateChunkData(ChunkPrimer primer, int chunkX, int chunkZ)
 	{
 		this.terrains = this.biomeProvider.getTerrainForGeneration(this.terrains, chunkX - size, chunkZ - size, 5 + scale, 5 + scale);
-		this.cachea = initializeNoiseFieldHigh(this.cachea, chunkX, 0, chunkZ, xzSize, ySize, xzSize);
+		this.hights = initializeNoiseFieldHigh(this.hights, chunkX, 0, chunkZ, xzSize, ySize, xzSize);
 		
 		for (int z = 0; z < subDivXZ; z++)
 		{
@@ -160,14 +159,14 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			{
 				for (int y = 0; y < subDivY; y++)
 				{
-					double noiseDL  =  this.cachea[(((z    ) * xzSize + x    ) * ySize + y    )];
-					double noiseUL  =  this.cachea[(((z + 1) * xzSize + x    ) * ySize + y    )];
-					double noiseDR  =  this.cachea[(((z    ) * xzSize + x + 1) * ySize + y    )];
-					double noiseUR  =  this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y    )];
-					double noiseDLA = (this.cachea[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
-					double noiseULA = (this.cachea[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
-					double noiseDRA = (this.cachea[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
-					double noiseURA = (this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
+					double noiseDL  =  this.hights[(((z    ) * xzSize + x    ) * ySize + y    )];
+					double noiseUL  =  this.hights[(((z + 1) * xzSize + x    ) * ySize + y    )];
+					double noiseDR  =  this.hights[(((z    ) * xzSize + x + 1) * ySize + y    )];
+					double noiseUR  =  this.hights[(((z + 1) * xzSize + x + 1) * ySize + y    )];
+					double noiseDLA = (this.hights[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
+					double noiseULA = (this.hights[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
+					double noiseDRA = (this.hights[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
+					double noiseURA = (this.hights[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
 					for (int y1 = 0; y1 < 8; y1++)
 					{
 						int Y = y1 | (y << 3) | arrayYHeight;
