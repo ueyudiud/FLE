@@ -29,10 +29,10 @@ public class BaseStack implements AbstractStack
 		return size <= 0 ? null : new BaseStack(stack.item, size, stack.meta, stack.nbt);
 	}
 	
-	private Item			item;
-	private int				size;
-	private int				meta;
-	private NBTTagCompound	nbt;
+	public Item				item;
+	public int				size;
+	public int				meta;
+	public NBTTagCompound	nbt;
 	
 	public BaseStack(String modid, String name, int size, int meta)
 	{
