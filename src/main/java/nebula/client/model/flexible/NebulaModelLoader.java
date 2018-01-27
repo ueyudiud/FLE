@@ -6,6 +6,7 @@ package nebula.client.model.flexible;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -538,12 +539,13 @@ public enum NebulaModelLoader implements ICustomModelLoader
 					switch (values[0])
 					{
 					case "@include":
-						if (values.length != 2) throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
 						try
 						{
 							builder.putAll(getTextureSet(new ResourceLocation(values[1])));
 						}
-						catch (InternalError exception)
+						catch (InternalError error)
 						{
 							this.stream.println("Looped loading. file: " + location + " line: " + line + " target: " + values[1]);
 						}
@@ -553,7 +555,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 						}
 						break;
 					case "@remove":
-						if (values.length != 2) throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
 						builder.remove(values[1]);
 						break;
 					default:
@@ -593,10 +596,11 @@ public enum NebulaModelLoader implements ICustomModelLoader
 					list.forEach(k1 -> builder.put(k1, value));
 					break;
 				}
-				default:
+				default :
 				{
 					int idx;
-					if ((idx = key.indexOf('=')) == -1) throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
+					if ((idx = key.indexOf('=')) == -1)
+						throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
 					builder.put(key.substring(0, idx), new ResourceLocation(key.substring(idx + 1)));
 					break;
 				}
@@ -660,9 +664,13 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		{
 			return GSON.fromJson(new InputStreamReader(resource.getInputStream()), ModelPartCollection.class);
 		}
-		catch (IOException exception)
+		catch (FileNotFoundException exception)
 		{
 			this.stream.println("Model part " + location + " not found.");
+			return ModelPartCollection.EMPTY;
+		}
+		catch (IOException exception)
+		{
 			exception.printStackTrace(this.stream);
 			return ModelPartCollection.EMPTY;
 		}
