@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.enviornment;
+package nebula.common.environment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

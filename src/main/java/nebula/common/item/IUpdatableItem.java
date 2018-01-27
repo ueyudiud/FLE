@@ -3,7 +3,7 @@
  */
 package nebula.common.item;
 
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import net.minecraft.item.ItemStack;
 
 public interface IUpdatableItem

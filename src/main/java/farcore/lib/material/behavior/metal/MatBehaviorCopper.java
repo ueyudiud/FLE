@@ -8,7 +8,7 @@ import farcore.lib.material.MatCondition;
 import farcore.lib.material.behavior.IItemMatProp;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.enviornment.IEnvironment;
+import nebula.common.environment.IEnvironment;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.Strings;
 import net.minecraft.entity.Entity;

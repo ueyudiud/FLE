@@ -21,7 +21,7 @@ import nebula.Nebula;
 import nebula.common.CommonOverride;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
-import nebula.common.enviornment.EnviornmentBlockPos;
+import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.world.ICoord;
 import nebula.common.world.IObjectInWorld;

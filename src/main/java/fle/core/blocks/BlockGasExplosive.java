@@ -9,7 +9,7 @@ import farcore.data.EnumBlock;
 import farcore.data.Materials;
 import farcore.lib.fluid.BlockGas;
 import fle.api.recipes.instance.FlamableRecipes;
-import nebula.common.enviornment.EnviornmentBlockPos;
+import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.Maths;
 import nebula.common.util.Worlds;

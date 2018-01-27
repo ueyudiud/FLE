@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import nebula.Log;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.enviornment.EnviornmentEntity;
+import nebula.common.environment.EnviornmentEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
