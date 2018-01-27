@@ -26,7 +26,7 @@ public final class NebulaCoreAPI
 	{
 		addASMSearchingDirection("nebula");
 		// Far & Nebula group mods...
-		addASMSearchingDirection("ed");// Extra Data mod, uses to override
-										// vanilla world data save method.
+		addASMSearchingDirection("ed");
+		// Extra Data mod, uses to override vanilla world data save method.
 	}
 }

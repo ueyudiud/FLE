@@ -4,8 +4,10 @@
 package nebula.common;
 
 import nebula.common.capability.CapabilityHelper;
+import nebula.common.foodstat.FoodStatExt;
 import nebula.common.world.IBiomeExtended;
 import nebula.common.world.IBiomeRegetter;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -19,6 +21,11 @@ import net.minecraftforge.common.capabilities.Capability;
  */
 public class CommonOverride
 {
+	public static FoodStats createFoodStats()
+	{
+		return NebulaConfig.useExtPlayerStat ? new FoodStatExt() : new FoodStats();
+	}
+	
 	public static void registerCapabilityType(Class<?> clazz, Capability<?> capability)
 	{
 		CapabilityHelper.registerCapabilityType(clazz, capability);

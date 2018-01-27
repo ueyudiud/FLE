@@ -101,8 +101,8 @@ public final class NebulaConfiguration
 		for (Field field : configClass.getFields())
 		{
 			int modifier = field.getModifiers();
-			if ((modifier & Modifier.FINAL) != 0) continue;// Skip final value.
-			if (flag ^ (modifier & Modifier.STATIC) != 0) continue;
+			if ((modifier & Modifier.FINAL) != 0 || flag ^ (modifier & Modifier.STATIC) != 0 || field.isAnnotationPresent(ConfigExclusive.class))
+				continue;
 			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) getAdapter(field);
 			if (adapter == null)
 			{

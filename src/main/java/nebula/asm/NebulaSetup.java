@@ -104,9 +104,9 @@ public class NebulaSetup implements IFMLCallHook
 	/**
 	 * The ASM file version, uses to determine if it need replaced ASM files.
 	 */
-	private static final int VERSION = 14;
+	private static final int VERSION = 16;
 	
-	final JsonDeserializer<OpInfo>		DESERIALIZER1	= (json, typeOfT, context) -> {
+	final JsonDeserializer<OpInfo>				DESERIALIZER1	= (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
 		JsonObject object = json.getAsJsonObject();
 		OpInfo information = new OpInfo(object.get("name").getAsString());
@@ -395,11 +395,9 @@ public class NebulaSetup implements IFMLCallHook
 		File file = new File(destination, "version.txt");
 		if (!file.exists())
 		{
-			OutputStream stream = null;
-			try
+			try (OutputStream stream = new BufferedOutputStream(new FileOutputStream(file)))
 			{
 				file.createNewFile();
-				stream = new BufferedOutputStream(new FileOutputStream(file));
 				stream.write(VERSION);
 				return true;
 			}
@@ -407,23 +405,17 @@ public class NebulaSetup implements IFMLCallHook
 			{
 				NebulaASMLogHelper.LOG.error("Fail to add version file.", exception);
 			}
-			finally
-			{
-				if (stream != null)
-				{
-					stream.close();
-				}
-			}
 		}
 		else
 		{
-			try (
-					InputStream stream1 = new BufferedInputStream(new FileInputStream(file)))
+			try (InputStream stream1 = new BufferedInputStream(new FileInputStream(file)))
 			{
 				int version = stream1.read();
 				if (version != VERSION)
 				{
-					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, " + "there may cause some bug, it is suggested that you should clean your ./asm file if " + "you don't known what is happening and your game got crashed.");
+					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, " +
+							"there may cause some bug, it is suggested that you should clean your ./asm file if " +
+							"you don't known what is happening and your game got crashed.");
 				}
 				stream1.close();
 				return false;

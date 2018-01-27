@@ -10,26 +10,13 @@
 					"name": "<init>",
 					"desc": "()V",
 					"off": -2,
+					"len": 3,
 					"nodes": [
 						{
-							"opcode": 187,
-							"desc": "nebula/common/foodstat/FoodStatExt"
-						}
-					]
-				},
-				{
-					"type": "replace",
-					"owner": "abb",
-					"name": "<init>",
-					"desc": "()V",
-					"off": 0,
-					"nodes": [
-						{
-							"opcode": 183,
-							"owner": "nebula/common/foodstat/FoodStatExt",
-							"name": "<init>",
-							"desc": "()V",
-							"itf" : false
+							"opcode": 184,
+							"owner": "nebula/common/CommonOverride",
+							"name": "createFoodStats",
+							"desc": "()Labb;"
 						}
 					]
 				}

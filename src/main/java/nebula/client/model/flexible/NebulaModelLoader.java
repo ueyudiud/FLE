@@ -142,7 +142,9 @@ public enum NebulaModelLoader implements ICustomModelLoader
 					deserializer = MODEL_DESERIALIZERS.get(new ResourceLocation(key));
 				}
 				if (deserializer == null) if (INSTANCE.defaultDeserializer == null)
+				{
 					throw new JsonParseException("No deserializer found.");
+				}
 				else
 				{
 					deserializer = INSTANCE.defaultDeserializer;
@@ -507,10 +509,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		{
 			result = loadTextureSet(location);
 		}
-		catch (Exception exception)
-		{
-			throw exception;
-		}
 		finally
 		{
 			this.loadingTextureSets.removeLast();
@@ -617,6 +615,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			{
 				return supplier.get();
 			}
+			exception.printStackTrace(this.stream);
 			return ImmutableMap.of();
 		}
 		catch (RuntimeException exception)
@@ -638,6 +637,12 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		return (model == null) ? ModelLoaderRegistry.getModelOrMissing(location) : model;
 	}
 	
+	/**
+	 * Load model part from resource location.
+	 * 
+	 * @param location
+	 * @return
+	 */
 	public static INebulaModelPart getModelPart(String location)
 	{
 		ModelResourceLocation location2 = new ModelResourceLocation(location);
