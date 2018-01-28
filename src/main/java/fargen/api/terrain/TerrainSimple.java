@@ -39,7 +39,6 @@ public class TerrainSimple extends Terrain
 		// Rescaled
 		double d1 = (height - 1) * (data[BASE_HEIGHT] * 0.15625 + 0.125 + 0.03125);
 		double d2 = 1.0 + data[HEIGHT_VARIATION] * VARIATION_SUPPLIER.applyAsDouble(randHeight);
-		if (d2 < 0.3) d2 = 1.0 + (d2 - 0.3) * 0.4;
 		// Height calculate
 		int i1 = offset;
 		for (int y = 1; y <= height; y++)
@@ -49,10 +48,10 @@ public class TerrainSimple extends Terrain
 			{
 				off *= 4.0;
 			}
-			double output = off + lerp(min[i1], max[i1], main[i1]) * 2.0 - 1.0;
+			double output = off + lerp(min[i1], max[i1], main[i1]) * 8.0 - 4.0;
 			if (y > height - 4)
 			{
-				output = lerp(-1.0, output, (height - y) / 3.0F);
+				output = lerp(- 4.0, output, (height - y) / 3.0F);
 			}
 			result[i1 ++] = output;
 		}

@@ -53,11 +53,11 @@ public class TerrainValley extends Terrain
 			{
 				off *= 4.0;
 			}
-			double d4 = lerp(min[i1], max[i1], main[i1]) * 2.0 - 1.0;
+			double d4 = lerp(min[i1], max[i1], main[i1]) * 8.0 - 4.0;
 			double output = off + clampLerp(d4 - 0.5, -4.0 * d4, d3 * main[i1]);
 			if (y > height - 4)
 			{
-				output = lerp(-1.0, output, (height - y) / 3.0F);
+				output = lerp(- 4.0, output, (height - y) / 3.0F);
 			}
 			result[i1 ++] = output;
 		}

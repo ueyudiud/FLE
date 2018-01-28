@@ -78,7 +78,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private double[] cacheBase;
 	private double[] cache5;
 	
-	private double[] hights;
+	private double[] heights;
 	
 	public FarSurfaceChunkGenerator(World world, long seed)
 	{
@@ -86,7 +86,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.seed = seed;
 		this.biomeProvider = (FarSurfaceBiomeProvider) world.provider.getBiomeProvider();
 		Random random = new Random(seed);
-		this.noiseBase = new NoisePerlin(random,  6, 0.7, 1.8, 2.0);
+		this.noiseBase = new NoisePerlin(random,  6, 0.5, 2.0, 2.0);
 		this.noiseMax  = new NoisePerlin(random, 12, 0.5, 2.0, 2.0);
 		this.noiseMin  = new NoisePerlin(random, 12, 0.5, 2.0, 2.0);
 		this.noiseMain = new NoisePerlin(random,  6, 1.6, 2.5, 1.6);
@@ -151,7 +151,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private void generateChunkData(ChunkPrimer primer, int chunkX, int chunkZ)
 	{
 		this.terrains = this.biomeProvider.getTerrainForGeneration(this.terrains, chunkX - size, chunkZ - size, 5 + scale, 5 + scale);
-		this.hights = initializeNoiseFieldHigh(this.hights, chunkX, 0, chunkZ, xzSize, ySize, xzSize);
+		this.heights = initializeNoiseFieldHigh(this.heights, chunkX, 0, chunkZ, xzSize, ySize, xzSize);
 		
 		for (int z = 0; z < subDivXZ; z++)
 		{
@@ -159,30 +159,30 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			{
 				for (int y = 0; y < subDivY; y++)
 				{
-					double noiseDL  =  this.hights[(((z    ) * xzSize + x    ) * ySize + y    )];
-					double noiseUL  =  this.hights[(((z + 1) * xzSize + x    ) * ySize + y    )];
-					double noiseDR  =  this.hights[(((z    ) * xzSize + x + 1) * ySize + y    )];
-					double noiseUR  =  this.hights[(((z + 1) * xzSize + x + 1) * ySize + y    )];
-					double noiseDLA = (this.hights[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
-					double noiseULA = (this.hights[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
-					double noiseDRA = (this.hights[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
-					double noiseURA = (this.hights[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
+					double noiseDL  =  this.heights[(((z    ) * xzSize + x    ) * ySize + y    )];
+					double noiseUL  =  this.heights[(((z + 1) * xzSize + x    ) * ySize + y    )];
+					double noiseDR  =  this.heights[(((z    ) * xzSize + x + 1) * ySize + y    )];
+					double noiseUR  =  this.heights[(((z + 1) * xzSize + x + 1) * ySize + y    )];
+					double noiseDLA = (this.heights[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
+					double noiseULA = (this.heights[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
+					double noiseDRA = (this.heights[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
+					double noiseURA = (this.heights[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
 					for (int y1 = 0; y1 < 8; y1++)
 					{
-						int Y = y1 | (y << 3) | arrayYHeight;
+						int Y = y1 | y << 3 | arrayYHeight;
 						double var34 =  noiseDL;
 						double var36 =  noiseUL;
 						double var38 = (noiseDR - noiseDL) * xzLerp;
 						double var40 = (noiseUR - noiseUL) * xzLerp;
 						for (int x1 = 0; x1 < 4; x1++)
 						{
-							int X = x1 | (x << 2);
+							int X = x1 | x << 2;
 							
 							double var49 = (var36 - var34) * xzLerp;
 							double var47 =  var34 - var49;
 							for (int z1 = 0; z1 < 4; z1++)
 							{
-								int Z = z1 | (z << 2);
+								int Z = z1 | z << 2;
 								
 								if ((var47 += var49) > 0.0D)
 								{

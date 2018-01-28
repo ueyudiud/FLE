@@ -32,10 +32,7 @@ public abstract class Terrain
 			x = x * 2.0 - 1.0;
 		}
 		// [0.0, 3.0]
-		x = x - 1.0;
-		x /= 2.0;
-		// [-0.5, 1.0]
-		return x * 8;
+		return x * 3.0;
 	};
 	
 	/** The index of terrain, it only use to mark in generation layer. */
