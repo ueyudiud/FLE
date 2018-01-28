@@ -3,6 +3,8 @@
  */
 package farcore.data;
 
+import com.google.common.collect.ImmutableSet;
+
 import farcore.lib.oredict.OreStackExt;
 import nebula.common.tool.EnumToolType;
 
@@ -86,6 +88,7 @@ public class EnumToolTypes
 		{
 			super("farcore." + name, name, "craftingTool" + dictName, new OreStackExt("craftingTool" + dictName));
 			this.className = name;
+			this.toolClass = ImmutableSet.of(name);
 		}
 		
 		@Override

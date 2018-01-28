@@ -94,7 +94,8 @@ public class BaseStack implements AbstractStack
 	
 	public BaseStack(ItemStack stack, int size)
 	{
-		this(stack, size, stack == null ? 0 : stack.getItemDamage());
+		this(stack);
+		this.size = size;
 	}
 	
 	public BaseStack(ItemStack stack, int size, int meta)
@@ -105,10 +106,6 @@ public class BaseStack implements AbstractStack
 			this.size = size;
 			this.meta = meta;
 			this.nbt = stack.getTagCompound();
-		}
-		if (this.item != null && ((this.item.getHasSubtypes() || this.item instanceof ItemBlock) && meta == OreDictionary.WILDCARD_VALUE))
-		{
-			this.meta = -1;
 		}
 	}
 	
@@ -146,7 +143,13 @@ public class BaseStack implements AbstractStack
 	@Override
 	public ItemStack instance()
 	{
-		return this.item != null ? new ItemStack(this.item, this.size, this.meta) : null;
+		if (this.item != null)
+		{
+			ItemStack stack = new ItemStack(this.item, this.size, this.meta);
+			stack.setTagCompound(this.nbt);
+			return stack;
+		}
+		return null;
 	}
 	
 	@Override
