@@ -35,10 +35,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelPartQuad implements INebulaModelPart
 {
-	private static final float[][] ATTACH_UP = { { 0.0F, 15.2F, 0.0F }, { 0.0F, 15.2F, 16.0F }, { 16.0F, 15.2F, 16.0F }, { 16.0F, 15.2F, 0.0F } }, ATTACH_DOWN = { { 0.0F, 0.8F, 0.0F }, { 0.0F, 0.8F, 16.0F }, { 16.0F, 0.8F, 16.0F }, { 16.0F, 0.8F, 0.0F } },
-			ATTACH_NORTH = { { 0.0F, 16.0F, 0.8F }, { 0.0F, 0.0F, 0.8F }, { 16.0F, 0.0F, 0.8F }, { 16.0F, 16.0F, 0.8F } }, ATTACH_SOUTH = { { 16.0F, 16.0F, 15.2F }, { 16.0F, 0.0F, 15.2F }, { 0.0F, 0.0F, 15.2F }, { 0.0F, 16.0F, 15.2F } },
-			ATTACH_WEST = { { 0.8F, 16.0F, 0.0F }, { 0.8F, 0.0F, 0.0F }, { 0.8F, 0.0F, 16.0F }, { 0.8F, 16.0F, 16.0F } }, ATTACH_EAST = { { 15.2F, 16.0F, 16.0F }, { 15.2F, 0.0F, 16.0F }, { 15.2F, 0.0F, 0.0F }, { 15.2F, 16.0F, 0.0F } },
-			CROSSING_1 = { { 0.8F, 16.0F, 0.8F }, { 0.8F, 0.0F, 0.8F }, { 15.2F, 0.0F, 15.2F }, { 15.2F, 16.0F, 15.2F } }, CROSSING_2 = { { 15.2F, 16.0F, 0.8F }, { 15.2F, 0.0F, 0.8F }, { 0.8F, 0.0F, 15.2F }, { 0.8F, 16.0F, 15.2F } };
+	private static final float[][]
+			ATTACH_UP    = { { 0.0F,15.2F, 0.0F}, { 0.0F,15.2F,16.0F}, {16.0F,15.2F,16.0F}, {16.0F,15.2F, 0.0F} },
+			ATTACH_DOWN  = { { 0.0F, 0.8F, 0.0F}, {16.0F, 0.8F, 0.0F}, {16.0F, 0.8F,16.0F}, { 0.0F, 0.8F,16.0F} },
+			ATTACH_NORTH = { { 0.0F,16.0F, 0.8F}, { 0.0F, 0.0F, 0.8F}, {16.0F, 0.0F, 0.8F}, {16.0F,16.0F, 0.8F} },
+			ATTACH_SOUTH = { {16.0F,16.0F,15.2F}, {16.0F, 0.0F,15.2F}, { 0.0F, 0.0F,15.2F}, { 0.0F,16.0F,15.2F} },
+			ATTACH_WEST  = { { 0.8F,16.0F,16.0F}, { 0.8F, 0.0F,16.0F}, { 0.8F, 0.0F, 0.0F}, { 0.8F,16.0F, 0.0F} },
+			ATTACH_EAST  = { {15.2F,16.0F, 0.0F}, {15.2F, 0.0F, 0.0F}, {15.2F, 0.0F,16.0F}, {15.2F,16.0F,16.0F} },
+			CROSSING_1   = { { 0.8F,16.0F, 0.8F}, { 0.8F, 0.0F, 0.8F}, {15.2F, 0.0F,15.2F}, {15.2F,16.0F,15.2F} },
+			CROSSING_2   = { {15.2F,16.0F, 0.8F}, {15.2F, 0.0F, 0.8F}, { 0.8F, 0.0F,15.2F}, { 0.8F,16.0F,15.2F} };
 	
 	public static final JsonDeserializer<INebulaModelPart> LOADER = (json, typeOfT, context) -> {
 		JsonObject object = json.getAsJsonObject();
@@ -145,7 +150,7 @@ public class ModelPartQuad implements INebulaModelPart
 		vec1.cross(vec1, vec2);
 		vec1.normalize();
 		
-		builder1.startQuad(modifier.rotateFacing(EnumFacing.UP));
+		builder1.startQuad(modifier.rotateFacing(EnumFacing.getFacingFromVector(vec1.x, vec1.y, vec1.z)));
 		builder1.normal(vec1.x, vec1.y, vec1.z);
 		builder1.color(this.red, this.green, this.blue, this.alpha);
 		float[] u = { this.textureMinU, this.textureMinU, this.textureMaxU, this.textureMaxU };
