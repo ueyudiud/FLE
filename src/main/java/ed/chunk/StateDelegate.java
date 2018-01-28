@@ -14,9 +14,9 @@ import com.google.common.collect.ImmutableList;
 
 import ed.EDConfig;
 import nebula.Log;
-import nebula.base.IntegerEntry;
 import nebula.base.A;
 import nebula.base.HashIntMap;
+import nebula.base.IntegerEntry;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.L;
@@ -37,8 +37,8 @@ abstract class StateDelegate
 		return block == Blocks.AIR ? AIR : block.getBlockState().getProperties().isEmpty() ? new StateDegegateSingle(block) : (EDConfig.buildStateIn || (block instanceof IExtendedDataBlock)) ? new StateDelegateExt(block) : new StateDegegateNormal(block);
 	}
 	
-	final Block	block;
-	int			id	= -1;
+	final Block block;
+	int id = -1;
 	
 	StateDelegate(Block block)
 	{
