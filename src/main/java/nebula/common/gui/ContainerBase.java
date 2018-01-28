@@ -644,9 +644,9 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 			return false;
 		}
 		
-		public boolean mergeItemStack(ItemStack itemstack)
+		public boolean mergeItemStack(ItemStack stack)
 		{
-			return !isItemValid(itemstack) ? false : ContainerBase.this.mergeItemStack(itemstack, this.startId, this.endId, this.reverseDirection);
+			return !isItemValid(stack) ? false : ContainerBase.this.mergeItemStack(stack, this.startId, this.endId, this.reverseDirection);
 		}
 	}
 	

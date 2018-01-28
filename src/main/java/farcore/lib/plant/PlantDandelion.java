@@ -15,9 +15,11 @@ import farcore.lib.material.Mat;
 import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendar;
 import farcore.lib.world.ICalendarWithMonth;
+import nebula.client.model.ModelLocation;
 import nebula.client.model.StateMapperExt;
+import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
-import nebula.client.util.Renders;
+import nebula.common.block.BlockBase;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Properties;
@@ -26,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -34,6 +37,7 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,7 +50,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	public static final IProperty<Integer>	AGE			= Properties.create("age", 0, 3);
 	public static final IProperty<Integer>	PROGRESS	= Properties.create("progress", 0, 7);
 	
-	private Block block;
+	private BlockBase block;
 	
 	public PlantDandelion()
 	{
@@ -63,13 +67,15 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Renders.registerCompactModel(new StateMapperExt(FarCore.ID, "plant/dandelion", null, PROGRESS), this.block, AGE);
+		ModelResourceLocation location = new ModelLocation(FarCore.ID, "plant/dandelion", "normal");
+		ModelLoader.setCustomStateMapper(this.block, new StateMapperExt(FarCore.ID, "plant/dandelion", null, PROGRESS));
+		Client.registerModel(this.block.getItemBlock(), new ModelLocation(location, "inventory"));
 	}
 	
 	@Override
 	public void registerStateToRegister(Block block, IBlockStateRegister register)
 	{
-		register.registerStates(block, AGE);
+		register.registerStates(AGE);
 	}
 	
 	@Override

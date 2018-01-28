@@ -10,7 +10,7 @@
 			"textures": { "all": "farcore:blocks/plants/poa_bluegrass" }
 		},
 		"inventory": {
-			"model": "item/generated",
+			"model": "nebula:item",
 			"transform": "forge:default-item",
 			"textures": { "layer0": "farcore:blocks/plants/poa_bluegrass" }
 		}

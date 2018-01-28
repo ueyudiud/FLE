@@ -13,7 +13,7 @@
 			}
 		},
 		"inventory": {
-			"model": "item/generated",
+			"model": "nebula:item",
 			"transform": "forge:default-item",
 			"textures": { 
 				"layer0": "farcore:blocks/plants/inula",

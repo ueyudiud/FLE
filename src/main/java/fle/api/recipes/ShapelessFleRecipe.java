@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.common.collect.ObjectArrays;
 
 import nebula.base.ObjArrayParseHelper;
+import nebula.base.Stack;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
+import nebula.common.util.L;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -50,8 +53,7 @@ public class ShapelessFleRecipe implements IRecipe
 			this.output = output;
 			this.inputs = new ArrayList<>();
 			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
-			
-			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack -> stack.repeat(this.inputs::add));
+			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, L.toConsumer(Stack::repeat, (Consumer<SingleInputMatch>) this.inputs::add));
 		}
 		catch (Exception exception)
 		{

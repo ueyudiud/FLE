@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
@@ -484,6 +485,18 @@ public class L
 	public static <T, F> Judgable<F> toPredicate(BiPredicate<F, T> function, T constant)
 	{
 		return target -> function.test(target, constant);
+	}
+	
+	/**
+	 * Convert predicate to high level function input logic, it exists a constant variable.
+	 * 
+	 * @param function the predicate used to combine.
+	 * @param constant the constant for input.
+	 * @return the combined predicate.
+	 */
+	public static <T, F> Consumer<F> toConsumer(BiConsumer<F, ? super T> function, T constant)
+	{
+		return target -> function.accept(target, constant);
 	}
 	
 	/**

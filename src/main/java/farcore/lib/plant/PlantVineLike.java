@@ -30,7 +30,7 @@ public class PlantVineLike extends PlantNormal
 	{
 		super(material);
 		this.vine = createVineBlock(material);
-		LanguageManager.registerLocal(this.vine.getTranslateNameForItemStack(0), "Vine");
+		LanguageManager.registerLocal(this.vine.getTranslateNameForItemStack(0), material.localName);
 	}
 	
 	protected BlockPlantVine createVineBlock(Mat material)

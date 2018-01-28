@@ -6,9 +6,11 @@ package nebula.client.model;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 
 import javax.annotation.Nullable;
 
@@ -16,6 +18,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedMap;
 
+import nebula.base.A;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
@@ -55,19 +58,19 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	 * @param path the state file path.
 	 * @param property1 the file split property, use this property value name as
 	 *            file name, no property means state mapper don't split file.
-	 * @param properties the ignore properties, those properties will not
+	 * @param excludes the ignore properties, those properties will not
 	 *            present in model state.
 	 */
-	public StateMapperExt(String modid, String path, @Nullable IProperty property1, IProperty...properties)
+	public StateMapperExt(String modid, String path, @Nullable IProperty property1, IProperty...excludes)
 	{
-		this(modid + ":" + path, property1, properties);
+		this(modid + ":" + path, property1, excludes);
 	}
 	
-	public StateMapperExt(String path, @Nullable IProperty property1, IProperty...properties)
+	public StateMapperExt(String path, @Nullable IProperty property1, IProperty...excludes)
 	{
 		this.path = path;
 		this.fileProperty = property1;
-		this.ignore = ImmutableList.copyOf(properties);
+		this.ignore = ImmutableList.copyOf(excludes);
 	}
 	
 	/** Now it is only an internal method, use to create a fake property. */
@@ -142,17 +145,16 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 			map.put(this.fakeProperty, this.variantsValue);
 		}
 		
-		String key = this.path;
+		StringBuilder key = new StringBuilder().append(this.path);
+		
 		if (this.fileProperty != null)
 		{
-			key += "/" + removeAndGetName(this.fileProperty, map);
+			key.append('/').append(removeAndGetName(this.fileProperty, map));
 		}
 		
-		for (IProperty property : this.ignore)
-		{
-			map.remove(property);
-		}
-		return key;
+		map.keySet().removeAll(this.ignore);
+		
+		return key.toString();
 	}
 	
 	/**
@@ -173,7 +175,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 			
 			public Optional<String> parseValue(String value)
 			{
-				return Optional.of(value);
+				return A.contain(values, value) ? Optional.of(value) : Optional.absent();
 			}
 			
 			public String getName(String value)
@@ -191,32 +193,38 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	 */
 	public static String getPropertyKey(Map<IProperty<?>, Comparable<?>> values)
 	{
-		if (!(values instanceof ImmutableSortedMap))
+		if (!(values instanceof SortedMap) || ((SortedMap<IProperty<?>, Comparable<?>>) values).comparator() != PROPERTY_COMPARATOR)
 		{
 			values = ImmutableSortedMap.copyOf(values, PROPERTY_COMPARATOR);
 		}
-		StringBuilder builder = new StringBuilder();
 		
-		for (Entry<IProperty<?>, Comparable<?>> entry : values.entrySet())
+		if (values.isEmpty())
 		{
-			if (builder.length() != 0)
+			return "normal";
+		}
+		else
+		{
+			StringBuilder builder = new StringBuilder();
+			Entry<IProperty<?>, Comparable<?>> entry;
+			IProperty property;
+			Iterator<Entry<IProperty<?>, Comparable<?>>> values$itr = values.entrySet().iterator();
+			entry = values$itr.next();
+			property = entry.getKey();
+			builder.append(property.getName()).append('=').append(property.getName(entry.getValue()));
+			while (values$itr.hasNext())
 			{
-				builder.append(",");
+				entry = values$itr.next();
+				property = entry.getKey();
+				builder.append(',').append(property.getName()).append('=').append(property.getName(entry.getValue()));
 			}
-			IProperty property = entry.getKey();
-			builder.append(property.getName()).append("=").append(property.getName(entry.getValue()));
+			return builder.toString();
 		}
-		if (builder.length() == 0)
-		{
-			builder.append("normal");
-		}
-		return builder.toString();
 	}
 	
 	/** Helper method. */
 	public static <T extends Comparable<T>> String removeAndGetName(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
 	{
-		return property.getName(removeAndGetValue(property, map));
+		return property.getName((T) map.remove(property));
 	}
 	
 	/** Helper method. */
