@@ -12,5 +12,5 @@ import net.minecraft.world.IBlockAccess;
  */
 public interface IFallingStaySupport
 {
-	int getFallWeight(IBlockAccess world, BlockPos pos, IBlockState state);
+	int getFallWeight(IBlockAccess world, BlockPos pos, IBlockState state, boolean stableOnly);
 }

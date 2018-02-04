@@ -14,9 +14,9 @@ import net.minecraft.world.World;
  */
 public interface ISmartFallableBlockRockLike extends ISmartFallableBlock, IFallingStaySupport
 {
-	default int getFallWeight(IBlockAccess world, BlockPos pos, IBlockState state)
+	default int getFallWeight(IBlockAccess world, BlockPos pos, IBlockState state, boolean stableOnly)
 	{
-		return 100;
+		return stableOnly ? 0 : 100;
 	}
 	
 	boolean onCaveInCheck(World world, BlockPos pos, IBlockState state);

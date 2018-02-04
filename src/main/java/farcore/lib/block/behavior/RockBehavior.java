@@ -1,5 +1,5 @@
 /*
- * copyright© 2016-2017 ueyudiud
+ * copyright© 2016-2018 ueyudiud
  */
 package farcore.lib.block.behavior;
 
@@ -285,6 +285,10 @@ implements IRockLikeBehavior<B>
 		{
 			world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble));
 		}
+		if (Worlds.isAirOrReplacable(world, pos.down()) && checkCollapse(world, pos, state, 200, true))
+		{
+			NebulaWorldHandler.schedueTask(new TaskFalling(world, pos, pos, state, 4));
+		}
 	}
 	
 	public boolean onBurn(B block, IBlockState state, IModifiableCoord coord, float burnHardness, Direction direction)
@@ -373,7 +377,7 @@ implements IRockLikeBehavior<B>
 	public void scheduleFalling(B block, World world, BlockPos pos, IBlockState state, int delayMultiplier)
 	{
 		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) &&
-				checkCollapse(world, pos, state, 1000))
+				checkCollapse(world, pos, state, 500, true))
 		{
 			pos = pos.toImmutable();
 			NebulaWorldHandler.schedueTask(new TaskFalling(world, pos, pos, state, 2 * delayMultiplier));
@@ -384,7 +388,7 @@ implements IRockLikeBehavior<B>
 	@Override
 	public boolean onCaveInCheck(B block, World world, BlockPos pos, IBlockState state)
 	{
-		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) && checkCollapse(world, pos, state, 100))
+		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) && checkCollapse(world, pos, state, 100, false))
 		{
 			Worlds.fallBlock(world, pos, state);
 			
@@ -415,7 +419,7 @@ implements IRockLikeBehavior<B>
 		return false;
 	}
 	
-	protected boolean checkCollapse(IBlockAccess world, BlockPos pos, IBlockState state, int chance)
+	protected boolean checkCollapse(IBlockAccess world, BlockPos pos, IBlockState state, int chance, boolean stableOnly)
 	{
 		switch (state.getValue(TYPE))
 		{
@@ -429,23 +433,23 @@ implements IRockLikeBehavior<B>
 				IBlockState state2 = world.getBlockState(facing.offset(pos));
 				if (state2.getBlock() instanceof IFallingStaySupport)
 				{
-					weight += ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos, state2);
+					weight += ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos, state2, stableOnly);
 				}
 			}
 			return weight < 8 * chance;
 		default :
 			int
-			map[] = generateCollapseMap(world, pos, 5, new int[5]);
+			map[] = generateCollapseMap(world, pos, 5, new int[5], stableOnly);
 			weight = map[0] + map[1] / 2 + map[2] / 3 + map[3] / 5 + map[4] / 8;
 			return L.nextInt(weight * 3 / 4, world instanceof World ? ((World) world).rand : L.random()) + weight / 4 < 20 * chance;
 		case resource:
-			map = generateCollapseMap(world, pos, 4, new int[4]);
+			map = generateCollapseMap(world, pos, 4, new int[4], stableOnly);
 			weight = map[0] + map[1] / 2 + map[2] / 4 + map[3] / 8;
 			return L.nextInt(weight * 3 / 4, world instanceof World ? ((World) world).rand : L.random()) + weight / 4 < 20 * chance;
 		}
 	}
 	
-	private int[] generateCollapseMap(IBlockAccess world, BlockPos pos, int range, int[] cache)
+	private int[] generateCollapseMap(IBlockAccess world, BlockPos pos, int range, int[] cache, boolean stableOnly)
 	{
 		final int scale = (range << 1) | 1;
 		LinkedList<byte[]> pooled = new LinkedList<>();
@@ -471,7 +475,7 @@ implements IRockLikeBehavior<B>
 			
 			if (d <= range && (state2 = world.getBlockState(pos2)).getBlock() instanceof IFallingStaySupport)
 			{
-				int weight = ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos2, state2);
+				int weight = ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos2, state2, stableOnly);
 				cache[d - 1] += weight;
 				
 				if (weight > 0 && d < range)

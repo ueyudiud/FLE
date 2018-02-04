@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2018 ueyudiud
+ */
 package fle.core.entity.pathfinding;
 
 import java.util.EnumSet;

@@ -31,7 +31,7 @@ public class TaskFalling extends WorldTask
 		this.target = target;
 		this.state = state;
 		this.tile = world.getChunkFromBlockCoords(source).getTileEntity(source, EnumCreateEntityType.CHECK);
-		world.setBlockState(source, Misc.AIR, 2);
+		world.setBlockState(source, Misc.AIR, 4);
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class TaskFalling extends WorldTask
 			while (!EntityFallingBlockExtended.canFallAt(this.world, pos, this.state))
 			{
 				pos = pos.down();
-				++height;
+				++ height;
 			}
 			if (pos.getY() > 0)
 			{
@@ -73,6 +73,7 @@ public class TaskFalling extends WorldTask
 		}
 		if (super.handleTask())
 		{
+			this.world.notifyBlockUpdate(this.source, this.state, Misc.AIR, 2);
 			this.world.spawnEntity(new EntityFallingBlockExtended(this.world, this.source, this.target, this.state, this.tile));
 			return true;
 		}
