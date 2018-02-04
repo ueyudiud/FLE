@@ -66,8 +66,7 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 			int z = MathHelper.floor(this.entity.posZ);
 			BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, i, z);
 			
-			for (Material material = this.blockaccess.getBlockState(pos).getMaterial(); material == Material.WATER; pos.setPos(x, ++i, z), material = this.blockaccess.getBlockState(pos).getMaterial())
-				;
+			for (Material material = this.blockaccess.getBlockState(pos).getMaterial(); material == Material.WATER; pos.setPos(x, ++i, z), material = this.blockaccess.getBlockState(pos).getMaterial());
 		}
 		else if (this.entity.onGround)
 		{
@@ -77,8 +76,7 @@ public class NodeProcessorBlockBreakable extends NodeProcessor
 		{
 			BlockPos pos = new BlockPos(this.entity);
 			
-			for (IBlockState state = this.blockaccess.getBlockState(pos); (state.getBlock().isAir(state, this.blockaccess, pos) || state.getBlock().isPassable(this.blockaccess, pos)) && pos.getY() > 0; state = this.blockaccess.getBlockState(pos = pos.down()))
-				;
+			for (IBlockState state = this.blockaccess.getBlockState(pos); (state.getBlock().isAir(state, this.blockaccess, pos) || state.getBlock().isPassable(this.blockaccess, pos)) && pos.getY() > 0; state = this.blockaccess.getBlockState(pos = pos.down()));
 			
 			i = pos.up().getY();
 		}

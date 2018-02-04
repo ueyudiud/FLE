@@ -18,12 +18,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.apache.http.util.Asserts;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 
 import nebula.Log;
+import nebula.common.data.Misc;
 import nebula.common.util.Strings;
 import net.minecraft.client.resources.I18n;
 import scala.actors.threadpool.Arrays;
@@ -67,7 +71,7 @@ public class LanguageManager
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized strings.
 	 */
-	public static void registerTooltip(String unlocalized, String...localized)
+	public static void registerTooltip(@Nonnull String unlocalized, @Nonnull String...localized)
 	{
 		if (localized.length == 1)
 		{
@@ -91,7 +95,7 @@ public class LanguageManager
 	 * @see String#format(String, Object...) String.format
 	 * @see #registerLocal(String, String)
 	 */
-	public static void registerLocal(String unlocalized, String localized, Object...formats)
+	public static void registerLocal(@Nonnull String unlocalized, @Nonnull String localized, Object...formats)
 	{
 		try
 		{
@@ -111,8 +115,10 @@ public class LanguageManager
 	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 */
-	public static void registerLocal(String unlocalized, String localized)
+	public static void registerLocal(@Nonnull String unlocalized, @Nonnull String localized)
 	{
+		Asserts.notNull(unlocalized, "unlocalized name");
+		Asserts.notNull(localized, "localized name");
 		MAP2.put(unlocalized, localized);
 	}
 	
@@ -137,7 +143,7 @@ public class LanguageManager
 	 *         nothing found.
 	 * @see #translateToLocalWithIgnoreUnmapping(String, Object...)
 	 */
-	public static String translateToLocal(String unlocalized, Object...objects)
+	public static String translateToLocal(@Nonnull String unlocalized, Object...objects)
 	{
 		String translate;
 		if (MAP1.containsKey(unlocalized))
@@ -166,7 +172,7 @@ public class LanguageManager
 	 * @param unlocalized
 	 * @return
 	 */
-	public static String translateToLocalOfText(String unlocalized)
+	public static String translateToLocalOfText(@Nonnull String unlocalized)
 	{
 		String translate;
 		if (MAP1.containsKey(unlocalized))
@@ -202,7 +208,7 @@ public class LanguageManager
 	 * @return the formated localized string, or <tt>null</tt> if nothing found.
 	 * @see #translateToLocal(String, Object...)
 	 */
-	public static @Nullable String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
+	public static @Nullable String translateToLocalWithIgnoreUnmapping(@Nullable String unlocalized, Object...objects)
 	{
 		String translate;
 		if (MAP1.containsKey(unlocalized))
@@ -254,7 +260,7 @@ public class LanguageManager
 					int idx = line.indexOf('=');
 					if (idx == -1) throw new RuntimeException();
 					final String line1 = line;
-					map.computeIfAbsent(line.substring(0, idx).trim(), any -> line1.substring(idx + 1));
+					map.computeIfAbsent(line.substring(0, idx).trim(), Misc.anyTo(line1.substring(idx + 1)));
 				}
 			}
 		}

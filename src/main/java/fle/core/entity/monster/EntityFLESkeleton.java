@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.entity.monster;
 
 import farcore.lib.entity.IEntityDamageEffect;
