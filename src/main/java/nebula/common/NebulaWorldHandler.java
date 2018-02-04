@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,6 +20,7 @@ import nebula.Log;
 import nebula.common.block.IUpdateDelayBlock;
 import nebula.common.util.Worlds;
 import nebula.common.world.IObjectInWorld;
+import nebula.common.world.WorldTask;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
@@ -89,6 +92,7 @@ public class NebulaWorldHandler
 	private static final String							key			= "objsinw";
 	private static Map<Integer, List<IObjectInWorld>>	objects		= new HashMap<>();
 	private static Map<Integer, List<NotifyEntry>>		updatePos	= new HashMap<>();
+	private static List<WorldTask>						tasks		= new ArrayList<>();
 	
 	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap<>();
 	
@@ -96,6 +100,24 @@ public class NebulaWorldHandler
 	{
 		OBJECTS_TO_ID.put(clazz, id);
 		ID_TO_OBJECTS.put(id, clazz);
+	}
+	
+	public static void schedueTask(WorldTask task)
+	{
+		tasks.add(task);
+	}
+	
+	public static <T extends WorldTask> List<T> getTasks(World world, Class<T> type, Predicate<? super T> predicate)
+	{
+		List<T> list = new ArrayList<>();
+		for (WorldTask task : tasks)
+		{
+			if (type.isInstance(task) && predicate.test((T) task))
+			{
+				list.add((T) task);
+			}
+		}
+		return list;
 	}
 	
 	public static List<IObjectInWorld> getObjectInRange(World world, BlockPos pos, double range)
@@ -158,6 +180,7 @@ public class NebulaWorldHandler
 		{
 			nebula.common.util.L.put(unlistedObjects, dim, list);
 		}
+		tasks.removeIf(task -> task.world.provider.getDimension() == dim);
 		synchronized (updatePos)
 		{
 			updatePos.remove(dim);
@@ -205,6 +228,8 @@ public class NebulaWorldHandler
 		updateAllObjectInWorld(event.world);
 		event.world.theProfiler.endStartSection("update.notified");
 		updateNotifiedNeighbours(event.world);
+		event.world.theProfiler.endStartSection("update.custom.tasks");
+		updateTasks(event.world);
 		event.world.theProfiler.endSection();
 	}
 	
@@ -317,6 +342,19 @@ public class NebulaWorldHandler
 					nbt1.setTag(entry.getKey(), list);
 				}
 				nbt.setTag("oiw", nbt1);
+			}
+		}
+	}
+	
+	private void updateTasks(World world)
+	{
+		Iterator<WorldTask> tasks$itr = tasks.iterator();
+		while (tasks$itr.hasNext())
+		{
+			WorldTask task = tasks$itr.next();
+			if (task.handleTask())
+			{
+				tasks$itr.remove();
 			}
 		}
 	}

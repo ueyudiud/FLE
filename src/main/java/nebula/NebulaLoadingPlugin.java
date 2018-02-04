@@ -4,6 +4,7 @@
 package nebula;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
@@ -15,6 +16,23 @@ public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 	/** This is <code>true</code> in obfuscation environment. */
 	public static boolean	runtimeDeobf;
 	public static File		location;
+	private static File		source;
+	
+	public static File source()
+	{
+		if (source == null)
+		{
+			try
+			{
+				source = new File(NebulaLoadingPlugin.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			}
+			catch (URISyntaxException exception)
+			{
+				source = new File(".");
+			}
+		}
+		return source;
+	}
 	
 	@Override
 	public String[] getASMTransformerClass()

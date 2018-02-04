@@ -7,6 +7,7 @@ import static farcore.blocks.terria.BlockRock.HEATED;
 import static farcore.blocks.terria.BlockRock.TYPE;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,17 +16,23 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
+import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
+import farcore.lib.block.IFallingStaySupport;
+import farcore.lib.block.ISmartFallableBlockRockLike;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.tile.instance.TECustomCarvedStone;
-import nebula.common.block.IBlockBehavior;
+import farcore.lib.world.TaskFalling;
+import nebula.Log;
+import nebula.common.NebulaWorldHandler;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
+import nebula.common.util.Maths;
 import nebula.common.util.Worlds;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.Block;
@@ -43,6 +50,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -52,7 +60,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> implements IBlockBehavior<B>
+public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B>
+implements IRockLikeBehavior<B>
 {
 	public Block stonechip;
 	
@@ -141,7 +150,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	@Override
 	public void notifyAfterTicking(B block, IBlockState state, World world, BlockPos pos, IBlockState changed)
 	{
-		if (!canBlockStayTotally(world, pos, state, world.rand))
+		if (!canBlockStay(world, pos, state))
 		{
 			Worlds.fallBlock(world, pos, state);
 		}
@@ -193,6 +202,26 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 			break;
 		}
 		updateTick(block, state, world, pos, random);
+	}
+	
+	public void onBlockDestroyedByPlayer(B block, IBlockState state, World world, BlockPos pos)
+	{
+		if (world.isRemote) return;
+		final int chance = 10;
+		if (world.rand.nextInt(chance) == 0)
+		{
+			MutableBlockPos pos1 = new MutableBlockPos();
+			for (int counter = 0; counter < 100; ++counter)
+			{
+				pos1.setPos(pos.getX() - 4 + world.rand.nextInt(9), pos.getY() - 2 + world.rand.nextInt(5), pos.getZ() - 4 + world.rand.nextInt(9));
+				IBlockState state1 = world.getBlockState(pos1);
+				if (state1.getBlock() instanceof ISmartFallableBlockRockLike &&
+						((ISmartFallableBlockRockLike) state1.getBlock()).onCaveInCheck(world, pos1, state1))
+				{
+					return;
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -273,49 +302,21 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		EnumRockType type = state.getValue(TYPE);
 		switch (type)
 		{
-		case cobble:
-		case mossy:
-		case cobble_art:
-			return world.isSideSolid(pos.down(), EnumFacing.UP, false);
+		case cobble :
+		case mossy :
+			return Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true);
 		default:
-			return !world.isAirBlock(pos.down()) ? true : world.isSideSolid(pos.north(), EnumFacing.SOUTH, false) || world.isSideSolid(pos.south(), EnumFacing.NORTH, false) || world.isSideSolid(pos.east(), EnumFacing.WEST, false) || world.isSideSolid(pos.west(), EnumFacing.EAST, false);
-		}
-	}
-	
-	public boolean canBlockStayTotally(IBlockAccess world, BlockPos pos, IBlockState state, Random rand)
-	{
-		EnumRockType type = state.getValue(TYPE);
-		switch (type)
-		{
-		case cobble:
-		case mossy:
-		case cobble_art:
-			if (!world.isSideSolid(pos.down(), EnumFacing.UP, false)) return false;
-			BlockPos pos1 = pos.down();
-			for (Direction direction : Direction.DIRECTIONS_2D)
-			{
-				if (world.isAirBlock(direction.offset(pos)) && world.isAirBlock(direction.offset(pos1)) && rand.nextInt(7) == 0) return false;
-			}
-			return true;
-		case resource:
-			if (!world.isAirBlock(pos.down())) return true;
-			int c = 0;
-			for (Direction direction : Direction.DIRECTIONS_3D)
-			{
-				if (world.isAirBlock(direction.offset(pos)))
-				{
-					c++;
-				}
-			}
-			return c > 3 ? true : c == 3 ? rand.nextInt(9) != 0 : rand.nextInt(3) != 0;
-		default:
-			return !world.isAirBlock(pos.down());
+			return !Worlds.isAir(world, pos.down()) ||
+					world.isSideSolid(pos.north(), EnumFacing.SOUTH, true) ||
+					world.isSideSolid(pos.south(), EnumFacing.NORTH, true) ||
+					world.isSideSolid(pos.east(), EnumFacing.WEST, true) ||
+					world.isSideSolid(pos.west(), EnumFacing.EAST, true);
 		}
 	}
 	
 	public boolean canFallingBlockStay(B block, IBlockState state, World world, BlockPos pos)
 	{
-		return canBlockStay(world, pos, state);
+		return !EntityFallingBlockExtended.canFallAt(world, pos, state);
 	}
 	
 	public float onFallOnEntity(B block, IBlockState state, World world, EntityFallingBlockExtended entity, Entity target)
@@ -326,8 +327,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	public boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height, NBTTagCompound tileNBT)
 	{
 		EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
-		boolean broken = height < 2 ? false : height < 5 ? world.rand.nextInt(5 - height) == 0 : true;
-		if (broken)
+		if (height < 2 ? false : height < 5 ? world.rand.nextInt(5 - height) == 0 : true)
 		{
 			state = state.withProperty(TYPE, EnumRockType.values()[state.getValue(TYPE).fallBreakMeta]);
 		}
@@ -367,5 +367,142 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 			}
 		}
 		return IToolableTile.DEFAULT_RESULT;
+	}
+	
+	@Override
+	public void scheduleFalling(B block, World world, BlockPos pos, IBlockState state, int delayMultiplier)
+	{
+		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) &&
+				checkCollapse(world, pos, state, 1000))
+		{
+			pos = pos.toImmutable();
+			NebulaWorldHandler.schedueTask(new TaskFalling(world, pos, pos, state, 2 * delayMultiplier));
+			Log.logger().info(pos);
+		}
+	}
+	
+	@Override
+	public boolean onCaveInCheck(B block, World world, BlockPos pos, IBlockState state)
+	{
+		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) && checkCollapse(world, pos, state, 100))
+		{
+			Worlds.fallBlock(world, pos, state);
+			
+			int range = 3 + world.rand.nextInt(16);
+			MutableBlockPos pos2 = new MutableBlockPos();
+			int scanX, scanY, scanZ;
+			for (scanY = -4; scanY <= 1; ++scanY)
+			{
+				for (scanX = -range; scanX <= range; ++scanX)
+				{
+					for (scanZ = -range; scanZ <= range; ++scanZ)
+					{
+						if (world.rand.nextInt(100) < V.caveInSpreadChance)
+						{
+							IBlockState state1 = world.getBlockState(pos2.setPos(pos.getX() + scanX, pos.getY() + scanY, pos.getZ() + scanZ));
+							if (state1.getBlock() instanceof ISmartFallableBlockRockLike)
+							{
+								((ISmartFallableBlockRockLike) state1.getBlock()).scheduleFalling(world, pos2, state1, scanY + 5);
+							}
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	protected boolean checkCollapse(IBlockAccess world, BlockPos pos, IBlockState state, int chance)
+	{
+		switch (state.getValue(TYPE))
+		{
+		case cobble :
+		case mossy :
+			return true;
+		case cobble_art :
+			int weight = 0;
+			for (Direction facing : Direction.DIRECTIONS_2D)
+			{
+				IBlockState state2 = world.getBlockState(facing.offset(pos));
+				if (state2.getBlock() instanceof IFallingStaySupport)
+				{
+					weight += ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos, state2);
+				}
+			}
+			return weight < 8 * chance;
+		default :
+			int
+			map[] = generateCollapseMap(world, pos, 5, new int[5]);
+			weight = map[0] + map[1] / 2 + map[2] / 3 + map[3] / 5 + map[4] / 8;
+			return L.nextInt(weight * 3 / 4, world instanceof World ? ((World) world).rand : L.random()) + weight / 4 < 20 * chance;
+		case resource:
+			map = generateCollapseMap(world, pos, 4, new int[4]);
+			weight = map[0] + map[1] / 2 + map[2] / 4 + map[3] / 8;
+			return L.nextInt(weight * 3 / 4, world instanceof World ? ((World) world).rand : L.random()) + weight / 4 < 20 * chance;
+		}
+	}
+	
+	private int[] generateCollapseMap(IBlockAccess world, BlockPos pos, int range, int[] cache)
+	{
+		final int scale = (range << 1) | 1;
+		LinkedList<byte[]> pooled = new LinkedList<>();
+		boolean[][][] flags = new boolean[scale][scale][scale];
+		flags[range][range][range] = true;
+		pooled.addLast(new byte[] {-1, 0, 0});
+		pooled.addLast(new byte[] { 1, 0, 0});
+		pooled.addLast(new byte[] {0, -1, 0});
+		pooled.addLast(new byte[] {0,  1, 0});
+		pooled.addLast(new byte[] {0, 0, -1});
+		pooled.addLast(new byte[] {0, 0,  1});
+		final int X = pos.getX(), Y = pos.getY(), Z = pos.getZ();
+		MutableBlockPos pos2 = new MutableBlockPos();
+		int x, y, z;
+		IBlockState state2;
+		while (!pooled.isEmpty())
+		{
+			byte[] offset = pooled.poll();
+			x = X + offset[0]; y = Y + offset[1]; z = Z + offset[2];
+			pos2.setPos(x, y, z);
+			int d = Maths.lp1Distance(offset[0], offset[1], offset[2]);
+			flags[range + offset[0]][range + offset[1]][range + offset[2]] = true;
+			
+			if (d <= range && (state2 = world.getBlockState(pos2)).getBlock() instanceof IFallingStaySupport)
+			{
+				int weight = ((IFallingStaySupport) state2.getBlock()).getFallWeight(world, pos2, state2);
+				cache[d - 1] += weight;
+				
+				if (weight > 0 && d < range)
+				{
+					if (!flags[range + offset[0] + 1][range + offset[1]][range + offset[2]])
+					{
+						offset[0] ++; pooled.addLast(offset);
+					}
+					if (!flags[range + offset[0] - 1][range + offset[1]][range + offset[2]])
+					{
+						pooled.addLast(new byte[] {(byte) (offset[0] - 1), offset[1], offset[2]});
+					}
+					if (!flags[range + offset[0]][range + offset[1] - 1][range + offset[2]])
+					{
+						pooled.addLast(new byte[] {offset[0], (byte) (offset[1] - 1), offset[2]});
+					}
+					if (!flags[range + offset[0]][range + offset[1] + 1][range + offset[2]])
+					{
+						pooled.addLast(new byte[] {offset[0], (byte) (offset[1] + 1), offset[2]});
+					}
+					if (!flags[range + offset[0]][range + offset[1]][range + offset[2] - 1])
+					{
+						pooled.addLast(new byte[] {offset[0], offset[1], (byte) (offset[2] - 1)});
+					}
+					if (!flags[range + offset[0]][range + offset[1]][range + offset[2] + 1])
+					{
+						pooled.addLast(new byte[] {offset[0], offset[1], (byte) (offset[2] + 1)});
+					}
+				}
+			}
+		}
+		return cache;
 	}
 }

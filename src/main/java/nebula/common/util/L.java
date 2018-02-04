@@ -39,6 +39,7 @@ import com.google.common.collect.Table;
 import nebula.base.Judgable;
 import nebula.base.function.Applicable;
 import nebula.base.function.Func;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -86,6 +87,23 @@ public class L
 		count = (count & 0b00110011) + ((count & 0b11001100) >>> 2);
 		count =  count               + ( count               >>> 4);
 		return count;
+	}
+	
+	public static int randomBit(byte list, Random random)
+	{
+		if (list == 0) return -1;
+		int i = random.nextInt(bitCounts(list));
+		int p = MathHelper.log2DeBruijn(Byte.toUnsignedInt(list));
+		while (true)
+		{
+			if ((list | 1 << p) != 0)
+			{
+				if (i -- == 0)
+					break;
+			}
+			p --;
+		}
+		return p;
 	}
 	
 	/**
@@ -1080,6 +1098,6 @@ public class L
 	
 	public static <E> Optional<E> or(Optional<E> opt1, Applicable<? extends E> supplier)
 	{
-		return opt1.isPresent() ? opt1 : supplier.applyOptional();
+		return opt1.isPresent() ? opt1 : (Optional<E>) supplier.applyOptional();
 	}
 }

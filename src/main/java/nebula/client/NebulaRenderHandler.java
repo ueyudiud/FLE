@@ -94,8 +94,7 @@ public final class NebulaRenderHandler implements IIconLoader
 			EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
 			if (event.getType() == ElementType.HEALTH)
 			{
-				if (NebulaConfig.enableWaterStat)// Water stat need render
-													// before health rendering.
+				if (NebulaConfig.useExtPlayerStat)// Water stat need render before health rendering.
 				{
 					renderWaterStat(mc, player, updateCounter, event.getPartialTicks(), event.getResolution());
 				}
@@ -151,14 +150,14 @@ public final class NebulaRenderHandler implements IIconLoader
 			
 			if (idx < level)
 				Renders.drawTexturedModalRect(x, y, 0, 9, 9, 9, 0);// Full water
-																	// icon.
+			// icon.
 			else if (idx == level) Renders.drawTexturedModalRect(x, y, 9, 9, 9, 9, 0);// Half
-																						// water
-																						// icon.
+			// water
+			// icon.
 		}
 		
 		mc.renderEngine.bindTexture(GuiIngameForge.ICONS);// Bind back to
-															// vanilla texture.
+		// vanilla texture.
 		GlStateManager.disableBlend();// GUI need disable blend.
 		
 		mc.mcProfiler.endSection();

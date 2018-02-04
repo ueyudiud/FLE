@@ -108,9 +108,9 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 		return get();
 	}
 	
-	default <T1> Optional<T1> applyOptional()
+	default Optional<T> applyOptional()
 	{
-		return this == NULL ? Optional.empty() : Optional.ofNullable((T1) apply());
+		return this == NULL ? Optional.empty() : Optional.ofNullable(get());
 	}
 	
 	@Deprecated

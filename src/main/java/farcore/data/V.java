@@ -18,6 +18,7 @@ public class V
 	public static boolean	generateState		= false;
 	public static boolean	removeErroredTile	= false;
 	public static int		treeScanRange		= 6;
+	public static int		caveInSpreadChance	= 25;
 	
 	public static float	airHeatConductivity	= 0.3F;
 	public static float	airHeatCapacity		= 4300F;

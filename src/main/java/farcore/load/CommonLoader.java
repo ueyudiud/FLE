@@ -66,9 +66,7 @@ import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
-import nebula.common.LanguageManager;
-import nebula.common.NebulaKeyHandler;
-import nebula.common.NebulaWorldHandler;
+import nebula.common.*;
 import nebula.common.fluid.FluidBase;
 import nebula.common.gui.ContainerDataHandlerManager;
 import nebula.common.tool.ToolHooks;
@@ -169,6 +167,7 @@ public class CommonLoader
 		ToolHooks.addEfficiencyTool(LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
 		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
 		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
+		NebulaConfig.useExtPlayerStat = true;
 		// Register languages.
 		bar.step("Register Localized Entries");
 		registerLocal("info.debug.date", "Date : ");

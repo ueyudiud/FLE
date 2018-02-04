@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import nebula.common.NebulaConfig;
 import nebula.common.item.IFoodStat;
 import nebula.common.util.NBTs;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -176,7 +175,7 @@ public class FoodStatExt extends FoodStats
 				this.foodLevel = Math.max(this.foodLevel - 1.0F, 0F);
 			}
 		}
-		if (NebulaConfig.enableWaterStat && this.waterExhaustionLevel > 10.0F)
+		if (this.waterExhaustionLevel > 10.0F)
 		{
 			this.waterExhaustionLevel -= 10F;
 			this.waterLevel = Math.max(this.waterLevel - 1, 0);
@@ -264,21 +263,18 @@ public class FoodStatExt extends FoodStats
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(HUNGER_WEAKNESS_I);
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HUNGER_WEAKNESS_II);
 		}
-		if (NebulaConfig.enableWaterStat)
+		if (this.waterLevel < 4F)
 		{
-			if (this.waterLevel < 4F)
+			if (this.prevWaterLevel >= 4)
 			{
-				if (this.prevWaterLevel >= 4)
-				{
-					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(THIRSTY_WEAKNESS_I);
-					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(THIRSTY_WEAKNESS_II);
-				}
+				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(THIRSTY_WEAKNESS_I);
+				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(THIRSTY_WEAKNESS_II);
 			}
-			else if (this.prevWaterLevel < 4F)
-			{
-				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(THIRSTY_WEAKNESS_I);
-				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(THIRSTY_WEAKNESS_II);
-			}
+		}
+		else if (this.prevWaterLevel < 4F)
+		{
+			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(THIRSTY_WEAKNESS_I);
+			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(THIRSTY_WEAKNESS_II);
 		}
 	}
 	

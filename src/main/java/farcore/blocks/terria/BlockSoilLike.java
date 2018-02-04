@@ -215,8 +215,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 		}
 		if (oldState != state && update)
 		{
-			worldIn.setBlockState(pos, state, 2);// Already updated, will not
-													// cause block update.
+			worldIn.setBlockState(pos, state, 2);// Already updated, will not cause block update.
 		}
 		return state;
 	}

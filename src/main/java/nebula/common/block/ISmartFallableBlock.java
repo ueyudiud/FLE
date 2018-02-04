@@ -20,8 +20,9 @@ import net.minecraft.world.World;
  * <li><tt>start_falling</tt> - called when block start falling.
  * <li><tt>checking_stay</tt> - called when block checking for place to stay.
  * <li><tt>fall_on_ground</tt> - called when block try falling.
- * <li><tt>drop_as_item</tt>
- * <li><tt>fall_on_entity</tt></li>
+ * <li><tt>drop_as_item</tt> - called when block drop as item.
+ * <li><tt>fall_on_entity</tt> - called when block fall on entities.
+ * </li>
  * <p>
  * For some method you can't get EntityFallingBlockExtended for that the block
  * falling event will still be handled when block are out of updating range, and

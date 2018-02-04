@@ -3,11 +3,13 @@
  */
 package nebula.client;
 
-import nebula.Log;
+import java.util.List;
+
 import nebula.base.function.Applicable;
 import nebula.client.util.IRenderRegister;
 import nebula.common.LanguageManager;
 import nebula.common.util.Game;
+import nebula.common.util.ItemStacks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -60,13 +62,36 @@ public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 	{
 		if (this.stack == null)
 		{
-			this.stack = ItemStack.copyItemStack(this.appliable.apply());
-			if (this.stack == null)
-			{
-				this.stack = new ItemStack(Blocks.FIRE);
-				Log.error("The creative tab is missing a stack for display, use fire instead.");
-			}
+			this.stack = this.appliable.applyOptional()
+					.map(ItemStacks.COPY_ITEMSTACK).orElse(new ItemStack(Blocks.FIRE));
 		}
 		return this.stack.copy();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void displayAllRelevantItems(List<ItemStack> list)
+	{
+		for (Item item : Item.REGISTRY)
+		{
+			if (item == null)
+			{
+				continue;
+			}
+			for (CreativeTabs tab : item.getCreativeTabs())
+			{
+				if (tab == this)
+				{
+					item.getSubItems(item, this, list);
+					break;
+				}
+			}
+		}
+	}
+	
+	@Override
+	public boolean hasSearchBar()
+	{
+		return false;
 	}
 }

@@ -357,4 +357,9 @@ public final class Maths
 	{
 		return v1 == v2 ? 0 : Math.abs(v1.getX() - v2.getX()) + Math.abs(v1.getY() - v2.getY()) + Math.abs(v1.getZ() - v2.getZ());
 	}
+	
+	public static int lp1Distance(int x, int y, int z)
+	{
+		return Math.abs(x) + Math.abs(y) + Math.abs(z);
+	}
 }

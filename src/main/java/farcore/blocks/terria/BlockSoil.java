@@ -3,7 +3,6 @@
  */
 package farcore.blocks.terria;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +15,7 @@ import nebula.base.ObjArrayParseHelper;
 import nebula.common.block.IHitByFallenBehaviorBlock;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
+import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
@@ -46,40 +46,43 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 		BlockPos pos1 = pos.down();
 		IBlockState state1 = world.getBlockState(pos1);
 		if (state1.getBlock().isAir(state1, world, pos1))
+		{
 			return true;
+		}
 		else if (state1.getBlock() instanceof IHitByFallenBehaviorBlock)
 		{
 			IHitByFallenBehaviorBlock block = (IHitByFallenBehaviorBlock) state1.getBlock();
 			return block.isPermeatableBy(world, pos1, state1, state);
 		}
 		else
+		{
 			return state1.getMaterial().isReplaceable();
+		}
 	}
 	
-	protected static List<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
+	protected static byte canFallNearby(World world, BlockPos pos, IBlockState state)
 	{
-		BlockPos pos1 = pos.down();
-		List<EnumFacing> result = new ArrayList();
+		byte result = 0;
 		BlockPos pos2;
-		pos2 = pos1.north();
-		if (canFallBelow(world, pos2, state))
+		pos2 = pos.north();
+		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
-			result.add(EnumFacing.NORTH);
+			result |= Direction.N.horizontalOrdinal;
 		}
-		pos2 = pos1.south();
-		if (canFallBelow(world, pos2, state))
+		pos2 = pos.south();
+		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
-			result.add(EnumFacing.SOUTH);
+			result |= Direction.S.horizontalOrdinal;
 		}
-		pos2 = pos1.west();
-		if (canFallBelow(world, pos2, state))
+		pos2 = pos.west();
+		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
-			result.add(EnumFacing.WEST);
+			result |= Direction.W.horizontalOrdinal;
 		}
-		pos2 = pos1.east();
-		if (canFallBelow(world, pos2, state))
+		pos2 = pos.east();
+		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
-			result.add(EnumFacing.EAST);
+			result |= Direction.E.horizontalOrdinal;
 		}
 		return result;
 	}
@@ -123,23 +126,30 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	
 	protected boolean checkAndFall(World world, BlockPos pos, IBlockState state, Random rand, boolean checkFallToNearby)
 	{
-		if (canFallBelow(world, pos, state)) return Worlds.fallBlock(world, pos, state);
+		if (canFallBelow(world, pos, state))
+		{
+			return Worlds.fallBlock(world, pos, state);
+		}
 		if (checkFallToNearby)
 		{
-			List<EnumFacing> sides = canFallNearby(world, pos, state);
+			byte sides = canFallNearby(world, pos, state);
 			switch (state.getValue(COVER_TYPE).noCover)
 			{
 			case NONE:
-				if (sides.size() >= 2) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+				if (L.bitCounts(sides) >= 3) return Worlds.fallBlock(world, pos,
+						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			case FROZEN:
-				if (!sides.isEmpty()) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+				if (sides != 0) return Worlds.fallBlock(world, pos,
+						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			case GRASS:
 			case MYCELIUM:
 			case TUNDRA:
 			case TUNDRA_FROZEN:
-				if (sides.size() >= 3 || (sides.size() == 2 && rand.nextInt(5) == 0)) return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+				int c = L.bitCounts(sides);
+				if (c == 4 || (c == 3 && rand.nextInt(5) == 0)) return Worlds.fallBlock(world, pos,
+						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			default:
 				break;
@@ -164,11 +174,12 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	}
 	
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 		if (!worldIn.isRemote)
 		{
-			updateBase(worldIn, pos, state, rand, true);
+			IBlockState state2 = updateBase(worldIn, pos, state, random, true);
+			if (checkAndFall(worldIn, pos, state2, random, false)) return;
 		}
 	}
 	
@@ -181,8 +192,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
-		if (canFallBelow(world, pos, state)) return false;
-		return canFallNearby(world, pos, state).size() < 2;
+		return !canFallBelow(world, pos, state);
 	}
 	
 	@Override

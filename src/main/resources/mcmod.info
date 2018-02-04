@@ -2,7 +2,9 @@
 	{
 		"modid": "fle",
 		"name": "Far Land Era",
+		"version": "@VERSION@",
 		"mcversion": "1.10.2",
+		"description": "The mod include more exploring, agriculture, industry, etc functions. It is for player can play in a more interesting world.",
 		"updateUrl": "",
 		"screenshots": [],
 		"dependencies": []

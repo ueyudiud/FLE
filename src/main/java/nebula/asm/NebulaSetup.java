@@ -63,14 +63,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -93,6 +92,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import nebula.NebulaLoadingPlugin;
 import nebula.common.util.Jsons;
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
 
@@ -316,9 +316,9 @@ public class NebulaSetup implements IFMLCallHook
 	
 	private void extractASMFile(File file, String location, File destination) throws IOException
 	{
-		if (file.getName().endsWith(".jar"))
+		if (!file.isDirectory())//zip or jar.
 		{
-			JarFile jarFile = new JarFile(file);
+			ZipFile jarFile = new ZipFile(file);
 			location += "/";
 			if (jarFile.getEntry(location) == null)
 			{
@@ -326,10 +326,10 @@ public class NebulaSetup implements IFMLCallHook
 			}
 			else
 			{
-				Enumeration<JarEntry> enumeration = jarFile.entries();
+				Enumeration<? extends ZipEntry> enumeration = jarFile.entries();
 				while (enumeration.hasMoreElements())
 				{
-					JarEntry entry = enumeration.nextElement();
+					ZipEntry entry = enumeration.nextElement();
 					if (!entry.isDirectory() && entry.getName().startsWith(location))
 					{
 						NebulaASMLogHelper.LOG.info("Copy asm data from " + entry.getName());
@@ -432,7 +432,6 @@ public class NebulaSetup implements IFMLCallHook
 	public Void call() throws Exception
 	{
 		File destination = new File(mcPath, "asm/" + (runtimeDeobf ? "obf" : "mcp"));
-		File file;
 		
 		if (!destination.exists())
 		{
@@ -448,14 +447,12 @@ public class NebulaSetup implements IFMLCallHook
 		if (markVersion(destination))
 		{
 			final String suffix = runtimeDeobf ? "obf" : "mcp";
-			final URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
-			file = new File(url.toURI());
 			for (String str : NebulaCoreAPI.ASM_SEARCHING_DIRECTION)
 			{
 				String targetLocation = "asm/" + str + "/" + suffix;
 				try // Insert Operation Files source to location.
 				{
-					extractASMFile(file, targetLocation, destination);
+					extractASMFile(NebulaLoadingPlugin.source(), targetLocation, destination);
 				}
 				catch (IOException exception)
 				{

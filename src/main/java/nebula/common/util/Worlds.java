@@ -443,7 +443,7 @@ public final class Worlds
 			world.setBlockToAir(pos);
 			if (state.getBlock() instanceof ISmartFallableBlock)
 			{
-				((ISmartFallableBlock) state.getBlock()).onStartFalling(world, pos);
+				((ISmartFallableBlock) state.getBlock()).onStartFalling(world, dropPos);
 			}
 			int height = 0;
 			while (!EntityFallingBlockExtended.canFallAt(world, pos, state))

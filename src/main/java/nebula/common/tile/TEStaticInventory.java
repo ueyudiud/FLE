@@ -227,7 +227,7 @@ public abstract class TEStaticInventory extends TEStatic implements IBasicInvent
 	@Override
 	public final int getInventoryStackLimit()
 	{
-		return getInventoryStackLimit();
+		return getStackLimit();
 	}
 	
 	@Override
