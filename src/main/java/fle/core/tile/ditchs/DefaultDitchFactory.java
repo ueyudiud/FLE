@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.tile.ditchs;
 
 import static fle.api.ditch.DitchInformation.DITCH_INFORMATION_PROPERTY;

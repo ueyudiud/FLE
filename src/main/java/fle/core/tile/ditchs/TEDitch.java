@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.tile.ditchs;
 
 import java.io.IOException;
@@ -305,8 +304,8 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 				if (tile instanceof IDitchTile)
 				{
 					FluidStack stack = this.tank.drain(speed, true);// Force to
-																	// drain
-																	// fluid.
+					// drain
+					// fluid.
 					return ((IDitchTile) tile).getTank().fill(stack, true);
 				}
 				else

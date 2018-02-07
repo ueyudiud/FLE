@@ -16,7 +16,8 @@
 							"opcode": 184,
 							"owner": "nebula/common/CommonOverride",
 							"name": "createFoodStats",
-							"desc": "()Lnet/minecraft/util/FoodStats;"
+							"desc": "()Lnet/minecraft/util/FoodStats;",
+							"itf": false
 						}
 					]
 				}
