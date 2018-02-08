@@ -37,8 +37,8 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 		
 		void onOutput(IBasicInventory inventory, int value);
 		
-		@SideOnly(Side.CLIENT)
 		@Nullable
+		@SideOnly(Side.CLIENT)
 		default int[] getDisplayNumbers(IBasicInventory inventory, int value)
 		{
 			return null;

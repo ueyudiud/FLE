@@ -26,6 +26,18 @@ compileJava {
     sourceCompatibility = targetCompatibility = "8"
 }
 
+repositories {
+	maven {
+		//JEI
+		url "http://dvs1.progwml6.com/files/maven"
+	}
+	
+	maven {
+		// HWYLA
+		url "http://tehnut.info/maven"
+	}
+}
+
 tasks.withType(JavaCompile) {  
     options.encoding = "UTF-8"  
 }
@@ -42,11 +54,9 @@ minecraft {
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-    
+	deobfCompile 'mezz.jei:jei_1.10.2:3.14.7.420'
+	deobfCompile 'mcp.mobius.waila:Hwyla:1.8.17-B31_1.10.2'
+	    
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env

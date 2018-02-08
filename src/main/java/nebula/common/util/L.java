@@ -481,6 +481,18 @@ public class L
 	// =====================Functional method start=====================
 	
 	/**
+	 * Wrapper function.
+	 * 
+	 * @param constant
+	 * @return
+	 */
+	@SuppressWarnings("hiding")
+	public static <T, R, F extends Function<? super T, ? extends R>> Func<F, R> funtional(T constant)
+	{
+		return toFunction(Function::apply, constant);
+	}
+	
+	/**
 	 * Convert function to high level function input logic, it exists a constant variable.
 	 * 
 	 * @param function the function used to combine.

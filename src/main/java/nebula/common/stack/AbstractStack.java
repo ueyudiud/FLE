@@ -52,9 +52,10 @@ public interface AbstractStack
 	// INFO : Please at least override instance or display one, or
 	// the stack will be over flow!
 	/**
-	 * Create a instance stack.
+	 * Create a instance stack, which should be a copy of source
+	 * that any modification of instance will not affect this stack.
 	 * 
-	 * @return
+	 * @return the instance {@link ItemStack} of this stack.
 	 */
 	default ItemStack instance()
 	{
@@ -62,9 +63,12 @@ public interface AbstractStack
 	}
 	
 	/**
-	 * Display most of stack matched.
+	 * Display most of stack matched, for most allowed matched in
+	 * consideration should be contained, but it needn't contain
+	 * all if matched stack are not enumable.<p>
+	 * The result list should be unmodifiable.
 	 * 
-	 * @return
+	 * @return the
 	 */
 	default List<ItemStack> display()
 	{

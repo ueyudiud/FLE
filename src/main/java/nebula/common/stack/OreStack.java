@@ -77,7 +77,7 @@ public class OreStack implements AbstractStack
 	}
 	
 	@Override
-	public List<ItemStack> display()
+	public ImmutableList<ItemStack> display()
 	{
 		if (this.list == null)
 		{

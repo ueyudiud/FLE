@@ -182,10 +182,10 @@ public interface IFluidHandlerHelper
 			}
 		}
 		
-		public SidedFluidIOPropertyWrapper(SidedFluidIOProperty property, FluidStack stack)
+		public SidedFluidIOPropertyWrapper(SidedFluidIOProperty property, @Nullable FluidStack stack)
 		{
 			this.property = property;
-			this.stack = stack.copy();
+			this.stack = FluidStacks.copy(stack);
 		}
 		
 		@Override

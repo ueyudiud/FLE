@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.api.recipes;
 
 import java.util.function.BiConsumer;
@@ -25,7 +24,7 @@ public class SingleInputMatch
 	/**
 	 * The input stack.
 	 */
-	protected AbstractStack									input;
+	public final AbstractStack								input;
 	/**
 	 * The effect on output.
 	 */

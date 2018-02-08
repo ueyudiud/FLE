@@ -84,7 +84,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 		if (this.itemDataGen == null) return getQuads((IBlockState) null, facing, rand);
 		try
 		{
-			Object[] datas = A.transform(this.itemDataGen, L.toFunction(Function::apply, stack));
+			Object[] datas = A.transform(this.itemDataGen, L.funtional(stack));
 			List<BakedQuad> quads = new ArrayList<>();
 			for (int i = 0; i < this.parts.length; ++i)
 			{
@@ -113,7 +113,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 			}
 			else
 			{
-				Object[] datas = A.transform(this.blockDataGen, L.toFunction(Function::apply, state));
+				Object[] datas = A.transform(this.blockDataGen, L.funtional(state));
 				for (int i = 0; i < this.parts.length; ++i)
 				{
 					quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]], rand));

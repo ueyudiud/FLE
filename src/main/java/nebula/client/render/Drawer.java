@@ -50,6 +50,7 @@ public class Drawer
 	public Drawer draw()
 	{
 		this.tessellator.draw();
+		this.icon = null;
 		return this;
 	}
 	

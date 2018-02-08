@@ -92,7 +92,7 @@ public interface Judgable<T> extends Predicate<T>
 		return and(this, other);
 	}
 	
-	default <K> Judgable<K> from(Function<K, ? extends T> function)
+	default <K> Judgable<K> from(Function<? super K, ? extends T> function)
 	{
 		return key -> test(function.apply(key));
 	}

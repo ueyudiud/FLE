@@ -82,7 +82,7 @@ public class ArrayStack implements AbstractStack
 	}
 	
 	@Override
-	public List<ItemStack> display()
+	public ImmutableList<ItemStack> display()
 	{
 		return ItemStacks.sizeOf(this.array, this.size);
 	}

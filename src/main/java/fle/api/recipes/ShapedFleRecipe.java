@@ -53,7 +53,7 @@ public class ShapedFleRecipe implements IRecipe
 		else if (object instanceof AbstractStack)
 		{
 			if (object instanceof OreStack) object = new OreStackExt((OreStack) object);// Extended
-																						// wrapper.
+			// wrapper.
 			return new SingleInputMatch((AbstractStack) object);
 		}
 		else if (object instanceof SingleInputMatch)
@@ -64,12 +64,12 @@ public class ShapedFleRecipe implements IRecipe
 			throw new RuntimeException("Unknown element: " + object);
 	}
 	
-	protected SingleInputMatch[][]	inputs;
-	protected int					width;
-	protected int					height;
-	protected AbstractStack			output;
-	protected boolean				forcePlayerContain;
-	protected boolean				enableMirror;
+	public SingleInputMatch[][]	inputs;
+	public int					width;
+	public int					height;
+	public AbstractStack		output;
+	public boolean				forcePlayerContain;
+	public boolean				enableMirror;
 	
 	public ShapedFleRecipe(ItemStack output, Object...inputs)
 	{
@@ -196,7 +196,7 @@ public class ShapedFleRecipe implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return this.output.instance().copy();
+		return this.output.instance();
 	}
 	
 	@Override

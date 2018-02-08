@@ -102,7 +102,7 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		@Override
 		public String apply(IBlockState state)
 		{
-			return state == null ? String.format(this.key, (Object[]) this.def) : String.format(this.key, A.transform(this.formats, L.toFunction(Function::apply, state)));
+			return state == null ? String.format(this.key, (Object[]) this.def) : String.format(this.key, A.transform(this.formats, L.funtional(state)));
 		}
 	}
 	
@@ -124,7 +124,7 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		@Override
 		public String apply(ItemStack stack)
 		{
-			return String.format(this.key, A.transform(this.formats, L.toFunction(Function::apply, stack)));
+			return String.format(this.key, A.transform(this.formats, L.funtional(stack)));
 		}
 	}
 }

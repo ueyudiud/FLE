@@ -32,9 +32,9 @@ import net.minecraftforge.common.ForgeHooks;
  */
 public class ShapelessFleRecipe implements IRecipe
 {
-	protected List<SingleInputMatch>	inputs;
-	protected AbstractStack				output;
-	protected boolean					forcePlayerContain;
+	public List<SingleInputMatch>	inputs;
+	public AbstractStack			output;
+	public boolean					forcePlayerContain;
 	
 	protected ShapelessFleRecipe()
 	{
@@ -130,7 +130,7 @@ public class ShapelessFleRecipe implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return this.output.instance().copy();
+		return this.output.instance();
 	}
 	
 	@Override

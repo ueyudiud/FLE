@@ -3,7 +3,6 @@
  */
 package nebula.common.stack;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -153,7 +152,7 @@ public class BaseStack implements AbstractStack
 	}
 	
 	@Override
-	public List<ItemStack> display()
+	public ImmutableList<ItemStack> display()
 	{
 		return this.item != null ? ImmutableList.of(instance()) : ImmutableList.of();
 	}

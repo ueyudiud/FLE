@@ -4,6 +4,7 @@
 package nebula.common.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.UnaryOperator;
@@ -350,5 +351,12 @@ public final class ItemStacks
 		int size = target.stackSize;
 		target.readFromNBT(src.serializeNBT());
 		target.stackSize = size;
+	}
+	
+	public static List<List<ItemStack>> expandStacks(Collection<? extends AbstractStack> collection)
+	{
+		ImmutableList.Builder<List<ItemStack>> builder = ImmutableList.builder();
+		collection.stream().map(AbstractStack::display).forEach(builder::add);
+		return builder.build();
 	}
 }
