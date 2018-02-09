@@ -18,6 +18,7 @@ import nebula.client.model.flexible.NebulaModelDeserializer;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.FontMap;
 import nebula.client.render.FontRenderExtend;
+import nebula.common.NebulaConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,5 +60,12 @@ public class ClientLoader extends CommonLoader
 			});
 		}
 		NebulaModelLoader.registerItemColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
+	}
+	
+	@Override
+	public void load()
+	{
+		super.load();
+		NebulaConfig.hidingDebugInfo = true;
 	}
 }

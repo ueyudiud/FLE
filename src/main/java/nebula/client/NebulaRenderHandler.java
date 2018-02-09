@@ -130,46 +130,49 @@ public final class NebulaRenderHandler implements IIconLoader
 	@SubscribeEvent
 	public void renderText(RenderGameOverlayEvent.Text event)
 	{
-		final Minecraft mc = Minecraft.getMinecraft();
-		final EntityPlayer player = Players.player();
-		if (player.isCreative())
+		if (NebulaConfig.hidingDebugInfo)
 		{
-			
-		}
-		else
-		{
-			if (mc.gameSettings.showDebugInfo)
+			final Minecraft mc = Minecraft.getMinecraft();
+			final EntityPlayer player = Players.player();
+			if (player.isCreative())
 			{
-				List<String> left = event.getLeft(), right = event.getRight();
-				left.clear();
-				right.clear();
 				
-				long i = Runtime.getRuntime().maxMemory();
-				long j = Runtime.getRuntime().totalMemory();
-				long k = Runtime.getRuntime().freeMemory();
-				long l = j - k;
-				if (mc.isReducedDebug())
+			}
+			else
+			{
+				if (mc.gameSettings.showDebugInfo)
 				{
-					right.addAll(A.argument(new Object[] {String.format("Mem: % 2d%% %03d/%03dMB", l * 100L / i, l / (1L << 20), i / (1L << 20))}));
+					List<String> left = event.getLeft(), right = event.getRight();
+					left.clear();
+					right.clear();
+					
+					long i = Runtime.getRuntime().maxMemory();
+					long j = Runtime.getRuntime().totalMemory();
+					long k = Runtime.getRuntime().freeMemory();
+					long l = j - k;
+					if (mc.isReducedDebug())
+					{
+						right.addAll(A.argument(new Object[] {String.format("Mem: % 2d%% %03d/%03dMB", l * 100L / i, l / (1L << 20), i / (1L << 20))}));
+					}
+					else
+					{
+						List<String> list;
+						list = Lists.newArrayList(
+								String.format("Java: %s %dbit", System.getProperty("java.version"), mc.isJava64bit() ? 64 : 32),
+								String.format("Mem: % 2d%% %03d/%03dMB", l * 100L / i, l / (1L << 20), i / (1L << 20)),
+								String.format("Allocated: % 2d%% %03dMB", j * 100L / i, j / (1L << 20)),
+								"",
+								String.format("CPU: %s", OpenGlHelper.getCpu()),
+								"",
+								String.format("Display: %dx%d (%s)", Display.getWidth(), Display.getHeight(), GlStateManager.glGetString(7936)),
+								GlStateManager.glGetString(7937),
+								GlStateManager.glGetString(7938));
+						right.addAll(list);
+						right.add("");
+						right.addAll(FMLCommonHandler.instance().getBrandings(false));
+					}
+					left.add(Minecraft.getDebugFPS() + " FPS");
 				}
-				else
-				{
-					List<String> list;
-					list = Lists.newArrayList(
-							String.format("Java: %s %dbit", System.getProperty("java.version"), mc.isJava64bit() ? 64 : 32),
-							String.format("Mem: % 2d%% %03d/%03dMB", l * 100L / i, l / (1L << 20), i / (1L << 20)),
-							String.format("Allocated: % 2d%% %03dMB", j * 100L / i, j / (1L << 20)),
-							"",
-							String.format("CPU: %s", OpenGlHelper.getCpu()),
-							"",
-							String.format("Display: %dx%d (%s)", Display.getWidth(), Display.getHeight(), GlStateManager.glGetString(7936)),
-							GlStateManager.glGetString(7937),
-							GlStateManager.glGetString(7938));
-					right.addAll(list);
-					right.add("");
-					right.addAll(FMLCommonHandler.instance().getBrandings(false));
-				}
-				left.add(Minecraft.getDebugFPS() + " FPS");
 			}
 		}
 	}

@@ -265,9 +265,13 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		{
 			int damage = getCustomDamage(stack);
 			if (damage < property.durbility)
+			{
 				Localization.addDamageInformation((property.durbility - damage) / property.capacity, property.durbility / property.capacity, unlocalizedList);
+			}
 			else
+			{
 				unlocalizedList.add("info.fluidcontainer.completely.damaged");
+			}
 		}
 	}
 	
@@ -280,6 +284,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	@Override
 	protected CapabilityProviderItem createProvider(ItemStack stack)
 	{
-		return new CapabilityProviderSimpleFluidContainer(this.propertyMap.get(getBaseDamage(stack)));
+		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stack));
+		return property != null ? new CapabilityProviderSimpleFluidContainer(property) : null;
 	}
 }

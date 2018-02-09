@@ -87,12 +87,14 @@ public class FarCoreSetup
 		FarCoreSetup.proxy.load(event);
 		this.compator = ModCompator.newCompactor();
 		this.compator.addCompatible("fle", "farcore.load.FLECompact");
+		this.compator.addCompatible("JEI", "farcore.load.JEICompact");
 	}
 	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		FarCoreSetup.proxy.load(event);
+		this.compator.call("post");
 	}
 	
 	@EventHandler

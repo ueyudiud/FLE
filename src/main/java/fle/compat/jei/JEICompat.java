@@ -14,7 +14,7 @@ import mezz.jei.api.JEIPlugin;
  * @author ueyudiud
  */
 @JEIPlugin
-public class JEICompact extends BlankModPlugin
+public class JEICompat extends BlankModPlugin
 {
 	@Override
 	public void register(IModRegistry registry)

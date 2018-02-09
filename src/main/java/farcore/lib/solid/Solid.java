@@ -52,14 +52,14 @@ public abstract class Solid implements IRegisterElement<Solid>
 		this.unlocalizedName = unlocalizedName;
 	}
 	
-	public String getUnlocalizedname()
+	public String getUnlocalizedName()
 	{
 		return "MISSING_UNLOCALIZED_NAME_" + this.unlocalizedName;
 	}
 	
-	public String getLocalizedname()
+	public String getLocalizedName()
 	{
-		return LanguageManager.translateToLocal(getUnlocalizedname() + ".name");
+		return LanguageManager.translateToLocal(getUnlocalizedName() + ".name");
 	}
 	
 	/**

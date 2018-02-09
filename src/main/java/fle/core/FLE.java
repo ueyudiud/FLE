@@ -16,7 +16,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = FLE.MODID, version = FLE.VERSION, name = FLE.NAME, dependencies = "required-after:farcore")
+@Mod(modid = FLE.MODID, version = FLE.VERSION, name = FLE.NAME,
+dependencies = "required-after:farcore",
+acceptedMinecraftVersions = "[1.10, 1.11)")
 public class FLE
 {
 	/**

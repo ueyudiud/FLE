@@ -3,6 +3,8 @@
  */
 package fle.api.ditch;
 
+import javax.annotation.Nonnull;
+
 import farcore.lib.material.Mat;
 import fle.api.tile.IDitchTile;
 import nebula.client.util.UnlocalizedList;
@@ -30,7 +32,7 @@ public interface DitchFactory
 	 * @param tile
 	 * @return
 	 */
-	FluidTankN apply(IDitchTile tile);
+	@Nonnull FluidTankN apply(IDitchTile tile);
 	
 	void onUpdate(IDitchTile tile);
 	
@@ -50,9 +52,21 @@ public interface DitchFactory
 	 */
 	int getMaxTransferLimit(IDitchTile tile);
 	
+	/**
+	 * Get ditch icon by material.
+	 * 
+	 * @param material the material.
+	 * @return
+	 */
 	@SideOnly(Side.CLIENT)
 	TextureAtlasSprite getMaterialIcon(Mat material);
 	
+	/**
+	 * Add tool tip to ditch item.
+	 * 
+	 * @param material the material.
+	 * @param list the tool tips list.
+	 */
 	@SideOnly(Side.CLIENT)
-	void addTooltip(Mat material, UnlocalizedList list);
+	void addTooltip(@Nonnull Mat material, UnlocalizedList list);
 }

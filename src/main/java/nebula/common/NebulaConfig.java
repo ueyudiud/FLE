@@ -26,6 +26,8 @@ public class NebulaConfig
 	@ConfigComment("The in-game GUI will be changed if enable this option.")
 	public static boolean	overrideIngameStat;
 	// Client
+	@ConfigExclusive
+	public static boolean hidingDebugInfo = false;
 	@ConfigProperty(category = "client", defValue = "true")
 	@ConfigComment("Disable this option will let quad data be caculated during rendering, this will release some memory, but take more time to rendering.")
 	public static boolean	storeModelTransformedData;

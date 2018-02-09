@@ -258,8 +258,9 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		 */
 		Log.info("Nebula checking forge version...");
 		int forge = ForgeVersion.getBuildVersion();
-		if ((forge > 0) && (forge < MIN_FORGE)) throw new RuntimeException("The currently installed version of " + "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + ForgeVersion.getRevisionVersion() + "." + forge + ") is out of data.\n"
-				+ "Please update the Minecraft Forge.\n" + "\n" + "(Technical information: " + forge + " < " + MIN_FORGE + ")");
+		if ((forge > 0) && (forge < MIN_FORGE))
+			throw new RuntimeException("The currently installed version of " + "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + ForgeVersion.getRevisionVersion() + "." + forge + ") is out of data.\n"
+					+ "Please update the Minecraft Forge.\n(Technical information: " + forge + " < " + MIN_FORGE + ")");
 		Log.info("Checking end.");
 	}
 	

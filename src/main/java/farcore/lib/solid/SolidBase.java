@@ -29,11 +29,11 @@ public class SolidBase extends Solid
 		super(modid + ":" + name);
 		this.location = new ResourceLocation(modid, "solids/" + name);
 		this.unlocalized = name;
-		LanguageManager.registerLocal(getUnlocalizedname() + ".name", localizedName);
+		LanguageManager.registerLocal(getUnlocalizedName() + ".name", localizedName);
 	}
 	
 	@Override
-	public String getUnlocalizedname()
+	public String getUnlocalizedName()
 	{
 		return "solid." + this.unlocalized;
 	}

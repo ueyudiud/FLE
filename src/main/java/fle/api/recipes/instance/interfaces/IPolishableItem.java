@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.api.recipes.instance.interfaces;
 
 import javax.annotation.Nullable;
