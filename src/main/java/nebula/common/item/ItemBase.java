@@ -82,7 +82,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 			this.unlocalizedTooltip = modid + "." + unlocalizedTooltip;
 			LanguageManager.registerLocal(modid + "." + unlocalizedTooltip, localTooltip);
 		}
-		Game.registerItem(this, modid, name);
+		Game.registerItem(this, Game.getActiveModID(), name);
 		/**
 		 * Added item into post-initialized list.
 		 */

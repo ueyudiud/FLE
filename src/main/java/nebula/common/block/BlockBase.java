@@ -13,6 +13,7 @@ import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.tool.ToolHooks;
+import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.L;
@@ -69,6 +70,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public final String		blockName;
 	protected final Item	item;
 	private boolean			toolRequired	= true;
+	private final String	modid;
 	
 	protected float	effectiveSpeedMultiplier	= 1 / 30F;
 	protected float	uneffectiveSpeedMultiplier	= 1F / 100F;
@@ -82,9 +84,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		super(materialIn);
 		if (list == null) throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
+		this.modid = modid;
 		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
-		Game.registerBlock(this, modid, name, this.item = createItemBlock());
+		Game.registerBlock(this, Game.getActiveModID(), name, this.item = createItemBlock());
 		list.add(this);// Added for re-register.
 	}
 	
@@ -97,9 +100,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		super(blockMaterialIn, blockMapColorIn);
 		if (list == null) throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
+		this.modid = modid;
 		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
-		Game.registerBlock(this, modid, name, this.item = createItemBlock());
+		Game.registerBlock(this, Game.getActiveModID(), name, this.item = createItemBlock());
 		list.add(this);// Added for re-register.
 	}
 	
@@ -344,6 +348,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
 	{
+		if (advanced)
+		{
+			tooltip.add("" + EnumChatFormatting.BLUE + EnumChatFormatting.ITALIC + this.modid);
+		}
 		UnlocalizedList list = new UnlocalizedList(tooltip);
 		addUnlocalizedInfomation(stack, player, list, advanced);
 		list.list();

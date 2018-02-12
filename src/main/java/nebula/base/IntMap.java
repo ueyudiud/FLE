@@ -12,6 +12,7 @@ import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author ueyudiud
@@ -54,9 +55,9 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 		return size() == 0;
 	}
 	
-	boolean containsKey(Object key);
+	boolean containsKey(@Nullable Object key);
 	
-	boolean contains(Object key, int value);
+	boolean contains(@Nullable Object key, int value);
 	
 	/**
 	 * Get value which specified key is mapped.
@@ -66,28 +67,28 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 	 * @return the value of key mapped.
 	 * @see java.util.Map#get(Object)
 	 */
-	default int get(Object key)
+	default int get(@Nullable Object key)
 	{
 		return getOrDefault(key, 0);
 	}
 	
-	default int getOrDefault(Object key, int value)
+	default int getOrDefault(@Nullable Object key, int value)
 	{
 		return getIf(key).orElse(value);
 	}
 	
-	@Nonnull OptionalInt getIf(Object key);
+	@Nonnull OptionalInt getIf(@Nullable Object key);
 	
 	default int put(@Nonnull IntegerEntry<E> entry)
 	{
 		return put(entry.getKey(), entry.getValue());
 	}
 	
-	int put(E key, int value);
+	int put(@Nullable E key, int value);
 	
-	void putOrAdd(E key, int amount);
+	void putOrAdd(@Nullable E key, int amount);
 	
-	default void putAll(IntMap<? extends E> map)
+	default void putAll(@Nonnull IntMap<? extends E> map)
 	{
 		for (IntegerEntry<? extends E> entry : map)
 		{
@@ -104,12 +105,12 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 	 */
 	void rescale() throws IllegalStateException;
 	
-	default int remove(Object key, int def)
+	default int remove(@Nullable Object key, int def)
 	{
 		return removeIf(key).orElse(def);
 	}
 	
-	@Nonnull OptionalInt removeIf(Object key);
+	@Nonnull OptionalInt removeIf(@Nullable Object key);
 	
 	void clear();
 	
@@ -162,7 +163,7 @@ public interface IntMap<E> extends Iterable<IntegerEntry<E>>
 		}
 	}
 	
-	default OptionalInt find(Predicate<E> predicate)
+	default OptionalInt find(@Nonnull Predicate<E> predicate)
 	{
 		for (IntegerEntry<E> entry : this)
 		{

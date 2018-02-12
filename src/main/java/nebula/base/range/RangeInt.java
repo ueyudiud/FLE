@@ -9,12 +9,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Consumer;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 
 import nebula.base.A;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author ueyudiud
@@ -74,8 +76,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	@Override
 	public boolean isEmpty()
 	{
-		return false;// The range will always not empty, with initializer
-		// checking.
+		return false;// The range will always not empty, with initializer checking.
 	}
 	
 	@Override
@@ -248,11 +249,22 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	}
 	
 	@Override
+	public void forEach(Consumer<? super Integer> action)
+	{
+		for (int i = this.min; i < this.max; ++i)
+		{
+			action.accept(i);
+		}
+	}
+	
+	@Override
 	public int hashCode()
 	{
 		int hashCode = 1;
 		for (int i = this.min; i < this.max; ++i)
+		{
 			hashCode = 31 * hashCode + Integer.hashCode(i);
+		}
 		return hashCode;
 	}
 	
@@ -261,13 +273,14 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	{
 		if (o == this) return true;
 		if (o instanceof RangeInt) return ((RangeInt) o).min == this.min && ((RangeInt) o).max == this.max;
-		if (!(o instanceof List)) return false;
+		if (!(o instanceof List) || size() != ((List<?>) o).size()) return false;
 		
 		Iterator<Integer> iterator1 = iterator();
 		ListIterator<?> iterator2 = ((List<?>) o).listIterator();
 		while (iterator1.hasNext() && iterator2.hasNext())
 		{
-			if (!Objects.equal(iterator1.next(), iterator2.next())) return false;
+			if (!Objects.equal(iterator1.next(), iterator2.next()))
+				return false;
 		}
 		return !(iterator1.hasNext() || iterator2.hasNext());
 	}
@@ -276,7 +289,7 @@ public class RangeInt extends AbstractList<Integer> implements Serializable
 	public String toString()
 	{
 		Iterator<Integer> itr = iterator();
-		StringBuilder sb = new StringBuilder().append('[');
+		StringBuilder sb = new StringBuilder(size() * MathHelper.log2DeBruijn(this.max) >> 2).append('[');
 		while (true)
 		{
 			sb.append(itr.next());

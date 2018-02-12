@@ -151,6 +151,22 @@ public class BaseStack implements AbstractStack
 		return null;
 	}
 	
+	/**
+	 * Create a instance with specific size.
+	 * @param size the size of created stack.
+	 * @return the ItemStack.
+	 */
+	public ItemStack instance(int size)
+	{
+		if (this.item != null)
+		{
+			ItemStack stack = new ItemStack(this.item, size, this.meta);
+			stack.setTagCompound(this.nbt);
+			return stack;
+		}
+		return null;
+	}
+	
 	@Override
 	public ImmutableList<ItemStack> display()
 	{

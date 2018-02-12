@@ -145,6 +145,7 @@ public final class Strings
 	 * @param name The formated name.
 	 * @return The validate name.
 	 */
+	@Deprecated
 	public static String validateOre(boolean upperFirst, @Nullable String name)
 	{
 		String string = validate(name);
@@ -203,8 +204,8 @@ public final class Strings
 		else if (str.indexOf(split) != -1)
 		{
 			List<String> list = new ArrayList<>(4);
-			int start = 0, idx = 0, length = str.length();
-			for (; idx < length; ++idx)
+			int start = 0, idx, length = str.length();
+			for (idx = 0; idx < length; ++idx)
 			{
 				if (str.charAt(idx) == split)
 				{

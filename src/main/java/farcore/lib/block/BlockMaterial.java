@@ -8,7 +8,6 @@ import java.util.Random;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
 import nebula.common.block.BlockBase;
 import nebula.common.util.Direction;
@@ -26,14 +25,12 @@ import net.minecraft.world.World;
 public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implements IThermalCustomBehaviorBlock
 {
 	public final Mat				material;
-	protected final PropertyBasic	basic;
 	public final P					property;
 	
 	public BlockMaterial(String modid, String name, Material materialIn, Mat mat, P property)
 	{
 		super(modid, name, materialIn);
 		this.material = mat;
-		this.basic = this.material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	
@@ -41,7 +38,6 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 		this.material = mat;
-		this.basic = this.material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	
@@ -114,7 +110,7 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public double getThermalConduct(World world, BlockPos pos, IBlockState state)
 	{
-		return this.basic.thermalConduct;
+		return this.material.thermalConductivity;
 	}
 	
 	@Override

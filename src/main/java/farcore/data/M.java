@@ -181,6 +181,8 @@ public class M
 	public static final Mat	redbrick		= new Mat(11003, FarCore.ID, "redbrick"		, "RedBrick"		, "Red Brick"		).builder().setRGBa(0xB75A40FF).setBrick(4, 4.0F, 8.5F).build();
 	public static final Mat	greybrick		= new Mat(11004, FarCore.ID, "greybrick"	, "GreyBrick"		, "Grey Brick"		).builder().setRGBa(0xB8CAC7FF).setBrick(4, 4.0F, 8.5F).build();
 	
+	public static final Mat plant_ash		= new Mat(15401, FarCore.ID, "plant_ash"	, "plantAsh"		, "Plant Ash"		);
+	
 	static
 	{
 		block.setNames(sand, "Sand", redsand, "Red Sand");
@@ -196,6 +198,8 @@ public class M
 		SubTags.HERB.addTo(dandelion);
 		SubTags.FLINT.addTo(flint, obsidian, quartz);
 		SubTags.PILEABLE.addTo(gravel);
+		SubTags.REDUCABLE.addTo(copper);
+		SubTags.DUST.addTo(plant_ash);
 		
 		fragment.addToBlackList(obsidian);
 		pile_purified.addToBlackList(gravel);

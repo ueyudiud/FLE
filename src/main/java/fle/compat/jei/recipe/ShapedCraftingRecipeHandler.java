@@ -50,7 +50,7 @@ public class ShapedCraftingRecipeHandler implements IRecipeHandler<ShapedFleReci
 			return false;
 		for (SingleInputMatch[] matches : recipe.inputs)
 			for (SingleInputMatch match : matches)
-				if (match != null && !match.input.valid())
+				if (match.input != null && !match.input.valid())
 					return false;
 		return true;
 	}

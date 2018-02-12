@@ -3,7 +3,6 @@
  */
 package farcore.load;
 
-import nebula.common.LanguageManager;
 import nebula.common.util.ModCompator.ICompatible;
 
 /**
@@ -17,7 +16,7 @@ public class JEICompact implements ICompatible
 		switch (phase)
 		{
 		case "post" :
-			LanguageManager.registerLocal("jei.compat.solid.amount", "Amount: %dL");
+			//			LanguageManager.registerLocal("jei.compat.solid.amount", "Amount: %dL");
 			break;
 		}
 	}

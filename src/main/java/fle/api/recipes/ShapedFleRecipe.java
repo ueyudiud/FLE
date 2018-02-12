@@ -52,8 +52,8 @@ public class ShapedFleRecipe implements IRecipe
 		}
 		else if (object instanceof AbstractStack)
 		{
-			if (object instanceof OreStack) object = new OreStackExt((OreStack) object);// Extended
-			// wrapper.
+			if (object instanceof OreStack) object = new OreStackExt((OreStack) object);
+			// Extended wrapper.
 			return new SingleInputMatch((AbstractStack) object);
 		}
 		else if (object instanceof SingleInputMatch)
@@ -149,23 +149,27 @@ public class ShapedFleRecipe implements IRecipe
 		int maxXOff = inv.getWidth() - this.width;
 		int maxYOff = inv.getHeight() - this.height;
 		for (int j = 0; j <= maxYOff; ++j)
+		{
 			for (int i = 0; i <= maxXOff; ++i)
 			{
 				if (matchWithCoordOffset(inv, i, j, false)) return new int[] { i, j, 0 };
 				if (this.enableMirror && matchWithCoordOffset(inv, i, j, true)) return new int[] { i, j, 1 };
 			}
+		}
 		return null;
 	}
 	
 	protected boolean matchWithCoordOffset(InventoryCrafting inv, int xOff, int yOff, boolean mirror)
 	{
 		for (int j = 0; j < this.height; ++j)
+		{
 			for (int i = 0; i < this.width; ++i)
 			{
 				SingleInputMatch match = this.inputs[j][mirror ? this.width - i - 1 : i];
 				ItemStack stack = inv.getStackInRowAndColumn(i + xOff, j + yOff);
 				if (!match.match(stack)) return false;
 			}
+		}
 		return true;
 	}
 	
@@ -178,11 +182,13 @@ public class ShapedFleRecipe implements IRecipe
 		{
 			boolean mirror = offset[2] == 1;
 			for (int j = 0; j < this.height; ++j)
+			{
 				for (int i = 0; i < this.width; ++i)
 				{
-					SingleInputMatch match = this.inputs[j][mirror ? this.width - i - 1 : i];
-					match.applyOutput(ItemStack.copyItemStack(inv.getStackInRowAndColumn(i + offset[0], j + offset[1])), result);
+					this.inputs[j][mirror ? this.width - i - 1 : i]
+							.applyOutput(ItemStack.copyItemStack(inv.getStackInRowAndColumn(i + offset[0], j + offset[1])), result);
 				}
+			}
 		}
 		return result;
 	}

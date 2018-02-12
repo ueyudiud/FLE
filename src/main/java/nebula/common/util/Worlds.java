@@ -73,6 +73,11 @@ public final class Worlds
 	{
 	}
 	
+	public static Random random(IBlockAccess world)
+	{
+		return world instanceof World ? ((World) world).rand : L.random();
+	}
+	
 	/**
 	 * I don't know why some modification can be crashed on this method, use
 	 * this instead.

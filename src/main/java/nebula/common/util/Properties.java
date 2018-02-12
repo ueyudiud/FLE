@@ -75,7 +75,6 @@ public class Properties
 	 * The state annotation, mark on Enum class and provide auto property.
 	 * 
 	 * @author ueyudiud
-	 *
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.TYPE })
@@ -87,21 +86,5 @@ public class Properties
 		 * @return
 		 */
 		String value();
-	}
-	
-	/**
-	 * The property injection will be given if it is on a enum property.
-	 * <p>
-	 * It dose not take effect now!
-	 * <p>
-	 * XXX
-	 * 
-	 * @author ueyudiud
-	 */
-	@Deprecated
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD })
-	public static @interface PropertyInject
-	{
 	}
 }

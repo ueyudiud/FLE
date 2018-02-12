@@ -37,8 +37,14 @@ public class MC
 	public static final MatCondition	seed				= new MatCondition("seed", "Seed", "% Seed").setSize(72L, 24L).setFilter(SubTags.CROP);
 	public static final MatCondition	chip_rock			= new MatCondition("chip", "Chip", "% Chip").setSize(576L, 576L, 4.0F).setFilter(SubTags.ROCK);
 	public static final MatCondition	chip_ore			= new MatCondition("chip_ore", "chip", "Ore Chip", "% Chip").setSize(576L, 576L, 4.0F).setFilter(SubTags.ORE);
+	public static final MatCondition	impure_reduced_pile	= new MatCondition("impure_reduced_pile", "pileReducedImpure", "Impure Reduced Pile", "Impure Reduced %").setSize(1276L, 576L).setFilter(SubTags.REDUCABLE);
+	public static final MatCondition	reduced_pile		= new MatCondition("reduced_pile", "pileReduced", "Reduced Pile", "Reduced %").setSize(1276L, 576L).setFilter(SubTags.REDUCABLE);
+	public static final MatCondition	reduced_pile_small	= new MatCondition("reduced_pile_small", "pileReducedSmall", "Small Reduced Pile", "Small Reduced %").setSize(576L, 576L).setFilter(SubTags.REDUCABLE);
 	public static final MatCondition	fragment			= new MatCondition("fragment", "Fragment", "% Fragment").setSize(864L, 864L, 1.5F).setFilter(SubTags.ROCK);
 	public static final MatCondition	sapling				= new MatCondition("sapling", "Sapling", "% Sapling").setSize(640L, 512L, 25.0F).setFilter(SubTags.WOOD);
+	public static final MatCondition	dust				= new MatCondition("dust", "Dust", "% Dust").setSize(576L, 4L).setFilter(SubTags.DUST);
+	public static final MatCondition	dust_small			= new MatCondition("dust_small", "dustSmall", "Small Dust", "Small % Dust").setSize(144L, 4L).setFilter(SubTags.DUST);
+	public static final MatCondition	dust_tiny			= new MatCondition("dust_tiny", "dustTiny", "Tiny Dust", "Tiny % Dust").setSize(64L, 4L).setFilter(SubTags.DUST);
 	public static final MatCondition	pile				= new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
 	public static final MatCondition	pile_purified		= new MatCondition("pile_purified", "Purified Pile", "Purified % Pile").setSize(576L, 12L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
 	public static final MatCondition	clayball			= new MatCondition("clayball", "clay", "Clay", "% Ball").setSize(576L, 8L).setFilter(SubTags.CLAY);

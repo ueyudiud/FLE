@@ -503,7 +503,7 @@ public class OreDictExt
 	 * @param oreName
 	 * @return
 	 */
-	public static boolean oreMatchs(ItemStack stack, String oreName)
+	public static boolean oreMatchs(@Nonnull ItemStack stack, @Nonnull String oreName)
 	{
 		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map;
 		return NAME_TO_ID.containsKey(oreName) ? (map = FUNCTION_MAP.get(NAME_TO_ID.get(oreName))).containsKey(stack.getItem()) && map.get(stack.getItem()).getKey().test(stack) : false;

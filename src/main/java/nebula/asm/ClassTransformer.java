@@ -46,19 +46,22 @@ public class ClassTransformer implements IClassTransformer
 			NebulaASMLogHelper.keyOutputStream.println(name + "=" + transformedName);
 		}
 		OpInfo information;
-		if ((information = informations.remove(transformedName)) != null) return modifyClass(transformedName, information, basicClass);
+		if ((information = informations.remove(transformedName)) != null)
+		{
+			return modifyClass(transformedName, information, basicClass);
+		}
 		return basicClass;
 	}
 	
-	public byte[] modifyClass(String clazzName, OpInfo information, byte[] basicClass)
+	private byte[] modifyClass(String clazzName, OpInfo information, byte[] source)
 	{
 		try
 		{
 			String clazzName1 = clazzName.substring(clazzName.lastIndexOf('.') + 1);
 			NebulaASMLogHelper.LOG.info("Start to modify class {}({}).", clazzName1, clazzName);
 			NebulaASMLogHelper.LOG.debug("Checking targets are {}", information.modifies);
+			ClassReader reader = new ClassReader(source);
 			ClassNode node = new ClassNode();
-			ClassReader reader = new ClassReader(basicClass);
 			reader.accept(node, 0);
 			List<String> methods = new ArrayList<>();
 			Iterator<MethodNode> nodes = node.methods.iterator();
@@ -103,7 +106,7 @@ public class ClassTransformer implements IClassTransformer
 		catch (Exception exception)
 		{
 			NebulaASMLogHelper.LOG.error("Fail to modify class.", exception);
-			return basicClass;
+			return source;
 		}
 	}
 	

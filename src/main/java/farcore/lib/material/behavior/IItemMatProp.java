@@ -7,8 +7,10 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.environment.IEnvironment;
+import nebula.common.util.ItemStacks;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -48,6 +50,24 @@ public interface IItemMatProp
 	 * @see nebula.common.item.ItemBase#getStackMetaOffset(ItemStack)
 	 */
 	int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag);
+	
+	default void copyData(ItemStack source, ItemStack target, Mat material, MatCondition conditionSource, MatCondition conditionTarget)
+	{
+		copyData(source, target, material, conditionSource, conditionTarget, DEFAULT_SAVE_TAG);
+	}
+	
+	default void copyData(ItemStack source, ItemStack target, Mat material, MatCondition conditionSource, MatCondition conditionTarget, String saveTag)
+	{
+		NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(source, saveTag, false);
+		if (nbt.hasNoTags())
+		{
+			ItemStacks.getOrSetupNBT(target, false).removeTag(saveTag);
+		}
+		else
+		{
+			ItemStacks.getOrSetupNBT(target, true).setTag(saveTag, nbt);
+		}
+	}
 	
 	default ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment)
 	{

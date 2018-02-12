@@ -29,8 +29,10 @@ public class SubTags
 	public static final SubTag	VINES			= getNewSubTag("VINES");
 	public static final SubTag	HERB			= getNewSubTag("HERB");
 	public static final SubTag	ORE				= getNewSubTag("ORE");
+	public static final SubTag	REDUCABLE		= getNewSubTag("REDUCABLE");
 	public static final SubTag	BRICK			= getNewSubTag("BRICK");
 	public static final SubTag	PILEABLE		= getNewSubTag("PILEABLE");
+	public static final SubTag	DUST			= getNewSubTag("DUST");
 	public static final SubTag	ORE_SIMPLE		= getNewSubTag("ORE_SIMPLE");
 	public static final SubTag	ORE_GEM			= getNewSubTag("ORE_GEM");
 	public static final SubTag	ORE_NOBLE		= getNewSubTag("ORE_NOBLE");

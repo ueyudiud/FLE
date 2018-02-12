@@ -9,7 +9,7 @@ import java.util.function.IntUnaryOperator;
 /**
  * @author ueyudiud
  */
-public abstract class ImmutableIntMap<E> implements IntMap<E>
+abstract class ImmutableIntMap<E> implements IntMap<E>
 {
 	ImmutableIntMap()
 	{

@@ -186,7 +186,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + RANDOM.nextInt(3)));
+		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + Worlds.random(world).nextInt(3)));
 	}
 	
 	@Override

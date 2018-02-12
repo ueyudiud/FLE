@@ -133,6 +133,11 @@ public class SolidStack
 		return this.delegate.get();
 	}
 	
+	public final String getRegistryName()
+	{
+		return this.delegate.name();
+	}
+	
 	public SolidStack splitStack(int amount)
 	{
 		this.amount -= amount;

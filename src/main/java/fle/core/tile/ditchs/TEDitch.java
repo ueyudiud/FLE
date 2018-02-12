@@ -389,8 +389,6 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		case 0:
 			buf.writeFluidStack(this.tank.getFluid());
 			break;
-		default:
-			break;
 		}
 	}
 	
@@ -402,8 +400,6 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		{
 		case 0:
 			this.tank.setFluid(buf.readFluidStack());
-			break;
-		default:
 			break;
 		}
 	}

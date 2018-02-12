@@ -24,7 +24,7 @@ public interface AbstractStack
 	 * @param stack
 	 * @return
 	 */
-	boolean similar(ItemStack stack);
+	boolean similar(@Nullable ItemStack stack);
 	
 	/**
 	 * Check this stack is fully to input with target stack.

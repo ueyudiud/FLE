@@ -36,9 +36,13 @@ public class ShapedCraftingRecipeWrapper extends BlankRecipeWrapper implements I
 		{
 			for (SingleInputMatch match : matches)
 			{
-				if (match != null)
+				if (match.input != null)
 				{
 					builder.add(ImmutableList.copyOf(Lists.transform(match.input.display(), ItemStacks::valid)));
+				}
+				else
+				{
+					builder.add(ImmutableList.of());
 				}
 			}
 		}

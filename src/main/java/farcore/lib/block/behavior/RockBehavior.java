@@ -122,7 +122,7 @@ implements IRockLikeBehavior<B>
 		}
 		else
 		{
-			Random rand = world instanceof World ? ((World) world).rand : L.random();
+			Random rand = Worlds.random(world);
 			EnumRockType type = state.getValue(TYPE);
 			switch (type)
 			{

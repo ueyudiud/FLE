@@ -51,6 +51,14 @@ public class RecipeResource1
 			}
 		}
 		
+		for (Mat material : Mat.filt(SubTags.DUST, true))
+		{
+			addShapedRecipe(ItemMulti.createStack(material, MC.dust_small, 4), "x ", 'x', MC.dust.getOreName(material));
+			addShapedRecipe(ItemMulti.createStack(material, MC.dust_tiny, 9), " x", 'x', MC.dust.getOreName(material));
+			addShapelessRecipe(ItemMulti.createStack(material, MC.dust), MC.dust_small.getOreName(material), 4);
+			addShapelessRecipe(ItemMulti.createStack(material, MC.dust), MC.dust_tiny.getOreName(material), 9);
+		}
+		
 		RecipeMaps.PORTABLE_WOODWORK.addRecipe(new RecipePortableWoodwork1());
 		RecipeMaps.PORTABLE_WOODWORK.addRecipe(new RecipePortableWoodwork2());
 	}

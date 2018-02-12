@@ -37,7 +37,7 @@ public class OreStackExt implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return OreDictExt.oreMatchs(stack, this.name);
+		return stack != null && OreDictExt.oreMatchs(stack, this.name);
 	}
 	
 	@Override

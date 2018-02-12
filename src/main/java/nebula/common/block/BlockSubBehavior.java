@@ -372,7 +372,7 @@ public abstract class BlockSubBehavior extends BlockBase implements IUpdateDelay
 	@Override
 	public Boolean isAABBInsideMaterial(World world, BlockPos pos, AxisAlignedBB boundingBox, Material materialIn)
 	{
-		// TODO Auto-generated method stub
+		// TODO
 		return super.isAABBInsideMaterial(world, pos, boundingBox, materialIn);
 	}
 	

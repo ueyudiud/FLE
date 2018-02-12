@@ -13,5 +13,5 @@ package farcore.data;
 @Deprecated
 public enum EnumOreAmount
 {
-	pure, enrich, normal, poor, trace, scattered;
+	enrich, normal, poor, trace, scattered;
 }

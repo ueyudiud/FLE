@@ -422,7 +422,7 @@ public class InventoryHelper
 	
 	private static boolean insertAllStacks(IBasicInventory inventory, int from, int to, ItemStack[] stacks, boolean process)
 	{
-		if (stacks == null || stacks.length == 0) return false;
+		if (stacks == null || stacks.length == 0) return true;
 		ItemStack[] array = inventory.toArray();
 		int limit = inventory.getStackLimit();
 		List<ItemStack> list = ArrayListConditional.requireNonnull();
