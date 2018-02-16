@@ -226,7 +226,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 			{
 				final int j = state.getValue(LAYER) - 4;
 				map.transformAll(i -> i < j ? j - i : 0);
-				if (map.getSum() > 0)
+				if (map.sum() > 0)
 				{
 					EnumFacing facing = Selector.of(map).next(rand);
 					return fallBlockAt(world, pos, pos.offset(facing), state);

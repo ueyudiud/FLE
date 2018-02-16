@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
+import com.google.common.collect.Lists;
+
 import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.Direction;
@@ -57,6 +59,11 @@ public class FlamableRecipes
 				return 420;
 			return -1;
 		});
+	}
+	
+	public static List<AbstractStack> getFlamables()
+	{
+		return Lists.transform(FLAMABLES, f -> f.stack);
 	}
 	
 	public static void addFlameSource(ToIntFunction<ICoord> function)

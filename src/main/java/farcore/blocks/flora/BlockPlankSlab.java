@@ -1,9 +1,9 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-package farcore.blocks.wood;
+package farcore.blocks.flora;
 
-import farcore.blocks.wood.BlockPlank.EnumPlankState;
+import farcore.blocks.flora.BlockPlank.EnumPlankState;
 import farcore.data.CT;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.material.Mat;

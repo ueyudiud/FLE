@@ -6,7 +6,7 @@ package farcore.items;
 import java.util.List;
 
 import farcore.FarCore;
-import farcore.blocks.BlockCrop;
+import farcore.blocks.flora.BlockCrop;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;

@@ -5,6 +5,12 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.FarCore;
+import farcore.data.EnumBlock;
+import farcore.data.EnumToolTypes;
+import farcore.data.MC;
+import farcore.lib.compat.jei.ToolDisplayRecipeMap;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tree.Tree;
@@ -12,6 +18,8 @@ import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendar;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
+import nebula.common.stack.AbstractStack;
+import nebula.common.stack.BaseStack;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import nebula.common.util.Properties;
@@ -24,6 +32,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -145,6 +154,32 @@ public abstract class TreeWithFruitLeaves extends Tree
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	@Optional.Method(modid = FarCore.JEI)
+	public void addDropRecipe()
+	{
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[0], 1, -1),
+				new AbstractStack[] { EnumToolTypes.AXE.stack() },
+				new AbstractStack[] {new BaseStack(ItemMulti.createStack(this.material, MC.log_cutted))},
+				new int[][] {{10000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[0], 1, -1),
+				new AbstractStack[] { EnumToolTypes.BIFACE.stack() },
+				new AbstractStack[] {new BaseStack(ItemMulti.createStack(this.material, MC.log_cutted))},
+				new int[][] {{10000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[2], 1, -1),
+				new AbstractStack[0],
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.branch)),
+						new BaseStack(this.isBroadLeaf ? LEAVES_APPLIER1.get() : LEAVES_APPLIER2.get()),
+						new BaseStack(EnumBlock.sapling.block, 1, this.material.id)},
+				new int[][] {{1250}, {1427}, null});
+		IBlockState state = this.blocks[2].getDefaultState().withProperty(FRUIT_STAGE, 4);
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(state),
+				new AbstractStack[0],
+				new AbstractStack[] {new BaseStack(createFruit(null, null, state))},
+				null);
 	}
 	
 	protected abstract ItemStack createFruit(World world, BlockPos pos, IBlockState state);

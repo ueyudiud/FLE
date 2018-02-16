@@ -64,6 +64,7 @@ public class FLE
 		compator = ModCompator.newCompactor();
 		loader.init(event);
 		compator.addCompatible("fg", "fargen.compact.fle.SubCompact");
+		compator.addCompatible("JEI", "fle.compat.jei.JEIRecipes");
 	}
 	
 	@EventHandler
@@ -76,5 +77,6 @@ public class FLE
 	public void load(FMLPostInitializationEvent event)
 	{
 		compator.call("init");
+		
 	}
 }

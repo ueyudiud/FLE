@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-import farcore.blocks.BlockCrop;
+import farcore.blocks.flora.BlockCrop;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.crop.ICrop;

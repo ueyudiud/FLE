@@ -68,7 +68,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		}
 	}
 	
-	public static ItemStack createItemStack(String name, FluidStack stack)
+	public static ItemStack createItemStack(String name, @Nullable FluidStack stack)
 	{
 		ItemStack stack2 = IBFS.iFluidContainer.getSubItem(name);
 		setFluid(stack2, stack);

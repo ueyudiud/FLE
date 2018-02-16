@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package farcore.data;
 
 import net.minecraftforge.fluids.Fluid;
@@ -43,4 +42,9 @@ public class V
 	public static final double	sqrt2π	= 2.5066282746310007D;
 	
 	public static final int MATERIAL_SIZE = 32768;
+	
+	public static final int jeiXOffset = 5;
+	public static final int jeiYOffset = 10;
+	public static final int jeiXSlotOff = 6;
+	public static final int jeiYSlotOff = 11;
 }

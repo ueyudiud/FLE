@@ -5,16 +5,22 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.FarCore;
 import farcore.data.EnumToolTypes;
+import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import fle.api.tile.ILogProductionCollector;
+import fle.core.items.ItemSimpleFluidContainer;
 import fle.loader.IBFS;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.data.Misc;
+import nebula.common.item.ItemFluidDisplay;
+import nebula.common.stack.AbstractStack;
+import nebula.common.stack.BaseStack;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
@@ -33,6 +39,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -155,6 +162,17 @@ public class TreeLacquer extends Tree
 			}
 		}
 		return super.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, isArt);
+	}
+	
+	@Override
+	@Optional.Method(modid = FarCore.JEI)
+	public void addDropRecipe()
+	{
+		super.addDropRecipe();
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[0], 1),
+				new AbstractStack[] { EnumToolTypes.BIFACE.stack(), new BaseStack(ItemSimpleFluidContainer.createItemStack("bowl_wooden", null)) },
+				new AbstractStack[] { new BaseStack(ItemFluidDisplay.createFluidDisplay(new FluidStack(IBFS.fLacquer, 225), true))},
+				null);
 	}
 	
 	@Override

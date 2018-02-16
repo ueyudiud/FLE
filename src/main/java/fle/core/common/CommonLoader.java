@@ -3,6 +3,7 @@
  */
 package fle.core.common;
 
+import fle.core.FLE;
 import fle.core.handler.FleEntityHandler;
 import fle.core.tile.ditchs.DefaultDitchFactory;
 import fle.loader.Configs;
@@ -40,6 +41,7 @@ public class CommonLoader
 		Fuels.init();
 		FW.init();
 		Recipes.init();
+		FLE.compator.call("ar");
 		Lang.init();
 	}
 }

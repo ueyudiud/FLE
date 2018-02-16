@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.FarCore;
 import farcore.blocks.terria.BlockRock;
 import farcore.data.EnumBlock;
 import farcore.data.EnumRockType;
@@ -20,6 +21,7 @@ import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IFallingStaySupport;
 import farcore.lib.block.ISmartFallableBlockRockLike;
+import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
@@ -28,6 +30,8 @@ import farcore.lib.world.TaskFalling;
 import nebula.Log;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.entity.EntityFallingBlockExtended;
+import nebula.common.stack.AbstractStack;
+import nebula.common.stack.BaseStack;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
@@ -54,6 +58,7 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -112,6 +117,64 @@ implements IRockLikeBehavior<B>
 		}
 	}
 	
+	@Optional.Method(modid = FarCore.JEI)
+	public void addDropRecipe()
+	{
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.resource)),
+				new AbstractStack[] { EnumToolTypes.HAMMER_DIGABLE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock)),
+						new BaseStack(ItemMulti.createStack(this.material, MC.fragment))},
+				new int[][] {{10000, 7500, 5000, 5000, 5000, 2500}, {5000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.resource)),
+				new AbstractStack[] { EnumToolTypes.PICKAXE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock)),
+						new BaseStack(ItemMulti.createStack(this.material, MC.fragment))},
+				new int[][] {{10000, 7500, 5000, 5000, 5000, 2500}, {5000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.cobble)),
+				new AbstractStack[] { EnumToolTypes.HAMMER_DIGABLE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock)),
+						new BaseStack(ItemMulti.createStack(this.material, MC.fragment))},
+				new int[][] {{10000, 7500, 5000, 5000, 5000, 2500}, {5000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.cobble)),
+				new AbstractStack[] { EnumToolTypes.PICKAXE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock)),
+						new BaseStack(ItemMulti.createStack(this.material, MC.fragment))},
+				new int[][] {{10000, 7500, 5000, 5000, 5000, 2500}, {5000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.cobble_art)),
+				new AbstractStack[] { EnumToolTypes.HAMMER_DIGABLE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock, 9))},
+				null);
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.cobble_art)),
+				new AbstractStack[] { EnumToolTypes.PICKAXE.stack() },
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.chip_rock, 9))},
+				null);
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.resource)),
+				new AbstractStack[] { EnumToolTypes.CHISEL_POLISH.stack() },
+				new AbstractStack[] { new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.smoothed))},
+				null);
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.resource)),
+				new AbstractStack[] { new BaseStack(EnumBlock.fire.block), new BaseStack(EnumBlock.water.block) },
+				new AbstractStack[] { new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.cobble))},
+				null);
+		for (EnumRockType type : EnumRockType.values())
+		{
+			if (type == EnumRockType.cobble || type == EnumRockType.cobble_art || type == EnumRockType.resource)
+				continue;
+			ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, type)),
+					new AbstractStack[] { EnumToolTypes.HAMMER_DIGABLE.stack() },
+					new AbstractStack[] { new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.values()[type.noSilkTouchDropMeta]))}, null);
+			ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.block.getDefaultState().withProperty(TYPE, type)),
+					new AbstractStack[] { EnumToolTypes.PICKAXE.stack() },
+					new AbstractStack[] { new BaseStack(this.block.getDefaultState().withProperty(TYPE, EnumRockType.values()[type.noSilkTouchDropMeta]))}, null);
+		}
+	}
+	
 	@Override
 	public List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
@@ -131,13 +194,13 @@ implements IRockLikeBehavior<B>
 				int count = rand.nextInt(4) + 3;
 				if (rand.nextBoolean())
 				{
-					ret.add(ItemMulti.createStack(block.material, MC.fragment));
+					ret.add(ItemMulti.createStack(this.material, MC.fragment));
 					count -= 2;
 				}
-				ret.add(ItemMulti.createStack(block.material, MC.chip_rock, count));
+				ret.add(ItemMulti.createStack(this.material, MC.chip_rock, count));
 				break;
 			case cobble_art:
-				ret.add(ItemMulti.createStack(block.material, MC.chip_rock, 9));
+				ret.add(ItemMulti.createStack(this.material, MC.chip_rock, 9));
 				break;
 			default:
 				ret.add(new ItemStack(block, 1, type.noSilkTouchDropMeta));
@@ -198,8 +261,6 @@ implements IRockLikeBehavior<B>
 			{
 				world.setBlockState(pos, state.withProperty(HEATED, false), 6);
 			}
-		default:
-			break;
 		}
 		updateTick(block, state, world, pos, random);
 	}

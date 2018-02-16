@@ -47,30 +47,40 @@ public class MatBehaviorCopper implements IItemMatProp
 	@Override
 	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition, String saveTag)
 	{
-		ItemStacks.getSubOrSetupNBT(stack, saveTag, true).setFloat("rustness", (metaOffset & 0x3) / 3.0F);
+		ItemStacks.getSubOrSetupNBT(stack, saveTag, true).setInteger("rustness", (metaOffset & 0x3) * 10_0000 / 3);
 	}
 	
 	@Override
 	public int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag)
 	{
-		return Math.round(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getFloat("rustness") * 3);
+		return Math.round(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getInteger("rustness") / (10_0000 / 3));
 	}
 	
 	@Override
 	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment, String saveTag)
 	{
+		//		float speed = 1.0F;
+		//		float temp = ThermalNet.getTemperature(environment);
+		//		float h2o = L.cast(environment.getValue(WP.H2OConcentration));
+		//		float co2 = L.cast(environment.getValue(WP.CO2Concentration));
+		//		if (temp > 280)
+		//		{
+		//			temp = (temp - 280) / 10;
+		//			speed *= temp / (1 + temp);
+		//		}
+		
 		return stack;
 	}
 	
 	@Override
 	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag)
 	{
-		list.add("info.material.behavior.metal.copper.rustness", Strings.progress(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getFloat("rustness")));
+		list.add("info.material.behavior.metal.copper.rustness", Strings.progress(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getInteger("rustness") / 10_0000F));
 	}
 	
 	@Override
 	public float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target, String saveTag)
 	{
-		return 1.0F - 0.4F * ItemStacks.getSubOrSetupNBT(stack, saveTag, true).getFloat("rustness");
+		return 1.0F - 0.4F * ItemStacks.getSubOrSetupNBT(stack, saveTag, true).getInteger("rustness") / 10_0000F;
 	}
 }

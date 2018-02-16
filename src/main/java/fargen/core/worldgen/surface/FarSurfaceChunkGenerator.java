@@ -12,7 +12,7 @@ import java.util.Random;
 import com.google.common.collect.ImmutableList;
 
 import farcore.FarCore;
-import farcore.blocks.BlockCrop;
+import farcore.blocks.flora.BlockCrop;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.crop.CropAccessSimulated;

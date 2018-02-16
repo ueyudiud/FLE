@@ -5,7 +5,7 @@ package farcore.lib.plant;
 
 import java.util.Random;
 
-import farcore.blocks.BlockPlant;
+import farcore.blocks.flora.BlockPlant;
 import farcore.lib.material.Mat;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;

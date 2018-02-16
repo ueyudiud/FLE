@@ -10,17 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.blocks.wood.BlockLeaves;
-import farcore.blocks.wood.BlockLeavesCore;
-import farcore.blocks.wood.BlockLogArtificial;
-import farcore.blocks.wood.BlockLogNatural;
+import farcore.FarCore;
+import farcore.blocks.flora.BlockLeaves;
+import farcore.blocks.flora.BlockLeavesCore;
+import farcore.blocks.flora.BlockLogArtificial;
+import farcore.blocks.flora.BlockLogNatural;
 import farcore.data.Config;
+import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
+import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.data.MP;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IFamily;
+import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
@@ -32,6 +36,8 @@ import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
 import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
+import nebula.common.stack.AbstractStack;
+import nebula.common.stack.BaseStack;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
@@ -47,6 +53,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -409,6 +416,26 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 			list.add(ItemStack.copyItemStack((this.isBroadLeaf ? LEAVES_APPLIER1 : LEAVES_APPLIER2).apply()));
 		}
 		return list;
+	}
+	
+	@Optional.Method(modid = FarCore.JEI)
+	public void addDropRecipe()
+	{
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[0], 1, -1),
+				new AbstractStack[] { EnumToolTypes.AXE.stack() },
+				new AbstractStack[] {new BaseStack(ItemMulti.createStack(this.material, MC.log_cutted))},
+				new int[][] {{10000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[0], 1, -1),
+				new AbstractStack[] { EnumToolTypes.BIFACE.stack() },
+				new AbstractStack[] {new BaseStack(ItemMulti.createStack(this.material, MC.log_cutted))},
+				new int[][] {{10000}});
+		ToolDisplayRecipeMap.addToolDisplayRecipe(new BaseStack(this.blocks[2], 1, -1),
+				new AbstractStack[0],
+				new AbstractStack[] {
+						new BaseStack(ItemMulti.createStack(this.material, MC.branch)),
+						new BaseStack(this.isBroadLeaf ? LEAVES_APPLIER1.get() : LEAVES_APPLIER2.get()),
+						new BaseStack(EnumBlock.sapling.block, 1, this.material.id)},
+				new int[][] {{1250}, {1427}, null});
 	}
 	
 	@Override

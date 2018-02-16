@@ -5,7 +5,7 @@ package farcore.util.runnable;
 
 import java.util.ArrayList;
 
-import farcore.blocks.wood.BlockLogNatural;
+import farcore.blocks.flora.BlockLogNatural;
 import farcore.data.EnumItem;
 import farcore.data.V;
 import farcore.items.ItemTreeLog;

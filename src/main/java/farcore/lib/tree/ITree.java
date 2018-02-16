@@ -9,10 +9,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import farcore.blocks.wood.BlockLeaves;
-import farcore.blocks.wood.BlockLeavesCore;
-import farcore.blocks.wood.BlockLogArtificial;
-import farcore.blocks.wood.BlockLogNatural;
+import farcore.blocks.flora.BlockLeaves;
+import farcore.blocks.flora.BlockLeavesCore;
+import farcore.blocks.flora.BlockLogArtificial;
+import farcore.blocks.flora.BlockLogNatural;
 import farcore.lib.bio.ISpecie;
 import farcore.lib.tile.instance.TECoreLeaves;
 import nebula.common.block.IBlockStateRegister;

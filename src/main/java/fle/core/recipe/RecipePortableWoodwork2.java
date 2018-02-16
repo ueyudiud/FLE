@@ -3,7 +3,7 @@
  */
 package fle.core.recipe;
 
-import farcore.blocks.wood.BlockLogArtificial;
+import farcore.blocks.flora.BlockLogArtificial;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;

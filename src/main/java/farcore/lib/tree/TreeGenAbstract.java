@@ -6,7 +6,7 @@ package farcore.lib.tree;
 import java.util.Random;
 
 import farcore.FarCore;
-import farcore.blocks.BlockPlantVine;
+import farcore.blocks.flora.BlockPlantVine;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;

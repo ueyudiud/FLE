@@ -20,14 +20,14 @@ import static org.lwjgl.input.Keyboard.KEY_R;
 
 import farcore.FarCore;
 import farcore.blocks.BlockCarvedRock;
-import farcore.blocks.BlockCrop;
 import farcore.blocks.BlockFire;
 import farcore.blocks.BlockIce;
 import farcore.blocks.BlockMetal;
-import farcore.blocks.BlockPlantVine;
 import farcore.blocks.BlockRedstoneCircuit;
 import farcore.blocks.BlockScreen;
-import farcore.blocks.wood.BlockSapling;
+import farcore.blocks.flora.BlockCrop;
+import farcore.blocks.flora.BlockPlantVine;
+import farcore.blocks.flora.BlockSapling;
 import farcore.data.CT;
 import farcore.data.EnumBlock;
 import farcore.data.EnumFluid;

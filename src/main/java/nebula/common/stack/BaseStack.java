@@ -10,8 +10,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -41,6 +43,23 @@ public class BaseStack implements AbstractStack
 	public BaseStack(Block block)
 	{
 		this(block, 1);
+	}
+	
+	private static int getMeta(IBlockState state)
+	{
+		Block block = state.getBlock();
+		return block instanceof IExtendedDataBlock ?
+				((IExtendedDataBlock) block).getDataFromState(state) : block.getMetaFromState(state);
+	}
+	
+	public BaseStack(IBlockState state)
+	{
+		this(state, 1);
+	}
+	
+	public BaseStack(IBlockState state, int size)
+	{
+		this(state.getBlock(), size, getMeta(state));
 	}
 	
 	public BaseStack(Block block, int size)

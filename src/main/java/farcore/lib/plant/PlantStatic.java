@@ -9,7 +9,7 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 
-import farcore.blocks.BlockPlant;
+import farcore.blocks.flora.BlockPlant;
 import farcore.lib.material.Mat;
 import nebula.client.model.ModelLocation;
 import nebula.client.util.Client;

@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-package farcore.blocks;
+package farcore.blocks.flora;
 
 import java.util.List;
 

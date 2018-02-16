@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Iterables;
 
 import farcore.blocks.BlockBrick;
+import farcore.blocks.flora.BlockLeaves;
+import farcore.blocks.flora.BlockLeavesCore;
+import farcore.blocks.flora.BlockLogArtificial;
+import farcore.blocks.flora.BlockLogNatural;
+import farcore.blocks.flora.BlockPlank;
+import farcore.blocks.flora.BlockWoodenFence;
 import farcore.blocks.terria.BlockClay;
 import farcore.blocks.terria.BlockRock;
 import farcore.blocks.terria.BlockSand;
 import farcore.blocks.terria.BlockSoil;
 import farcore.blocks.terria.BlockStoneChip;
-import farcore.blocks.wood.BlockLeaves;
-import farcore.blocks.wood.BlockLeavesCore;
-import farcore.blocks.wood.BlockLogArtificial;
-import farcore.blocks.wood.BlockLogNatural;
-import farcore.blocks.wood.BlockPlank;
-import farcore.blocks.wood.BlockWoodenFence;
 import farcore.data.MP;
 import farcore.data.Materials;
 import farcore.data.SubTags;
@@ -517,16 +517,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		
 		public Builder setSoil(float hardness, float resistance)
 		{
-			PropertyBlockable property = new PropertyBlockable(Mat.this, -1,// It
-					// seems
-					// no
-					// soil
-					// need
-					// use
-					// tool
-					// to
-					// harvest.
-					hardness, resistance);
+			// It seems no soil need use tool to harvest.
+			PropertyBlockable property = new PropertyBlockable(Mat.this, -1, hardness, resistance);
 			property.block = new BlockSoil(Mat.this.modid, "soil." + Mat.this.name, Materials.DIRT, Mat.this, property);
 			add(SubTags.DIRT);
 			return addProperty(MP.property_soil, property);
@@ -534,16 +526,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		
 		public Builder setClay(float hardness, float resistance)
 		{
-			PropertyBlockable property = new PropertyBlockable(Mat.this, -1,// It
-					// seems
-					// no
-					// soil
-					// need
-					// use
-					// tool
-					// to
-					// harvest.
-					hardness, resistance);
+			// It seems no clay need use tool to harvest.
+			PropertyBlockable property = new PropertyBlockable(Mat.this, -1, hardness, resistance);
 			property.block = new BlockClay(Mat.this.modid, "soil." + Mat.this.name, Materials.CLAY, Mat.this, property);
 			add(SubTags.CLAY);
 			return addProperty(MP.property_soil, property);

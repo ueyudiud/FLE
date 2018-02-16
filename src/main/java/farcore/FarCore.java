@@ -20,6 +20,8 @@ public class FarCore
 	/** The main modid. */
 	public static final String MAIN_MOD_ID = "fle";
 	
+	public static final String JEI = "JEI";
+	
 	/**
 	 * Use in resource location, this locate will get resource from code instead
 	 * of get resource from real path.

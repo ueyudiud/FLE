@@ -10,6 +10,7 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
@@ -156,5 +157,18 @@ public class FarSurfaceProvider extends WorldProvider
 		{
 			return getBiomeProvider().getBiome(pos, BiomeBase.DEBUG);
 		}
+	}
+	
+	@Override
+	public float getSunBrightnessFactor(float partialTicks)
+	{
+		float f = this.world.getCelestialAngle(partialTicks);
+		float f1 = 1.0F - (MathHelper.cos(f * ((float)Math.PI * 2F)) * 2.0F + 0.5F);
+		f1 = MathHelper.clamp(f1, 0.0F, 1.0F);
+		f1 = 1.0F - f1;
+		f1 = (float) (f1 * (1.0 - this.world.getRainStrength(partialTicks) * 5.0F / 16.0));
+		f1 = (float) (f1 * (1.0 - this.world.getThunderStrength(partialTicks) * 5.0F / 16.0));
+		f1 = 1 - (1 - f1) * 15.0F / 11.0F;
+		return f1;
 	}
 }

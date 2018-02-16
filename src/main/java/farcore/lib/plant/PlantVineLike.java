@@ -5,8 +5,8 @@ package farcore.lib.plant;
 
 import java.util.Random;
 
-import farcore.blocks.BlockPlant;
-import farcore.blocks.BlockPlantVine;
+import farcore.blocks.flora.BlockPlant;
+import farcore.blocks.flora.BlockPlantVine;
 import farcore.lib.material.Mat;
 import nebula.common.LanguageManager;
 import nebula.common.block.IBlockStateRegister;

@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-package farcore.blocks.wood;
+package farcore.blocks.flora;
 
 import static nebula.common.data.Misc.PROPS_SIDE_HORIZONTALS;
 import static net.minecraft.block.BlockFence.EAST_AABB;

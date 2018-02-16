@@ -37,7 +37,8 @@ public class StackContainer<E>
 	
 	public synchronized <N extends NBTBase> void readFromNBT(NBTTagList list, INBTReader<E, N> reader)
 	{
-		clear();
+		this.amount = 0;
+		this.stacks.clear();
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound compound = list.getCompoundTagAt(i);

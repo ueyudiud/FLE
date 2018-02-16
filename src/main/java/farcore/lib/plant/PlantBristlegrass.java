@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.blocks.BlockPlant;
+import farcore.blocks.flora.BlockPlant;
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.items.ItemSeed;
