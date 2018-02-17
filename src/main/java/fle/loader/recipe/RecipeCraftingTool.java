@@ -87,7 +87,7 @@ public class RecipeCraftingTool
 			}
 		}
 		
-		addGeneralToolRecipe("hammer.hard.flint", new BaseStack(MC.hard_hammer_flint.instance));
+		addToolRecipe("hammer.hard.flint", new SingleInputMatch(new BaseStack(MC.hard_hammer_flint.instance), CONSUMER1, null), new OreStack(MC.bark.orePrefix), HANDLE_MATCH, TIE_MATCH1);
 		addGeneralToolRecipe("shovel.rock", new BaseStack(MC.shovel_rock.instance));
 		addGeneralToolRecipe("hammer.hard.rock", new BaseStack(MC.hard_hammer_rock.instance));
 		addGeneralToolRecipe("spade.hoe.rock", new BaseStack(MC.spade_hoe_rock.instance));
@@ -96,6 +96,13 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("axe.rock", new BaseStack(MC.axe_rock.instance));
 		addGeneralToolRecipe("chisel.rock", new BaseStack(MC.chisel_rock.instance));
 		addGeneralNoTieToolRecipe("spinning.disk", new BaseStack(MC.spinning_disk.instance));
+		addGeneralNoTieToolRecipe("axe.metal", new BaseStack(MC.axe_metal.instance));
+		addGeneralNoTieToolRecipe("shovel.metal", new BaseStack(MC.shovel_metal.instance));
+		addGeneralNoTieToolRecipe("pickaxe.metal", new BaseStack(MC.pickaxe_metal.instance));
+		addGeneralNoTieToolRecipe("hammer.hard.metal", new BaseStack(MC.hard_hammer_metal.instance));
+		addGeneralNoTieToolRecipe("chisel.metal", new BaseStack(MC.chisel_metal.instance));
+		addGeneralNoTieToolRecipe("bowsaw.metal", new BaseStack(MC.bowsaw_metal.instance));
+		
 		// Firestarter
 		RecipeAdder.addShapedRecipe(new BaseStack(IBFS.iTool.getSubItem("firestarter")), " s", "ld", 's', "stickWood", 'l', matchOfMaterial(new OreStack(MC.firewood.orePrefix), "head"), 'd', IBFS.iResources.getSubItem("dry_broadleaf"));
 		// Bar Grizzly
@@ -153,6 +160,11 @@ public class RecipeCraftingTool
 		ItemStack output = IBFS.iTool.getSubItem(key);
 		ItemToolFar.setMaterialToItem(output, "head", head);
 		RecipeAdder.addShapelessRecipe(output, inputs);
+	}
+	
+	private static void addToolRecipe(String key, Object...inputs)
+	{
+		RecipeAdder.addShapelessRecipe(IBFS.iTool.getSubItem(key), inputs);
 	}
 	
 	private static void addGeneralToolRecipe(String key, AbstractStack input)

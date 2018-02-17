@@ -13,6 +13,14 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+/**
+ * The simulated empty NBT.<p>
+ * This NBT has no tag exist and it which is immutable,
+ * used to be as a result when getting a read-only NBT.
+ * 
+ * @author ueyudiud
+ * @see net.minecraft.nbt.NBTTagCompound
+ */
 public class NBTTagCompoundEmpty extends NBTTagCompound
 {
 	/** The empty NBT tag. */
@@ -155,6 +163,11 @@ public class NBTTagCompoundEmpty extends NBTTagCompound
 	
 	@Override
 	public void setIntArray(String tag, int[] value)
+	{
+	}
+	
+	@Override
+	public void setUniqueId(String key, UUID value)
 	{
 	}
 	

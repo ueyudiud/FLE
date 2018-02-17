@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import farcore.FarCore;
 import farcore.data.Config;
@@ -123,7 +123,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return silkTouch ? ImmutableList.of(new ItemStack(this, 1)) : new ArrayList<>();
+		return silkTouch ? Lists.newArrayList(new ItemStack(this, 1)) : new ArrayList<>();
 	}
 	
 	@Override

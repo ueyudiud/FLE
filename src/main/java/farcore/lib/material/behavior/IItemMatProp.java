@@ -3,6 +3,9 @@
  */
 package farcore.lib.material.behavior;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import nebula.client.util.UnlocalizedList;
@@ -56,7 +59,8 @@ public interface IItemMatProp
 		copyData(source, target, material, conditionSource, conditionTarget, DEFAULT_SAVE_TAG);
 	}
 	
-	default void copyData(ItemStack source, ItemStack target, Mat material, MatCondition conditionSource, MatCondition conditionTarget, String saveTag)
+	default void copyData(@Nonnull ItemStack source, @Nonnull ItemStack target, @Nonnull Mat material,
+			@Nullable MatCondition conditionSource, @Nullable MatCondition conditionTarget, @Nonnull String saveTag)
 	{
 		NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(source, saveTag, false);
 		if (nbt.hasNoTags())
@@ -75,7 +79,8 @@ public interface IItemMatProp
 	}
 	
 	/**
-	 *
+	 * Called when item update.
+	 * 
 	 * @param stack
 	 * @param material
 	 * @param condition

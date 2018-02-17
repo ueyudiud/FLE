@@ -36,5 +36,8 @@ public class RecipePolish
 		
 		PolishRecipe.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(M.limestone)), "ccccccccc", ItemMulti.createStack(M.limestone, MC.pile));
 		PolishRecipe.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(M.marble)), "ccccccccc", ItemMulti.createStack(M.marble, MC.pile));
+		
+		PolishRecipe.addPolishRecipe(new OreStack(MC.branch.orePrefix), "p pp pp p", new ItemStack(Items.STICK));
+		PolishRecipe.addPolishRecipe(new OreStack(MC.branch.orePrefix), "ppp   ppp", new ItemStack(Items.STICK));
 	}
 }

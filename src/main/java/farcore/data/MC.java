@@ -21,6 +21,7 @@ public class MC
 	 */
 	public static final MatCondition LATTICE = new MatCondition("lattice", "Lattice", "%s Lattice").setSize(1L).setFilter(SubTag.TRUE);
 	
+	public static final Judgable<ISubTagContainer>	METALLIC_TOOL;
 	public static final Judgable<ISubTagContainer>	ROCKY_TOOL;
 	public static final Judgable<ISubTagContainer>	FLINTY_TOOL;
 	public static final Judgable<ISubTagContainer>	ROCK_OR_FLINT_TOOL;
@@ -68,9 +69,12 @@ public class MC
 	public static final MatCondition	handle				= new MatCondition("handle", "Handle", "% Handle").setSize(72L, 72L, 1.5F).setFilter(SubTags.HANDLE);
 	public static final MatCondition	adz_metal			= new MatCondition("adz_metal", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(Judgable.and(SubTags.METAL, SubTags.TOOL));
 	public static final MatCondition	adz_rock			= new MatCondition("adz_rock", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(Judgable.and(Judgable.or(SubTags.ROCK, SubTags.FLINT), SubTags.TOOL));
-	public static final MatCondition	axe_rock			= new MatCondition("axe_rock", "axe", "Axe", "% Axe");
-	public static final MatCondition	hard_hammer_flint	= new MatCondition("hard_hammer_flint", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L, 288L, 1.0F);
-	public static final MatCondition	hard_hammer_rock	= new MatCondition("hard_hammer_rock", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L, 288L, 1.0F).setFilter(Judgable.and(SubTags.ROCK, SubTags.FLINT.not(), SubTags.TOOL));
+	public static final MatCondition	axe_rock			= new MatCondition("axe_rock", "axe", "Axe", "% Axe").setSize(288L);
+	public static final MatCondition	axe_metal			= new MatCondition("axe_metal", "axe", "Axe", "% Axe").setSize(288L);
+	public static final MatCondition	pickaxe_metal		= new MatCondition("pickaxe_metal", "pickaxe", "Pickaxe", "% Pickaxe").setSize(288L);
+	public static final MatCondition	hard_hammer_flint	= new MatCondition("hard_hammer_flint", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L);
+	public static final MatCondition	hard_hammer_rock	= new MatCondition("hard_hammer_rock", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(Judgable.and(SubTags.ROCK, SubTags.FLINT.not(), SubTags.TOOL));
+	public static final MatCondition	hard_hammer_metal	= new MatCondition("hard_hammer_metal", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(Judgable.and(SubTags.ROCK, SubTags.FLINT.not(), SubTags.TOOL));
 	public static final MatCondition	shovel_rock			= new MatCondition("shovel_rock", "shovel", "Shovel", "% Shovel").setSize(288L, 288L, 1.2F);
 	public static final MatCondition	shovel_metal		= new MatCondition("shovel_metal", "shovel", "Shovel", "% Shovel").setSize(144L, 144L, 1.2F).setFilter(Judgable.and(SubTags.METAL, SubTags.TOOL));
 	public static final MatCondition	spade_hoe_rock		= new MatCondition("spade_hoe_rock", "spadeHoe", "Spade-Hoe", "% Spade-Hoe").setSize(288L, 288L, 1.3F);
@@ -85,13 +89,18 @@ public class MC
 	public static final MatCondition	bar_grizzly			= new MatCondition("bar_grizzly", "barGrizzly", "Bar Grizzly", "% Bar Grizzly").setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
 	public static final MatCondition	spinning_disk		= new MatCondition("spinning_disk", "spinningDisk", "Spinning Disk", "% Spinning Disk");
 	public static final MatCondition	chisel_rock			= new MatCondition("chisel_rock", "chisel", "Chisel", "% Chisel");
+	public static final MatCondition	chisel_metal		= new MatCondition("chisel_metal", "chisel", "Chisel", "% Chisel");
+	public static final MatCondition	bowsaw_metal		= new MatCondition("bowsaw_metal", "bowsaw", "Bowsaw", "% Bowsaw");
+	
 	
 	static
 	{
 		ROCKY_TOOL = Judgable.and(SubTags.ROCK, SubTags.TOOL);
 		FLINTY_TOOL = Judgable.and(SubTags.FLINT, SubTags.TOOL);
+		METALLIC_TOOL = Judgable.and(SubTags.METAL, SubTags.TOOL);
 		ROCK_OR_FLINT_TOOL = Judgable.and(Judgable.or(SubTags.FLINT, SubTags.ROCK), SubTags.TOOL);
 		shovel_rock.setFilter(ROCK_OR_FLINT_TOOL);
+		shovel_metal.setFilter(METALLIC_TOOL);
 		spade_hoe_rock.setFilter(ROCKY_TOOL);
 		spear_rock.setFilter(ROCK_OR_FLINT_TOOL);
 		sickle_rock.setFilter(ROCKY_TOOL);
@@ -99,10 +108,15 @@ public class MC
 		decorticating_stick.setFilter(ROCKY_TOOL);
 		whetstone.setFilter(ROCKY_TOOL);
 		axe_rock.setFilter(ROCK_OR_FLINT_TOOL);
+		axe_metal.setFilter(METALLIC_TOOL);
 		hard_hammer_flint.setFilter(FLINTY_TOOL);
+		hard_hammer_metal.setFilter(METALLIC_TOOL);
 		biface.setFilter(FLINTY_TOOL);
 		spinning_disk.setFilter(ROCKY_TOOL);
 		chisel_rock.setFilter(ROCKY_TOOL);
+		chisel_metal.setFilter(METALLIC_TOOL);
+		bowsaw_metal.setFilter(METALLIC_TOOL);
+		pickaxe_metal.setFilter(METALLIC_TOOL);
 	}
 	
 	public static void init()

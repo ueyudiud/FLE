@@ -19,9 +19,6 @@ import nebula.common.block.IToolableBlock;
 import nebula.common.item.ITool;
 import nebula.common.nbt.NBTTagCompoundEmpty;
 import nebula.common.stack.AbstractStack;
-import nebula.common.stack.ArrayStack;
-import nebula.common.stack.BaseStack;
-import nebula.common.stack.OreStack;
 import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -70,10 +67,17 @@ public final class ItemStacks
 	}
 	
 	/**
-	 * Validate item stack, the stack size is negative will returned as null.
+	 * Validate item stack, the result ItemStack will be
+	 * <li>
+	 * <code>null</code> - when input is null or its stack size is non-positive.
+	 * <li>
+	 * The copied non-Wildcard meta stack. - when stack damage is {@link OreDictionary#WILDCARD_VALUE}.
+	 * <li>
+	 * The input stack - for other condition.
+	 * </li>
 	 * 
-	 * @param stack
-	 * @return
+	 * @param stack the input stack.
+	 * @return the validated stack.
 	 */
 	@Nullable
 	public static ItemStack valid(@Nullable ItemStack stack)
@@ -93,10 +97,10 @@ public final class ItemStacks
 	 * @param stack The stack.
 	 * @param createTag Should create a new NBT for stack, or only give a
 	 *            simulated NBT as empty NBT.
-	 * @return
+	 * @return the result NBT.
 	 */
 	@Nonnull
-	public static NBTTagCompound getOrSetupNBT(ItemStack stack, boolean createTag)
+	public static NBTTagCompound getOrSetupNBT(@Nonnull ItemStack stack, boolean createTag)
 	{
 		if (!stack.hasTagCompound())
 		{
@@ -135,11 +139,12 @@ public final class ItemStacks
 		if (stacks == null || stacks.isEmpty())
 			return ImmutableList.of();
 		ImmutableList.Builder builder = ImmutableList.builder();
-		for (ItemStack stack : stacks)
+		stacks.forEach(stack -> {
 			if (stack != null)
 			{
 				builder.add(sizeOf(stack, size));
 			}
+		});
 		return builder.build();
 	}
 	
@@ -169,12 +174,6 @@ public final class ItemStacks
 	public static ItemStack copyNomoreThan(@Nullable ItemStack stack, int size)
 	{
 		return stack == null ? null : stack.stackSize > size ? sizeOf(stack, size) : stack.copy();
-	}
-	
-	@Deprecated
-	public static AbstractStack sizeOf(AbstractStack stack, int size)
-	{
-		return size <= 0 ? null : stack instanceof BaseStack ? BaseStack.sizeOf((BaseStack) stack, size) : stack instanceof ArrayStack ? ArrayStack.sizeOf((ArrayStack) stack, size) : stack instanceof OreStack ? OreStack.sizeOf((OreStack) stack, size) : null;
 	}
 	
 	/**

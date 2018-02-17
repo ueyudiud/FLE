@@ -198,11 +198,7 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 			ItemStack stack = stacks[i];
 			if (stack != null && stack.getItem() instanceof IUpdatableItem)
 			{
-				((IUpdatableItem) stack.getItem()).updateItem(enviornment, stack);
-				if (stack.stackSize <= 0)
-				{
-					stacks[i] = null;
-				}
+				stacks[i] = ItemStacks.valid(((IUpdatableItem) stack.getItem()).updateItem(enviornment, stack));
 			}
 		}
 	}
@@ -259,7 +255,7 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 					
 					if (iinventory == this)
 					{
-						++this.numPlayersUsing;
+						++ this.numPlayersUsing;
 					}
 				}
 			}
