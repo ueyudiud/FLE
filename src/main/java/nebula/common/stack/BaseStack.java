@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.block.IExtendedDataBlock;
+import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -131,7 +132,7 @@ public class BaseStack implements AbstractStack
 	public boolean similar(ItemStack stack)
 	{
 		return this.item == null ? stack == null : (stack != null && stack.getItem() == this.item &&
-				(this.meta == -1 || stack.getItemDamage() == this.meta) && L.equals(stack.getTagCompound(), this.nbt));
+				(this.meta == -1 || stack.getItemDamage() == this.meta) && (this.nbt == null || L.equals(ItemStacks.getOrSetupNBT(stack, false), this.nbt)));
 	}
 	
 	@Override

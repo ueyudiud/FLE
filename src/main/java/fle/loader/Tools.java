@@ -68,6 +68,7 @@ public class Tools
 		new ItemToolHead(MC.sickle_rock);
 		new ItemToolHead(MC.axe_rock);
 		new ItemToolHead(MC.axe_metal);
+		new ItemToolHead(MC.pickaxe_metal);
 		new ItemToolHead(MC.spinning_disk);
 		new ItemToolHead(MC.chisel_rock);
 		new ItemToolHead(MC.chisel_metal);

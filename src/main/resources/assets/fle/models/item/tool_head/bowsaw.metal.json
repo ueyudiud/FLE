@@ -1,0 +1,6 @@
+{
+	"layer": {
+		"texture": "fle:items/tool_head/bowsaw_metal",
+		"colorMultiplier": "farcore:material"
+	}
+}

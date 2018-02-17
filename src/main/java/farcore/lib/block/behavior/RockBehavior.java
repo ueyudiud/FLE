@@ -176,6 +176,12 @@ implements IRockLikeBehavior<B>
 	}
 	
 	@Override
+	public boolean canSilkHarvest(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player)
+	{
+		return true;
+	}
+	
+	@Override
 	public List<ItemStack> getDrops(B block, IBlockState state, BlockPos pos, IBlockAccess world, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		List<ItemStack> ret = new ArrayList();

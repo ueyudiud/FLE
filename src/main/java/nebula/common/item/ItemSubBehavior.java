@@ -151,10 +151,12 @@ public class ItemSubBehavior extends ItemBase
 		{
 			boolean flag = false;
 			for (IBehavior behavior : getBehavior(stack))
+			{
 				if (behavior.onBlockDestroyed(stack, worldIn, state, pos, entityLiving))
 				{
 					flag = true;
 				}
+			}
 			return flag;
 		}
 		catch (Exception exception)

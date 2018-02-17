@@ -294,6 +294,7 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 		{
 			onToolUse(entityLiving, stack, stat.getToolType(), stat.getToolDamagePerBreak(stack, entityLiving, worldIn, pos, state));
 		}
+		super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 		return true;
 	}
 	
