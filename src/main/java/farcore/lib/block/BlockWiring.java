@@ -20,9 +20,8 @@ import net.minecraft.world.World;
  * 
  * @author ueyudiud
  */
-public abstract class BlockWiring extends BlockSingleTE // The wiring block will
-														 // use only single tile
-														 // entity.
+public abstract class BlockWiring extends BlockSingleTE
+// The wiring block will use only single tile entity.
 {
 	public BlockWiring(String name, Material materialIn)
 	{

@@ -6,14 +6,20 @@ package farcore.lib.item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 
 import farcore.FarCore;
+import farcore.data.Capabilities;
 import farcore.data.MC;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import farcore.lib.skill.ISkill;
 import farcore.util.Localization;
 import fle.loader.Configs;
@@ -52,7 +58,8 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
+public class ItemTool extends ItemSubBehavior
+implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed, IMaterialCapabilityCreative
 {
 	public static Mat getMaterial(ItemStack stack, String part)
 	{
@@ -467,43 +474,8 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 	@Override
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
-		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		Mat material = getMaterialFromItem(stack, "head");
-		if (material.itemProp != null)
-		{
-			stack = material.itemProp.updateItem(stack, material, prop.condition, environment, "");
-		}
-		if (stack != null && prop.hasTie)
-		{
-			material = getMaterialFromItem(stack, "tie");
-			if (material.itemProp != null)
-			{
-				try
-				{
-					stack = material.itemProp.updateItem(stack, material, MC.tie, environment);
-				}
-				catch (Exception exception)
-				{
-					FarCore.catching(exception);
-				}
-			}
-		}
-		if (stack != null && prop.hasHandle)
-		{
-			material = getMaterialFromItem(stack, "handle");
-			if (material.itemProp != null)
-			{
-				try
-				{
-					stack = material.itemProp.updateItem(stack, material, MC.handle, environment);
-				}
-				catch (Exception exception)
-				{
-					FarCore.catching(exception);
-				}
-			}
-		}
-		return stack;
+		MaterialHandler handler = stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null);
+		return handler.updateItem(stack, environment);
 	}
 	
 	@Override
@@ -515,10 +487,7 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 	@Override
 	public int getStackMetaOffset(ItemStack stack)
 	{
-		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		Mat material = getMaterialFromItem(stack, "head");
-		if (material != null && material.itemProp != null) return material.itemProp.getMetaOffset(stack, material, prop.condition, "head");
-		return 0;
+		return stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).getMetaOffset("head");
 	}
 	
 	@Override
@@ -527,10 +496,7 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 		int base = damage & 0x7FFF;
 		super.setDamage(stack, base);
 		Mat material = getMaterial(stack, "head");
-		if (material.itemProp != null)
-		{
-			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.toolPropMap.getOrDefault(base, EMPTY_PROP).condition);
-		}
+		stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).setMetaOffset("head", damage >> 15, material);
 	}
 	
 	protected String getBaseTranslateInformation(ItemStack stack)
@@ -563,31 +529,23 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 		if (stack.hasTagCompound())
 		{
 			Localization.addDamageInformation((int) (now * 100), max * 100, unlocalizedList);
+			MaterialHandler handler = stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null);
 			Mat material = getMaterialFromItem(stack, "head");
 			Localization.addToolMaterialInformation(material, prop.stat, unlocalizedList);
-			if (material.itemProp != null)
-			{
-				material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");
-			}
+			handler.addInformation("head", unlocalizedList);
 			if (prop.hasHandle)
 			{
 				material = getMaterialFromItem(stack, "handle");
 				unlocalizedList.add("info.tool.handle.name", material.getLocalName());
 				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
-				if (material.itemProp != null)
-				{
-					material.itemProp.addInformation(stack, material, MC.handle, unlocalizedList, "handle");
-				}
+				handler.addInformation("handle", unlocalizedList);
 			}
 			if (prop.hasTie)
 			{
 				material = getMaterialFromItem(stack, "tie");
 				unlocalizedList.add("info.tool.tie.name", material.getLocalName());
 				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
-				if (material.itemProp != null)
-				{
-					material.itemProp.addInformation(stack, material, MC.tie, unlocalizedList, "tie");
-				}
+				handler.addInformation("tie", unlocalizedList);
 			}
 		}
 		unlocalizedList.add(prop.stat.getPhysicalDamageType().getTranslation());
@@ -604,5 +562,18 @@ public class ItemTool extends ItemSubBehavior implements ITool, IUpdatableItem, 
 	{
 		ToolProp prop = this.toolPropMap.get(getBaseDamage(stack));
 		return prop == null ? null : prop.stat.createProvider();
+	}
+	
+	@Override
+	public MaterialHandler createMaterialHandler(ItemStack stack)
+	{
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ImmutableMap.Builder<String, Entry<MatCondition, Mat>> builder = ImmutableMap.builder();
+		builder.put("head", Pair.of(prop.condition, getMaterial(stack, "head")));
+		if (prop.hasHandle)
+			builder.put("handle", Pair.of(prop.condition, getMaterial(stack, "handle")));
+		if (prop.hasTie)
+			builder.put("tie", Pair.of(prop.condition, getMaterial(stack, "tie")));
+		return new MaterialHandler(builder.build());
 	}
 }

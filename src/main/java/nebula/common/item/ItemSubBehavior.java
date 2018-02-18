@@ -6,6 +6,7 @@ package nebula.common.item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,6 +63,8 @@ public class ItemSubBehavior extends ItemBase
 	 */
 	private final Map<Integer, List<IBehavior>>	behaviors	= new HashMap<>();
 	
+	private Map<Integer, String> localization = new HashMap<>();
+	
 	protected ItemSubBehavior(String name)
 	{
 		super(name);
@@ -96,7 +99,17 @@ public class ItemSubBehavior extends ItemBase
 		}
 		if (localName != null)
 		{
-			LanguageManager.registerLocal(getTranslateName(new ItemStack(this, 1, id)), localName);
+			this.localization.put(id, localName);
+		}
+	}
+	
+	@Override
+	public void postInitalizedItems()
+	{
+		super.postInitalizedItems();
+		for (Entry<Integer, String> entry : this.localization.entrySet())
+		{
+			LanguageManager.registerLocal(getTranslateName(new ItemStack(this, 1, entry.getKey())), entry.getValue());
 		}
 	}
 	

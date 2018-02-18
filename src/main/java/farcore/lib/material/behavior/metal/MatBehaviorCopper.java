@@ -5,20 +5,38 @@ package farcore.lib.material.behavior.metal;
 
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.material.behavior.IItemMatProp;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.environment.IEnvironment;
-import nebula.common.util.ItemStacks;
 import nebula.common.util.Strings;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public class MatBehaviorCopper implements IItemMatProp
+public class MatBehaviorCopper extends MatBehaviorMetal<MatBehaviorCopper.MetalCopper>
 {
+	public static class MetalCopper extends MatBehaviorMetal.Metal
+	{
+		public int rustness;
+		
+		public MetalCopper(Mat material, int heat, int rustness)
+		{
+			super(material, heat);
+			this.rustness = rustness;
+		}
+		
+		@Override
+		public Metal copy()
+		{
+			return new MetalCopper(this.material, this.heat, this.rustness);
+		}
+	}
+	
 	{
 		LanguageManager.registerLocal("info.material.behavior.metal.copper.rustness", "Rustness: %s");
 	}
@@ -44,20 +62,22 @@ public class MatBehaviorCopper implements IItemMatProp
 		}
 	}
 	
+	private static final int MAX_RUSTNESS = 1_0000_0000;
+	
 	@Override
-	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition, String saveTag)
+	public int getMetaOffset(MetalCopper value, Mat material)
 	{
-		ItemStacks.getSubOrSetupNBT(stack, saveTag, true).setInteger("rustness", (metaOffset & 0x3) * 10_0000 / 3);
+		return Math.round(value.rustness / (MAX_RUSTNESS / 3.0F));
 	}
 	
 	@Override
-	public int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag)
+	public MetalCopper instance(int metaOffset, Mat material)
 	{
-		return Math.round(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getInteger("rustness") / (10_0000 / 3));
+		return new MetalCopper(material, 0, MAX_RUSTNESS * metaOffset / 3);
 	}
 	
 	@Override
-	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment, String saveTag)
+	public ItemStack updateItem(MetalCopper arg, ItemStack stack, Mat material, MatCondition condition, IEnvironment environment)
 	{
 		//		float speed = 1.0F;
 		//		float temp = ThermalNet.getTemperature(environment);
@@ -73,14 +93,34 @@ public class MatBehaviorCopper implements IItemMatProp
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag)
+	@SideOnly(Side.CLIENT)
+	public void addInformation(MetalCopper value, Mat material, MatCondition condition, UnlocalizedList list)
 	{
-		list.add("info.material.behavior.metal.copper.rustness", Strings.progress(ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getInteger("rustness") / 10_0000F));
+		float amount = value.rustness / (float) MAX_RUSTNESS;
+		if (amount > 0.1F)
+		{
+			list.add("info.material.behavior.metal.copper.rustness", Strings.progress(amount));
+		}
 	}
 	
 	@Override
-	public float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target, String saveTag)
+	public NBTTagCompound write(Mat material, MetalCopper arg)
 	{
-		return 1.0F - 0.4F * ItemStacks.getSubOrSetupNBT(stack, saveTag, true).getInteger("rustness") / 10_0000F;
+		NBTTagCompound nbt = super.write(material, arg);
+		nbt.setInteger("rustness", arg.rustness);
+		return nbt;
+	}
+	
+	@Override
+	protected void read(NBTTagCompound nbt, MetalCopper arg)
+	{
+		super.read(nbt, arg);
+		arg.rustness = nbt.getInteger("rustness");
+	}
+	
+	@Override
+	public float entityAttackDamageMultiple(MetalCopper value, Mat material, Entity target)
+	{
+		return 1.0F - 0.4F * value.rustness / MAX_RUSTNESS;
 	}
 }

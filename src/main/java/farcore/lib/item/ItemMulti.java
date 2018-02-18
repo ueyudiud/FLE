@@ -6,8 +6,10 @@ package farcore.lib.item;
 import java.util.List;
 
 import farcore.FarCore;
+import farcore.data.Capabilities;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
@@ -33,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see nebula.common.item.ItemSubBehavior
  */
-public class ItemMulti extends ItemBase implements IUpdatableItem
+public class ItemMulti extends ItemBase implements IUpdatableItem, IMaterialCapabilityCreative
 {
 	/**
 	 * General method for multiple item, use to get material from stack. Return
@@ -51,11 +53,17 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			return Mat.VOID;
 	}
 	
+	public static MatCondition getMaterialCondition(ItemStack stack)
+	{
+		return stack != null && stack.getItem() instanceof ItemMulti ?
+				((ItemMulti) stack.getItem()).condition : null;
+	}
+	
 	/**
 	 * Get sub meta from stack.
 	 * 
 	 * @param stack the stack should be predicated that
-	 *            {@code stack.getItem() instanceof ItemMulti == true}.
+	 *              <code>stack.getItem() instanceof ItemMulti == true</code>
 	 * @return the sub meta of stack.
 	 * @see nebula.common.item.ItemBase#getStackMetaOffset
 	 */
@@ -136,9 +144,9 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			{
 				for (int i = 0; i < material.itemProp.getOffsetMetaCount(); ++i)
 				{
-					ItemStack s1 = templete.copy();
-					material.itemProp.setInstanceFromMeta(s1, i, material, this.condition);
-					LanguageManager.registerLocal(getTranslateName(s1), this.condition.getLocal(material.itemProp.getReplacedLocalName(i, material)));
+					ItemStack stack = templete.copy();
+					stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).setMetaOffset(i, material);
+					LanguageManager.registerLocal(getTranslateName(stack), this.condition.getLocal(material.itemProp.getReplacedLocalName(i, material)));
 				}
 			}
 			else
@@ -168,18 +176,18 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		for (Mat material : Mat.filt(this.condition))
 		{
-			ItemStack stack = new ItemStack(itemIn, 1, material.id);
 			if (material.itemProp != null)
 			{
-				for (int i = 0; i < material.itemProp.getOffsetMetaCount(); ++i)
+				int length = material.itemProp.getOffsetMetaCount();
+				for (int i = 0; i < length; ++i)
 				{
-					ItemStack stack2 = stack.copy();
-					material.itemProp.setInstanceFromMeta(stack2, i, material, this.condition);
-					subItems.add(stack2);
+					ItemStack stack = new ItemStack(itemIn, 1, material.id);
+					stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).setMetaOffset(i, material);
+					subItems.add(stack);
 				}
 			}
 			else
-				subItems.add(stack);
+				subItems.add(new ItemStack(itemIn, 1, material.id));
 		}
 	}
 	
@@ -234,12 +242,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
-		Mat material = getMaterialFromItem(stack);
-		if (material.itemProp != null)
-		{
-			stack = material.itemProp.updateItem(stack, material, this.condition, environment);
-		}
-		return stack;
+		return stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).updateItem(stack, environment);
 	}
 	
 	@Override
@@ -251,9 +254,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public int getStackMetaOffset(ItemStack stack)
 	{
-		Mat material = getMaterialFromItem(stack);
-		if (material != null && material.itemProp != null) return material.itemProp.getMetaOffset(stack, material, this.condition);
-		return 0;
+		return stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).getMetaOffset();
 	}
 	
 	@Override
@@ -266,11 +267,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			unlocalizedList.addNotNull("info.material.chemical.formula." + getMaterialFromItem(stack));
 		}
 		unlocalizedList.addToolTip("info.material.custom." + getMaterialFromItem(stack).name);
-		Mat material = getMaterialFromItem(stack);
-		if (material.itemProp != null)
-		{
-			material.itemProp.addInformation(stack, material, this.condition, unlocalizedList);
-		}
+		stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).addInformation(unlocalizedList);
 	}
 	
 	@Override
@@ -278,9 +275,17 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		super.setDamage(stack, damage & 0x7FFF);
 		Mat material = getMaterialFromItem(stack);
-		if (material.itemProp != null)
-		{
-			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.condition);
-		}
+		stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null).setMetaOffset(damage >> 15, material);
+	}
+	
+	@Override
+	protected boolean hasCapability()
+	{
+		return true;
+	}
+	
+	public MaterialHandler createMaterialHandler(ItemStack stack)
+	{
+		return new MaterialHandler(this.condition, getMaterialFromItem(stack));
 	}
 }

@@ -3,7 +3,7 @@
  */
 package fle.core.items.behavior;
 
-import static nebula.common.util.EnumChatFormatting.RESET;
+import static nebula.common.util.EnumChatFormatting.WHITE;
 import static nebula.common.util.EnumChatFormatting.YELLOW;
 
 import farcore.data.EnumToolTypes;
@@ -34,7 +34,7 @@ public class BehaviorChiselHelpingSilkTouch extends BehaviorTool
 {
 	{
 		LanguageManager.registerLocal("info.chisel.helping.silk.touch",
-				"Put " + YELLOW + "%s" + RESET + " to right slot in order to harvest block in silk touching when player is sneaking.");
+				WHITE + "Put " + YELLOW + "%s" + WHITE + " to right slot in order to harvest block in silk touching when player is sneaking.");
 	}
 	
 	@Override

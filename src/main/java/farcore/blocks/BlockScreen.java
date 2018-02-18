@@ -8,8 +8,10 @@ import static farcore.data.Materials.METALIC;
 
 import farcore.data.CT;
 import farcore.lib.tesr.TESRScreenLineChart;
+import farcore.lib.tile.instance.screen.TEScreenLight;
 import farcore.lib.tile.instance.screen.TEScreenTemperature;
 import nebula.base.register.IRegister;
+import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;
@@ -39,6 +41,8 @@ public class BlockScreen extends BlockTE
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Temperature Chart Simple Monitor");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Light Chart Simple Monitor");
 	}
 	
 	@Override
@@ -47,12 +51,14 @@ public class BlockScreen extends BlockTE
 	{
 		TESRScreenLineChart tesr = new TESRScreenLineChart();
 		registerTESR(TEScreenTemperature.class, tesr);
+		registerTESR(TEScreenLight.class, tesr);
 	}
 	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(0, "temperature", TEScreenTemperature.class);
+		register.register(1, "light", TEScreenLight.class);
 		return true;
 	}
 	

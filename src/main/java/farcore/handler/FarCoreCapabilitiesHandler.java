@@ -4,8 +4,12 @@
 package farcore.handler;
 
 import farcore.FarCore;
+import farcore.data.Capabilities;
 import farcore.lib.capability.IFluidHandlerHelper;
+import farcore.lib.item.IMaterialCapabilityCreative;
+import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import nebula.common.util.Direction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -22,11 +26,50 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class FarCoreCapabilitiesHandler
 {
+	public static final ResourceLocation ITEM_PROPERTY = new ResourceLocation(FarCore.ID, "item/property");
+	public static final ResourceLocation TILE_PROPERTY = new ResourceLocation(FarCore.ID, "tile/property");
+	
+	@SubscribeEvent
+	public static void onCapabilityProviding(AttachCapabilitiesEvent.Item event)
+	{
+		if (event.getObject() instanceof IMaterialCapabilityCreative)
+		{
+			final IMaterialCapabilityCreative item = (IMaterialCapabilityCreative) event.getObject();
+			final ItemStack stack = event.getItemStack();
+			event.addCapability(ITEM_PROPERTY, new ICapabilityProvider()
+			{
+				private MaterialHandler handler;
+				
+				private MaterialHandler handler()
+				{
+					if (this.handler == null)
+					{
+						this.handler = item.createMaterialHandler(stack);
+					}
+					return this.handler;
+				}
+				
+				@Override
+				public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+				{
+					return capability == Capabilities.CAPABILITY_MATERIAL && facing == null;
+				}
+				
+				@Override
+				public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+				{
+					return hasCapability(capability, facing) ?
+							Capabilities.CAPABILITY_MATERIAL.cast(handler()) : null;
+				}
+			});
+		}
+	}
+	
 	@SubscribeEvent
 	public static void onCapabilityWraped(AttachCapabilitiesEvent.TileEntity event)
 	{
 		TileEntity tile = event.getTileEntity();
-		event.addCapability(new ResourceLocation(FarCore.ID, "capabilities"), new WrapperChecker(tile));
+		event.addCapability(TILE_PROPERTY, new WrapperChecker(tile));
 	}
 	
 	static class WrapperChecker implements ICapabilityProvider

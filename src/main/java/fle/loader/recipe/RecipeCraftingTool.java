@@ -13,6 +13,7 @@ import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
+import farcore.lib.material.behavior.MaterialPropertyManager;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.instance.RecipeAdder;
 import fle.core.items.ItemSimpleFluidContainer;
@@ -119,6 +120,7 @@ public class RecipeCraftingTool
 	private static final BiConsumer<ItemStack, ItemStack>		CONSUMER1	= (input, output) -> {
 		Mat material = ItemMulti.getMaterial(input);
 		ItemTool.setMaterialToItem(output, "head", material);
+		MaterialPropertyManager.copyData(input, MaterialPropertyManager.DEFAULT_PART, output, "head");
 	};
 	
 	private static final SingleInputMatch HANDLE_MATCH = new SingleInputMatch(new OreStack("stickWood"), (i, o) -> ItemToolFar.setMaterialToItem(o, "handle", M.wood), null);

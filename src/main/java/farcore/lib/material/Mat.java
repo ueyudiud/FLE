@@ -37,7 +37,8 @@ import farcore.data.SubTags;
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.crop.ICrop;
-import farcore.lib.material.behavior.IItemMatProp;
+import farcore.lib.material.behavior.IMaterialProperty;
+import farcore.lib.material.behavior.MaterialPropertyManager;
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
@@ -288,7 +289,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public short[]		RGBa				= { 255, 255, 255, 255 };
 	public int			RGB					= 0xFFFFFF;
 	// Multi item configuration.
-	public IItemMatProp itemProp;
+	public IMaterialProperty itemProp;
 	
 	/**
 	 * The heat capacity of material, unit : J/(m^3*K)
@@ -583,6 +584,30 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			return addProperty(tag, Float.floatToIntBits(value));
 		}
 		
+		public Builder setProperty(IMaterialProperty property)
+		{
+			return setProperty(property, false);
+		}
+		
+		/**
+		 * Set {@link Mat#itemProp}.<p>
+		 * 
+		 * @param property the material property.
+		 * @param register the property will register to {@link MaterialPropertyManager} with material name
+		 *                 if this option is <code>true</code>
+		 * @return the builder.
+		 * @see MaterialPropertyManager#registerMaterialProperty(String, IMaterialProperty)
+		 */
+		public Builder setProperty(IMaterialProperty property, boolean register)
+		{
+			Mat.this.itemProp = property;
+			if (register)
+			{
+				MaterialPropertyManager.registerMaterialProperty(Mat.this.name, property);
+			}
+			return this;
+		}
+		
 		public Mat build()
 		{
 			return Mat.this;
@@ -653,7 +678,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	@Override
 	public void add(SubTag...tags)
 	{
-		A.executeAll(tags, tag -> tag.addContainerToList(this));
+		A.executeAll(tags, L.toConsumer(SubTag::addContainerToList, this));
 		this.subTags.addAll(Arrays.asList(tags));
 		onDataChanged();
 	}
@@ -661,7 +686,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	@Override
 	public boolean remove(SubTag tag)
 	{
-		return this.subTags.remove(tag);
+		if (this.subTags.remove(tag))
+		{
+			onDataChanged();
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

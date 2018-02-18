@@ -190,7 +190,7 @@ public class M
 		chip_rock.setNames(sand, "Brown Sandstone Chip", redsand, "Ocherous Sandstone Chip");
 		fragment.setNames(sand, "Brown Sandstone Fragment", redsand, "Ocherous Sandstone Fragment");
 		
-		copper.itemProp = new MatBehaviorCopper();
+		copper.builder().setProperty(new MatBehaviorCopper(), true);
 		
 		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow, lacquer, citrus);
 		SubTags.ROPE.addTo(vine, ramie_dry, rattan, ivy);

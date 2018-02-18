@@ -392,7 +392,7 @@ implements IRockLikeBehavior<B>
 	
 	public float onFallOnEntity(B block, IBlockState state, World world, EntityFallingBlockExtended entity, Entity target)
 	{
-		return (float) ((1.0F + this.material.toolDamageToEntity) * entity.motionY * entity.motionY * 0.25F);
+		return 9.0F + this.material.toolDamageToEntity;
 	}
 	
 	public boolean onFallOnGround(B block, IBlockState state, World world, BlockPos pos, int height, NBTTagCompound tileNBT)

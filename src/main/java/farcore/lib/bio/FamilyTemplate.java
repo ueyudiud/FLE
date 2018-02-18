@@ -22,7 +22,7 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 	protected final String									name;
 	protected T												baseType;
 	protected Set<T>										list	= new HashSet<>();
-	protected INode<Entry<Judgable<GeneticMaterial>, T>>	judgables;
+	protected INode<Entry<Judgable<GeneticMaterial>, T>>	predicates;
 	
 	public FamilyTemplate(String name)
 	{
@@ -42,15 +42,15 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 		return this;
 	}
 	
-	public FamilyTemplate<T, H> addJudgable(Judgable<GeneticMaterial> judgable, T specie)
+	public FamilyTemplate<T, H> addSpecie(Judgable<GeneticMaterial> predicate, T specie)
 	{
-		if (this.judgables == null)
+		if (this.predicates == null)
 		{
-			this.judgables = Node.first(new Ety<>(judgable, specie));
+			this.predicates = Node.first(new Ety<>(predicate, specie));
 		}
 		else
 		{
-			this.judgables.addLast(new Ety<>(judgable, specie));
+			this.predicates.addLast(new Ety<>(predicate, specie));
 		}
 		return this;
 	}
@@ -77,6 +77,6 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 	public T getSpecieFromGM(GeneticMaterial gm)
 	{
 		INode<Entry<Judgable<GeneticMaterial>, T>> entry;
-		return this.judgables == null ? this.baseType : (entry = this.judgables.find(ety -> ety.getKey().test(gm))) != null ? entry.value().getValue() : this.baseType;
+		return this.predicates == null ? this.baseType : (entry = this.predicates.find(ety -> ety.getKey().test(gm))) != null ? entry.value().getValue() : this.baseType;
 	}
 }

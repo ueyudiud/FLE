@@ -435,8 +435,9 @@ public final class Worlds
 	{
 		if (!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
 		{
+			boolean flammable = state.getBlock().isFlammable(world, pos, null);
 			world.setBlockToAir(pos);
-			return world.isRemote || world.spawnEntity(new EntityFallingBlockExtended(world, pos, dropPos, state, world.getTileEntity(pos)));
+			return world.isRemote || world.spawnEntity(new EntityFallingBlockExtended(world, pos, dropPos, state, world.getTileEntity(pos), flammable));
 		}
 		else
 		{

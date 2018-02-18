@@ -23,6 +23,7 @@ public class TaskFalling extends WorldTask
 	private BlockPos target;
 	private IBlockState state;
 	private TileEntity tile;
+	private boolean flammable;
 	
 	public TaskFalling(World world, BlockPos source, BlockPos target, IBlockState state, long delay)
 	{
@@ -31,6 +32,7 @@ public class TaskFalling extends WorldTask
 		this.target = target;
 		this.state = state;
 		this.tile = world.getChunkFromBlockCoords(source).getTileEntity(source, EnumCreateEntityType.CHECK);
+		this.flammable = state.getBlock().isFlammable(world, source, null);
 		world.setBlockState(source, Misc.AIR, 4);
 	}
 	
@@ -74,7 +76,7 @@ public class TaskFalling extends WorldTask
 		if (super.handleTask())
 		{
 			this.world.notifyBlockUpdate(this.source, this.state, Misc.AIR, 2);
-			this.world.spawnEntity(new EntityFallingBlockExtended(this.world, this.source, this.target, this.state, this.tile));
+			this.world.spawnEntity(new EntityFallingBlockExtended(this.world, this.source, this.target, this.state, this.tile, this.flammable));
 			return true;
 		}
 		return false;

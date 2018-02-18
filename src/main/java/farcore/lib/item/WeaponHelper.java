@@ -3,12 +3,13 @@
  */
 package farcore.lib.item;
 
+import farcore.data.Capabilities;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.MP;
 import farcore.event.AttackEvent;
 import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.material.Mat;
-import farcore.lib.material.behavior.IItemMatProp;
+import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import nebula.common.util.L;
 import nebula.common.util.Players;
 import nebula.common.util.R;
@@ -40,11 +41,19 @@ public class WeaponHelper
 		if (event.isCanceled()) return;
 		stack = event.newWeapon;
 		Mat material = ItemTool.getMaterial(stack, "head");
-		IItemMatProp materialProperty = material.itemProp;
-		if (entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// &&
-			// !entity.isInvisibleToPlayer(player))
+		if (entity.canBeAttackedWithItem() && !entity.hitByEntity(player) /*
+		&& !entity.isInvisibleToPlayer(player)) */)
 		{
-			float baseMultiple = 1F;
+			float baseMultiple;
+			if (stack.hasCapability(Capabilities.CAPABILITY_MATERIAL, null))
+			{
+				MaterialHandler handler = stack.getCapability(Capabilities.CAPABILITY_MATERIAL, null);
+				baseMultiple = handler.entityAttackDamageMultiple("head", entity);
+			}
+			else
+			{
+				baseMultiple = 1F;
+			}
 			if (type.getSkill() != null)
 			{
 				int level = type.getSkill().level(player);
@@ -69,10 +78,6 @@ public class WeaponHelper
 				break;
 			default:
 				break;
-			}
-			if (materialProperty != null)
-			{
-				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity, "head");
 			}
 			if (entity instanceof IEntityDamageEffect)
 			{

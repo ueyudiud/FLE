@@ -3,6 +3,8 @@
  */
 package farcore.data;
 
+import farcore.lib.material.behavior.MaterialPropertyManager;
+import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import farcore.lib.solid.container.CapabilitySolidHandler;
 import farcore.lib.solid.container.ISolidHandler;
 import net.minecraftforge.common.capabilities.Capability;
@@ -21,4 +23,6 @@ public class Capabilities
 	public static final Capability<IItemHandler>	CAPABILITY_ITEM		= CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	public static final Capability<IFluidHandler>	CAPABILITY_FLUID	= CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	public static final Capability<ISolidHandler>	CAPABILITY_SOLID	= CapabilitySolidHandler.CAPABILITY_SOLID_HANDLER;
+	
+	public static final Capability<MaterialHandler> CAPABILITY_MATERIAL = MaterialPropertyManager.CAPABILITY_MATERIAL_HANDLER;
 }

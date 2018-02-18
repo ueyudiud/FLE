@@ -12,6 +12,7 @@ import farcore.data.MC;
 import farcore.data.SubTags;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
+import farcore.lib.material.behavior.MaterialPropertyManager;
 import farcore.lib.oredict.OreStackExt;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import fle.api.recipes.instance.RecipeAdder;
@@ -54,11 +55,9 @@ public class RecipeWashingBarGrizzly
 		RecipeMaps.WASHING_BARGRIZZLY.addRecipe(new TemplateRecipe<>(
 				stack1.containCheck(), Misc.anyTo(200), (Function<ItemStack, ItemStack[]>) source -> {
 					List<ItemStack> list = new ArrayList<>(3);
+					Object data = MaterialPropertyManager.extractData(source);
 					ItemStack stack = stack2.instance();
-					if (material.itemProp != null)
-					{
-						material.itemProp.copyData(source, stack, material, MC.impure_reduced_pile, MC.reduced_pile);
-					}
+					MaterialPropertyManager.insertData(stack, data);
 					list.add(stack);
 					int size = 0;
 					if (L.nextInt(10000) < 6000)
@@ -80,10 +79,7 @@ public class RecipeWashingBarGrizzly
 					if (size > 0)
 					{
 						stack = stack3.instance(size);
-						if (material.itemProp != null)
-						{
-							material.itemProp.copyData(source, stack, material, MC.impure_reduced_pile, MC.reduced_pile_small);
-						}
+						MaterialPropertyManager.insertData(stack, data);
 						list.add(stack);
 					}
 					if (L.nextInt(10000) < 5000)

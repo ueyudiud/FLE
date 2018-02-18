@@ -612,11 +612,28 @@ public class L
 	 * @return
 	 * @see #getFromEntries(Collection, Judgable)
 	 */
-	@Nullable
+	@Nonnull
 	public static <K, V> Optional<V> getOptional(@Nullable Map<K, V> map, @Nonnull Judgable<K> predicate)
 	{
 		return map == null || map.isEmpty() ? Optional.empty() :
 			getFromEntries(map.entrySet(), predicate);
+	}
+	
+	/**
+	 * Get optional result.
+	 * The map value should be nonnull.
+	 * 
+	 * @param map
+	 * @param key
+	 * @return
+	 * @see #getFromEntries(Collection, Judgable)
+	 */
+	@Nonnull
+	public static <K, V> Optional<V> getOptional(@Nullable Map<K, V> map, @Nullable K key)
+	{
+		if (map == null) return Optional.empty();
+		V value = map.get(key);
+		return value == null ? Optional.empty() : Optional.of(value);
 	}
 	
 	/**

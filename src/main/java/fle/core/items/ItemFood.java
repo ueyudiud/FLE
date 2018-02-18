@@ -40,7 +40,7 @@ public class ItemFood extends ItemSubEdible
 	@Override
 	public void postInitalizedItems()
 	{
-		
+		super.postInitalizedItems();
 	}
 	
 	@Override

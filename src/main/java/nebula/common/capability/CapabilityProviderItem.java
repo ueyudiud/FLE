@@ -35,7 +35,7 @@ public class CapabilityProviderItem implements ICapabilityProvider
 	{
 		try
 		{
-			return (T) this;
+			return hasCapability(capability, facing) ? (T) this : null;
 		}
 		catch (ClassCastException exception)
 		{

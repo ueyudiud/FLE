@@ -232,7 +232,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		return Client.getFontRender();
 	}
 	
-	class CapabilityProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
+	protected class CapabilityProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
 	{
 		ItemStack			stack;
 		ICapabilityProvider	provider;

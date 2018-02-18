@@ -95,7 +95,7 @@ public class EntityFallingBlockExtended extends Entity
 		this.fallable = INSTANCE;
 	}
 	
-	public EntityFallingBlockExtended(World world, BlockPos pos, BlockPos pos1, IBlockState state, TileEntity tile)
+	public EntityFallingBlockExtended(World world, BlockPos pos, BlockPos pos1, IBlockState state, TileEntity tile, boolean flammable)
 	{
 		super(world);
 		try
@@ -120,6 +120,7 @@ public class EntityFallingBlockExtended extends Entity
 			{
 				tile.writeToNBT(this.nbt = new NBTTagCompound());
 			}
+			this.isImmuneToFire = !flammable;
 		}
 		catch (Exception exception)
 		{
@@ -205,6 +206,8 @@ public class EntityFallingBlockExtended extends Entity
 					// this.world.setBlockToAir(pos);
 				}
 				
+				fall(this.height);
+				
 				if (this.onGround)
 				{
 					this.motionX *= 0.7D;
@@ -255,9 +258,7 @@ public class EntityFallingBlockExtended extends Entity
 	 */
 	protected void fall(float height)
 	{
-		int i = MathHelper.ceil(height - 1.0F);
-		
-		if (i > 0)
+		if (height > 0.5F)
 		{
 			ArrayList<Entity> arraylist = new ArrayList<>(this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox()));
 			
@@ -267,7 +268,7 @@ public class EntityFallingBlockExtended extends Entity
 				amount = this.fallable.onFallOnEntity(this.world, this, entity);
 				if (amount > 0)
 				{
-					entity.attackEntityFrom(DamageSource.fallingBlock, Math.min(MathHelper.floor(i * amount), 100F));
+					entity.attackEntityFrom(DamageSource.fallingBlock, Math.min(MathHelper.floor(height * amount), 100F));
 				}
 				this.hitEntity = true;
 			}
@@ -325,6 +326,14 @@ public class EntityFallingBlockExtended extends Entity
 		if (nbt.hasKey("tile", 10))
 		{
 			this.nbt = nbt.getCompoundTag("tile");
+		}
+		try
+		{
+			this.isImmuneToFire = !this.state.getBlock().isFlammable(this.world, null, null);
+		}
+		catch (Exception exception)
+		{
+			this.isImmuneToFire = false;
 		}
 	}
 	
