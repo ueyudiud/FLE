@@ -9,6 +9,7 @@ import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.client.render.ItemRenderWithTESR;
 import fle.core.client.render.TESRSimplyKiln;
+import fle.core.tile.TEPlatedArgil;
 import fle.core.tile.rocky.TECeramicPot;
 import fle.core.tile.rocky.TESimplyKiln;
 import nebula.base.register.IRegister;
@@ -38,6 +39,7 @@ public class BlockRockyMiscMachine extends BlockTE
 		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Ceramic Pot");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Simply Kiln");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Argil Plates");
 	}
 	
 	@Override
@@ -45,6 +47,7 @@ public class BlockRockyMiscMachine extends BlockTE
 	{
 		register.register(0, "ceramic_pot", TECeramicPot.class);
 		register.register(1, "simply_klin", TESimplyKiln.class);
+		register.register(2, "plated_argil", TEPlatedArgil.class);
 		return true;
 	}
 	
@@ -60,6 +63,7 @@ public class BlockRockyMiscMachine extends BlockTE
 		registerRenderMapper(mapper);
 		registerCustomBlockRender(mapper, 0, "misc_machine/ceramic_pot");
 		registerCustomBlockRender(mapper, 1, "misc_machine/simply_kiln");
+		registerCustomBlockRender(mapper, 2, "misc_machine/argil_plates");
 	}
 	
 	@Override

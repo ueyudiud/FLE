@@ -14,6 +14,7 @@ import farcore.data.MC;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
+import nebula.common.data.Misc;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
@@ -238,13 +239,14 @@ implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, 
 	}
 	
 	@Override
-	public void onBlockDestroyedByPlayer(IBlockState state)
+	public boolean onBlockDestroyedByPlayer(IBlockState state)
 	{
 		Block block = state.getBlock();
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
 			this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), block);
 		}
+		return this.world.setBlockState(this.pos, Misc.AIR, isClient() ? 11 : 3);
 	}
 	
 	@Override

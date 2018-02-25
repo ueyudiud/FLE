@@ -21,11 +21,14 @@ import static net.minecraft.block.material.Material.VINE;
 import static net.minecraft.block.material.Material.WEB;
 import static net.minecraft.block.material.Material.WOOD;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
+import nebula.base.A;
+import nebula.common.block.BlockBase;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
@@ -44,9 +47,9 @@ import net.minecraftforge.common.ForgeHooks;
  */
 public class ToolHooks
 {
-	private static final Map<Material, List<EnumToolType>>	breakableToolMap	= new HashMap<>();
-	private static final Map<Material, List<EnumToolType>>	efficiencyToolMap	= new HashMap<>();
-	private static final Map<Material, List<EnumToolType>>	harvestableToolMap	= new HashMap<>();
+	private static final Multimap<Material, EnumToolType>	breakableToolMap	= HashMultimap.create();
+	private static final Multimap<Material, EnumToolType>	efficiencyToolMap	= HashMultimap.create();
+	private static final Multimap<Material, EnumToolType>	harvestableToolMap	= HashMultimap.create();
 	
 	static
 	{
@@ -67,34 +70,45 @@ public class ToolHooks
 	
 	public static void addBreakableTool(Material material, EnumToolType...toolTypes)
 	{
-		L.put(breakableToolMap, material, toolTypes);
+		breakableToolMap.putAll(material, A.argument(toolTypes));
 	}
 	
 	public static void addEfficiencyTool(Material material, EnumToolType...toolTypes)
 	{
-		L.put(breakableToolMap, material, toolTypes);// The efficiency tool
-														// should be able to
-														// break it.
-		L.put(efficiencyToolMap, material, toolTypes);
+		List<EnumToolType> list = A.argument(toolTypes);
+		breakableToolMap.putAll(material, list);// The efficiency tool should be able to break it.
+		efficiencyToolMap.putAll(material, list);
 	}
 	
 	public static void addHarvestableTool(Material material, boolean efficiency, EnumToolType...toolTypes)
 	{
-		L.put(breakableToolMap, material, toolTypes);// The harvestable tool
-														// should be able to
-														// break it.
-		if (efficiency) L.put(efficiencyToolMap, material, toolTypes);
-		L.put(harvestableToolMap, material, toolTypes);
+		List<EnumToolType> list = A.argument(toolTypes);
+		breakableToolMap.putAll(material, list);// The harvestable tool should be able to break it.
+		if (efficiency) efficiencyToolMap.putAll(material, list);
+		harvestableToolMap.putAll(material, list);
 	}
 	
 	public static boolean isToolBreakable(IBlockState state, ItemStack stack)
 	{
-		return mapMatch(breakableToolMap, state, stack);
+		Material material = state.getMaterial();
+		Block block = state.getBlock();
+		if (block instanceof BlockBase)
+		{
+			if (!((BlockBase) block).isToolRequired())
+			{
+				return true;
+			}
+		}
+		else if (material.isToolNotRequired())//Might not accuracy, but it still needed a compatible option.
+		{
+			return true;
+		}
+		return mapMatch(breakableToolMap, material, stack);
 	}
 	
 	public static boolean isToolEffciency(IBlockState state, ItemStack stack)
 	{
-		return mapMatch(efficiencyToolMap, state, stack);
+		return mapMatch(efficiencyToolMap, state.getMaterial(), stack);
 	}
 	
 	public static boolean isToolHarvestable(Block block, IBlockAccess world, BlockPos pos, EntityPlayer player)
@@ -105,22 +119,21 @@ public class ToolHooks
 	private static boolean matchHarvestable(IBlockState state, EntityPlayer player)
 	{
 		ItemStack stack = player.getHeldItemMainhand();
-		if (!mapMatch(harvestableToolMap, state, stack)) return false;
-		Set<String> set = stack.getItem().getToolClasses(stack);
-		if (set.isEmpty()) return false;
-		// Only get a default level, I don't think there is any tool have
-		// different harvest level for different tool type...
-		int level = stack.getItem().getHarvestLevel(stack, set.iterator().next());
-		return level >= state.getBlock().getHarvestLevel(state);
+		Material material = state.getMaterial();
+		Collection<EnumToolType> toolTypes = harvestableToolMap.get(material);
+		if (toolTypes.isEmpty()) return false;
+		List<EnumToolType> target = ItemStacks.getCurrentToolType(stack);
+		EnumToolType type = L.get(toolTypes, target::contains);
+		if (type == null)
+			return false;
+		return stack.getItem().getHarvestLevel(stack, type.name, player, state) >= state.getBlock().getHarvestLevel(state);
 	}
 	
-	private static boolean mapMatch(Map<Material, List<EnumToolType>> map, IBlockState state, ItemStack stack)
+	private static boolean mapMatch(Multimap<Material, EnumToolType> map, Material material, ItemStack stack)
 	{
-		Material material = state.getMaterial();
-		if (material.isToolNotRequired()) return true;
-		if (!map.containsKey(material)) return false;
-		List<EnumToolType> toolTypes = map.get(material);
+		Collection<EnumToolType> toolTypes = map.get(material);
+		if (toolTypes.isEmpty()) return false;
 		List<EnumToolType> target = ItemStacks.getCurrentToolType(stack);
-		return L.contain(toolTypes, type -> target.contains(type));
+		return L.contain(toolTypes, target::contains);
 	}
 }

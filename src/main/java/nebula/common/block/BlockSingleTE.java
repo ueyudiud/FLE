@@ -121,12 +121,15 @@ public abstract class BlockSingleTE extends BlockBase implements ITileEntityProv
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		TileEntity tile = Worlds.getTileEntity(world, pos, false);
-		boolean flag = super.removedByPlayer(state, world, pos, player, willHarvest);
-		if (flag && (tile instanceof ITB_BlockDestroyedByPlayer))
+		if (tile instanceof ITB_BlockDestroyedByPlayer)
 		{
-			((ITB_BlockDestroyedByPlayer) tile).onBlockDestroyedByPlayer(state);
+			if (tile instanceof ITB_BlockHarvested)
+			{
+				((ITB_BlockHarvested) tile).onBlockHarvested(state, player);
+			}
+			return ((ITB_BlockDestroyedByPlayer) tile).onBlockDestroyedByPlayer(state);
 		}
-		return flag;
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 	
 	@Override
@@ -340,7 +343,10 @@ public abstract class BlockSingleTE extends BlockBase implements ITileEntityProv
 				addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
 			}
 		}
-		super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn);
+		else
+		{
+			super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn);
+		}
 	}
 	
 	@Override

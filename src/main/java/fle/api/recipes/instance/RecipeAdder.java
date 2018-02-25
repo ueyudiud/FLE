@@ -163,6 +163,14 @@ public final class RecipeAdder
 		CERAMIC.addRecipe(new TemplateRecipe<byte[]>(L.toPredicate(RecipeAdder::inRange, range), Misc.anyTo(range), Misc.anyTo(output).andThen(COPY_ITEMSTACK)));
 	}
 	
+	public static void addSimpleReducingRecipe(Mat input, Mat output)
+	{
+		SimpleReducingRecipeHandler.Recipe recipe = RecipeMaps.SIMPLE_REDUCING.new Recipe();
+		recipe.source = input;
+		recipe.target = output;
+		RecipeMaps.SIMPLE_REDUCING.addRecipe(recipe);
+	}
+	
 	private static boolean inRange(byte[] target, byte[][] ranges)
 	{
 		for (int i = 0; i < target.length; ++i)

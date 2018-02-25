@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList;
 import nebula.Log;
 import nebula.base.register.IRegister;
 import nebula.common.nbt.INBTCompoundReader;
+import nebula.common.nbt.INBTCompoundWriter;
 import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.nbt.INBTWriter;
@@ -52,6 +53,22 @@ public final class NBTs
 		{
 			nbt.setString(key, new String(value));
 		}
+	}
+	
+	public static <E> void setArray(NBTTagCompound nbt, String key, E[] value, INBTCompoundWriter<E> writer)
+	{
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < value.length; ++i)
+		{
+			if (value[i] != null)
+			{
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				list.appendTag(nbt1);
+				nbt1.setShort("idx", (short) i);
+				writer.writeToNBT(value[i], nbt1);
+			}
+		}
+		nbt.setTag(key, list);
 	}
 	
 	public static <E> void setList(NBTTagCompound nbt, String key, E[] value, Function<E, ? extends NBTBase> writer, boolean ordered)

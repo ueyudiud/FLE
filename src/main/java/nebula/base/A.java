@@ -18,6 +18,7 @@ import java.util.function.LongPredicate;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -313,16 +314,24 @@ public final class A
 	public static int indexOfFirst(Object[] array, Object arg)
 	{
 		final int length = array.length;
-		for (int i = 0; i < length; ++i)
+		if (arg == null)
 		{
-			try
+			for (int i = 0; i < length; ++i)
 			{
-				if (L.equals(array[i], arg))
+				if (array[i] == null)
+				{
 					return i;
+				}
 			}
-			catch (ClassCastException exception)
+		}
+		else
+		{
+			for (int i = 0; i < length; ++i)
 			{
-				continue;
+				if (array[i] != null && arg.equals(array[i]))
+				{
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -592,7 +601,7 @@ public final class A
 	 * @throws ClassCastException if elements can not cast to same comparable
 	 *             type.
 	 */
-	public static int deepCompare(Object[] array1, Object[] array2)
+	public static int deepCompare(@Nonnull Object[] array1, @Nonnull Object[] array2)
 	{
 		int size = Math.min(array1.length, array2.length);
 		int com;
@@ -603,7 +612,41 @@ public final class A
 		}
 		return -Integer.compare(array1.length, array2.length);
 	}
-
+	
+	@Nonnegative
+	public static <E> int countIf(@Nonnull E[] array, @Nonnull Predicate<? super E> predicate)
+	{
+		int i = 0;
+		for (E e : array)
+			if (predicate.test(e))
+				++ i;
+		return i;
+	}
+	
+	/**
+	 * Get counted number that how many value that equals to value in array.
+	 * 
+	 * @param array the array.
+	 * @param value the matching value.
+	 * @return the counted number.
+	 */
+	@Nonnegative
+	public static int count(@Nonnull Object[] array, @Nullable Object value)
+	{
+		int i = 0;
+		if (value == null)
+			for (Object object : array)
+			{
+				if (object == null)
+					++ i;
+			}
+		else
+			for (Object object : array)
+				if (object != null && value.equals(object))
+					++ i;
+		return i;
+	}
+	
 	public static <E> List<E> argument(Object[] array)
 	{
 		return new ArrayListArgument(array);

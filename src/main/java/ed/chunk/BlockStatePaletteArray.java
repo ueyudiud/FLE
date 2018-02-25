@@ -42,7 +42,7 @@ public class BlockStatePaletteArray implements IBlockStatePalette
 		if (j < this.states.length)
 		{
 			this.states[j] = state;
-			++this.capacity;
+			++ this.capacity;
 			return j;
 		}
 		else
@@ -80,13 +80,12 @@ public class BlockStatePaletteArray implements IBlockStatePalette
 	
 	public int getSerializedState()
 	{
-		int i = PacketBuffer.getVarIntSize(this.capacity);
+		int size = PacketBuffer.getVarIntSize(this.capacity);
 		
-		for (int j = 0; j < this.capacity; ++j)
+		for (int i = 0; i < this.capacity; ++i)
 		{
-			i += PacketBuffer.getVarIntSize(ExtendedBlockStateRegister.INSTANCE.getNetworkID(this.states[j]));
+			size += PacketBuffer.getVarIntSize(ExtendedBlockStateRegister.INSTANCE.getNetworkID(this.states[i]));
 		}
-		
-		return i;
+		return size;
 	}
 }

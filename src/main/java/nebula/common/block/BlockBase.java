@@ -298,6 +298,11 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		return !this.toolRequired || ToolHooks.isToolEffciency(state, player.getHeldItemMainhand());
 	}
 	
+	public boolean isToolRequired()
+	{
+		return this.toolRequired;
+	}
+	
 	@Override
 	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	{

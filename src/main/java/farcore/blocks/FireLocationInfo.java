@@ -37,9 +37,63 @@ class FireLocationInfo implements IModifiableCoord
 	
 	/**
 	 * The information for fire update. The elementary list length is 13. 0 for
-	 * boolean type prop.
-	 *
-	 * 1-6 for spread speed 7-12 for flammability.
+	 * boolean type prop. 1-6 for spread speed 7-12 for flammability.
+	 * <table BORDER CELLPADDING=8 CELLSPACING=1>
+	 * <caption>Data format</caption>
+	 *  <tr>
+	 *    <td ALIGN=CENTER><b>Index</b></td>
+	 *    <td ALIGN=CENTER COLSPAN=8><b>Name</b></td>
+	 *  </tr>
+	 *  <tr>
+	 *    <td>0</td>
+	 *    <td>isFire(0)</td>
+	 *    <td>isBlock(1)</td>
+	 *    <td>isCustomed(2)</td>
+	 *    <td>&ltempty&gt(3-7)</td>
+	 *    <td>isFlammable(8-13)</td>
+	 *    <td>&ltempty&gt(14-15)</td>
+	 *    <td>isFireSource(16-21)</td>
+	 *    <td>&ltempty&gt(22-32)</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>1</td>
+	 *     <td COLSPAN=8 ROWSPAN=6>Spread Speed(int for 6 dirs)</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>2</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>3</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>4</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>5</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>6</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>7</td>
+	 *     <td COLSPAN=8 ROWSPAN=6>Flammability(int for 6 dirs)</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>8</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>9</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>10</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>11</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>12</td>
+	 *   </tr>
+	 * </table>
 	 */
 	int[][][][] values;
 	
@@ -221,7 +275,7 @@ class FireLocationInfo implements IModifiableCoord
 	
 	private boolean inRange(byte x, byte y, byte z)
 	{
-		return L.inRange(this.x + this.range, this.x - this.range, x) && L.inRange(this.y + this.range, this.y - this.range, y) && L.inRange(this.z + this.range, this.z - this.range, z);
+		return L.inRange(this.range, -this.range, x) && L.inRange(this.range, -this.range, y) && L.inRange(this.range, -this.range, z);
 	}
 	
 	private int value(byte i, byte j, byte k, byte type)
@@ -236,27 +290,27 @@ class FireLocationInfo implements IModifiableCoord
 	
 	private void refresh(int[] list, IBlockState state)
 	{
-		if (state.getBlock().isAir(state, this.world, this.pos1)) return;
-		if (state.getBlock() == EnumBlock.fire.block)
+		if (state.getBlock().isAir(state, this.world, this.pos1))
+		{
+			list[0] = 0;
+			return;
+		}
+		else if (state.getBlock() == EnumBlock.fire.block)
 		{
 			list[0] = 1;
 			return;
 		}
-		list[0] = 2;
+		list[0] = state.getBlock() instanceof IThermalCustomBehaviorBlock ? 6 : 2;
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
 			boolean isCatchingRaining = Worlds.isCatchingRain(this.world, this.pos1, true);
-			if ((state.getBlock() instanceof IThermalCustomBehaviorBlock && ((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(this.world, this.pos1, facing, isCatchingRaining)) || state.getBlock().isFlammable(this.world, this.pos1, facing))
+			if (((list[0] & 4) != 0 && ((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(this.world, this.pos1, facing, isCatchingRaining)) || state.getBlock().isFlammable(this.world, this.pos1, facing))
 			{
 				list[0] |= 1 << (8 + facing.ordinal());
 			}
 			else if (state.getBlock().isFireSource(this.world, this.pos1, facing))
 			{
 				list[0] |= 1 << (16 + facing.ordinal());
-			}
-			if (state.getBlock() instanceof IThermalCustomBehaviorBlock)
-			{
-				list[0] |= 0x4;
 			}
 			list[7 + facing.ordinal()] = state.getBlock().getFlammability(this.world, this.pos1, facing);
 			list[1 + facing.ordinal()] = state.getBlock().getFireSpreadSpeed(this.world, this.pos1, facing);

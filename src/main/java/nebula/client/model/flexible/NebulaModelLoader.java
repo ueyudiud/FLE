@@ -84,7 +84,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>
  * 
  * @author ueyudiud
- * @version 0.8
+ * @version 0.9
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -314,7 +314,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				this.stream.println("Invalid file get. modid: " + container.getModId());
 			}
 		}
-		this.stream.println("Finshed loaded replaced location.");
+		this.stream.println("Finished loaded replaced location.");
 		
 		ProgressBar bar = ProgressManager.push("Loading Nebula Model", map.size());
 		BlockColors colors1 = Minecraft.getMinecraft().getBlockColors();

@@ -81,7 +81,7 @@ implements IRockLikeBehavior<B>
 		switch (state.getValue(TYPE))
 		{
 		case cobble:
-			return this.hardness * .5F;
+			return this.hardness * .3F;
 		case cobble_art:
 			return this.hardness * .1F;
 		case brick:
@@ -101,7 +101,14 @@ implements IRockLikeBehavior<B>
 	
 	public int getHarvestLevel(B block, IBlockState state)
 	{
-		return this.harvestLevel;
+		switch (state.getValue(TYPE))
+		{
+		case cobble :
+		case cobble_art :
+			return 1;
+		default :
+			return this.harvestLevel;
+		}
 	}
 	
 	public String getHarvestTool(B block, IBlockState state)

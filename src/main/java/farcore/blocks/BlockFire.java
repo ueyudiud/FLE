@@ -397,14 +397,18 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				if (info.isCustomed(i + direction.x, j + direction.y, k + direction.z))
 				{
 					BlockPos pos3 = direction.offset(pos2);
-					if (((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos3).getBlock()).onBurn(info.setMainPos(pos3), 1000F / chance, U))
+					Block block = worldIn.getBlockState(pos3).getBlock();
+					if (((IThermalCustomBehaviorBlock) block).onBurn(info.setMainPos(pos3), 1000F / chance, direction.opposite()))
 					{
 						info.resetMainPos();
 						flag = true;
 					}
 				}
 			}
-			if (flag) return;
+			if (flag)
+			{
+				return;
+			}
 			if (chance > 0 && rand.nextInt(chance) < speed)
 			{
 				int l2 = Math.min(15, level + rand.nextInt(4) / 2);

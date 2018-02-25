@@ -131,4 +131,7 @@ public class RecipeMaps
 	// NBT ENTRY : range(byte[][]), output(ItemStack)
 	// DISPLAYMENTS: range(byte[][]), output(ItemStack)
 	public static final TemplateRecipeMap<byte[]> CERAMIC = TemplateRecipeMap.<byte[]> builder("fle.ceramic").addCacheEntry("range", RW_BYTE_ARRAY).addCacheEntry("output", RW_ITEMSTACK).build();
+	// NAME : fle.simple.reducing
+	// NBT ENTRY : duration(int), output(ItemStack)
+	public static final SimpleReducingRecipeHandler SIMPLE_REDUCING = new SimpleReducingRecipeHandler();
 }

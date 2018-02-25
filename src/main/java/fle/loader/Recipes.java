@@ -17,6 +17,7 @@ import fle.loader.recipe.RecipeOilMill;
 import fle.loader.recipe.RecipePolish;
 import fle.loader.recipe.RecipeResource1;
 import fle.loader.recipe.RecipeResource2;
+import fle.loader.recipe.RecipeSimpleReducing;
 import fle.loader.recipe.RecipeStoneMill;
 import fle.loader.recipe.RecipeWashingBarGrizzly;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,6 +45,7 @@ public class Recipes
 		RecipeStoneMill.init();
 		RecipeCeramicPot.init();
 		RecipeFood.init();
+		RecipeSimpleReducing.init();
 		
 		RecipeSorter.register("fle.shaped", ShapedFleRecipe.class, Category.SHAPED, "after:minecraft:shaped before:forge:shapedore before:minecraft:shapeless");
 		RecipeSorter.register("fle.shapeless", ShapelessFleRecipe.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");

@@ -195,7 +195,7 @@ public interface ITilePropertiesAndBehavior
 	
 	public static interface ITB_BlockDestroyedByPlayer
 	{
-		void onBlockDestroyedByPlayer(IBlockState state);
+		boolean onBlockDestroyedByPlayer(IBlockState state);
 	}
 	
 	public static interface ITB_BlockClicked

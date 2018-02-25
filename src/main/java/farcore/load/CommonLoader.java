@@ -4,11 +4,6 @@
 package farcore.load;
 
 import static farcore.FarCoreRegistry.registerEventListenerToMF;
-import static farcore.data.Materials.ICE;
-import static farcore.data.Materials.LOG;
-import static farcore.data.Materials.METALIC;
-import static farcore.data.Materials.ORE;
-import static farcore.data.Materials.ROCK;
 import static farcore.energy.thermal.ThermalNet.registerWorldThermalHandler;
 import static farcore.handler.FarCoreEnergyHandler.addNet;
 import static nebula.common.LanguageManager.registerLocal;
@@ -37,6 +32,7 @@ import farcore.data.EnumToolTypes;
 import farcore.data.Keys;
 import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.Materials;
 import farcore.data.Potions;
 import farcore.energy.IEnergyNet;
 import farcore.energy.kinetic.KineticNet;
@@ -168,14 +164,18 @@ public class CommonLoader
 		// Post load item and block.
 		// For register to Ore Dictionary, Tool Uses, Compatibility, etc.
 		bar.step("Post initalizing Items and Blocks");
-		ToolHooks.addEfficiencyTool(ROCK, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addHarvestableTool(ROCK, true, EnumToolTypes.HAMMER_DIGABLE);
-		ToolHooks.addEfficiencyTool(METALIC, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addEfficiencyTool(Materials.ROCK, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addHarvestableTool(Materials.ROCK, true, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.PICKAXE);
+		ToolHooks.addEfficiencyTool(Materials.METALIC, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER, EnumToolTypes.PICKAXE);
 		ToolHooks.addEfficiencyTool(Material.ANVIL, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addEfficiencyTool(ORE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addEfficiencyTool(LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
-		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
-		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
+		ToolHooks.addEfficiencyTool(Materials.ORE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addEfficiencyTool(Materials.LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
+		ToolHooks.addEfficiencyTool(Materials.ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
+		ToolHooks.addHarvestableTool(Materials.DIRT, true, EnumToolTypes.SHOVEL);
+		ToolHooks.addHarvestableTool(Materials.DIRT_GRASSY, true, EnumToolTypes.SHOVEL);
+		ToolHooks.addHarvestableTool(Materials.SAND, true, EnumToolTypes.SHOVEL);
+		ToolHooks.addHarvestableTool(Materials.CLAY, true, EnumToolTypes.SHOVEL);
+		ToolHooks.addHarvestableTool(Materials.ICE, true, EnumToolTypes.CHISEL);
 		NebulaConfig.useExtPlayerStat = true;
 		// Register languages.
 		bar.step("Register Localized Entries");

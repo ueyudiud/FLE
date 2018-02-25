@@ -56,6 +56,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(1004, "dry_broadleaf", "Dried Broadleaf");
 		addSubItem(1005, "dry_coniferous", "Dried Coniferous");
 		addSubItem(1006, "tinder", "Tinder");
+		addSubItem(1007, "charcoal", "Charcoal");
 		
 		addSubItem(2001, "ramie_rope", "Ramie Rope");
 		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle");

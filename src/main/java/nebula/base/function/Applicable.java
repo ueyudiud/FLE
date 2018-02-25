@@ -83,7 +83,7 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 */
 	default void consumeIfPresent(Consumer<? super T> consumer)
 	{
-		this.<T>applyOptional().ifPresent(consumer);
+		this.applyOptional().ifPresent(consumer);
 	}
 	
 	default <E> Function<E, T> anyTo()

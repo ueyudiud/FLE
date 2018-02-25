@@ -59,7 +59,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  * 
  * @author ueyudiud
  */
-@Mod(modid = "ed", name = "Extra Data", version = "0.1", dependencies = "required-after:nebula")
+@Mod(modid = "ed", name = "Extra Data", version = "0.2", dependencies = "required-after:nebula")
 public class ED
 {
 	@Instance("ed")

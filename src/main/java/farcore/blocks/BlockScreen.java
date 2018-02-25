@@ -65,7 +65,7 @@ public class BlockScreen extends BlockTE
 	@Override
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(Misc.PROP_DIRECTION_HORIZONTALS, Direction.of(placer.getHorizontalFacing()));
+		return super.getBlockPlaceState(worldIn, pos, facing, hitX, hitY, hitZ, stackIn, placer).withProperty(Misc.PROP_DIRECTION_HORIZONTALS, Direction.of(placer.getHorizontalFacing()));
 	}
 	
 	@Override
