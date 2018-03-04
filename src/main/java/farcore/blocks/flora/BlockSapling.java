@@ -12,7 +12,6 @@ import farcore.data.SubTags;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tile.instance.TESapling;
-import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
@@ -72,12 +71,6 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	public int getMetaFromState(IBlockState state)
 	{
 		return 0;
-	}
-	
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		return BlockStateTileEntityWapper.wrap(world.getTileEntity(pos), state);
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ package nebula.common.tile;
 import java.util.List;
 import java.util.Random;
 
+import nebula.client.model.ITileEntityCustomModelData;
 import nebula.common.util.Direction;
 import nebula.common.world.ICoord;
 import net.minecraft.block.Block;
@@ -28,6 +29,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface ITilePropertiesAndBehavior
 {
+	/**
+	 * Include extra data provided by Nebula.
+	 * 
+	 * @author ueyudiud
+	 */
+	public static interface ITP_CustomModelData extends ITileEntityCustomModelData
+	{
+		
+	}
+	
 	public static interface ITP_BlockHardness
 	{
 		default float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player)

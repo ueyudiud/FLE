@@ -38,7 +38,6 @@ import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
 import nebula.Nebula;
 import nebula.base.register.IRegister;
-import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.flexible.NebulaModelDeserializer;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
@@ -201,14 +200,6 @@ public class BlockRedstoneCircuit extends BlockTE
 			}
 		}
 		return state;
-	}
-	
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TECircuitBase) return BlockStateTileEntityWapper.wrap(tile, state);
-		return super.getExtendedState(state, world, pos);
 	}
 	
 	@Override

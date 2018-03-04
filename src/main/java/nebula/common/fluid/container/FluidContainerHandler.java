@@ -162,7 +162,7 @@ public class FluidContainerHandler
 		if (required == null) return true;
 		if (inventory.hasStackInSlot(in))
 		{
-			ItemStack stack = ItemStacks.sizeOf(inventory.getStack(in), 1);
+			ItemStack stack = ItemStacks.setSizeOf(inventory.getStack(in), 1);
 			if (stack.getItem() instanceof IItemFluidContainer)
 			{
 				IItemFluidContainer containerRaw = (IItemFluidContainer) stack.getItem();
@@ -236,7 +236,7 @@ public class FluidContainerHandler
 		if (amount == 0) return true;
 		if (inventory.hasStackInSlot(in))
 		{
-			ItemStack stack = ItemStacks.sizeOf(inventory.getStack(in), 1);
+			ItemStack stack = ItemStacks.setSizeOf(inventory.getStack(in), 1);
 			if (stack.getItem() instanceof IItemFluidContainer)
 			{
 				IItemFluidContainer containerRaw = (IItemFluidContainer) stack.getItem();

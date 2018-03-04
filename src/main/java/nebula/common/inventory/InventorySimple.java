@@ -8,6 +8,9 @@ import java.util.Arrays;
 
 import nebula.base.A;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * @author ueyudiud
@@ -29,9 +32,37 @@ public class InventorySimple implements IBasicInventory
 	}
 	
 	@Override
+	public void toNBT(NBTTagCompound compound, String key)
+	{
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < this.stacks.length; ++i)
+		{
+			if (this.stacks[i] != null)
+			{
+				NBTTagCompound compound2 = this.stacks[i].writeToNBT(new NBTTagCompound());
+				compound2.setByte("id", (byte) i);
+				list.appendTag(compound2);
+			}
+		}
+		compound.setTag(key, list);
+	}
+	
+	@Override
+	public void fromNBT(NBTTagCompound compound, String key)
+	{
+		removeAllStacks();
+		NBTTagList list = compound.getTagList(key, NBT.TAG_COMPOUND);
+		for (int i = 0; i < list.tagCount(); ++i)
+		{
+			NBTTagCompound compound2 = list.getCompoundTagAt(i);
+			this.stacks[compound2.getByte("id")] = ItemStack.loadItemStackFromNBT(compound2);
+		}
+	}
+	
+	@Override
 	public ItemStack[] toArray()
 	{
-		return A.transform(this.stacks, ItemStack.class, stack -> ItemStack.copyItemStack(stack));
+		return A.transform(this.stacks, ItemStack.class, ItemStack::copyItemStack);
 	}
 	
 	@Override

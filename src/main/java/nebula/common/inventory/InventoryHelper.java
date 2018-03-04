@@ -21,7 +21,6 @@ import nebula.common.fluid.container.IItemFluidContainerV2;
 import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
-import nebula.common.util.L;
 import nebula.common.util.Players;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -32,11 +31,13 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class InventoryHelper
 {
-	public static final byte MATCH_STACK_FULLY_INSERT = 0x0, MATCH_STACK_SAME = 0x1, MATCH_STACK_FULLY_INSERT_WITHOUTNBT = 0x2, MATCH_STACK_SAME_WITHOUTNBT = 0x3, MATCH_STACK_EMPTY = 0x4, MATCH_STACK_CONTAIN = 0x5, MATCH_STACK_CONTAIN_WITHOUTNBT = 0x6;
+	public static final byte
+	MATCH_STACK_FULLY_INSERT = 0x0, MATCH_STACK_SAME = 0x1, MATCH_STACK_FULLY_INSERT_WITHOUTNBT = 0x2,
+	MATCH_STACK_SAME_WITHOUTNBT = 0x3, MATCH_STACK_EMPTY = 0x4, MATCH_STACK_CONTAIN = 0x5, MATCH_STACK_CONTAIN_WITHOUTNBT = 0x6;
 	
-	public static final byte FD_FILL_SIMPLE = 0x1, FD_FILL_ONLYFULL = 0x2, FD_FILL_ANY = 0x3, FD_DRAIN = 0x8,
-			
-			FD_FILL_ANY_DRAIN = FD_FILL_ANY | FD_DRAIN, FD_FILL_ONLYFULL_DRAIN = FD_FILL_ONLYFULL | FD_DRAIN, FD_FILL_SIMPLE_DRAIN = FD_FILL_SIMPLE | FD_DRAIN;
+	public static final byte
+	FD_FILL_SIMPLE = 0x1, FD_FILL_ONLYFULL = 0x2, FD_FILL_ANY = 0x3, FD_DRAIN = 0x8,
+	FD_FILL_ANY_DRAIN = FD_FILL_ANY | FD_DRAIN, FD_FILL_ONLYFULL_DRAIN = FD_FILL_ONLYFULL | FD_DRAIN, FD_FILL_SIMPLE_DRAIN = FD_FILL_SIMPLE | FD_DRAIN;
 	
 	public static ItemStack removeStack(ItemStack[] stacks, int index)
 	{
@@ -95,7 +96,7 @@ public class InventoryHelper
 			}
 			else
 			{
-				result = L.min(stack.stackSize, inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
+				result = Math.min(stack.stackSize, getAllowedInsertSize(inventory, inventory.getStack(index)));
 				stack.stackSize -= result;
 				inventory.getStack(index).stackSize += result;
 				return stack.stackSize <= 0 ? null : stack;
@@ -114,7 +115,7 @@ public class InventoryHelper
 			{
 				if (onlyFullyExtract)
 				{
-					return stack.stackSize >= maxCount ? ItemStacks.sizeOf(stack, maxCount) : null;
+					return stack.stackSize >= maxCount ? ItemStacks.setSizeOf(stack, maxCount) : null;
 				}
 				else
 				{
@@ -146,7 +147,7 @@ public class InventoryHelper
 				return matchStack(MATCH_STACK_FULLY_INSERT, inventory, index, stack) ? stack.stackSize : 0;
 			else
 				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getStackLimit())
-						: ItemStacks.areItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
+						: ItemStacks.areItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, getAllowedInsertSize(inventory, inventory.getStack(index))) : 0;
 		}
 		else
 		{
@@ -168,7 +169,7 @@ public class InventoryHelper
 			}
 			else if (ItemStacks.areItemAndTagEqual(inventory.getStack(index), stack))
 			{
-				result = L.min(stack.stackSize, inventory.getStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
+				result = Math.min(stack.stackSize, getAllowedInsertSize(inventory, inventory.getStack(index)));
 				if (affectOnSourceStack)
 				{
 					stack.stackSize -= result;
@@ -191,7 +192,7 @@ public class InventoryHelper
 			{
 				if (stack.stackSize > 1)
 				{
-					stack = ItemStacks.sizeOf(stack, 1);
+					stack = ItemStacks.setSizeOf(stack, 1);
 					entry = FluidContainerHandler.fillContainerFromIO(stack, maxFill, io, Direction.Q, true);
 					if (entry != null && entry.getKey() == null)
 					{
@@ -212,7 +213,7 @@ public class InventoryHelper
 			}
 			else
 			{
-				ItemStack stack1 = ItemStacks.sizeOf(stack, 1);
+				ItemStack stack1 = ItemStacks.setSizeOf(stack, 1);
 				entry = FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, true);
 				if (entry != null)
 				{
@@ -248,7 +249,7 @@ public class InventoryHelper
 			}
 			else
 			{
-				stack = ItemStacks.sizeOf(stack, 1);
+				stack = ItemStacks.setSizeOf(stack, 1);
 				entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, true);
 				if (entry != null)
 				{
@@ -394,9 +395,9 @@ public class InventoryHelper
 		return false;
 	}
 	
-	private static int getAllowedInsertSize(ItemStack stack)
+	private static int getAllowedInsertSize(IBasicInventory inventory, ItemStack stack)
 	{
-		return stack.getMaxStackSize() - stack.stackSize;
+		return Math.min(inventory.getStackLimit(), stack.getMaxStackSize()) - stack.stackSize;
 	}
 	
 	/**
@@ -432,7 +433,7 @@ public class InventoryHelper
 			if (array[i] != null)
 			{
 				ItemStack stack = array[i];
-				int allowSize = Math.min(getAllowedInsertSize(stack), limit - stack.stackSize);
+				int allowSize = Math.min(stack.getMaxStackSize(), limit) - stack.stackSize;
 				if (allowSize <= 0) continue;
 				Iterator<ItemStack> itr = list.iterator();
 				while (itr.hasNext())
@@ -502,6 +503,8 @@ public class InventoryHelper
 			return size;
 		}
 		else
+		{
 			return 0;
+		}
 	}
 }

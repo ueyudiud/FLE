@@ -41,7 +41,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
@@ -70,7 +70,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
@@ -109,7 +109,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
@@ -201,7 +201,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
@@ -283,7 +283,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);
@@ -346,7 +346,7 @@ public class SolidContainerHelper
 			ItemStack inputRaw = inventory.getStack(in);
 			if (inputRaw != null)
 			{
-				ItemStack input = ItemStacks.sizeOf(inputRaw, 1);
+				ItemStack input = ItemStacks.setSizeOf(inputRaw, 1);
 				if (input.hasCapability(CAPABILITY_SOLID, null))
 				{
 					ISolidHandler handler = input.getCapability(CAPABILITY_SOLID, null);

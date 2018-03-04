@@ -28,10 +28,19 @@ import net.minecraftforge.items.IItemHandler;
  * Some useful method is given by.
  * 
  * @author ueyudiud
- *
  */
 public interface ICoord
 {
+	static IModifiableCoord create(World world, BlockPos pos)
+	{
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
+		if (tile instanceof IModifiableCoord)
+		{
+			return (IModifiableCoord) tile;
+		}
+		return new WorldCoord0(world, pos, tile);
+	}
+	
 	/**
 	 * The world belong.
 	 * 
@@ -45,6 +54,16 @@ public interface ICoord
 	 * @return
 	 */
 	BlockPos pos();
+	
+	default ICoord offset(Direction offset)
+	{
+		return offset(offset.x, offset.y, offset.z);
+	}
+	
+	default ICoord offset(int x, int y, int z)
+	{
+		return new WorldCoord2(this, pos().add(x, y, z));
+	}
 	
 	default IBlockState getBlockState()
 	{

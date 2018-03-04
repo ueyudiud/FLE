@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
@@ -355,6 +356,13 @@ public abstract class BlockSingleTE extends BlockBase implements ITileEntityProv
 		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if (tile instanceof ITP_ComparatorInputOverride) return ((ITP_ComparatorInputOverride) tile).getComparatorInputOverride(blockState);
 		return super.getComparatorInputOverride(blockState, worldIn, pos);
+	}
+	
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		return tile != null ? BlockStateTileEntityWapper.wrap(tile, state) : state;
 	}
 	
 	@Override

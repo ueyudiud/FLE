@@ -131,7 +131,7 @@ public final class RecipeAdder
 			if (stacks.getAmount() < size) return null;
 			for (Range<Mat> range : list)
 				if (!range.inRange(stacks.getContain(range.element))) return null;
-			return ItemStacks.sizeOf(output, (int) (stacks.getAmount() * output.stackSize / size));
+			return ItemStacks.setSizeOf(output, (int) (stacks.getAmount() * output.stackSize / size));
 		});
 	}
 	
@@ -216,7 +216,7 @@ public final class RecipeAdder
 						if (chance == 10000 || L.nextInt(10000) < chance) ++j;
 					if (j > 0)
 					{
-						l.add(ItemStacks.sizeOf(list[i], list[i].stackSize * j));
+						l.add(ItemStacks.setSizeOf(list[i], list[i].stackSize * j));
 					}
 				}
 				return L.cast(l, ItemStack.class);
@@ -233,7 +233,7 @@ public final class RecipeAdder
 			int size = 0;
 			for (int i : chances)
 				if (L.nextInt(10000) < i) ++size;
-			return size > 0 ? ItemStacks.sizeOf(s, size * s.stackSize) : null;
+			return size > 0 ? ItemStacks.setSizeOf(s, size * s.stackSize) : null;
 		};
 	}
 	

@@ -8,11 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.collect.ImmutableMap;
+
+import farcore.FarCore;
 import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.IIconLoader;
 import nebula.client.render.IIconRegister;
 import nebula.common.util.L;
@@ -36,9 +40,22 @@ public class MaterialTextureLoader implements IIconLoader
 	
 	private static final Map<String, TextureAtlasSprite> ICONS = new HashMap<>();
 	
-	public static void addIconset(MatCondition condition, String...variant)
+	public static void addIconset(MatCondition condition, String...variants)
 	{
-		L.put(VARIANTS, condition.name, variant);
+		L.put(VARIANTS, condition.name, variants);
+		for (String variant : variants)
+		{
+			NebulaModelLoader.registerTextureSet(
+					new ResourceLocation(FarCore.ID, "material/" + condition.name + "/" + variant),
+					() -> {
+						ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+						for (Mat material : Mat.materials())
+						{
+							builder.put(material.name, getResource(material, condition, variant));
+						}
+						return builder.build();
+					});
+		}
 	}
 	
 	public static void addIconLocationVariant(MatCondition condition, String variant, Mat material, ResourceLocation location)

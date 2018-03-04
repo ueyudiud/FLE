@@ -10,6 +10,9 @@ import javax.annotation.Nullable;
 
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * The basic inventory, without redundant method.
@@ -19,6 +22,33 @@ import net.minecraft.item.ItemStack;
  */
 public interface IBasicInventory
 {
+	default void toNBT(NBTTagCompound compound, String key)
+	{
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < getSizeInventory(); ++i)
+		{
+			ItemStack stack = getStack(i);
+			if (stack != null)
+			{
+				NBTTagCompound compound2 = stack.writeToNBT(new NBTTagCompound());
+				compound2.setByte("id", (byte) i);
+				list.appendTag(compound2);
+			}
+		}
+		compound.setTag(key, list);
+	}
+	
+	default void fromNBT(NBTTagCompound compound, String key)
+	{
+		removeAllStacks();
+		NBTTagList list = compound.getTagList(key, NBT.TAG_COMPOUND);
+		for (int i = 0; i < list.tagCount(); ++i)
+		{
+			NBTTagCompound compound2 = list.getCompoundTagAt(i);
+			setSlotContents(compound2.getByte("id"), ItemStack.loadItemStackFromNBT(compound2));
+		}
+	}
+	
 	/**
 	 * Return inventory slot as an array. For general uses, the array is
 	 * suggested be a copy of source array.

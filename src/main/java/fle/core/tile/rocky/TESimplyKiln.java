@@ -158,7 +158,7 @@ public class TESimplyKiln extends TESynchronization implements IThermalProvider,
 				this.handler.energy -= 300L * this.stack.stackSize;
 				if (++ this.progress == recipe.duration)
 				{
-					this.stack = ItemStacks.sizeOf(recipe.output.instance(), recipe.output.size(null) * this.stack.stackSize);
+					this.stack = ItemStacks.setSizeOf(recipe.output.instance(), recipe.output.size(null) * this.stack.stackSize);
 					this.progress = 0;
 					syncToNearby();
 				}

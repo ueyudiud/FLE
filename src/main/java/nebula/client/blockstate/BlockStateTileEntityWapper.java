@@ -10,7 +10,14 @@ public class BlockStateTileEntityWapper<T extends TileEntity> extends BlockState
 {
 	public static <T extends TileEntity> BlockStateTileEntityWapper<T> wrap(T tile, IBlockState state)
 	{
-		return new BlockStateTileEntityWapper<>(tile, state);
+		if (state instanceof BlockStateTileEntityWapper<?>)
+		{
+			return new BlockStateTileEntityWapper<>(tile, unwrap(state));
+		}
+		else
+		{
+			return new BlockStateTileEntityWapper<>(tile, state);
+		}
 	}
 	
 	public static <T extends TileEntity> T unwrap(IBlockState state)

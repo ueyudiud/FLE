@@ -280,7 +280,7 @@ public final class InventoryWrapFactory
 		{
 			int size = insertItem(stack, this.direction, simulate);
 			return size == 0 ? stack :
-				size == stack.stackSize ? null : ItemStacks.sizeOf(stack, stack.stackSize - size);
+				size == stack.stackSize ? null : ItemStacks.setSizeOf(stack, stack.stackSize - size);
 		}
 		
 		@Override

@@ -13,7 +13,6 @@ import fle.core.client.model.ModelSmallRockyTank;
 import fle.core.client.render.TESRFluidFase;
 import fle.core.tile.tanks.TESmallRockyTank;
 import nebula.base.register.IRegister;
-import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.util.Client;
 import nebula.common.LanguageManager;
@@ -26,8 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,13 +72,6 @@ public class BlockRockyTank extends BlockTE
 			Mat.setMaterialToStack(stack, "material", material);
 			list.add(stack);
 		}
-	}
-	
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		return BlockStateTileEntityWapper.wrap(tile, state);
 	}
 	
 	@Override

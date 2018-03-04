@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
@@ -41,6 +42,7 @@ import nebula.base.Ety;
 import nebula.client.model.IStateMapperExt;
 import nebula.client.model.ModelLocation;
 import nebula.client.model.flexible.NebulaModelDeserializer.Transform;
+import nebula.client.model.flexible.SubmetaLoader.ItemSubmetaGetterNBT;
 import nebula.client.util.IIconCollection;
 import nebula.common.data.Misc;
 import nebula.common.item.ItemFluidDisplay;
@@ -84,7 +86,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>
  * 
  * @author ueyudiud
- * @version 0.9
+ * @version 0.10
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -260,6 +262,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	private Map<ResourceLocation, Map<String, ResourceLocation>>	cacheLocations;
 	private Map<ResourceLocation, IModel>							models;
 	private Map<ResourceLocation, ModelPartCollection>				parts;
+	private Map<ResourceLocation, Function<ItemStack, String>>		imgCache;
 	
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
@@ -274,6 +277,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		this.cacheLocations = new HashMap<>();
 		this.parts = new HashMap<>();
 		this.loadingTextureSets.clear();
+		this.imgCache = new HashMap<>(ITEM_META_GENERATOR);
 		
 		Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> map = new HashMap<>(MODEL_PROVIDERS);
 		this.stream.println("Load replace loading model locations from resource.");
@@ -357,6 +361,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		ProgressManager.pop(bar);
 		Log.logCachedInformations(this.stream, Level.WARN, ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
 		this.stream.println("Nebula Model Loader finished model loading.");
+		this.imgCache = null;
 	}
 	
 	private static final DateFormat FORMAT = new SimpleDateFormat("[HH:mm:ss]");
@@ -430,7 +435,48 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 */
 	public static Function<ItemStack, String> loadItemMetaGenerator(String location)
 	{
-		return ITEM_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<ItemStack, String>) NORMAL_METAGENERATOR);
+		ResourceLocation location1 = new ResourceLocation(location);
+		Function<ItemStack, String> result = INSTANCE.imgCache.get(location1);
+		if (result == null)
+		{
+			switch (location1.getResourceDomain())
+			{
+			case "nbt" :
+			{
+				ItemSubmetaGetterNBT.Builder builder = ItemSubmetaGetterNBT.builder();
+				StringTokenizer tokenizer = new StringTokenizer(location1.getResourcePath(), "/\\");
+				while (tokenizer.hasMoreTokens())
+				{
+					String token = tokenizer.nextToken();
+					if (token.length() == 0)
+					{
+						INSTANCE.stream.println("Invalid nbt item meta generator. got: " + location);
+						throw new IllegalArgumentException();
+					}
+					switch (token.charAt(0))
+					{
+					case '[':
+						builder.appendAt(Short.parseShort(token.substring(1)));
+						break;
+					default :
+						if (token.startsWith("\\["))
+						{
+							token = token.substring(2);//When first char in tag is '['.
+						}
+						builder.append(token);
+						break;
+					}
+				}
+				INSTANCE.imgCache.put(location1, result = builder.build());
+				break;
+			}
+			}
+		}
+		if (result == null)
+		{
+			result = (Function<ItemStack, String>) NORMAL_METAGENERATOR;
+		}
+		return result;
 	}
 	
 	/**

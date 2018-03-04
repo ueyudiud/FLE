@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author ueyudiud
  */
 public class SimpleReducingRecipeHandler
-implements IRecipeMap<SimpleReducingRecipeHandler.Recipe, SimpleReducingRecipeHandler.Cache, ItemStack[]>
+implements IRecipeMap<SimpleReducingRecipeHandler.Recipe, SimpleReducingRecipeHandler.Cache, ItemStack>
 {
 	public class Recipe
 	{
@@ -71,29 +71,24 @@ implements IRecipeMap<SimpleReducingRecipeHandler.Recipe, SimpleReducingRecipeHa
 	}
 	
 	@Override
-	public Cache findRecipe(ItemStack[] handler)
+	public Cache findRecipe(ItemStack handler)
 	{
-		assert handler.length == 4;
-		Mat[] mixture = new Mat[4];
-		for (int i = 0; i < 4; ++i)
+		if (handler == null) return null;
+		if (handler.getItem() instanceof ItemOreChip && handler.stackSize == 4)
 		{
-			if (handler[i] == null) return null;
-			if (handler[i].getItem() instanceof ItemOreChip)
+			Mat material = ItemOreChip.getMaterial(handler);
+			for (Recipe recipe : this.recipes)
 			{
-				Mat material = ItemOreChip.getMaterial(handler[i]);
-				for (Recipe recipe : this.recipes)
+				if (matchRecipe(recipe, material))
 				{
-					if (matchRecipe(recipe, material))
-					{
-						mixture[i] = recipe.target;
-					}
+					Cache cache = new Cache();
+					cache.duration = 2000;
+					cache.output = ItemMulti.createStack(recipe.target, MC.impure_reduced_pile);
+					return cache;
 				}
 			}
 		}
-		Cache cache = new Cache();
-		cache.duration = 2000;
-		cache.output = ItemMulti.createStack(mixture[0], MC.impure_reduced_pile);//TODO
-		return cache;
+		return null;
 	}
 	
 	protected boolean matchRecipe(Recipe recipe, Mat handler)

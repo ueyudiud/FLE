@@ -17,7 +17,6 @@ import fle.core.client.model.ModelDitch;
 import fle.core.client.render.TESRDitch;
 import fle.core.tile.ditchs.TEDitch;
 import nebula.client.CreativeTabBase;
-import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
@@ -33,8 +32,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,17 +70,6 @@ public class BlockDitch extends BlockSingleTE
 		// ModelLoader.setCustomStateMapper(BlocksItems.ditch, new
 		// StateMapperExt(FLE.MODID, "ditch", null,
 		// Misc.PROPS_SIDE_HORIZONTALS));
-	}
-	
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TEDitch)
-		{
-			return BlockStateTileEntityWapper.wrap(tile, state);
-		}
-		return super.getExtendedState(state, world, pos);
 	}
 	
 	@Override

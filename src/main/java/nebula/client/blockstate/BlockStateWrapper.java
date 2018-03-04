@@ -354,7 +354,7 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	@Override
 	public IBlockState getClean()
 	{
-		return this.state instanceof IExtendedBlockState ? wrapState(((IExtendedBlockState) this.state).getClean()) : this.state;
+		return this.state instanceof IExtendedBlockState ? ((IExtendedBlockState) this.state).getClean() : this.state;
 	}
 	
 	@Override

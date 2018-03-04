@@ -119,11 +119,11 @@ public class InventoryTypeUnlimited implements IBasicInventory
 			{
 				if (this.stacks == null)
 				{
-					this.stacks = Node.first(ItemStacks.sizeOf(resource, in));
+					this.stacks = Node.first(ItemStacks.setSizeOf(resource, in));
 				}
 				else
 				{
-					this.stacks.addLast(ItemStacks.sizeOf(resource, in));
+					this.stacks.addLast(ItemStacks.setSizeOf(resource, in));
 				}
 				this.size += in;
 			}

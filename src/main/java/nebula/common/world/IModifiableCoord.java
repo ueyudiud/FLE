@@ -18,6 +18,18 @@ import net.minecraft.world.EnumSkyBlock;
  */
 public interface IModifiableCoord extends ICoord
 {
+	@Override
+	default IModifiableCoord offset(Direction offset)
+	{
+		return offset(offset.x, offset.y, offset.z);
+	}
+	
+	@Override
+	default IModifiableCoord offset(int x, int y, int z)
+	{
+		return new WorldCoord1(this, pos().add(x, y, z));
+	}
+	
 	/**
 	 * Mark tile entity in this coordinate is required refreshing saved NBT.
 	 */

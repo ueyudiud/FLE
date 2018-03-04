@@ -4,6 +4,7 @@
 package nebula.client.model.flexible;
 
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.function.Function;
 
 import com.google.gson.JsonDeserializationContext;
@@ -14,11 +15,23 @@ import com.google.gson.JsonParseException;
 
 import nebula.base.A;
 import nebula.base.Cache;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.model.ITileEntityCustomModelData;
+import nebula.common.util.ItemStacks;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,8 +50,29 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 			if (json.isJsonObject())
 			{
 				JsonObject object = json.getAsJsonObject();
-				String key = object.get("key").getAsString();
-				return new BlockSubmetaGetter(key, A.allNonNull(Jsons.getArray(object.getAsJsonArray("formats"), -1, String.class, JsonElement::getAsString)), A.allNonNull(Jsons.getArray(object.getAsJsonArray("default"), -1, String.class, JsonElement::getAsString)));
+				int marker = Jsons.getOrDefault(object, "marker", 0);
+				String key;
+				switch (marker)
+				{
+				case 0 :
+				{
+					key = object.get("key").getAsString();
+					return new BlockSubmetaGetterFromState(key, A.allNonNull(Jsons.getArray(object.getAsJsonArray("formats"), -1, String.class, JsonElement::getAsString)), A.allNonNull(Jsons.getArray(object.getAsJsonArray("default"), -1, String.class, JsonElement::getAsString)));
+				}
+				case 1 :
+				{
+					key = object.get("key").getAsString();
+					Function<IBlockState, String>[] funcs = object.has("formats") ? Jsons.getArray(object.getAsJsonArray("formats"), -1, Function.class, j -> deserialize(j, typeOfT, context)) : new Function[0];
+					return new BlockSubmetaGetterCompose(key, funcs);
+				}
+				case 2 :
+				{
+					key = object.get("key").getAsString();
+					return new BlockSubmetaGetterFromTile(key);
+				}
+				default:
+					throw new JsonParseException("Unsupported marker yet, got: " + marker);
+				}
 			}
 			else
 				throw new JsonParseException("Unknown json type, got: " + json.getClass());
@@ -69,13 +103,35 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		return null;
 	}
 	
-	static class BlockSubmetaGetter implements Function<IBlockState, String>
+	static abstract class BlockSubmetaGetter implements Function<IBlockState, String>
+	{
+		
+	}
+	
+	static class BlockSubmetaGetterFromTile extends BlockSubmetaGetter
+	{
+		String key;
+		
+		BlockSubmetaGetterFromTile(String key)
+		{
+			this.key = key;
+		}
+		
+		@Override
+		public String apply(IBlockState state)
+		{
+			TileEntity te = BlockStateTileEntityWapper.unwrap(state);
+			return te instanceof ITileEntityCustomModelData ? ((ITileEntityCustomModelData) te).getCustomModelData(this.key) : NebulaModelLoader.NORMAL;
+		}
+	}
+	
+	static class BlockSubmetaGetterFromState extends BlockSubmetaGetter
 	{
 		String							key;
 		Function<IBlockState, String>[]	formats;
 		String[]						def;
 		
-		BlockSubmetaGetter(String key, String[] formats, final String[] def)
+		BlockSubmetaGetterFromState(String key, String[] formats, final String[] def)
 		{
 			if (formats.length != def.length) throw new IllegalArgumentException("The formats and default values length are not same.");
 			this.key = key;
@@ -106,8 +162,106 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		}
 	}
 	
+	private static class BlockSubmetaGetterCompose extends BlockSubmetaGetter
+	{
+		String							key;
+		Function<IBlockState, String>[]	formats;
+		
+		BlockSubmetaGetterCompose(String key, Function<IBlockState, String>[] formats)
+		{
+			this.key = key;
+			this.formats = formats;
+		}
+		
+		@Override
+		public String apply(IBlockState state)
+		{
+			return String.format(this.key, A.transform(this.formats, L.funtional(state)));
+		}
+	}
+	
 	static abstract class ItemSubmetaGetter implements Function<ItemStack, String>
 	{
+	}
+	
+	static class ItemSubmetaGetterNBT extends ItemSubmetaGetter
+	{
+		static Builder builder()
+		{
+			return new Builder();
+		}
+		
+		static class Builder
+		{
+			private LinkedList<Function<NBTBase, NBTBase>> list = new LinkedList<>();
+			
+			void append(String key)
+			{
+				this.list.add(L.withCastIn(L.toFunction(NBTTagCompound::getTag, key)));
+			}
+			
+			void appendAt(int id)
+			{
+				this.list.add(L.withCastIn(L.toFunction(NBTTagList::get, id)));
+			}
+			
+			private Function<NBTBase, NBTBase> transform()
+			{
+				Function<NBTBase, NBTBase> func = this.list.removeFirst();
+				while (!this.list.isEmpty())
+				{
+					func = func.andThen(this.list.removeFirst());
+				}
+				return func;
+			}
+			
+			ItemSubmetaGetterNBT build()
+			{
+				ItemSubmetaGetterNBT result = new ItemSubmetaGetterNBT();
+				result.formats = transform();
+				return result;
+			}
+		}
+		
+		Function<NBTBase, NBTBase> formats;
+		
+		@Override
+		public String apply(ItemStack t)
+		{
+			NBTBase nbt = ItemStacks.getOrSetupNBT(t, false);
+			try
+			{
+				nbt = this.formats.apply(nbt);
+			}
+			catch (ClassCastException | NullPointerException exception)
+			{
+				return "<error>";
+			}
+			if (nbt instanceof NBTTagDouble)
+			{
+				return Double.toString(((NBTTagDouble) nbt).getDouble());
+			}
+			else if (nbt instanceof NBTTagFloat)
+			{
+				return Float.toString(((NBTTagDouble) nbt).getFloat());
+			}
+			else if (nbt instanceof NBTTagLong)
+			{
+				return Long.toString(((NBTTagLong) nbt).getLong());
+			}
+			else if (nbt instanceof NBTPrimitive)
+			{
+				return Integer.toString(((NBTTagDouble) nbt).getInt());
+			}
+			else if (nbt instanceof NBTTagString)
+			{
+				return ((NBTTagString) nbt).getString();
+			}
+			else
+			{
+				return "<error>";
+			}
+		}
 	}
 	
 	private static class ItemSubmetaGetterCompose extends ItemSubmetaGetter

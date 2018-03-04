@@ -81,7 +81,7 @@ public class OreStack implements AbstractStack
 	{
 		if (this.list == null)
 		{
-			this.list = ItemStacks.sizeOf(this.ore, this.size);
+			this.list = ItemStacks.setSizeOf(this.ore, this.size);
 		}
 		return this.list;
 	}

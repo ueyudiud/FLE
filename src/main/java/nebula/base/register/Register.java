@@ -239,6 +239,19 @@ public class Register<T> extends AbstractRegister<T>
 		return new RegisterItr();
 	}
 	
+	public void trimToMinCapacity()
+	{
+		int i = this.names.length;
+		while(-- i >= 0 && this.names[i] == null);
+		i ++;
+		String[] names1 = new String[i];
+		System.arraycopy(this.names, 0, names1, 0, i);
+		this.names = names1;
+		Object[] targets1 = new Object[i];
+		System.arraycopy(this.targets, 0, targets1, 0, i);
+		this.targets = targets1;
+	}
+	
 	private class RegisterItr implements Iterator<T>
 	{
 		int p = 0;

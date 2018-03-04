@@ -39,7 +39,7 @@ public class TESRSimplyKiln extends TESRBase<TESimplyKiln>
 				int size = Math.min(8, tile.stack.stackSize);
 				for (int i = 0; i < size; ++i)
 				{
-					renderItem(ItemStacks.sizeOf(tile.stack, 1), .5, 0, - 0.032 * i - 0.03125);
+					renderItem(ItemStacks.setSizeOf(tile.stack, 1), .5, 0, - 0.032 * i - 0.03125);
 				}
 			}
 		}

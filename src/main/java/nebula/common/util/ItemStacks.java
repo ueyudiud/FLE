@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import nebula.base.A;
+import nebula.base.Judgable;
 import nebula.common.block.IToolableBlock;
 import nebula.common.item.ITool;
 import nebula.common.nbt.NBTTagCompoundEmpty;
@@ -134,17 +135,13 @@ public final class ItemStacks
 		return NBTs.getCompound(nbt, tag, createTag);
 	}
 	
-	public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
+	@SuppressWarnings("unused")
+	public static ImmutableList<ItemStack> setSizeOf(List<ItemStack> stacks, int size)
 	{
 		if (stacks == null || stacks.isEmpty())
 			return ImmutableList.of();
 		ImmutableList.Builder builder = ImmutableList.builder();
-		stacks.forEach(stack -> {
-			if (stack != null)
-			{
-				builder.add(sizeOf(stack, size));
-			}
-		});
+		stacks.stream().<ItemStack> filter(Judgable.NOT_NULL).map(s->setSizeOf(s, size)).forEach(builder::add);
 		return builder.build();
 	}
 	
@@ -155,11 +152,16 @@ public final class ItemStacks
 	 * @param size
 	 * @return
 	 */
-	public static ItemStack sizeOf(ItemStack stack, int size)
+	public static ItemStack setSizeOf(ItemStack stack, int size)
 	{
 		ItemStack ret;
 		(ret = stack.copy()).stackSize = size;
 		return ret;
+	}
+	
+	public static int sizeOf(@Nullable ItemStack stack)
+	{
+		return stack == null ? 0 : stack.stackSize;
 	}
 	
 	/**
@@ -173,7 +175,7 @@ public final class ItemStacks
 	 */
 	public static ItemStack copyNomoreThan(@Nullable ItemStack stack, int size)
 	{
-		return stack == null ? null : stack.stackSize > size ? sizeOf(stack, size) : stack.copy();
+		return stack == null ? null : stack.stackSize > size ? setSizeOf(stack, size) : stack.copy();
 	}
 	
 	/**

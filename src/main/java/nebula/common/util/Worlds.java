@@ -5,7 +5,6 @@ package nebula.common.util;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import nebula.Nebula;
+import nebula.base.A;
 import nebula.common.CommonOverride;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
@@ -345,9 +345,9 @@ public final class Worlds
 		}
 	}
 	
-	public static void spawnDropInWorld(ICoord coord, ItemStack drop)
+	public static void spawnDropInWorld(ICoord coord, ItemStack...drop)
 	{
-		spawnDropsInWorld(coord, Arrays.asList(drop));
+		spawnDropsInWorld(coord, A.argument(drop));
 	}
 	
 	/**

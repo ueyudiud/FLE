@@ -48,6 +48,11 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected ContainerBase		container;
 	protected boolean			translated = false;
 	
+	public void setLocation(ResourceLocation location)
+	{
+		this.location = location;
+	}
+	
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location)
 	{
 		this(inventorySlotsIn, location, 176, 166);
