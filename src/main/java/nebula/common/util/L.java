@@ -40,7 +40,6 @@ import nebula.base.Judgable;
 import nebula.base.function.Applicable;
 import nebula.base.function.Func;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * The basic helper.
@@ -275,30 +274,6 @@ public class L
 	public static Random random()
 	{
 		return RNG;
-	}
-	
-	/**
-	 * Exit game.
-	 * 
-	 * @see net.minecraftforge.fml.common.FMLCommonHandler#exitJava(int,
-	 *      boolean)
-	 */
-	public static void exit()
-	{
-		exit(0, false);
-	}
-	
-	/**
-	 * Exit game with exit code.
-	 * 
-	 * @param code
-	 * @param hardExit
-	 * @see net.minecraftforge.fml.common.FMLCommonHandler#exitJava(int,
-	 *      boolean)
-	 */
-	public static void exit(int code, boolean hardExit)
-	{
-		FMLCommonHandler.instance().exitJava(code, hardExit);
 	}
 	
 	/**

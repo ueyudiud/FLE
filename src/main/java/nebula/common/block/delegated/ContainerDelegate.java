@@ -1,11 +1,10 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-package nebula.common.gui.delegate;
+package nebula.common.block.delegated;
 
 import java.util.function.Predicate;
 
-import nebula.common.block.delegated.ITileDelegateTE;
 import nebula.common.gui.ContainerBase;
 import nebula.common.gui.ContainerTileInventory;
 import nebula.common.gui.FluidSlot;

@@ -66,6 +66,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	private static final int[] IN = A.rangeIntArray(0, 1), OUT = A.rangeIntArray(1, 2);
 	
 	protected Mat materialFrame = M.oak;
+	protected Mat materialMill = M.stone;
 	
 	public final FluidTankN	tank	= new FluidTankN(4000);
 	protected int			energy;
@@ -82,12 +83,14 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		super.readFromNBT(compound);
 		this.materialFrame = Mat.getMaterialByNameOrDefault(compound, "frame", M.oak);
+		this.materialMill = Mat.getMaterialByNameOrDefault(compound, "stone", M.stone);
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		compound.setString("frame", this.materialFrame.name);
+		compound.setString("mill", this.materialMill.name);
 		return super.writeToNBT(compound);
 	}
 	
@@ -96,6 +99,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		super.readFromDescription1(nbt);
 		this.materialFrame = Mat.getMaterialByIDOrDefault(nbt, "f", this.materialFrame);
+		this.materialMill = Mat.getMaterialByIDOrDefault(nbt, "m", this.materialMill);
 	}
 	
 	@Override
@@ -103,6 +107,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		super.writeToClientInitalization(nbt);
 		nbt.setShort("f", this.materialFrame.id);
+		nbt.setShort("m", this.materialMill.id);
 	}
 	
 	@Override
@@ -110,6 +115,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		ItemStack stack = new BaseStack(state).instance();
 		Mat.setMaterialToStack(stack, "frame", this.materialFrame);
+		Mat.setMaterialToStack(stack, "mill", this.materialMill);
 		return Lists.newArrayList(stack);
 	}
 	
@@ -117,6 +123,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		this.materialFrame = Mat.getMaterialFromStack(stack, "frame", M.oak);
+		this.materialMill = Mat.getMaterialFromStack(stack, "mill", M.stone);
 	}
 	
 	@Override
@@ -352,6 +359,8 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 		{
 		case "frame" :
 			return this.materialFrame.name;
+		case "mill" :
+			return this.materialMill.name;
 		default:
 			return null;
 		}

@@ -5,8 +5,6 @@ package nebula.common.block.delegated;
 
 import javax.annotation.Nullable;
 
-import nebula.client.gui.delegate.GuiContainerDelegate;
-import nebula.common.gui.delegate.ContainerDelegate;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.stack.AbstractStack;
 import nebula.common.tile.delegate.TEDelegate;

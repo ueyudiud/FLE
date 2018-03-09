@@ -26,6 +26,8 @@ public final class Game
 	{
 	}
 	
+	public static final String MOD_JEI = "JEI";
+	
 	/**
 	 * Get active modid, or get <tt>minecraft</tt> as modid if no active mod
 	 * container found.

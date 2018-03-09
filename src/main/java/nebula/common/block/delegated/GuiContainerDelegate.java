@@ -1,12 +1,11 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-package nebula.client.gui.delegate;
+package nebula.common.block.delegated;
 
 import java.io.IOException;
 
 import nebula.client.gui.GuiContainerTileInventory;
-import nebula.common.block.delegated.ITileDelegateTE;
 import nebula.common.gui.ContainerTileInventory;
 import nebula.common.tile.delegate.TEDelegate;
 import nebula.common.util.L;

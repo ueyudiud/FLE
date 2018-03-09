@@ -8,103 +8,86 @@
 	"part": [
 		{
 			"pos": [ 0, 0, 0, 4, 8, 4 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 12, 0, 0, 16, 8, 4 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 0, 0, 12, 4, 8, 16 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 12, 0, 12, 16, 8, 16 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 4, 5, 0, 12, 8, 3 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 4, 5, 13, 12, 8, 16 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 0, 5, 4, 3, 8, 12 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 13, 5, 4, 16, 8, 12 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 6, 8, 0, 10, 16, 3 ],
-			"blockmeta": {
-				"marker": 2,
-				"key": "frame"
-			},
+			"blockmeta": "tile:frame",
 			"itemmeta": "nbt:frame",
 			"textures": { "all": "#frame" }
 		},
 		{
 			"pos": [ 4, 0, 3, 12, 12, 4 ],
+			"blockmeta": "tile:mill",
+			"itemmeta": "nbt:mill",
 			"textures": { "all": "#body" }
 		},
 		{
 			"pos": [ 4, 0, 12, 12, 12, 13 ],
+			"blockmeta": "tile:mill",
+			"itemmeta": "nbt:mill",
 			"textures": { "all": "#body" }
 		},
 		{
 			"pos": [ 3, 0, 4, 4, 12, 12 ],
+			"blockmeta": "tile:mill",
+			"itemmeta": "nbt:mill",
 			"textures": { "all": "#body" }
 		},
 		{
 			"pos": [ 12, 0, 4, 13, 12, 12 ],
+			"blockmeta": "tile:mill",
+			"itemmeta": "nbt:mill",
 			"textures": { "all": "#body" }
 		},
 		{
 			"pos": [ 4, 0, 4, 12, 2, 12 ],
+			"blockmeta": "tile:mill",
+			"itemmeta": "nbt:mill",
 			"textures": { "all": "#body" }
 		}
 	]

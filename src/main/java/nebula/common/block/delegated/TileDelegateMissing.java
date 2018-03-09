@@ -5,7 +5,9 @@ package nebula.common.block.delegated;
 
 import java.util.List;
 
+import mezz.jei.api.IModRegistry;
 import nebula.client.util.UnlocalizedList;
+import nebula.common.util.Game;
 import nebula.common.world.ICoord;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -23,6 +25,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -63,6 +66,13 @@ public final class TileDelegateMissing implements ITileDelegate<Block, TileEntit
 	
 	@Override
 	public void renderload(Block block)
+	{
+		
+	}
+	
+	@Override
+	@Optional.Method(modid = Game.MOD_JEI)
+	public void loadJEI(Block block, Item item, IModRegistry registry)
 	{
 		
 	}
@@ -141,7 +151,7 @@ public final class TileDelegateMissing implements ITileDelegate<Block, TileEntit
 	}
 	
 	@Override
-	public void addSubBlock(Block block, IBlockState state, Item item, List<ItemStack> list, CreativeTabs tab)
+	public void addSubBlock(Block block, int meta, Item item, List<ItemStack> list, CreativeTabs tab)
 	{
 		
 	}

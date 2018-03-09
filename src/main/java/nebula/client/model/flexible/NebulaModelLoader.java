@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
@@ -42,7 +41,6 @@ import nebula.base.Ety;
 import nebula.client.model.IStateMapperExt;
 import nebula.client.model.ModelLocation;
 import nebula.client.model.flexible.NebulaModelDeserializer.Transform;
-import nebula.client.model.flexible.SubmetaLoader.ItemSubmetaGetterNBT;
 import nebula.client.util.IIconCollection;
 import nebula.common.data.Misc;
 import nebula.common.item.ItemFluidDisplay;
@@ -86,7 +84,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * <p>
  * 
  * @author ueyudiud
- * @version 0.10
+ * @version 0.11
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -123,8 +121,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	private static final Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>>	MODEL_PROVIDERS					= new HashMap<>();
 	private static final Map<ResourceLocation, JsonDeserializer<? extends IModel>>							MODEL_DESERIALIZERS				= new HashMap<>();
-	private static final Map<ResourceLocation, Function<ItemStack, String>>									ITEM_META_GENERATOR				= new HashMap<>();
-	private static final Map<ResourceLocation, Function<IBlockState, String>>								BLOCK_META_GENERATOR			= new HashMap<>();
 	private static final Map<ResourceLocation, ToIntFunction<IBlockState>>									BUILTIN_BLOCK_COLORMULTIPLIER	= new HashMap<>();
 	private static final Map<ResourceLocation, ToIntFunction<ItemStack>>									BUILTIN_ITEM_COLORMULTIPLIER	= new HashMap<>();
 	private static final Map<ResourceLocation, Supplier<Map<String, ResourceLocation>>>						BUILTIN_TEXTURESET				= new HashMap<>();
@@ -222,7 +218,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 */
 	public static void registerItemMetaGenerator(ResourceLocation location, Function<ItemStack, String> function)
 	{
-		ITEM_META_GENERATOR.put(location, function);
+		SubmetaLoader.ITEM_META_GENERATOR.put(location, function);
 	}
 	
 	/**
@@ -233,7 +229,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 */
 	public static void registerBlockMetaGenerator(ResourceLocation location, Function<IBlockState, String> function)
 	{
-		BLOCK_META_GENERATOR.put(location, function);
+		SubmetaLoader.BLOCK_META_GENERATOR.put(location, function);
 	}
 	
 	public static void registerBlockColorMultiplier(ResourceLocation location, ToIntFunction<IBlockState> colorMultiplier)
@@ -251,7 +247,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		BUILTIN_TEXTURESET.put(location, map);
 	}
 	
-	private PrintStream stream;
+	PrintStream stream;
 	
 	public IResourceManager	manager;
 	public ResourceLocation	currentLocation;
@@ -262,7 +258,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	private Map<ResourceLocation, Map<String, ResourceLocation>>	cacheLocations;
 	private Map<ResourceLocation, IModel>							models;
 	private Map<ResourceLocation, ModelPartCollection>				parts;
-	private Map<ResourceLocation, Function<ItemStack, String>>		imgCache;
 	
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
@@ -277,7 +272,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		this.cacheLocations = new HashMap<>();
 		this.parts = new HashMap<>();
 		this.loadingTextureSets.clear();
-		this.imgCache = new HashMap<>(ITEM_META_GENERATOR);
+		SubmetaLoader.onResourceReloadStart();
 		
 		Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> map = new HashMap<>(MODEL_PROVIDERS);
 		this.stream.println("Load replace loading model locations from resource.");
@@ -360,8 +355,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		}
 		ProgressManager.pop(bar);
 		Log.logCachedInformations(this.stream, Level.WARN, ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
+		SubmetaLoader.onResourceReloadEnd();
 		this.stream.println("Nebula Model Loader finished model loading.");
-		this.imgCache = null;
 	}
 	
 	private static final DateFormat FORMAT = new SimpleDateFormat("[HH:mm:ss]");
@@ -428,66 +423,23 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	}
 	
 	/**
-	 * Get meta applier.
-	 * 
-	 * @param location
+	 * Get item meta applier.
+	 * @param location the location of generator
 	 * @return
 	 */
 	public static Function<ItemStack, String> loadItemMetaGenerator(String location)
 	{
-		ResourceLocation location1 = new ResourceLocation(location);
-		Function<ItemStack, String> result = INSTANCE.imgCache.get(location1);
-		if (result == null)
-		{
-			switch (location1.getResourceDomain())
-			{
-			case "nbt" :
-			{
-				ItemSubmetaGetterNBT.Builder builder = ItemSubmetaGetterNBT.builder();
-				StringTokenizer tokenizer = new StringTokenizer(location1.getResourcePath(), "/\\");
-				while (tokenizer.hasMoreTokens())
-				{
-					String token = tokenizer.nextToken();
-					if (token.length() == 0)
-					{
-						INSTANCE.stream.println("Invalid nbt item meta generator. got: " + location);
-						throw new IllegalArgumentException();
-					}
-					switch (token.charAt(0))
-					{
-					case '[':
-						builder.appendAt(Short.parseShort(token.substring(1)));
-						break;
-					default :
-						if (token.startsWith("\\["))
-						{
-							token = token.substring(2);//When first char in tag is '['.
-						}
-						builder.append(token);
-						break;
-					}
-				}
-				INSTANCE.imgCache.put(location1, result = builder.build());
-				break;
-			}
-			}
-		}
-		if (result == null)
-		{
-			result = (Function<ItemStack, String>) NORMAL_METAGENERATOR;
-		}
-		return result;
+		return SubmetaLoader.loadItemMetaGenerator(location);
 	}
 	
 	/**
-	 * Get meta applier.
-	 * 
-	 * @param location
+	 * Get block meta applier.
+	 * @param location the location of generator.
 	 * @return
 	 */
 	public static Function<IBlockState, String> loadBlockMetaGenerator(String location)
 	{
-		return BLOCK_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<IBlockState, String>) NORMAL_METAGENERATOR);
+		return SubmetaLoader.loadBlockMetaGenerator(location);
 	}
 	
 	/**

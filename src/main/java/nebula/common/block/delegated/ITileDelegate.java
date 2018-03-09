@@ -8,7 +8,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import mezz.jei.api.IModRegistry;
 import nebula.client.util.UnlocalizedList;
+import nebula.common.util.Game;
 import nebula.common.world.ICoord;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.Block;
@@ -40,6 +42,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -58,6 +61,9 @@ public interface ITileDelegate<B extends Block, T extends TileEntity>
 	
 	@SideOnly(Side.CLIENT)
 	void renderload(B block);
+	
+	@Optional.Method(modid = Game.MOD_JEI)
+	void loadJEI(B block, Item item, IModRegistry registry);
 	
 	boolean isOpaqueCube(B block, IBlockState state);
 	
@@ -85,7 +91,7 @@ public interface ITileDelegate<B extends Block, T extends TileEntity>
 	float getExplosionResistance(B block, T tile, World world, ICoord coord, @Nullable Entity exploder, Explosion explosion);
 	
 	@SideOnly(Side.CLIENT)
-	void addSubBlock(B block, IBlockState state, Item item, List<ItemStack> list, CreativeTabs tab);
+	void addSubBlock(B block, int meta, Item item, List<ItemStack> list, CreativeTabs tab);
 	
 	boolean isFullCube(B block, IBlockState state);
 	

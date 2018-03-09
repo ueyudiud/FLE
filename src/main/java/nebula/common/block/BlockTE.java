@@ -109,8 +109,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	{
 		final IBlockState state = getDefaultState();
 		IBlockState state2 = state;
-		do
-			ModelLoader.setCustomModelResourceLocation(this.item, this.property_TE.getMetaFromState(state2), mapper.getLocationFromState(state2));
+		do ModelLoader.setCustomModelResourceLocation(this.item, this.property_TE.getMetaFromState(state2), mapper.getLocationFromState(state2));
 		while ((state2 = state2.cycleProperty(this.property_TE)) != state);
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}

@@ -141,7 +141,13 @@ public final class ItemStacks
 		if (stacks == null || stacks.isEmpty())
 			return ImmutableList.of();
 		ImmutableList.Builder builder = ImmutableList.builder();
-		stacks.stream().<ItemStack> filter(Judgable.NOT_NULL).map(s->setSizeOf(s, size)).forEach(builder::add);
+		for (ItemStack stack : stacks)
+		{
+			if (stack != null)
+			{
+				builder.add(setSizeOf(stack, size));
+			}
+		}
 		return builder.build();
 	}
 	

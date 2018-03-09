@@ -22,6 +22,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Update;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_CustomModelData;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import nebula.common.tile.IUpdatableTile;
@@ -45,7 +46,9 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects
+public class TECrop extends TEAged
+implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update,
+ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_CustomModelData
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(0.0F, .0F, 0.0F, 1.0F, .125F, 1.0F);
 	
@@ -166,9 +169,10 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		return CROP_AABB;
 	}
 	
+	@Deprecated
 	public String getStateName()
 	{
-		return this.card.getRegisteredName() + "_" + this.stage;
+		return getCustomModelData("state") + "_" + getCustomModelData("stage");
 	}
 	
 	@Override
@@ -376,5 +380,19 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		IBlockState state = getBlockState();
 		Client.addBlockDestroyEffects(this.world, this.pos, state.getActualState(this.world, this.pos), manager);
 		return true;
+	}
+	
+	@Override
+	public String getCustomModelData(String key)
+	{
+		switch (key)
+		{
+		case "state" :
+			return this.card.getRegisteredName();
+		case "stage" :
+			return Integer.toString(this.stage);
+		default:
+			return null;
+		}
 	}
 }

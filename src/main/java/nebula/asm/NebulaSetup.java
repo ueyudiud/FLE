@@ -53,8 +53,8 @@ import static org.objectweb.asm.Opcodes.RET;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Opcodes.TABLESWITCH;
 
+import java.awt.Frame;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,6 +70,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -390,21 +392,11 @@ public class NebulaSetup implements IFMLCallHook
 		}
 	}
 	
-	private boolean markVersion(File destination) throws IOException
+	private boolean markVersion(File file) throws IOException
 	{
-		File file = new File(destination, "version.txt");
-		if (!file.exists())
+		if (file.createNewFile())
 		{
-			try (OutputStream stream = new BufferedOutputStream(new FileOutputStream(file)))
-			{
-				file.createNewFile();
-				stream.write(VERSION);
-				return true;
-			}
-			catch (Exception exception)
-			{
-				NebulaASMLogHelper.LOG.error("Fail to add version file.", exception);
-			}
+			return true;
 		}
 		else
 		{
@@ -413,11 +405,13 @@ public class NebulaSetup implements IFMLCallHook
 				int version = stream1.read();
 				if (version != VERSION)
 				{
-					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, " +
-							"there may cause some bug, it is suggested that you should clean your ./asm file if " +
-							"you don't known what is happening and your game got crashed.");
+					Frame frame = new Frame();
+					return JOptionPane.showConfirmDialog(frame, "" +
+							"The Nebula ASM version and your config ASM version are not same.\r\n" +
+							"Would you want to update your ASM file? (May causes some game crash\r\n" +
+							"when select 'no')",
+							"Nebula ASM", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 				}
-				stream1.close();
 				return false;
 			}
 			catch (Exception exception)
@@ -444,8 +438,22 @@ public class NebulaSetup implements IFMLCallHook
 		{
 			throw new RuntimeException("Can't read custom asm file.");
 		}
-		if (markVersion(destination))
+		File versionFile = new File(destination, "version.txt");
+		if (markVersion(versionFile))
 		{
+			if (destination.exists())
+			{
+				FileUtils.cleanDirectory(destination);
+			}
+			NebulaASMLogHelper.LOG.info("Version file not find or is out date, start ASM file coping.");
+			try (OutputStream stream = new FileOutputStream(versionFile))
+			{
+				stream.write(VERSION);
+			}
+			catch (Exception exception)
+			{
+				NebulaASMLogHelper.LOG.error("Fail to add version file.", exception);
+			}
 			final String suffix = runtimeDeobf ? "obf" : "mcp";
 			for (String str : NebulaCoreAPI.ASM_SEARCHING_DIRECTION)
 			{

@@ -35,7 +35,7 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	@EnumStateName("type")
 	public static enum EnumType implements IStringSerializable
 	{
-		NORMAL, EIGEN;
+		NORMAL;
 		
 		static final EnumType[] VALUES = values();
 		
@@ -59,7 +59,6 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	{
 		OreDict.registerValid(MC.brickBlock.getOreName(this.material), this);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), MC.brickBlock.getLocal(this.material));
-		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Eigen " + MC.brickBlock.getLocal(this.material));
 	}
 	
 	@Override
@@ -92,6 +91,8 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for (EnumType type : EnumType.VALUES)
+		{
 			list.add(new ItemStack(item, 1, type.ordinal()));
+		}
 	}
 }

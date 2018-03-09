@@ -4,8 +4,13 @@
 package nebula.client.model.flexible;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.function.Function;
+
+import javax.annotation.Nonnull;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -16,7 +21,7 @@ import com.google.gson.JsonParseException;
 import nebula.base.A;
 import nebula.base.Cache;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
-import nebula.client.model.ITileEntityCustomModelData;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_CustomModelData;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
@@ -32,6 +37,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,7 +52,7 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		@Override
 		public Function<IBlockState, String> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 		{
-			if (json.isJsonPrimitive()) return NebulaModelLoader.loadBlockMetaGenerator(json.getAsString());
+			if (json.isJsonPrimitive()) return loadBlockMetaGenerator(json.getAsString());
 			if (json.isJsonObject())
 			{
 				JsonObject object = json.getAsJsonObject();
@@ -65,11 +71,6 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 					Function<IBlockState, String>[] funcs = object.has("formats") ? Jsons.getArray(object.getAsJsonArray("formats"), -1, Function.class, j -> deserialize(j, typeOfT, context)) : new Function[0];
 					return new BlockSubmetaGetterCompose(key, funcs);
 				}
-				case 2 :
-				{
-					key = object.get("key").getAsString();
-					return new BlockSubmetaGetterFromTile(key);
-				}
 				default:
 					throw new JsonParseException("Unsupported marker yet, got: " + marker);
 				}
@@ -83,7 +84,7 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		@Override
 		public Function<ItemStack, String> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 		{
-			if (json.isJsonPrimitive()) return NebulaModelLoader.loadItemMetaGenerator(json.getAsString());
+			if (json.isJsonPrimitive()) return loadItemMetaGenerator(json.getAsString());
 			if (json.isJsonObject())
 			{
 				JsonObject object = json.getAsJsonObject();
@@ -96,6 +97,129 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 		}
 	};
 	
+	static final Map<String, Function<String, Function<ItemStack, String>>>		ITEM_META_GENERATOR_APPLIER		= new HashMap<>();
+	static final Map<String, Function<String, Function<IBlockState, String>>>	BLOCK_META_GENERATOR_APPLIER	= new HashMap<>();
+	static final Map<ResourceLocation, Function<ItemStack, String>>		ITEM_META_GENERATOR		= new HashMap<>();
+	static final Map<ResourceLocation, Function<IBlockState, String>>	BLOCK_META_GENERATOR	= new HashMap<>();
+	private static Map<String, Function<String, Function<ItemStack, String>>>	imgCache;
+	private static Map<String, Function<String, Function<IBlockState, String>>>	bmgCache;
+	
+	static void onResourceReloadStart()
+	{
+		imgCache = new HashMap<>(ITEM_META_GENERATOR_APPLIER);
+		bmgCache = new HashMap<>(BLOCK_META_GENERATOR_APPLIER);
+	}
+	
+	static void onResourceReloadEnd()
+	{
+		imgCache.clear();
+		imgCache = null;
+		bmgCache.clear();
+		bmgCache = null;
+	}
+	
+	private static <T> Function<String, Function<T, String>> wrap(Function<String, Function<T, String>> function)
+	{
+		Map<String, Function<T, String>> map = new HashMap<>();
+		return key -> map.computeIfAbsent(key, function);
+	}
+	
+	private static Function<String, Function<ItemStack, String>> getItemMetaGeneratorApplier(String domain)
+	{
+		Function<String, Function<ItemStack, String>> function = imgCache.get(domain);
+		if (function == null)
+		{
+			function = path -> ITEM_META_GENERATOR.get(new ResourceLocation(domain, path));
+			imgCache.put(domain, function);
+		}
+		return function;
+	}
+	
+	private static Function<String, Function<IBlockState, String>> getBlockMetaGeneratorApplier(String domain)
+	{
+		Function<String, Function<IBlockState, String>> function = bmgCache.get(domain);
+		if (function == null)
+		{
+			function = path -> BLOCK_META_GENERATOR.get(new ResourceLocation(domain, path));
+			bmgCache.put(domain, function);
+		}
+		return function;
+	}
+	
+	static
+	{
+		BLOCK_META_GENERATOR_APPLIER.put("tile", SubmetaLoader.<IBlockState> wrap(path -> (state -> {
+			TileEntity tile = BlockStateTileEntityWapper.unwrap(state);
+			return tile instanceof ITP_CustomModelData ? ((ITP_CustomModelData) tile).getCustomModelData(path) : NebulaModelLoader.NORMAL;
+		})));
+		ITEM_META_GENERATOR_APPLIER.put("nbt", wrap(path -> {
+			ItemSubmetaGetterNBT.Builder builder = ItemSubmetaGetterNBT.builder();
+			StringTokenizer tokenizer = new StringTokenizer(path, "/\\");
+			while (tokenizer.hasMoreTokens())
+			{
+				String token = tokenizer.nextToken();
+				if (token.length() == 0)
+				{
+					NebulaModelLoader.INSTANCE.stream.println("Invalid nbt item meta generator. got: " + path);
+					throw new IllegalArgumentException();
+				}
+				switch (token.charAt(0))
+				{
+				case '[':
+					builder.appendAt(Short.parseShort(token.substring(1)));
+					break;
+				default :
+					if (token.startsWith("\\["))
+					{
+						token = token.substring(2);//When first char in tag is '['.
+					}
+					builder.append(token);
+					break;
+				}
+			}
+			return builder.build();
+		}));
+	}
+	
+	@Nonnull
+	static Function<ItemStack, String> loadItemMetaGenerator(String path)
+	{
+		ResourceLocation location = new ResourceLocation(path);
+		Function<ItemStack, String> result;
+		try
+		{
+			result = getItemMetaGeneratorApplier(location.getResourceDomain()).apply(location.getResourcePath());
+			if (result == null)
+			{
+				result = (Function<ItemStack, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+			}
+		}
+		catch (Exception exception)
+		{
+			result = (Function<ItemStack, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+		}
+		return result;
+	}
+	
+	static Function<IBlockState, String> loadBlockMetaGenerator(String path)
+	{
+		ResourceLocation location = new ResourceLocation(path);
+		Function<IBlockState, String> result;
+		try
+		{
+			result = getBlockMetaGeneratorApplier(location.getResourceDomain()).apply(location.getResourcePath());
+			if (result == null)
+			{
+				result = (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+			}
+		}
+		catch (Exception exception)
+		{
+			result = (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
+		}
+		return result;
+	}
+	
 	@Override
 	public Function<?, String> deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException
@@ -106,23 +230,6 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 	static abstract class BlockSubmetaGetter implements Function<IBlockState, String>
 	{
 		
-	}
-	
-	static class BlockSubmetaGetterFromTile extends BlockSubmetaGetter
-	{
-		String key;
-		
-		BlockSubmetaGetterFromTile(String key)
-		{
-			this.key = key;
-		}
-		
-		@Override
-		public String apply(IBlockState state)
-		{
-			TileEntity te = BlockStateTileEntityWapper.unwrap(state);
-			return te instanceof ITileEntityCustomModelData ? ((ITileEntityCustomModelData) te).getCustomModelData(this.key) : NebulaModelLoader.NORMAL;
-		}
 	}
 	
 	static class BlockSubmetaGetterFromState extends BlockSubmetaGetter

@@ -45,9 +45,9 @@ public class TextureCollectionManager
 	
 	public static Map<String, ResourceLocation> getResourceLocationCache(String key)
 	{
-		if (cache != null)
+		if (cache != null && cache.containsKey(key))
 		{
-			if (cache.containsKey(key)) return cache.get(key);
+			return cache.get(key);
 		}
 		Object object = loadedTextureCols.get(key);
 		if (object instanceof Supplier)
