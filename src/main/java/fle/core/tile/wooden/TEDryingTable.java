@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.tile.wooden;
 
 import static fle.api.recipes.instance.RecipeMaps.DRYING;
@@ -13,12 +12,13 @@ import com.google.common.collect.ImmutableList;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
+import nebula.common.inventory.ItemContainerSingle;
+import nebula.common.inventory.ItemContainers;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import nebula.common.tile.TEInventorySingleSlot;
+import nebula.common.tile.TE05InventorySimple;
 import nebula.common.util.Direction;
-import nebula.common.util.NBTs;
-import nebula.common.util.Worlds;
+import nebula.common.util.Players;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -30,7 +30,7 @@ import net.minecraft.util.EnumHand;
 /**
  * @author ueyudiud
  */
-public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockActived, ITP_Drops
+public class TEDryingTable extends TE05InventorySimple implements ITB_BlockActived, ITP_Drops
 {
 	protected int								dryingTick;
 	protected TemplateRecipeCache<ItemStack>	cache;
@@ -38,13 +38,23 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 	public TEDryingTable()
 	{
 		super();
+		this.items = new ItemContainers<>(new ItemContainerSingle(1) {
+			@Override
+			protected void onContainerChanged()
+			{
+				super.onContainerChanged();
+				syncToNearby();
+				TEDryingTable.this.cache = null;
+				TEDryingTable.this.dryingTick = 0;
+			}
+		});
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.cache = DRYING.readFromNBT(compound, "recipe");
+		this.cache = DRYING.readFrom(compound, "recipe");
 		this.dryingTick = compound.getInteger("progress");
 	}
 	
@@ -52,7 +62,7 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		DRYING.writeToNBT(this.cache, compound, "recipe");
+		DRYING.writeTo(compound, "recipe", this.cache);
 		compound.setInteger("progress", this.dryingTick);
 		return compound;
 	}
@@ -61,38 +71,29 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		this.stack = NBTs.getItemStackOrDefault(nbt, "i", this.stack);
+		this.items.readFrom(nbt, "i");
 	}
 	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		NBTs.setItemStack(nbt, "i", this.stack, true);
+		this.items.writeTo(nbt, "i");
 	}
 	
 	@Override
-	public int getStackLimit()
+	public int getInventoryStackLimit()
 	{
 		return 1;
-	}
-	
-	@Override
-	protected void onInventoryChanged()
-	{
-		super.onInventoryChanged();
-		syncToNearby();
-		this.cache = null;
-		this.dryingTick = 0;
 	}
 	
 	@Override
 	protected void updateServer()
 	{
 		super.updateServer();
-		if (this.cache == null && this.stack != null && this.stack.stackSize == 1)
+		if (this.cache == null && this.items.getContainer(0).hasStackInContainer())
 		{
-			this.cache = DRYING.findRecipe(this.stack);
+			this.cache = DRYING.findRecipe(this.items.getStackInContainer(0));
 		}
 		if (this.cache != null)
 		{
@@ -106,8 +107,7 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 			this.dryingTick += Math.ceil(this.cache.<Float> get(1) / rain);
 			if (this.dryingTick >= this.cache.<Integer> get(0))
 			{
-				this.stack = this.cache.<ItemStack> get(2);
-				onInventoryChanged();
+				this.items.setStackInContainer(0, this.cache.<ItemStack> get(2));
 			}
 		}
 	}
@@ -119,30 +119,24 @@ public class TEDryingTable extends TEInventorySingleSlot implements ITB_BlockAct
 		{
 			if (isServer())
 			{
-				if (this.stack == null)
+				if (!this.items.getContainer(0).hasStackInContainer())
 				{
 					if (stack != null)
 					{
-						this.stack = stack.splitStack(1);
+						this.items.setStackInContainer(0, stack.splitStack(1));
 					}
 				}
 				else
 				{
 					if (stack == null)
 					{
-						player.setHeldItem(hand, this.stack);
-						this.stack = null;
+						player.setHeldItem(hand, this.items.extractStack(0, 1));
 					}
 					else
 					{
-						if (!player.inventory.addItemStackToInventory(this.stack))
-						{
-							Worlds.spawnDropInWorld(this, this.stack);
-						}
-						this.stack = null;
+						Players.giveOrDrop(player, this.items.extractStack(0, 1));
 					}
 				}
-				onInventoryChanged();
 			}
 			return EnumActionResult.SUCCESS;
 		}

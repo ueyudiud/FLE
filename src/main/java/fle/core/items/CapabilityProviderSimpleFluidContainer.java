@@ -5,7 +5,7 @@ package fle.core.items;
 
 import fle.core.items.ItemSimpleFluidContainer.FluidContainerProperty;
 import nebula.common.capability.CapabilityProviderItem;
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
 import nebula.common.util.FluidStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 /**
  * @author ueyudiud
  */
-public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderItem implements INBTCompoundReaderAndWritter<CapabilityProviderSimpleFluidContainer>, IFluidHandler
+public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderItem implements INBTCompoundReaderAndWriter<CapabilityProviderSimpleFluidContainer>, IFluidHandler
 {
 	private final FluidContainerProperty	property;
 	private FluidStack						stack;
@@ -48,7 +48,7 @@ public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderIt
 	}
 	
 	@Override
-	public CapabilityProviderSimpleFluidContainer readFromNBT(NBTTagCompound nbt)
+	public CapabilityProviderSimpleFluidContainer readFrom(NBTTagCompound nbt)
 	{
 		if (nbt.hasKey("fluid"))
 		{
@@ -59,7 +59,7 @@ public class CapabilityProviderSimpleFluidContainer extends CapabilityProviderIt
 	}
 	
 	@Override
-	public void writeToNBT(CapabilityProviderSimpleFluidContainer target, NBTTagCompound nbt)
+	public void writeTo(CapabilityProviderSimpleFluidContainer target, NBTTagCompound nbt)
 	{
 		if (this.stack != null)
 		{

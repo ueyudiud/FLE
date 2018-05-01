@@ -3,7 +3,6 @@
  */
 package farcore.lib.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -116,9 +115,9 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ);
 	
-	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList<ItemStack> list);
+	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, List<ItemStack> list);
 	
-	ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList<ItemStack> list);
+	List<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, List<ItemStack> list);
 	
 	int onSaplingUpdate(ISaplingAccess access);
 	

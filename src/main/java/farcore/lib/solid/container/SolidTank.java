@@ -5,14 +5,15 @@ package farcore.lib.solid.container;
 
 import javax.annotation.Nullable;
 
+import farcore.lib.inventory.ISolidHandler;
 import farcore.lib.solid.SolidStack;
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTSelfCompoundReaderAndWriter;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author ueyudiud
  */
-public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISolidHandler
+public class SolidTank implements INBTSelfCompoundReaderAndWriter, ISolidHandler
 {
 	protected int			capacity;
 	protected SolidStack	stack;
@@ -150,38 +151,18 @@ public class SolidTank implements INBTCompoundReaderAndWritter<SolidTank>, ISoli
 	}
 	
 	@Override
-	public void readFromNBT1(NBTTagCompound nbt)
+	public void readFrom(NBTTagCompound nbt)
 	{
 		this.stack = SolidStack.loadFromNBT(nbt);
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public void writeTo(NBTTagCompound nbt)
 	{
 		if (this.stack != null)
 		{
 			this.stack.writeToNBT(nbt);
 		}
-		return nbt;
-	}
-	
-	@Override
-	public final Class<? super SolidTank> getTargetType()
-	{
-		return SolidTank.class;
-	}
-	
-	@Override
-	public final SolidTank readFromNBT(NBTTagCompound nbt)
-	{
-		readFromNBT1(nbt);
-		return this;
-	}
-	
-	@Override
-	public final void writeToNBT(SolidTank target, NBTTagCompound nbt)
-	{
-		target.writeToNBT(nbt);
 	}
 	
 	@Override

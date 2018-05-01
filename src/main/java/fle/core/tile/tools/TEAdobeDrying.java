@@ -6,12 +6,12 @@ package fle.core.tile.tools;
 import java.util.List;
 
 import fle.loader.IBFS;
-import nebula.base.ObjArrayParseHelper;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import nebula.common.tile.TEAged;
+import nebula.common.tile.TE05Aged;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
@@ -28,7 +28,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 /**
  * @author ueyudiud
  */
-public class TEAdobeDrying extends TEAged implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
+public class TEAdobeDrying extends TE05Aged implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 {
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25F, 0.0F, 0.125F, 0.75F, 0.375F, 0.875F);
 	

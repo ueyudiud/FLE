@@ -34,10 +34,15 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The crop block.
+ * @author ueyudiud
+ */
 public class BlockCrop extends BlockSingleTE implements IPlantable
 {
 	public static final ThreadLocal<ICrop>		CROP_THREAD	= new ThreadLocal<>();
 	public static final ThreadLocal<ItemStack>	ITEM_THREAD	= new ThreadLocal<>();
+	@Deprecated
 	public static final PropertyString			PROP_CROP_TYPE;
 	
 	static

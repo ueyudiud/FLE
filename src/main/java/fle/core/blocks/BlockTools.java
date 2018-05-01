@@ -56,7 +56,7 @@ public class BlockTools extends BlockTE
 		
 		registerCustomBlockRender(map, 0, "tool/oillamp");
 		registerCustomBlockRender(map, 1, "tool/wooden_bowl");
-		registerCustomBlockRender(map, 2, "tool/wooden_brick_mold");// FIXME
+		registerCustomBlockRender(map, 2, "tool/wooden_brick_mold");
 		
 		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "tool/brick_mold/duration"), state -> Integer.toString(BlockStateTileEntityWapper.<TEAdobeDrying> unwrap(state).duration));
 		

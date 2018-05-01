@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2018 ueyudiud
+ */
 package fle.core.items.behavior;
 
 import farcore.data.EnumPhysicalDamageType;
@@ -13,7 +16,7 @@ import nebula.common.item.IProjectileItem;
 import nebula.common.item.ITool;
 import nebula.common.util.Direction;
 import nebula.common.util.Entities;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +40,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
-		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
+		RayTraceResult result = W.rayTrace(worldIn, playerIn, false);
 		if (result == null)
 		{
 			playerIn.setActiveHand(hand);

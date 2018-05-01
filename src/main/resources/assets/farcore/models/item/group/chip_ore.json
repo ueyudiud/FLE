@@ -2,7 +2,11 @@
 	"layers": [ 
 		{
 			"texture": "[farcore:group/chip",
-			"meta": "farcore:group/ore_chip/rock"
+			"meta": {
+				"key": "material:%",
+				"formats": [ "nbt:rock" ],
+				"default": [ "stone" ]
+			}
 		}, 
 		{
 			"type": "flat",

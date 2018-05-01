@@ -10,7 +10,7 @@ import farcore.energy.thermal.IThermalHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author ueyudiud
  */
-public class TEThermalWire extends TESynchronization
+public class TEThermalWire extends TE04Synchronization
 // TEWiring? No, you can't transfer heat through dimension :D.
 implements IThermalHandler, IDebugableTile
 {

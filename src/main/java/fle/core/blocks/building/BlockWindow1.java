@@ -9,7 +9,8 @@ import farcore.data.SubTags;
 import farcore.lib.block.state.PropertyMaterial;
 import farcore.lib.material.Mat;
 import fle.core.FLE;
-import nebula.base.Judgable;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.common.block.BlockBase;
 import nebula.common.data.Misc;
 import nebula.common.util.ISubTagContainer;
@@ -29,7 +30,7 @@ import net.minecraft.world.World;
  */
 public class BlockWindow1 extends BlockBase
 {
-	public static final Judgable<ISubTagContainer>	MATERIAL_FILTER	= Judgable.or(SubTags.WOOD, SubTags.ROCK);
+	public static final Judgable<ISubTagContainer>	MATERIAL_FILTER	= F.or(SubTags.WOOD, SubTags.ROCK);
 	public static final PropertyMaterial			FRAME			= PropertyMaterial.create("frame", MATERIAL_FILTER);
 	public static final IProperty<EnumFacing>		FACING			= Misc.PROP_FACING_HORIZONTALS;
 	public static final IProperty<Boolean>			OPEN			= Properties.create("open");

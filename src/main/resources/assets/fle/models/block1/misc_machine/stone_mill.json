@@ -3,28 +3,14 @@
 	"textures": {
 		"frame": "minecraft:blocks/planks_oak",
 		"particle": "#frame",
-		"body": "minecraft:blocks/rock/stone/resource"
+		"body": "minecraft:blocks/rock/stone/resource",
+		"all": "#frame"
 	},
 	"part": [
-		{
-			"pos": [ 0, 0, 0, 4, 5, 4 ],
-			"textures": { "all": "#frame" }
-		},
-		{
-			"pos": [ 12, 0, 0, 16, 5, 4 ],
-			"textures": { "all": "#frame" }
-		},
-		{
-			"pos": [ 0, 0, 12, 4, 5, 16 ],
-			"textures": { "all": "#frame" }
-		},
-		{
-			"pos": [ 12, 0, 12, 16, 5, 16 ],
-			"textures": { "all": "#frame" }
-		},
-		{
-			"pos": [ 0, 5, 0, 16, 8, 16 ],
-			"textures": { "all": "#frame" }
-		}
+		[  0, 0,  0,  4, 5,  4 ],
+		[ 12, 0,  0, 16, 5,  4 ],
+		[  0, 0, 12,  4, 5, 16 ],
+		[ 12, 0, 12, 16, 5, 16 ],
+		[  0, 5,  0, 16, 8, 16 ]
 	]
 }

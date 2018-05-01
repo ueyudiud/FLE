@@ -17,7 +17,7 @@ import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyEdible;
 import fle.core.FLE;
-import nebula.base.Judgable;
+import nebula.base.function.F;
 
 /**
  * @author ueyudiud
@@ -33,7 +33,7 @@ public class Crops
 		bristlegrass.builder().setCrop((crop1 = new CropTemplate(bristlegrass, "Birstlegrass", 7, 600)).setFamily(family1).setMultiplicationProp(4, 6, 2).setDrop(() -> iCropRelated.getSubItem("bristlegrass"), 3));
 		family1.addBaseSpecie(crop1);
 		millet.builder().setCrop((crop1 = new CropTemplate(millet, "Millet", 7, 900)).setFamily(family1).setMultiplicationProp(3, 6, 2).setDrop(() -> iCropRelated.getSubItem("millet"), 2));
-		family1.addSpecie(Judgable.or(explicit(1), explicit(2), explicit(3), explicit(4)), crop1);
+		family1.addSpecie(F.or(explicit(1), explicit(2), explicit(3), explicit(4)), crop1);
 		soybean.builder().setCrop((crop1 = new CropTemplate(soybean, "Soybean", 6, 1600)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("soybean_pod"), 2));
 		rutabaga.builder().setCrop((crop1 = new CropTemplate(rutabaga, "Rutabaga", 5, 1900)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("rutabaga"), 1));
 		potato.builder().setCrop((crop1 = new CropTemplate(potato, "Potato", 6, 1300)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(2));
@@ -45,11 +45,11 @@ public class Crops
 		wild_cabbage.builder().setCrop((crop1 = new CropTemplate(wild_cabbage, "Wild Cabbage", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("wild_cabbage_leaf"), 1));
 		family1.addBaseSpecie(crop1);
 		cabbage.builder().setCrop((crop1 = new CropTemplate(cabbage, "Cabbage", 6, 1600)).setFamily(family1).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("cabbage"), 1));
-		family1.addSpecie(Judgable.and(explicit(0), implicit(1), implicit(2), implicit(3)), crop1);
+		family1.addSpecie(F.and(explicit(0), implicit(1), implicit(2), implicit(3)), crop1);
 		brussels_sprouts.builder().setCrop((crop1 = new CropTemplate(brussels_sprouts, "Brussels Sprouts", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("brussels_sprouts"), 2));
-		family1.addSpecie(Judgable.and(explicit(0), explicit(1), implicit(3)), crop1);
+		family1.addSpecie(F.and(explicit(0), explicit(1), implicit(3)), crop1);
 		purple_cabbage.builder().setCrop((crop1 = new CropTemplate(purple_cabbage, "Purple Cabbage", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("purple_cabbage"), 1));
-		family1.addSpecie(Judgable.and(explicit(0), implicit(1), explicit(2), implicit(3)), crop1);
+		family1.addSpecie(F.and(explicit(0), implicit(1), explicit(2), implicit(3)), crop1);
 		cauliflower.builder().setCrop((crop1 = new CropTemplate(cauliflower, "Cauliflower", 6, 1600)).setFamily(family1).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("cauliflower"), 1));
 		family1.addSpecie(explicit(3), crop1);
 		

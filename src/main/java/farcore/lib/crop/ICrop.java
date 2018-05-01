@@ -19,7 +19,7 @@ public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 	
 	default String getLocalName(GeneticMaterial gm)
 	{
-		return LanguageManager.translateToLocal("crop." + getRegisteredName() + ".name");
+		return LanguageManager.translateLocal("crop." + getRegisteredName() + ".name");
 	}
 	
 	int getMaxStage();

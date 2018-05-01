@@ -9,7 +9,7 @@ import farcore.blocks.flora.BlockLogNatural;
 import farcore.data.EnumItem;
 import farcore.data.V;
 import farcore.items.ItemTreeLog;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class BreakTree implements Runnable
 		{
 			ItemStack stack = new ItemStack(EnumItem.log.item, 1, this.block.tree.material.id);
 			ItemTreeLog.setLogSize(stack, this.cacheDrop);
-			Worlds.spawnDropInWorld(this.world, this.pos, stack);
+			W.spawnDropInWorld(this.world, this.pos, stack);
 		}
 	}
 	
@@ -56,25 +56,21 @@ public class BreakTree implements Runnable
 						if ((offsetX != 0 || offsetY != 0 || offsetZ != 0) && Math.abs(x + offsetX) <= V.treeScanRange && Math.abs(z + offsetZ) <= V.treeScanRange && this.pos.getY() + y + offsetY < 256)
 							if (!array[x + offsetX + V.treeScanRange][y + offsetY][z + offsetZ + V.treeScanRange] && this.block.isLog(world, this.pos.add(x + offsetX, y + offsetY, z + offsetZ)))
 							{
-							scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
+								scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
 							}
 				}
 			}
 			++this.cacheDrop;
 			BlockPos pos1 = this.pos.add(x, y, z);
-			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);// Some
-																		// update
-																		// causes
-																		// out
-																		// of
-																		// sych.
+			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);
+			// Some update causes out of sych.
 			beginLeavesDecay(world, pos1.up());
 			beginLeavesDecay(world, pos1.down());
 			beginLeavesDecay(world, pos1.south());
 			beginLeavesDecay(world, pos1.north());
 			beginLeavesDecay(world, pos1.east());
 			beginLeavesDecay(world, pos1.west());
-			Worlds.spawnDropsInWorld(world, pos1, this.block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
+			W.spawnDropsInWorld(world, pos1, this.block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
 		}
 	}
 	

@@ -4,22 +4,26 @@
 package farcore.lib.oredict;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.SetMultimap;
 
-import nebula.base.Ety;
-import nebula.base.Judgable;
+import nebula.base.collection.HashIntMap;
+import nebula.base.collection.IntMap;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.common.util.ItemStacks;
-import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.init.Blocks;
@@ -53,18 +57,17 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author ueyudiud
  * @see net.minecraftforge.oredict.OreDictionary
  */
+@ParametersAreNonnullByDefault
 public class OreDictExt
 {
 	/** The id of 'stack is invalid', only for internal use. */
 	private static final long																	INVALID_STACK_ID	= 0x0000000000000001L;
 	private static final List<String>															ID_TO_NAME			= new ArrayList<>();
-	private static final Map<String, Integer>													NAME_TO_ID			= new HashMap<>(128);
-	private static final List<Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>	FUNCTION_MAP		= new ArrayList<>();
-	private static final Map<Long, List<Integer>>												STACK_TO_IDS		= new HashMap<>();
-	private static final List<Entry<List<ItemStack>, List<ItemStack>>>							ID_TO_STACK			= new ArrayList<>();
+	private static final IntMap<String>															NAME_TO_ID			= new HashIntMap<>(128);
+	private static final List<ListMultimap<Item, Judgable<ItemStack>>>							FUNCTION_MAP		= new ArrayList<>();
+	private static final SetMultimap<Long, Integer>												STACK_TO_IDS		= HashMultimap.create();
+	private static final List<List<ItemStack>>													ID_TO_STACK			= new ArrayList<>();
 	public static final Function<ItemStack, Long>												STACK_SERIALIZER	= stack -> stack == null ? INVALID_STACK_ID : (long) Item.REGISTRY.getIDForObject(stack.getItem()) << 32 | stack.getItemDamage();
-	
-	private static final OreDictExt INSTANCE = new OreDictExt();
 	
 	public static final ImmutableList<ItemStack> EMPTY_LIST = ImmutableList.of();
 	
@@ -79,7 +82,7 @@ public class OreDictExt
 	/** Internal method, do not use. */
 	public static void init()
 	{
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
+		MinecraftForge.EVENT_BUS.register(OreDictExt.class);
 		registerVanillaOres();
 	}
 	
@@ -202,8 +205,7 @@ public class OreDictExt
 		registerOre("sandstone", Blocks.RED_SANDSTONE);
 		registerOre("clay", Blocks.CLAY);// Far Core added.
 		registerOre("clayHardened", Blocks.HARDENED_CLAY);// Far Core added.
-		registerOre("clayHardened", Blocks.STAINED_HARDENED_CLAY);// Far Core
-		// added.
+		registerOre("clayHardened", Blocks.STAINED_HARDENED_CLAY);// Far Core added.
 		registerOre("netherrack", Blocks.NETHERRACK);
 		registerOre("obsidian", Blocks.OBSIDIAN);
 		registerOre("glowstone", Blocks.GLOWSTONE);
@@ -243,30 +245,24 @@ public class OreDictExt
 			registerOre("dye" + dyes[i], new ItemStack(Items.DYE, 1, i));
 			registerOre("blockGlass" + dyes[i], new ItemStack(Blocks.STAINED_GLASS, 1, 15 - i));
 			registerOre("paneGlass" + dyes[i], new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 15 - i));
-			registerOre("clayHardened" + dyes[i], new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 15 - i));// Far
-			// Core
-			// added.
+			registerOre("clayHardened" + dyes[i], new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 15 - i));//Far Core added.
 		}
 	}
 	
 	private static int getOreID(String name)
 	{
-		Integer id = NAME_TO_ID.get(name);
-		if (id == null)
-		{
-			id = ID_TO_NAME.size();
-			ID_TO_NAME.add(name);
-			NAME_TO_ID.put(name, id);
-			List<ItemStack> stacks = new ArrayList<>();
-			ID_TO_STACK.add(new Ety<>(stacks, Collections.unmodifiableList(stacks)));
-			FUNCTION_MAP.add(new HashMap<>());
-		}
-		return id.intValue();
+		return NAME_TO_ID.computeIfAbsent(name, key -> {
+			int id = ID_TO_NAME.size();
+			ID_TO_NAME.add(key);
+			NAME_TO_ID.put(key, id);
+			ID_TO_STACK.add(new ArrayList<>());
+			FUNCTION_MAP.add(ArrayListMultimap.create());
+			return id;
+		});
 	}
 	
 	/**
 	 * Register block to EOD.
-	 * 
 	 * @see #registerOre(String, Item)
 	 */
 	public static void registerOre(String name, Block block)
@@ -276,7 +272,6 @@ public class OreDictExt
 	
 	/**
 	 * Register block with meta to EOD.
-	 * 
 	 * @see #registerOre(String, Item, int)
 	 */
 	public static void registerOre(String name, Block block, int meta)
@@ -285,14 +280,11 @@ public class OreDictExt
 	}
 	
 	/**
-	 * Register item to EOD.
-	 * <p>
-	 * Added item by EOD will not change OD list.
-	 * <p>
+	 * Register item to EOD. <p>
+	 * Added item by EOD will not change OD list. <p>
 	 * Register ore by this method will provider an instance display item stack
 	 * to display list and a default any-meta <tt>ItemStack=>boolean</tt>
 	 * predicate will be register to EOD. will be applied to ore list.
-	 * 
 	 * @param name the name of ore.
 	 * @param item the register item.
 	 */
@@ -303,16 +295,14 @@ public class OreDictExt
 		int itemID = Item.REGISTRY.getIDForObject(item);
 		if (itemID == -1) throw new RuntimeException("An invalid registeration has a raw item id!");
 		long stackID = (long) itemID << 32 | WILDCARD_VALUE_LONG;
-		registerOreFunction(name, item, Judgable.TRUE);
+		registerOreFunction(name, item, F.P_T);
 		registerIDToStackObject(oreID, new ItemStack(item));
 		registerStackToIDObject(oreID, stackID);
 	}
 	
 	/**
-	 * Register item with specific meta to EOD.
-	 * <p>
-	 * Added item by EOD will not change OD list.
-	 * <p>
+	 * Register item with specific meta to EOD.<p>
+	 * Added item by EOD will not change OD list.<p>
 	 * Register ore by this method will provider an instance display item stack
 	 * to display list and a specific <tt>ItemStack=>boolean</tt> predicate
 	 * which is: <code>stack->stack.getItemDamage()==meta</code> will be
@@ -344,23 +334,27 @@ public class OreDictExt
 	
 	private static void registerIDToStackObject(int oreID, ItemStack stack)
 	{
-		ID_TO_STACK.get(oreID).getKey().add(stack.copy());
+		ID_TO_STACK.get(oreID).add(stack.copy());
 	}
 	
 	private static void registerStackToIDObject(int oreID, long stackID)
 	{
-		List<Integer> list = STACK_TO_IDS.get(stackID);
-		if (list == null)
-		{
-			STACK_TO_IDS.put(stackID, list = new ArrayList<>());
-		}
-		list.add(oreID);
+		STACK_TO_IDS.put(stackID, oreID);
 	}
 	
 	/** @see #registerOreFunction(String, Item, Judgable, ItemStack[]) */
-	public static void registerOreFunction(String name, Item item, Judgable<ItemStack> function, Collection<ItemStack> instances)
+	public static void registerOreFunction(String name, Item item, @Nonnull Judgable<ItemStack> function, Iterable<ItemStack> instances)
 	{
-		registerOreFunction(name, item, function, L.cast(instances, ItemStack.class));
+		if (name == null || function == null) return;
+		int oreID = getOreID(name);
+		FUNCTION_MAP.get(oreID).put(item, function);
+		List<ItemStack> list1 = ID_TO_STACK.get(oreID);
+		for (ItemStack stack : instances)
+		{
+			list1.add(stack.copy());
+			long stackID = STACK_SERIALIZER.apply(stack);
+			registerStackToIDObject(oreID, stackID);
+		}
 	}
 	
 	/**
@@ -391,28 +385,19 @@ public class OreDictExt
 	{
 		if (name == null || function == null) return;
 		int oreID = getOreID(name);
-		List<ItemStack> list1 = ID_TO_STACK.get(oreID).getKey();
-		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map = FUNCTION_MAP.get(oreID);
-		List<Judgable<ItemStack>> list;
-		if (!map.containsKey(item))
-		{
-			list = new ArrayList<>();
-			map.put(item, new Ety<>(Judgable.or(list), list));
-		}
-		else
-			list = map.get(item).getValue();
-		list.add(function);
+		FUNCTION_MAP.get(oreID).put(item, function);
+		List<ItemStack> list1 = ID_TO_STACK.get(oreID);
 		for (ItemStack stack : instances)
 		{
-			long stackID = STACK_SERIALIZER.apply(stack);
 			list1.add(stack.copy());
+			long stackID = STACK_SERIALIZER.apply(stack);
 			registerStackToIDObject(oreID, stackID);
 		}
 	}
 	
 	private static List<ItemStack> getOres(int id)
 	{
-		return ID_TO_STACK.size() > id ? ID_TO_STACK.get(id).getValue() : EMPTY_LIST;
+		return ID_TO_STACK.size() > id ? Collections.unmodifiableList(ID_TO_STACK.get(id)) : EMPTY_LIST;
 	}
 	
 	/**
@@ -439,7 +424,7 @@ public class OreDictExt
 	 */
 	public static List<ItemStack> getOres(String name, boolean alwaysCreateEntry)
 	{
-		return alwaysCreateEntry || NAME_TO_ID.get(name) != null ? getOres(getOreID(name)) : EMPTY_LIST;
+		return alwaysCreateEntry || NAME_TO_ID.containsKey(name) ? getOres(getOreID(name)) : EMPTY_LIST;
 	}
 	
 	/**
@@ -468,13 +453,10 @@ public class OreDictExt
 		if (useCache)
 		{
 			long stackID = STACK_SERIALIZER.apply(stack);
-			List<Integer> list1 = STACK_TO_IDS.get(stackID);
-			if (list1 != null)
+			Set<Integer> list1 = STACK_TO_IDS.get(stackID);
+			for (Integer i : list1)
 			{
-				for (Integer i : list1)
-				{
-					list.add(ID_TO_NAME.get(i));
-				}
+				list.add(ID_TO_NAME.get(i));
 			}
 			stackID |= WILDCARD_VALUE;
 			list1 = STACK_TO_IDS.get(stackID);
@@ -490,8 +472,17 @@ public class OreDictExt
 		Item item = stack.getItem();
 		for (int i = 0; i < FUNCTION_MAP.size(); ++i)
 		{
-			Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map = FUNCTION_MAP.get(i);
-			if (map.containsKey(item) && map.get(item).getKey().test(stack)) list.add(ID_TO_NAME.get(i));
+			ListMultimap<Item, Judgable<ItemStack>> map = FUNCTION_MAP.get(i);
+			if (map.containsKey(item))
+			{
+				for (Judgable<ItemStack> p : map.get(item))
+				{
+					if (p.test(stack))
+					{
+						list.add(ID_TO_NAME.get(i));
+					}
+				}
+			}
 		}
 		return list;
 	}
@@ -505,8 +496,23 @@ public class OreDictExt
 	 */
 	public static boolean oreMatchs(@Nonnull ItemStack stack, @Nonnull String oreName)
 	{
-		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map;
-		return NAME_TO_ID.containsKey(oreName) ? (map = FUNCTION_MAP.get(NAME_TO_ID.get(oreName))).containsKey(stack.getItem()) && map.get(stack.getItem()).getKey().test(stack) : false;
+		OptionalInt id = NAME_TO_ID.getIf(oreName);
+		if (id.isPresent())
+		{
+			Item item = stack.getItem();
+			ListMultimap<Item, Judgable<ItemStack>> map = FUNCTION_MAP.get(id.getAsInt());
+			if (map.containsKey(item))
+			{
+				for (Judgable<ItemStack> p : map.get(item))
+				{
+					if (p.test(stack))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	private OreDictExt()
@@ -515,7 +521,7 @@ public class OreDictExt
 	
 	/** Internal method, register ore registered in OD to E-OD. */
 	@SubscribeEvent
-	public void onOreRegistered(OreDictionary.OreRegisterEvent event)
+	public static void onOreRegistered(OreDictionary.OreRegisterEvent event)
 	{
 		if (event.getOre().getItemDamage() == OreDictionary.WILDCARD_VALUE)
 		{

@@ -13,7 +13,7 @@ import fle.core.entity.monster.EntityFLESlime;
 import fle.core.entity.monster.EntityFLESpider;
 import fle.core.entity.monster.EntityFLEZombie;
 import fle.loader.Configs;
-import nebula.common.util.R;
+import nebula.base.R;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

@@ -3,7 +3,7 @@
  */
 package fle.core.tree;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import farcore.FarCore;
@@ -37,7 +37,7 @@ public class TreeOak extends Tree
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList list)
+	public List<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, List<ItemStack> list)
 	{
 		super.getLeavesDrops(world, pos, state, fortune, silkTouching, list);
 		if (L.nextInt(12) == 0)

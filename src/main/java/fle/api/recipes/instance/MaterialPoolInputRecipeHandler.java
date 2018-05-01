@@ -10,8 +10,8 @@ import java.util.List;
 import farcore.lib.material.Mat;
 import fle.api.recipes.IRecipeMap;
 import nebula.base.A;
-import nebula.base.ObjArrayParseHelper;
 import nebula.base.Stack;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,13 +42,13 @@ public class MaterialPoolInputRecipeHandler implements IRecipeMap<MaterialPoolIn
 	}
 	
 	@Override
-	public List<Stack<Mat>> readFromNBT(NBTTagCompound nbt)
+	public List<Stack<Mat>> readFrom(NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public void writeToNBT(List<Stack<Mat>> target, NBTTagCompound nbt)
+	public void writeTo(List<Stack<Mat>> target, NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -62,7 +62,7 @@ public class MaterialPoolInputRecipeHandler implements IRecipeMap<MaterialPoolIn
 	public void addRecipe(AbstractStack input, Object...objects)
 	{
 		List<Stack<Mat>> stacks = new ArrayList<>();
-		ObjArrayParseHelper helper = ObjArrayParseHelper.create(objects);
+		ObjArrayParseHelper helper = nebula.base.collection.A.create(objects);
 		while (helper.hasNext())
 		{
 			if (helper.match(Stack.class))

@@ -4,18 +4,16 @@
 package fle.core.tile.chest;
 
 import fle.api.item.IIDKeyItem;
-import fle.core.client.gui.GuiInvContainer;
-import fle.core.common.gui.container.Containernxn;
-import fle.core.common.gui.container.EnumSlotsSize;
-import nebula.common.tile.IGuiTile;
+import fle.core.common.gui.EnumSlotsSize;
+import nebula.common.gui.Container03TileEntity;
+import nebula.common.gui.ISlotInitalizer;
+import nebula.common.gui.ItemSlot;
+import nebula.common.inventory.ItemContainersArray;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing.Axis;
@@ -26,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
+public class TEChest1 extends TEChest implements ITP_BoundingBox
 {
 	public static enum ChestType
 	{
@@ -55,6 +53,7 @@ public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 	public TEChest1()
 	{
 		super(true, false);
+		this.items = new ItemContainersArray(new ItemStack[0], 64);
 	}
 	
 	public ChestType getChestType()
@@ -73,8 +72,9 @@ public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
-		super.readFromNBT(compound);
 		this.type = NBTs.getEnumOrDefault(compound, "type", ChestType.WOOD);
+		this.items = new ItemContainersArray(new ItemStack[this.type.size.size], 64);
+		super.readFromNBT(compound);
 	}
 	
 	@Override
@@ -89,17 +89,6 @@ public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 	{
 		super.readFromDescription1(nbt);
 		NBTs.getEnumOrDefault(nbt, "ty", this.type);
-	}
-	
-	@Override
-	protected ItemStack[] stacks()
-	{
-		if (this.stacks == null)
-		{
-			this.stacks = new ItemStack[this.type.size.size];
-		}
-		
-		return this.stacks;
 	}
 	
 	@Override
@@ -129,16 +118,25 @@ public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 	}
 	
 	@Override
-	public Container openContainer(int id, EntityPlayer player)
+	public void initalizeContainer(Container03TileEntity container, ISlotInitalizer initalizer)
 	{
-		return new Containernxn<>(this, player, this.type.size);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiContainer openGui(int id, EntityPlayer player)
-	{
-		return new GuiInvContainer(this, player, this.type.size);
+		EnumSlotsSize size = this.type.size;
+		
+		ItemSlot[] slots = new ItemSlot[size.size];
+		int index = 0;
+		for (int i = 0; i < size.column; ++i)
+		{
+			for (int j = 0; j < size.row; ++j)
+			{
+				slots[index] = new ItemSlot(this.items.getContainer(index), this, index, size.x + 18 * j, size.y + 18 * i);
+				index ++;
+			}
+		}
+		initalizer.addSlots("store", slots).addLocation("player", false);
+		initalizer.straegyPlayerBag().addLocation("store", false).addLocation("hand", false);
+		initalizer.straegyPlayerHand().addLocation("store", false).addLocation("bag", false);
+		
+		openInventory(container.player);
 	}
 	
 	private static final AxisAlignedBB	AABB1	= new AxisAlignedBB(1.0F / 16.0F, 0.0F / 16.0F, 2.0F / 16.0F, 15.0F / 16.0F, 10.0F / 16.0F, 14.0F / 16.0F);
@@ -147,7 +145,7 @@ public class TEChest1 extends TEChest implements IGuiTile, ITP_BoundingBox
 	@Override
 	public AxisAlignedBB getBoundBox(IBlockState state)
 	{
-		return this.facing.getAxis() == Axis.Z ? AABB1 : AABB2;// facing.getAxis()
-																// == Axis.X
+		return this.facing.getAxis() == Axis.Z ? AABB1 : AABB2;
+		// facing.getAxis() == Axis.X
 	}
 }

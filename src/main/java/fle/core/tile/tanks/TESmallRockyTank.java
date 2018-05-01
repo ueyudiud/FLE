@@ -7,14 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import farcore.data.Capabilities;
 import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.lib.capability.IFluidHandlerHelper;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
-import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
@@ -24,27 +21,23 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_SideSolid;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
-import nebula.common.util.L;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
 /**
  * @author ueyudiud
  */
-public class TESmallRockyTank extends TESynchronization implements IFluidHandlerHelper, ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
+public class TESmallRockyTank extends TE04Synchronization implements ITP_BlockHardness, ITP_ExplosionResistance, ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
 {
 	private Mat			material	= M.stone;
 	private FluidTankN	tank		= new FluidTankN(4000).enableTemperature();
@@ -54,7 +47,7 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		this.tank.writeToNBT(nbt, "tank");
+		this.tank.writeTo(nbt, "tank");
 		nbt.setString("material", this.material.name);
 		return super.writeToNBT(nbt);
 	}
@@ -63,7 +56,7 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.tank.readFromNBT(nbt, "tank");
+		this.tank.readFrom(nbt, "tank");
 		this.material = Mat.getMaterialByNameOrDefault(nbt, "material", M.stone);
 	}
 	
@@ -85,7 +78,7 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 	public void writeToClientInitalization(NBTTagCompound nbt)
 	{
 		super.writeToClientInitalization(nbt);
-		this.tank.writeToNBT(nbt, "t");
+		this.tank.writeTo(nbt, "t");
 	}
 	
 	@Override
@@ -114,7 +107,7 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 	protected void initClient(NBTTagCompound nbt)
 	{
 		super.initClient(nbt);
-		this.tank.readFromNBT(nbt, "t");
+		this.tank.readFrom(nbt, "t");
 		markBlockRenderUpdate();
 	}
 	
@@ -202,59 +195,60 @@ public class TESmallRockyTank extends TESynchronization implements IFluidHandler
 		return this.material;
 	}
 	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_FLUID;
-	}
+	//XXX
+	//	@Override
+	//	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_FLUID;
+	//	}
+	//
+	//	@Override
+	//	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_FLUID ? tank : null;
+	//	}
 	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_FLUID ? L.castAny(new IFluidHandlerHelper.FluidHandlerWrapper(this, Direction.of(facing))) : null;
-	}
-	
-	@Override
-	public boolean canFill(Direction direction, FluidStack stack)
-	{
-		return !FluidStacks.isGaseous(stack) && (direction.horizontal || direction == Direction.U);
-	}
-	
-	@Override
-	public boolean canDrain(Direction direction, FluidStack stack)
-	{
-		return direction.horizontal;
-	}
-	
-	@Override
-	public int fill(Direction direction, FluidStack resource, boolean process)
-	{
-		if (canFill(direction, resource))
-		{
-			int amt = this.tank.fill(resource, process);
-			if (amt > 0 && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
-			return amt;
-		}
-		return 0;
-	}
-	
-	@Override
-	public FluidStack drain(Direction direction, int maxAmount, boolean process)
-	{
-		if (canDrain(direction, null))
-		{
-			FluidStack stack = this.tank.drain(maxAmount, process);
-			if (stack != null && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
-			return stack;
-		}
-		return null;
-	}
-	
-	@Override
-	public SidedFluidIOProperty getProperty(Direction direction)
-	{
-		return new SidedFluidIOTankNPropertyWrapper(this.tank);
-	}
+	//	@Override
+	//	public boolean canFill(Direction direction, FluidStack stack)
+	//	{
+	//		return !FluidStacks.isGaseous(stack) && (direction.horizontal || direction == Direction.U);
+	//	}
+	//
+	//	@Override
+	//	public boolean canDrain(Direction direction, FluidStack stack)
+	//	{
+	//		return direction.horizontal;
+	//	}
+	//
+	//	@Override
+	//	public int fill(Direction direction, FluidStack resource, boolean process)
+	//	{
+	//		if (canFill(direction, resource))
+	//		{
+	//			int amt = this.tank.fill(resource, process);
+	//			if (amt > 0 && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+	//			return amt;
+	//		}
+	//		return 0;
+	//	}
+	//
+	//	@Override
+	//	public FluidStack drain(Direction direction, int maxAmount, boolean process)
+	//	{
+	//		if (canDrain(direction, null))
+	//		{
+	//			FluidStack stack = this.tank.drain(maxAmount, process);
+	//			if (stack != null && process) NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+	//			return stack;
+	//		}
+	//		return null;
+	//	}
+	//
+	//	@Override
+	//	public SidedFluidIOProperty getProperty(Direction direction)
+	//	{
+	//		return new SidedFluidIOTankNPropertyWrapper(this.tank);
+	//	}
 	
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)

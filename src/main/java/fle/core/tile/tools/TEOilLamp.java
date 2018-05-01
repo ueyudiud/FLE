@@ -9,7 +9,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
 import nebula.common.tile.IToolableTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +21,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TEOilLamp extends TESynchronization implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
+public class TEOilLamp extends TE04Synchronization implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 {
 	public static final AxisAlignedBB AABB_OIL_LAMP = new AxisAlignedBB(0.3125F, 0.0F, 0.3125F, 0.6875F, 0.25F, 0.6875F);
 	

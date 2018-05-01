@@ -3,10 +3,10 @@
  */
 package farcore.data;
 
+import farcore.lib.inventory.ISolidHandler;
 import farcore.lib.material.behavior.MaterialPropertyManager;
 import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import farcore.lib.solid.container.CapabilitySolidHandler;
-import farcore.lib.solid.container.ISolidHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;

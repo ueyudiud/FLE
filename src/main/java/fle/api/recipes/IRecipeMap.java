@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
 import nebula.common.util.IRegisteredNameable;
 
 /**
@@ -20,7 +20,7 @@ import nebula.common.util.IRegisteredNameable;
  * @author ueyudiud
  * @see fle.api.recipes.instance.RecipeMaps
  */
-public interface IRecipeMap<R, C, H> extends INBTCompoundReaderAndWritter<C>, IRegisteredNameable
+public interface IRecipeMap<R, C, H> extends INBTCompoundReaderAndWriter<C>, IRegisteredNameable
 {
 	/**
 	 * Add a recipe to recipe map.

@@ -20,7 +20,7 @@ import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.stack.BaseStack;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -182,7 +182,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	{
 		if (side.getHorizontalIndex() != -1)
 		{
-			EnumFacing side1 = EnumFacing.VALUES[Worlds.fixSide(side, hitX, 0.5F, hitZ)];
+			EnumFacing side1 = EnumFacing.VALUES[W.fixSide(side, hitX, 0.5F, hitZ)];
 			IProperty<Boolean> property = PROPS_SIDE_HORIZONTALS[side1.getHorizontalIndex()];
 			boolean flag = state.getValue(property);
 			if (!flag)
@@ -255,7 +255,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 			if (state.getValue(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]) && !canConnectTo(worldIn, pos, facing))
 			{
 				updated = updated.withProperty(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], false);
-				Worlds.spawnDropInWorld(worldIn, pos.offset(facing), new ItemStack(Items.STICK));
+				W.spawnDropInWorld(worldIn, pos.offset(facing), new ItemStack(Items.STICK));
 			}
 		}
 		if (updated != state)
@@ -276,7 +276,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 				i++;
 			}
 		}
-		if (i > 0) Worlds.spawnDropInWorld(worldIn, pos, new ItemStack(Items.STICK, i));
+		if (i > 0) W.spawnDropInWorld(worldIn, pos, new ItemStack(Items.STICK, i));
 	}
 	
 	@Override

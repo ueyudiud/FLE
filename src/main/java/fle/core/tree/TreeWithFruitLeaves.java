@@ -23,7 +23,7 @@ import nebula.common.stack.BaseStack;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -114,7 +114,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 			case 4:
 				if (rand.nextInt(9) == 0)
 				{
-					Worlds.spawnDropInWorld(world, pos, createFruit(world, pos, state));
+					W.spawnDropInWorld(world, pos, createFruit(world, pos, state));
 					i = 0;
 				}
 				break;
@@ -128,7 +128,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 			switch (state.getValue(FRUIT_STAGE))
 			{
 			case 4:
-				Worlds.spawnDropInWorld(world, pos, createFruit(world, pos, state));
+				W.spawnDropInWorld(world, pos, createFruit(world, pos, state));
 			case 3:
 			case 2:
 			case 1:
@@ -147,7 +147,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 				ItemStack stack = createFruit(world, pos, state);
 				if (!player.inventory.addItemStackToInventory(stack))
 				{
-					Worlds.spawnDropInWorld(world, pos, stack);
+					W.spawnDropInWorld(world, pos, stack);
 				}
 				world.setBlockState(pos, state.withProperty(FRUIT_STAGE, 0));
 			}

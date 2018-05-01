@@ -58,7 +58,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	public static ItemStack applySeed(int size, Mat material, GeneticMaterial dna)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		GenticMaterialFactory.INSTANCE.writeToNBT(dna, nbt, "genetic");
+		GenticMaterialFactory.INSTANCE.writeTo(nbt, "genetic", dna);
 		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
 		stack.setTagCompound(nbt);
 		return stack;
@@ -71,7 +71,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	
 	public static GeneticMaterial getDNAFromStack(ItemStack stack)
 	{
-		return !stack.hasTagCompound() ? null : GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
+		return !stack.hasTagCompound() ? null : GenticMaterialFactory.INSTANCE.readFrom(stack.getTagCompound(), "genetic");
 	}
 	
 	public ItemSeed()

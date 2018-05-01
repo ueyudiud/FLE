@@ -3,27 +3,50 @@
  */
 package farcore.lib.material;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import farcore.lib.item.ItemMulti;
+import fle.api.mat.OP;
 import nebula.base.A;
-import nebula.base.Judgable;
-import nebula.base.ObjArrayParseHelper;
+import nebula.base.S;
+import nebula.base.collection.ObjArrayParseHelper;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.base.register.Register;
 import nebula.common.LanguageManager;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.OreDict;
-import nebula.common.util.Strings;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class MatCondition implements Judgable<ISubTagContainer>
 {
-	public static final Register<MatCondition> register = new Register();
+	public static final Register<MatCondition> register = new Register<MatCondition>()
+	{
+		@Override
+		public int register(String name, MatCondition arg)
+		{
+			int id = super.register(name, arg);
+			for (MatCondition condition : this)
+			{
+				if (condition.name.startsWith(arg.orePrefix))
+				{
+					condition.prefixBlacklist.add(arg.orePrefix);
+				}
+				else if (arg.orePrefix.startsWith(condition.name))
+				{
+					arg.prefixBlacklist.add(condition.name);
+				}
+			}
+			return id;
+		}
+	};
 	
 	public final String	name;
 	public final String	orePrefix;
@@ -44,9 +67,10 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public ItemMulti instance;
 	
-	public Judgable<ISubTagContainer>	filter		= Judgable.FALSE;
-	public final Set<Mat>				blacklist	= new HashSet<>();
-	public final Set<Mat>				whitelist	= new HashSet<>();
+	public Judgable<ISubTagContainer>	filter			= F.P_F;
+	public final Set<Mat>				blacklist		= new HashSet<>();
+	public final Set<Mat>				whitelist		= new HashSet<>();
+	public final List<String>			prefixBlacklist	= new ArrayList<>();
 	
 	public final Map<Mat, String> unnormalNames = new HashMap<>();
 	
@@ -195,12 +219,12 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public String translateToLocal()
 	{
-		return LanguageManager.translateToLocal(getTranslateName());
+		return LanguageManager.translateLocal(getTranslateName());
 	}
 	
 	public String translateToLocal(Mat material)
 	{
-		return Strings.replace(LanguageManager.translateToLocal(getWithOreTranslateName()), '%', material.getLocalName());
+		return S.replacestos(LanguageManager.translateLocal(getWithOreTranslateName()), '%', material.getLocalName());
 	}
 	
 	public String getLocal(Mat material)
@@ -211,12 +235,17 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public String getLocal(String local)
 	{
-		return Strings.replace(this.withOreLocalName, '%', local);
+		return S.replacestos(this.withOreLocalName, '%', local);
 	}
 	
 	public String translateToLocal(String ore)
 	{
-		return LanguageManager.translateToLocal(getWithOreTranslateName(), ore);
+		return LanguageManager.translateLocal(getWithOreTranslateName(), ore);
+	}
+	
+	public Mat extractMaterial(ItemStack stack)
+	{
+		return OP.materialOf(this, stack);
 	}
 	
 	@Override

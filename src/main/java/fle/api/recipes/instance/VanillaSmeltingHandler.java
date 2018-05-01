@@ -21,13 +21,13 @@ import net.minecraftforge.oredict.OreDictionary;
 public class VanillaSmeltingHandler implements IRecipeMap<Entry<ItemStack, ItemStack>, ItemStack, ItemStack>
 {
 	@Override
-	public ItemStack readFromNBT(NBTTagCompound nbt)
+	public ItemStack readFrom(NBTTagCompound nbt)
 	{
 		return ItemStack.loadItemStackFromNBT(nbt);
 	}
 	
 	@Override
-	public void writeToNBT(ItemStack target, NBTTagCompound nbt)
+	public void writeTo(ItemStack target, NBTTagCompound nbt)
 	{
 		target.writeToNBT(nbt);
 	}

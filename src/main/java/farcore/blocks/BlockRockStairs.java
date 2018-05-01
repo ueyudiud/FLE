@@ -123,9 +123,9 @@ package farcore.blocks;
 // {
 // if(isFlammable(world, pos, direction.of()))
 // {
-// Worlds.setBlock(world, pos,
+// W.setBlock(world, pos,
 // this.group[EnumRockType.values()[this.meta].noMossy],
-// Worlds.getBlockMeta(world, pos), 3);
+// W.getBlockMeta(world, pos), 3);
 // return true;
 // }
 // return false;

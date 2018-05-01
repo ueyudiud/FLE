@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
-import nebula.common.inventory.IBasicInventory;
+import nebula.base.function.F;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,25 +21,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRecipe, PortableWoodworkRecipe, IBasicInventory>
+public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRecipe, PortableWoodworkRecipe, ItemStack[]>
 {
 	public static interface PortableWoodworkRecipe
 	{
-		boolean match(IBasicInventory inventory);
+		boolean match(ItemStack[] inventory);
 		
 		@Nullable
-		default int[] getIntScaleRange(IBasicInventory inventory)
+		default int[] getIntScaleRange(ItemStack[] inventory)
 		{
 			return null;
 		}
 		
-		ItemStack[] getOutputs(IBasicInventory inventory, int value);
+		ItemStack[] getOutputs(ItemStack[] inventory, int value);
 		
-		void onOutput(IBasicInventory inventory, int value);
+		void onOutput(ItemStack[] inventory, int value);
 		
 		@Nullable
 		@SideOnly(Side.CLIENT)
-		default int[] getDisplayNumbers(IBasicInventory inventory, int value)
+		default int[] getDisplayNumbers(ItemStack[] inventory, int value)
 		{
 			return null;
 		}
@@ -48,13 +48,13 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 	private final List<PortableWoodworkRecipe> recipes = new ArrayList<>();
 	
 	@Override
-	public PortableWoodworkRecipe readFromNBT(NBTTagCompound nbt)
+	public PortableWoodworkRecipe readFrom(NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public void writeToNBT(PortableWoodworkRecipe target, NBTTagCompound nbt)
+	public void writeTo(PortableWoodworkRecipe target, NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -72,9 +72,9 @@ public class PortableWoodworkRecipeMap implements IRecipeMap<PortableWoodworkRec
 	}
 	
 	@Override
-	public PortableWoodworkRecipe findRecipe(IBasicInventory handler)
+	public PortableWoodworkRecipe findRecipe(ItemStack[] handler)
 	{
-		return L.get(this.recipes, r -> r.match(handler));
+		return L.get(this.recipes, F.const2p(PortableWoodworkRecipe::match, handler));
 	}
 	
 	@Override

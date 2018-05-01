@@ -6,19 +6,20 @@ package farcore.blocks.terria;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 import farcore.data.MC;
 import farcore.data.MP;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.base.ObjArrayParseHelper;
 import nebula.common.block.IHitByFallenBehaviorBlock;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -65,22 +66,22 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 		byte result = 0;
 		BlockPos pos2;
 		pos2 = pos.north();
-		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
+		if (W.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
 			result |= Direction.N.horizontalOrdinal;
 		}
 		pos2 = pos.south();
-		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
+		if (W.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
 			result |= Direction.S.horizontalOrdinal;
 		}
 		pos2 = pos.west();
-		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
+		if (W.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
 			result |= Direction.W.horizontalOrdinal;
 		}
 		pos2 = pos.east();
-		if (Worlds.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
+		if (W.isAirOrReplacable(world, pos2) && canFallBelow(world, pos2, state))
 		{
 			result |= Direction.E.horizontalOrdinal;
 		}
@@ -128,7 +129,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	{
 		if (canFallBelow(world, pos, state))
 		{
-			return Worlds.fallBlock(world, pos, state);
+			return W.fallBlock(world, pos, state);
 		}
 		if (checkFallToNearby)
 		{
@@ -136,11 +137,11 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 			switch (state.getValue(COVER_TYPE).noCover)
 			{
 			case NONE:
-				if (L.bitCounts(sides) >= 3) return Worlds.fallBlock(world, pos,
+				if (L.bitCounts(sides) >= 3) return W.fallBlock(world, pos,
 						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			case FROZEN:
-				if (sides != 0) return Worlds.fallBlock(world, pos,
+				if (sides != 0) return W.fallBlock(world, pos,
 						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			case GRASS:
@@ -148,7 +149,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 			case TUNDRA:
 			case TUNDRA_FROZEN:
 				int c = L.bitCounts(sides);
-				if (c == 4 || (c == 3 && rand.nextInt(5) == 0)) return Worlds.fallBlock(world, pos,
+				if (c == 4 || (c == 3 && rand.nextInt(5) == 0)) return W.fallBlock(world, pos,
 						Direction.DIRECTIONS_2D[L.randomBit(sides, rand)].offset(pos.down()), state);
 				break;
 			default:
@@ -186,7 +187,7 @@ public class BlockSoil extends BlockSoilLike implements ISmartFallableBlock
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + Worlds.random(world).nextInt(3)));
+		return Lists.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + W.random(world).nextInt(3)));
 	}
 	
 	@Override

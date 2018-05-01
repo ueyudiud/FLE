@@ -11,8 +11,9 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ObjectArrays;
 
-import nebula.base.ObjArrayParseHelper;
 import nebula.base.Stack;
+import nebula.base.collection.A;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.util.L;
@@ -52,7 +53,7 @@ public class ShapelessFleRecipe implements IRecipe
 			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null)) throw new RuntimeException();
 			this.output = output;
 			this.inputs = new ArrayList<>();
-			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
+			ObjArrayParseHelper helper = A.create(inputs);
 			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, L.toConsumer(Stack::repeat, (Consumer<SingleInputMatch>) this.inputs::add));
 		}
 		catch (Exception exception)

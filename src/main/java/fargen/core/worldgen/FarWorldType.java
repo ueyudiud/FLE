@@ -6,8 +6,8 @@ package fargen.core.worldgen;
 import fargen.core.FarGenConfig;
 import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
+import nebula.base.R;
 import nebula.common.LanguageManager;
-import nebula.common.util.R;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -58,14 +58,14 @@ public class FarWorldType extends WorldType
 	@SideOnly(Side.CLIENT)
 	public String getTranslateName()
 	{
-		return LanguageManager.translateToLocal(super.getTranslateName());
+		return LanguageManager.translateLocal(super.getTranslateName());
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getTranslatedInfo()
 	{
-		return LanguageManager.translateToLocal(super.getTranslateName() + ".info");
+		return LanguageManager.translateLocal(super.getTranslateName() + ".info");
 	}
 	
 	@Override

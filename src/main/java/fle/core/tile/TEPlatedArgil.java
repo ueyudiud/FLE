@@ -19,11 +19,11 @@ import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.api.recipes.instance.SimpleReducingRecipeHandler;
 import fle.api.recipes.instance.SimpleReducingRecipeHandler.Cache;
-import fle.api.tile.TERecipe;
+import fle.api.tile.TE08Recipe;
 import fle.loader.IBFS;
 import nebula.common.data.Misc;
-import nebula.common.inventory.IBasicInventory;
-import nebula.common.inventory.InventorySimple;
+import nebula.common.inventory.IContainer;
+import nebula.common.inventory.ItemContainersArray;
 import nebula.common.stack.BaseStack;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockExploded;
@@ -31,7 +31,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -48,7 +48,7 @@ import net.minecraft.world.Explosion;
 /**
  * @author ueyudiud
  */
-public class TEPlatedArgil extends TERecipe<ItemStack, SimpleReducingRecipeHandler.Cache>
+public class TEPlatedArgil extends TE08Recipe<ItemStack, SimpleReducingRecipeHandler.Cache>
 implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_BlockExploded, IThermalProvider
 {
 	private static final List<AxisAlignedBB> BOUNDS_BOXES = ImmutableList.of(
@@ -61,25 +61,23 @@ implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_Block
 	private static final byte Burning = 3;
 	
 	private ThermalHandlerSimple handler = new ThermalHandlerSimple(this);
-	private IBasicInventory stacks = new InventorySimple(1, 4);
 	private boolean charcoal;
 	
 	{
 		this.handler.material = M.argil;
+		this.items = new ItemContainersArray(4, 1);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.stacks.fromNBT(compound, "stacks");
 		this.charcoal = compound.getBoolean("charcoal");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		this.stacks.toNBT(compound, "stacks");
 		compound.setBoolean("charcoal", this.charcoal);
 		return super.writeToNBT(compound);
 	}
@@ -103,11 +101,11 @@ implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_Block
 		{
 			if (this.charcoal)
 			{
-				Worlds.spawnDropInWorld(this, IBFS.iResources.getSubItem("charcoal"));
+				W.spawnDropInWorld(this, IBFS.iResources.getSubItem("charcoal"));
 			}
 			else
 			{
-				Worlds.spawnDropInWorld(this, this.stacks.toArray());
+				W.spawnDropInWorld(this, ((ItemContainersArray) this.items).toArray());
 				disable(Working);
 			}
 		}
@@ -136,22 +134,22 @@ implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_Block
 		{
 			if (this.cache != null)
 			{
-				Worlds.spawnDropInWorld(this, this.cache.output);
+				W.spawnDropInWorld(this, this.cache.output);
 				disable(WaitForOutput);
 				disable(Working);
 				this.recipeTick = 0;
 				this.cache = null;
-				this.stacks.removeAllStacks();
+				this.items.clear();
 				this.charcoal = false;
 			}
 			return true;
 		}
 		else
 		{
-			Worlds.spawnDropInWorld(this, this.stacks.toArray());
+			W.spawnDropInWorld(this, ((ItemContainersArray) this.items).toArray());
 			if (this.charcoal)
 			{
-				Worlds.spawnDropInWorld(this, IBFS.iResources.getSubItem("charcoal"));
+				W.spawnDropInWorld(this, IBFS.iResources.getSubItem("charcoal"));
 			}
 			return this.world.setBlockState(this.pos, Misc.AIR, isClient() ? 11 : 3);
 		}
@@ -184,12 +182,12 @@ implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_Block
 	{
 		if (!is(Working))
 		{
-			boolean flag = getRecipeMap().findRecipe(this.stacks.getStack(0)) != null;
+			boolean flag = getRecipeMap().findRecipe(getStackInSlot(0)) != null;
 			for (EntityItem enitiy : getEntitiesWithinAABB(EntityItem.class))
 			{
 				ItemStack stack = enitiy.getEntityItem();
 				int size = 0;
-				if (stack.getItem() instanceof ItemOreChip && (size = this.stacks.incrItem(0, stack, true)) != 0)
+				if (stack.getItem() instanceof ItemOreChip && (size = this.items.getContainer(0).incrStack(stack, IContainer.PROCESS)) != 0)
 				{
 					stack.stackSize -= size;
 				}
@@ -224,7 +222,7 @@ implements ITP_BoundingBox, IToolableTile, ITB_BlockDestroyedByPlayer, ITB_Block
 	@Override
 	protected ItemStack getRecipeInputHandler()
 	{
-		return this.stacks.getStack(0);
+		return getStackInSlot(0);
 	}
 	
 	@Override

@@ -331,7 +331,7 @@ package farcore.blocks;
 // material.getProperty(MP.property_rock).minTemperatureForExplosion *
 // material.heatCapacity)
 // {
-// Worlds.switchProp(world, pos, HEATED, true, 2);
+// W.switchProp(world, pos, HEATED, true, 2);
 // world.scheduleUpdate(pos, this, tickRate(world));
 // }
 // }

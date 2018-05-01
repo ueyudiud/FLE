@@ -10,7 +10,8 @@ import java.util.Map;
 import com.google.common.collect.ObjectArrays;
 
 import farcore.lib.oredict.OreStackExt;
-import nebula.base.ObjArrayParseHelper;
+import nebula.base.collection.A;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;
@@ -83,7 +84,7 @@ public class ShapedFleRecipe implements IRecipe
 			if (output == null || (output instanceof BaseStack && ((BaseStack) output).instance() == null)) throw new RuntimeException();
 			this.output = output;
 			int i = 0;
-			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
+			ObjArrayParseHelper helper = A.create(inputs);
 			this.enableMirror = helper.readOrSkip(false);
 			
 			char[][] map;

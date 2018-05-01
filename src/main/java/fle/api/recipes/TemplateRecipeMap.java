@@ -10,8 +10,9 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import nebula.Log;
-import nebula.base.Judgable;
-import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
+import nebula.common.nbt.INBTReaderAndWriter;
 import nebula.common.util.L;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -42,12 +43,12 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 			return this;
 		}
 		
-		public <D> Builder<H> addCacheEntry(String key, INBTReaderAndWritter<? super D, ?> nbtHandler)
+		public <D> Builder<H> addCacheEntry(String key, INBTReaderAndWriter<? super D, ?> nbtHandler)
 		{
-			return addCacheEntry(key, (Class<D>) nbtHandler.getTargetType(), nbtHandler);
+			return addCacheEntry(key, (Class<D>) nbtHandler.type(), nbtHandler);
 		}
 		
-		public <D> Builder<H> addCacheEntry(String key, Class<D> type, INBTReaderAndWritter<? super D, ?> nbtHandler)
+		public <D> Builder<H> addCacheEntry(String key, Class<D> type, INBTReaderAndWriter<? super D, ?> nbtHandler)
 		{
 			this.list1.add(new TemplateRecipeCacheEntryHandler<>(key, type, nbtHandler));
 			return this;
@@ -63,9 +64,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	{
 		String								entryName;
 		Class<D>							type;
-		INBTReaderAndWritter<? super D, ?>	nbtHandler;
+		INBTReaderAndWriter<? super D, ?>	nbtHandler;
 		
-		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWritter<? super D, ?> nbtHandler)
+		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWriter<? super D, ?> nbtHandler)
 		{
 			this.entryName = name;
 			this.type = type;
@@ -110,7 +111,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		
 		public TemplateRecipe(Judgable<? super H>[] judgables, Function<? super H, ?>...dataProviders)
 		{
-			this(Judgable.and(judgables), dataProviders);
+			this(F.and(judgables), dataProviders);
 		}
 		
 		public TemplateRecipe(Judgable<? super H> judgable, Function<? super H, ?>...dataProviders)
@@ -149,14 +150,14 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public TemplateRecipeCache<H> readFromNBT(NBTTagCompound nbt)
+	public TemplateRecipeCache<H> readFrom(NBTTagCompound nbt)
 	{
 		try
 		{
 			Object[] store = new Object[this.handlers.length];
 			for (int i = 0; i < this.handlers.length; ++i)
 			{
-				store[i] = this.handlers[i].nbtHandler.readFromNBT(nbt, this.handlers[i].entryName);
+				store[i] = this.handlers[i].nbtHandler.readFrom(nbt, this.handlers[i].entryName);
 			}
 			return new TemplateRecipeCache<>(this, null, store);
 		}
@@ -168,13 +169,13 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public void writeToNBT(TemplateRecipeCache<H> target, NBTTagCompound nbt)
+	public void writeTo(TemplateRecipeCache<H> target, NBTTagCompound nbt)
 	{
 		try
 		{
 			for (int i = 0; i < this.handlers.length; ++i)
 			{
-				this.handlers[i].nbtHandler.writeToNBT(target.storeData[i], nbt, this.handlers[i].entryName);
+				this.handlers[i].nbtHandler.writeTo(nbt, this.handlers[i].entryName, target.storeData[i]);
 			}
 		}
 		catch (Exception exception)
@@ -213,9 +214,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public Class<TemplateRecipeCache> getTargetType()
+	public Class<TemplateRecipeCache<H>> type()
 	{
-		return TemplateRecipeCache.class;
+		return (Class) TemplateRecipeCache.class;
 	}
 	
 	@Override

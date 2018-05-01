@@ -3,11 +3,11 @@
  */
 package farcore.lib.cover;
 
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
 
 /**
  * @author ueyudiud
  */
-public interface ICover extends INBTCompoundReaderAndWritter<ICover>
+public interface ICover extends INBTCompoundReaderAndWriter<ICover>
 {
 }

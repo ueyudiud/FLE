@@ -6,15 +6,14 @@ package fle.core.client.gui;
 import java.io.IOException;
 
 import farcore.data.Keys;
-import fle.core.FLE;
 import fle.core.common.gui.ContainerBarGrizzly;
-import nebula.client.gui.GuiContainerBase;
+import nebula.client.gui.GuiBackground;
+import nebula.client.gui.GuiContainer01Slots;
 import nebula.common.LanguageManager;
 import nebula.common.util.L;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,23 +23,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class GuiBarGrizzly extends GuiContainerBase
+@GuiBackground("fle:textures/gui/washing_bar_grizzly.png")
+public class GuiBarGrizzly extends GuiContainer01Slots
 {
-	private static final ResourceLocation LOCATION = new ResourceLocation(FLE.MODID, "textures/gui/washing_bar_grizzly.png");
-	
 	public GuiBarGrizzly(EntityPlayer player, World world, BlockPos pos)
 	{
-		super(new ContainerBarGrizzly(player, world, pos), LOCATION);
+		super(new ContainerBarGrizzly(player, world, pos));
 	}
 	
 	@Override
-	protected void drawOther(int mouseX, int mouseY)
+	protected void drawGuiContainerBackgroundLayer1(float partialTicks, int mouseX, int mouseY)
 	{
-		boolean mark = startTranslate();
-		super.drawOther(mouseX, mouseY);
-		int max = ((ContainerBarGrizzly) this.container).getMaxProgress();
-		int pro = ((ContainerBarGrizzly) this.container).getProgress();
-		int pow = ((ContainerBarGrizzly) this.container).getPower();
+		int max = ((ContainerBarGrizzly) this.inventorySlots).getMaxProgress();
+		int pro = ((ContainerBarGrizzly) this.inventorySlots).getProgress();
+		int pow = ((ContainerBarGrizzly) this.inventorySlots).getPower();
 		if (max > 1)
 		{
 			drawTexturedModalRect(57, 34, 176, 22, 29, 9);
@@ -51,21 +47,20 @@ public class GuiBarGrizzly extends GuiContainerBase
 			drawTexturedModalRect(35, 60, 176, 50, 11, 11);
 			drawProgressScaleDTU(26, 16, 176, 61, 8, 54, pow, 400);
 		}
-		endTranslate(mark);
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		this.fontRendererObj.drawString(this.container.getOpener().inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 0x404040);
+		this.fontRendererObj.drawString(((ContainerBarGrizzly) this.inventorySlots).player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 0x404040);
 	}
 	
 	@Override
 	public void updateScreen()
 	{
 		super.updateScreen();
-		if (((ContainerBarGrizzly) this.container).getProgress() > 0 && L.nextInt(4) == 0)
+		if (((ContainerBarGrizzly) this.inventorySlots).getProgress() > 0 && L.nextInt(4) == 0)
 		{
 			this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMusicRecord(SoundEvents.BLOCK_WATER_AMBIENT));
 		}
@@ -74,7 +69,7 @@ public class GuiBarGrizzly extends GuiContainerBase
 	@Override
 	protected String getTitleName()
 	{
-		return LanguageManager.translateToLocal("inventory.bar.grizzly");
+		return LanguageManager.translateLocal("inventory.bar.grizzly");
 	}
 	
 	@Override

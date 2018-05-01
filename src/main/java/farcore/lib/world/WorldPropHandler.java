@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -56,7 +56,7 @@ public class WorldPropHandler
 		@Override
 		public float getRainstrength(World world, BlockPos pos)
 		{
-			return Worlds.isCatchingRain(world, pos) ? world.getRainStrength(0F) : 0F;
+			return W.isCatchingRain(world, pos) ? world.getRainStrength(0F) : 0F;
 		}
 		
 		@Override

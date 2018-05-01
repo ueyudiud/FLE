@@ -19,7 +19,7 @@ import nebula.client.util.UnlocalizedList;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.IProjectileItem;
 import nebula.common.util.Direction;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,7 +77,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
 	{
-		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
+		RayTraceResult result = W.rayTrace(worldIn, playerIn, false);
 		if (result == null)
 		{
 			playerIn.setActiveHand(hand);

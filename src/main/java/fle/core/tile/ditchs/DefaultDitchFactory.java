@@ -15,10 +15,10 @@ import fle.api.ditch.DitchBlockHandler;
 import fle.api.ditch.DitchFactory;
 import fle.api.ditch.DitchInformation;
 import fle.api.tile.IDitchTile;
+import nebula.V.CF;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.fluid.FluidTankN;
-import nebula.common.util.EnumChatFormatting;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,12 +72,15 @@ public class DefaultDitchFactory implements DitchFactory
 	public DefaultDitchFactory()
 	{
 		DitchBlockHandler.rawFactory = this;
-		LanguageManager.registerLocal("info.ditch.factory.default.material", "Material : " + EnumChatFormatting.YELLOW + "%s");
-		LanguageManager.registerLocal("info.ditch.factory.default.capacity", "Capacity : " + EnumChatFormatting.AQUA + "%dL");
-		LanguageManager.registerLocal("info.ditch.factory.default.transfer.limit", "Transfer Limit : " + EnumChatFormatting.BLUE + "%dL/t");
-		LanguageManager.registerLocal("info.ditch.factory.default.speed", "Speed : " + EnumChatFormatting.GREEN + "%dm^2s");
-		LanguageManager.registerLocal("info.ditch.factory.default.destory.temperature", "Temperature Limit : " + EnumChatFormatting.RED + "%dK");
-		LanguageManager.registerTooltip("info.ditch.factory.default.speed.guide", "The ditch block can only transfer liquid.", "The ditch block speed provide basic flow speed multiplier, caculate real flow speed by m / v. The m is ditch block transfer Speed, and v is Viscosity of fluid.");
+		LanguageManager.registerLocal("info.ditch.factory.default.material", "Material : " + CF.YELLOW + "%s");
+		LanguageManager.registerLocal("info.ditch.factory.default.capacity", "Capacity : " + CF.AQUA + "%dL");
+		LanguageManager.registerLocal("info.ditch.factory.default.transfer.limit", "Transfer Limit : " + CF.BLUE + "%dL/t");
+		LanguageManager.registerLocal("info.ditch.factory.default.speed", "Speed : " + CF.GREEN + "%dm^2s");
+		LanguageManager.registerLocal("info.ditch.factory.default.destory.temperature", "Temperature Limit : " + CF.RED + "%dK");
+		LanguageManager.registerMultiLocal("info.ditch.factory.default.speed.guide",
+				"The ditch block can only transfer liquid.",
+				"The ditch block speed provide basic flow speed multiplier, caculate real flow speed by m / v.",
+				"The m is ditch block transfer Speed, and v is Viscosity of fluid.");
 	}
 	
 	@Override

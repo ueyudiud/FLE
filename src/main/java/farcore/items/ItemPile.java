@@ -11,7 +11,7 @@ import farcore.data.SubTags;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -55,7 +55,7 @@ public class ItemPile extends ItemMulti
 		if (material.contain(SubTags.DIRT) && stack.stackSize >= 9)
 		{
 			property = material.getProperty(MP.property_soil);
-			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState(), false) == EnumActionResult.SUCCESS)
+			if (W.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState(), false) == EnumActionResult.SUCCESS)
 			{
 				stack.stackSize -= 9;
 				return EnumActionResult.SUCCESS;
@@ -65,7 +65,7 @@ public class ItemPile extends ItemMulti
 		{
 			int use = Math.min(16, stack.stackSize);
 			property = material.getProperty(MP.property_sand);
-			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState().withProperty(BlockSand.LAYER, use), false) == EnumActionResult.SUCCESS)
+			if (W.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack, property.block.getDefaultState().withProperty(BlockSand.LAYER, use), false) == EnumActionResult.SUCCESS)
 			{
 				stack.stackSize -= use;
 				return EnumActionResult.SUCCESS;

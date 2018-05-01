@@ -40,8 +40,12 @@ import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
+import fle.api.recipes.instance.interfaces.ICraftingRecipeHandler;
 import fle.api.recipes.instance.interfaces.IRecipeInput;
-import nebula.base.ObjArrayParseHelper;
+import mezz.jei.api.recipe.IRecipeHandler;
+import nebula.base.collection.A;
+import nebula.base.collection.ObjArrayParseHelper;
+import nebula.base.function.F;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.FluidStacks;
@@ -49,6 +53,7 @@ import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -61,6 +66,11 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public final class RecipeAdder
 {
+	public static void addRecipe(IRecipe recipe)
+	{
+		CraftingManager.getInstance().addRecipe(recipe);
+	}
+	
 	public static void addShapedRecipe(AbstractStack result, Object...objects)
 	{
 		CraftingManager.getInstance().addRecipe(new ShapedFleRecipe(result, objects));
@@ -93,7 +103,7 @@ public final class RecipeAdder
 	
 	public static void addDringRecipe(AbstractStack input, int duration, float rainfall, @Nonnull ItemStack output)
 	{
-		DRYING.addRecipe(new TemplateRecipe<>(input.similarCheck(), anyTo(duration), anyTo(rainfall), anyTo(output).andThen(COPY_ITEMSTACK)).setData(input, duration, rainfall, output.copy()));
+		DRYING.addRecipe(new TemplateRecipe<>(input, F.anyf(duration), F.anyf(rainfall), F.anyf(output).andThen(COPY_ITEMSTACK)).setData(input, duration, rainfall, output.copy()));
 	}
 	
 	public static void addStoneMillRecipe(AbstractStack input, int duration, @Nullable SolidStack output1, @Nullable FluidStack output2)
@@ -118,7 +128,7 @@ public final class RecipeAdder
 	
 	public static void addDirtMixtureOutputRangedRecipe(@Nonnull ItemStack output, long size, Object...objects)
 	{
-		ObjArrayParseHelper helper = ObjArrayParseHelper.create(objects);
+		ObjArrayParseHelper helper = A.create(objects);
 		ImmutableList.Builder<Range<Mat>> builder = ImmutableList.builder();
 		
 		while (helper.hasNext())
@@ -140,7 +150,7 @@ public final class RecipeAdder
 		final SingleInputMatch input3i = input3 == null ? SingleInputMatch.EMPTY : input3;
 		CERAMICPOT_BASE.addRecipe(
 				new TemplateRecipe<IRecipeInput>(handler -> input1.contain(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1)) && FluidStacks.containFluid(handler.<FluidStack> getRecipeInput(TAG_CERAMICPOT_BASE_INPUT2), input2) && input3i.match(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT3)),
-						anyTo(minTemp), anyTo(duration), anyTo(output1).andThen(COPY_ITEMSTACK), input3i.toOutputTransferFunction(output2).compose(handler -> handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1))).setData(input1, FluidStacks.copy(input2), input3i, minTemp, duration,
+						F.anyf(minTemp), F.anyf(duration), F.anyf(output1).andThen(COPY_ITEMSTACK), input3i.toOutputTransferFunction(output2).compose(handler -> handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1))).setData(input1, FluidStacks.copy(input2), input3i, minTemp, duration,
 								copyItemStack(output1), copyItemStack(output2)));
 	}
 	
@@ -160,7 +170,7 @@ public final class RecipeAdder
 			if (value.length == 0 || (value.length == 2 && value[0] > value[1]))
 				throw new IllegalArgumentException("Illegal range: " + Arrays.toString(value));
 		}
-		CERAMIC.addRecipe(new TemplateRecipe<byte[]>(L.toPredicate(RecipeAdder::inRange, range), Misc.anyTo(range), Misc.anyTo(output).andThen(COPY_ITEMSTACK)));
+		CERAMIC.addRecipe(new TemplateRecipe<>(L.toPredicate(RecipeAdder::inRange, range), Misc.anyTo(range), Misc.anyTo(output).andThen(COPY_ITEMSTACK)));
 	}
 	
 	public static void addSimpleReducingRecipe(Mat input, Mat output)

@@ -5,8 +5,8 @@ package farcore.lib.tree;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
-import nebula.base.IntegerEntry;
-import nebula.base.HashIntMap;
+import nebula.base.IntEntry;
+import nebula.base.collection.HashIntMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -23,7 +23,7 @@ public class TreeInfo
 	
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		this.gm = GeneticMaterial.GenticMaterialFactory.INSTANCE.readFromNBT(nbt, "gm");
+		this.gm = GeneticMaterial.GenticMaterialFactory.INSTANCE.readFrom(nbt, "gm");
 		this.height = nbt.getInteger("hei");
 		this.growth = nbt.getInteger("gro");
 		this.resistance = nbt.getInteger("res");
@@ -38,13 +38,13 @@ public class TreeInfo
 	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		GenticMaterialFactory.INSTANCE.writeToNBT(this.gm, nbt, "gm");
+		GenticMaterialFactory.INSTANCE.writeTo(nbt, "gm", this.gm);
 		nbt.setInteger("hei", this.height);
 		nbt.setInteger("gro", this.growth);
 		nbt.setInteger("res", this.resistance);
 		nbt.setInteger("vit", this.vitality);
 		NBTTagList list = new NBTTagList();
-		for (IntegerEntry<String> prop : this.map)
+		for (IntEntry<String> prop : this.map)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
 			compound.setString("tag", prop.getKey());

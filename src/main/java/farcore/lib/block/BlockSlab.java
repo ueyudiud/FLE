@@ -10,7 +10,7 @@ import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.util.Direction;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -231,7 +231,7 @@ public abstract class BlockSlab extends BlockBase
 		EnumSlabState state = world.getBlockState(pos).getValue(EnumSlabState.PROPERTY);
 		if (state != EnumSlabState.rotationState[axis.ordinal()][state.ordinal()])
 		{
-			Worlds.switchProp(world, pos, EnumSlabState.PROPERTY, EnumSlabState.rotationState[axis.ordinal()][state.ordinal()], 3);
+			W.switchProp(world, pos, EnumSlabState.PROPERTY, EnumSlabState.rotationState[axis.ordinal()][state.ordinal()], 3);
 			return true;
 		}
 		return false;

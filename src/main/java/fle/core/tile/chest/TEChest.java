@@ -6,22 +6,21 @@ package fle.core.tile.chest;
 import java.io.IOException;
 import java.util.List;
 
-import farcore.data.Capabilities;
+import com.google.common.collect.Lists;
+
 import fle.api.item.IIDKeyItem;
 import fle.api.tile.IIDOpenableTile;
-import nebula.base.ObjArrayParseHelper;
 import nebula.common.NebulaSynchronizationHandler;
-import nebula.common.data.NBTLSs;
 import nebula.common.environment.EnviornmentBlockPos;
-import nebula.common.gui.ContainerTileInventory;
-import nebula.common.inventory.InventoryWrapFactory;
+import nebula.common.gui.Container03TileEntity;
+import nebula.common.inventory.IItemContainer;
 import nebula.common.item.IUpdatableItem;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import nebula.common.tile.TEInventoryDynamicSize;
+import nebula.common.tile.TE06HasGui;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
@@ -31,7 +30,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,15 +38,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.IItemHandler;
 
 /**
  * @author ueyudiud
  */
-public abstract class TEChest extends TEInventoryDynamicSize implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB_BlockPlacedBy
+public abstract class TEChest extends TE06HasGui<Container03TileEntity> implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB_BlockPlacedBy
 {
-	protected final IItemHandler	handler	= InventoryWrapFactory.wrap(getName(), this);
+	//	protected final IItemHandler	handler	= InventoryWrapFactory.wrap(getName(), this);
 	protected final TimeMarker		marker	= new TimeMarker(200, this::checkRangePlayers);
 	
 	protected final boolean	portable;
@@ -129,12 +125,6 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 	}
 	
 	@Override
-	public boolean isValidForSlot(int index, ItemStack stack)
-	{
-		return true;
-	}
-	
-	@Override
 	public long getOpenUUID()
 	{
 		return this.hasLock ? this.lockID : IIDOpenableTile.EMPTY_UUID;
@@ -192,13 +182,12 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 	protected void updateItems()
 	{
 		EnviornmentBlockPos enviornment = new EnviornmentBlockPos(this);
-		final ItemStack[] stacks = stacks();
-		for (int i = 0; i < stacks.length; ++i)
+		for (IItemContainer container : this.items.getContainers())
 		{
-			ItemStack stack = stacks[i];
+			ItemStack stack = container.getStackInContainer();
 			if (stack != null && stack.getItem() instanceof IUpdatableItem)
 			{
-				stacks[i] = ItemStacks.valid(((IUpdatableItem) stack.getItem()).updateItem(enviornment, stack));
+				container.setStackInContainer(ItemStacks.valid(((IUpdatableItem) stack.getItem()).updateItem(enviornment, stack)));
 			}
 		}
 	}
@@ -249,11 +238,9 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 			this.numPlayersUsing = 0;
 			for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.pos.add(-5, -5, -5), this.pos.add(5, 5, 5))))
 			{
-				if (entityplayer.openContainer instanceof ContainerTileInventory<?>)
+				if (entityplayer.openContainer instanceof Container03TileEntity<?>)
 				{
-					IInventory iinventory = ((ContainerTileInventory<?>) entityplayer.openContainer).getTileEntity();
-					
-					if (iinventory == this)
+					if (((Container03TileEntity<?>) entityplayer.openContainer).tile == this)
 					{
 						++ this.numPlayersUsing;
 					}
@@ -290,57 +277,46 @@ public abstract class TEChest extends TEInventoryDynamicSize implements INetwork
 		}
 	}
 	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_ITEM;
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(this.handler) : null;
-	}
+	//	@Override
+	//	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_ITEM;
+	//	}
+	//
+	//	@Override
+	//	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(this.handler) : null;
+	//	}
 	
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		ItemStack stack = new ItemStack(state.getBlock(), 1, getBlockMetadata());
 		writeToItemStackNBT(ItemStacks.getSubOrSetupNBT(stack, "chest", true));
-		return ObjArrayParseHelper.newArrayList(stack);
+		return Lists.newArrayList(stack);
 	}
 	
 	protected void writeToItemStackNBT(NBTTagCompound compound)
 	{
-		if (this.portable) NBTs.setList(compound, "items", stacks(), NBTLSs.ITEMSTACK_WRITER, true);
+		if (this.portable)
+		{
+			this.items.writeTo(compound, "items");
+		}
 	}
 	
 	protected void readFromItemStackNBT(NBTTagCompound compound)
 	{
-		if (this.portable) NBTs.insertToList(compound, "items", stacks(), NBTLSs.ITEMSTACK_READER, true);
+		if (this.portable)
+		{
+			this.items.readFrom(compound, "items");
+		}
 	}
 	
 	@Override
 	public void onBlockBreak(IBlockState state)
 	{
-		if (!this.portable) TileEntities.dropItemStacks(this);
-	}
-	
-	@Override
-	public final boolean isItemValidForSlot(int index, ItemStack stack)
-	{
-		return isValidForSlot(index, stack);
-	}
-	
-	@Override
-	public final int getInventoryStackLimit()
-	{
-		return getStackLimit();
-	}
-	
-	@Override
-	public final void setInventorySlotContents(int index, ItemStack stack)
-	{
-		setSlotContents(index, stack);
+		if (!this.portable)
+			TileEntities.dropItemStacks(this);
 	}
 }

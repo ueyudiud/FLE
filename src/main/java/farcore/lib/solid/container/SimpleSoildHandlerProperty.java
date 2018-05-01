@@ -3,8 +3,8 @@
  */
 package farcore.lib.solid.container;
 
+import farcore.lib.inventory.ISolidHandler.ISoildHandlerProperty;
 import farcore.lib.solid.SolidStack;
-import farcore.lib.solid.container.ISolidHandler.ISoildHandlerProperty;
 
 /**
  * @author ueyudiud

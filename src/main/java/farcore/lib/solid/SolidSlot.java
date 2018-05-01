@@ -5,8 +5,9 @@ package farcore.lib.solid;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.lib.solid.container.SolidTank;
-import nebula.client.gui.GuiContainerBase;
+import farcore.lib.inventory.ISolidContainer;
+import nebula.client.gui.GuiContainer01Slots;
+import nebula.common.gui.ISlot;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,20 +18,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class SolidSlot
+public class SolidSlot implements ISlot<SolidStack>
 {
-	public SolidTank	tank;
-	protected boolean	shouldRender	= true;
-	public int			x;
-	public int			y;
-	public int			u;
-	public int			v;
-	public int			slotNumber;
-	public boolean		renderHorizontal;
+	public ISolidContainer	container;
+	protected boolean		shouldRender	= true;
+	public int				x;
+	public int				y;
+	public int				u;
+	public int				v;
+	public int				slotNumber;
+	public boolean			renderHorizontal;
 	
-	public SolidSlot(SolidTank tank, int x, int y, int u, int v)
+	public SolidSlot(ISolidContainer container, int x, int y, int u, int v)
 	{
-		this.tank = tank;
+		this.container = container;
 		this.x = x;
 		this.y = y;
 		this.u = u;
@@ -56,7 +57,7 @@ public class SolidSlot
 	 */
 	public int getCapacity()
 	{
-		return this.tank.getCapacity();
+		return this.container.getRemainAmountInContainer() + this.container.getStackAmountInContainer();
 	}
 	
 	/**
@@ -64,9 +65,9 @@ public class SolidSlot
 	 * 
 	 * @return
 	 */
-	public SolidStack getStackInSlot()
+	public SolidStack getStack()
 	{
-		return this.tank.getStack();
+		return this.container.getStackInContainer();
 	}
 	
 	/**
@@ -76,7 +77,7 @@ public class SolidSlot
 	 */
 	public void putStack(SolidStack stack)
 	{
-		this.tank.setStack(stack);
+		this.container.setStackInContainer(stack);
 	}
 	
 	/**
@@ -96,31 +97,32 @@ public class SolidSlot
 	 * @param gui
 	 */
 	@SideOnly(Side.CLIENT)
-	public void renderSlot(GuiContainerBase gui)
+	public void renderSlot(GuiContainer01Slots gui, int x, int y)
 	{
 		if (this.shouldRender)
 		{
-			if (this.tank.getSolidAmount() > 0)
+			if (this.container.hasStackInContainer())
 			{
-				SolidStack stack = this.tank.getStack();
+				SolidStack stack = this.container.getStackInContainer();
 				if (stack.getSolid() == null)
+				{
 					return;//Data not synch.
+				}
 				TextureAtlasSprite solidIcon = stack.getSolid().getIcon(stack);
 				if (solidIcon != null)
 				{
-					boolean mark = gui.startTranslate();
-					gui.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+					gui.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 					int color = stack.getSolid().getColor(stack);
+					final float zLevel = 100.0F;
 					if (this.renderHorizontal)
 					{
-						gui.drawRepeated(solidIcon, this.x, this.y, (double) (stack.amount * this.u) / (double) this.tank.getCapacity(), this.v, gui.getZLevel(), color);
+						gui.drawRepeated(solidIcon, x + this.x, y + this.y, (double) (stack.amount * this.u) / (double) getCapacity(), this.v, zLevel, color);
 					}
 					else
 					{
-						gui.drawRepeated(solidIcon, this.x, this.y + this.v - (double) (stack.amount * this.v) / (double) this.tank.getCapacity(), this.u, (double) (stack.amount * this.v) / (double) this.tank.getCapacity(), gui.getZLevel(), color);
+						gui.drawRepeated(solidIcon, x + this.x, y + this.y + this.v - (double) (stack.amount * this.v) / (double) getCapacity(), this.u, (double) (stack.amount * this.v) / (double) getCapacity(), zLevel, color);
 					}
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					gui.endTranslate(mark);
 				}
 			}
 		}

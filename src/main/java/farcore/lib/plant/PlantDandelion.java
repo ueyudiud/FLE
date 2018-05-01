@@ -23,7 +23,7 @@ import nebula.common.block.BlockBase;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -178,7 +178,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 			{
 				pos2.move(EnumFacing.DOWN);
 			}
-			if (canBlockStay(block, block.getDefaultState(), world, pos2) && Worlds.isAirOrReplacable(world, pos2))
+			if (canBlockStay(block, block.getDefaultState(), world, pos2) && W.isAirOrReplacable(world, pos2))
 			{
 				world.setBlockState(pos2, block.getDefaultState().withProperty(AGE, 0));
 			}

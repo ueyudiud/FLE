@@ -12,13 +12,13 @@ import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
-import nebula.common.tile.TEStatic;
-import nebula.common.util.Worlds;
+import nebula.common.tile.TE01Static;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
+public class TECoreLeaves extends TE01Static implements ITB_BreakBlock
 {
 	public TreeInfo info;
 	
@@ -70,7 +70,7 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 	{
 		if (!V.generateState)
 		{
-			Worlds.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material)));
+			W.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material)));
 		}
 	}
 }

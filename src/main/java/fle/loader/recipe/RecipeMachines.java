@@ -3,12 +3,13 @@
  */
 package fle.loader.recipe;
 
+import static fle.api.recipes.instance.RecipeAdder.addRecipe;
 import static fle.api.recipes.instance.RecipeAdder.addShapedRecipe;
 
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.SubTags;
-import farcore.lib.material.Mat;
+import fle.api.recipes.ShapedFleDataRecipe;
 import fle.loader.IBFS;
 import net.minecraft.item.ItemStack;
 
@@ -21,11 +22,14 @@ public class RecipeMachines
 	{
 		addShapedRecipe(new ItemStack(IBFS.bWoodenWorkbench, 1, 0), "l", "g", 'l', MC.log.getOreName(M.wood), 'g', MC.pile.getOreName(M.gravel));
 		addShapedRecipe(new ItemStack(IBFS.bWoodenMachine, 1, 0), "ss", "ss", 's', "stickWood");
-		for (Mat material : Mat.filt(SubTags.WOOD))
-		{
-			ItemStack stack = new ItemStack(IBFS.bWoodenMachine, 1, 1);
-			Mat.setMaterialToStack(stack, "frame", material);
-			addShapedRecipe(stack, " sr", "ppp", 'p', MC.plank.getOreName(material), 's', MC.stone.orePrefix, 'r', IBFS.iResources.getSubItem("ramie_rope"));
-		}
+		addRecipe(ShapedFleDataRecipe.builder(new ItemStack(IBFS.bWoodenMachine, 1, 1),
+				" sr",
+				"ppp")
+				.v_nbt("F", SubTags.WOOD, "frame")
+				.v_nbt("S", SubTags.ROCK, "mill")
+				.t_m('s', MC.stone.orePrefix, "S", MC.stone::extractMaterial)
+				.t('r', IBFS.iResources.getSubItem("ramie_rope"))
+				.t_m('p', MC.plank.orePrefix, "F", MC.plank::extractMaterial)
+				.b());
 	}
 }

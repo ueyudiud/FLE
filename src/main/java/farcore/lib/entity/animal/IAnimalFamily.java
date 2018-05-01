@@ -10,7 +10,7 @@ import com.google.common.reflect.TypeToken;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IFamily;
-import nebula.common.util.R;
+import nebula.base.R;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 

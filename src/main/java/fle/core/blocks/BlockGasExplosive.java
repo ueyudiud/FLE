@@ -12,7 +12,7 @@ import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.Maths;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
@@ -67,7 +67,7 @@ public class BlockGasExplosive extends BlockGas
 								break label;
 							}
 						}
-					
+				
 				if (amount >= this.minExplosiveAmount)
 				{
 					for (int i = -this.checkRange; i < this.checkRange; ++i)
@@ -75,7 +75,7 @@ public class BlockGasExplosive extends BlockGas
 							for (int k = -this.checkRange; k < this.checkRange; ++k)
 							{
 								pos1.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k);
-								if (Worlds.isBlock(worldIn, pos1, this, -1, true))
+								if (W.isBlock(worldIn, pos1, this, -1, true))
 								{
 									worldIn.setBlockToAir(pos1);
 								}

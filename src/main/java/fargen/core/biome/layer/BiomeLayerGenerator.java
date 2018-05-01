@@ -7,7 +7,7 @@ import java.util.Random;
 
 import farcore.lib.world.IWorldPropProvider;
 import fargen.core.biome.BiomeBase;
-import nebula.base.IPropertyMap;
+import nebula.base.collection.IPropertyMap;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 

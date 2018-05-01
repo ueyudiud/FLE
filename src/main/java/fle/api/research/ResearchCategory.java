@@ -6,7 +6,7 @@ package fle.api.research;
 import java.util.List;
 
 import nebula.base.Cache;
-import nebula.base.HashIntMap;
+import nebula.base.collection.HashIntMap;
 import nebula.base.register.Register;
 import nebula.common.LanguageManager;
 import nebula.common.util.IRegisteredNameable;
@@ -35,7 +35,7 @@ public class ResearchCategory implements IRegisteredNameable
 	public boolean isAvailable(EntityPlayer player)
 	{
 		Cache<Integer> cache = new Cache<>(0);
-		this.objects.foreach((ro, w) -> {
+		this.objects.forEach((ro, w) -> {
 			if (ro.getKnowledge().access(player)) cache.set(cache.get() + w);
 		});
 		return cache.get() >= this.minAvailableWeight;
@@ -53,7 +53,7 @@ public class ResearchCategory implements IRegisteredNameable
 	
 	public String getLocalizedName()
 	{
-		return LanguageManager.translateToLocal(getTranslationName());
+		return LanguageManager.translateLocal(getTranslationName());
 	}
 	
 	@SideOnly(Side.CLIENT)

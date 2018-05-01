@@ -5,6 +5,9 @@ package fle.core.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import farcore.data.M;
+import farcore.data.MC;
+import farcore.instances.MaterialTextureLoader;
 import fle.core.FLE;
 import fle.core.tile.wooden.TELeverOilMill;
 import nebula.client.NebulaTextureHandler;
@@ -23,13 +26,11 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 {
 	private TextureAtlasSprite	handle;
 	private TextureAtlasSprite	rope;
-	private TextureAtlasSprite	rock;
 	
 	{
 		NebulaTextureHandler.addIconLoader(loader -> {
 			this.handle = loader.registerIcon("minecraft", "blocks/logs/oak_side");
 			this.rope = loader.registerIcon(FLE.MODID, "blocks/iconset/linen");
-			this.rock = loader.registerIcon("minecraft", "blocks/rock/stone/resource");
 		});
 	}
 	
@@ -40,6 +41,12 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		if (tile != null)
+		{
+			GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+			GL11.glRotatef(90.0F * (tile.getFacing().horizontalOrdinal - 2), 0, -1, 0);
+			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		}
 		float angle = tile == null ? -1 : tile.getRotationAngle();
 		// Render lever.
 		{
@@ -55,7 +62,8 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.25F, 0.375F - MathHelper.sin(angle) * 0.09F, 0.25F);
 			renderCube(0.24F, 0.1F, 0.24F, 0.26F, 0.5F, 0.26F, this.rope);
-			renderCube(0, 0F, 0, 0.5F, 0.25F, 0.5F, this.rock);
+			renderCube(0, 0F, 0, 0.5F, 0.25F, 0.5F,
+					MaterialTextureLoader.getIcon(MC.stone.name + "::" + (tile == null ? M.stone.name : tile.getCustomModelData("mill"))));
 			GL11.glPopMatrix();
 		}
 		GL11.glPopMatrix();

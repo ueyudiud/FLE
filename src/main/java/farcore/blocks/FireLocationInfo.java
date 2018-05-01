@@ -15,7 +15,6 @@ import farcore.lib.block.IThermalCustomBehaviorBlock;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -303,7 +302,7 @@ class FireLocationInfo implements IModifiableCoord
 		list[0] = state.getBlock() instanceof IThermalCustomBehaviorBlock ? 6 : 2;
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
-			boolean isCatchingRaining = Worlds.isCatchingRain(this.world, this.pos1, true);
+			boolean isCatchingRaining = nebula.common.util.W.isCatchingRain(this.world, this.pos1, true);
 			if (((list[0] & 4) != 0 && ((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(this.world, this.pos1, facing, isCatchingRaining)) || state.getBlock().isFlammable(this.world, this.pos1, facing))
 			{
 				list[0] |= 1 << (8 + facing.ordinal());

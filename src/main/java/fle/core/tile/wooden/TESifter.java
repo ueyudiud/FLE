@@ -3,15 +3,12 @@
  */
 package fle.core.tile.wooden;
 
-import static fle.api.tile.TEITSRecipe.WaitForOutput;
-import static fle.api.tile.TEITSRecipe.Working;
-
 import farcore.lib.solid.SolidStack;
 import farcore.lib.solid.container.SolidTank;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import fle.api.recipes.instance.RecipeMaps;
-import nebula.common.tile.TEInventorySingleSlot;
+import fle.api.tile.TE08Recipe;
 import nebula.common.util.Direction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TESifter extends TEInventorySingleSlot
+public class TESifter extends TE08Recipe<SolidStack, TemplateRecipeCache<SolidStack>>
 {
 	protected TemplateRecipeCache<SolidStack>	cache;
 	protected int								recipeMaxTick;
@@ -39,7 +36,7 @@ public class TESifter extends TEInventorySingleSlot
 		super.writeToNBT(compound);
 		if (this.cache != null)
 		{
-			getRecipeMap().writeToNBT(this.cache, compound, "cache");
+			getRecipeMap().writeTo(compound, "cache", this.cache);
 			compound.setInteger("recipetick", this.recipeTick);
 		}
 		return compound;
@@ -49,7 +46,7 @@ public class TESifter extends TEInventorySingleSlot
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		if ((this.cache = getRecipeMap().readFromNBT(compound, "cache")) != null)
+		if ((this.cache = getRecipeMap().readFrom(compound, "cache")) != null)
 		{
 			this.recipeTick = compound.getInteger("recipetick");
 		}
@@ -102,31 +99,37 @@ public class TESifter extends TEInventorySingleSlot
 		}
 	}
 	
+	@Override
 	public boolean isWorking()
 	{
 		return is(Working);
 	}
 	
+	@Override
 	public boolean isWaitingForOutput()
 	{
 		return is(WaitForOutput);
 	}
 	
+	@Override
 	protected SolidStack getRecipeInputHandler()
 	{
 		return this.tank.getStack();
 	}
 	
+	@Override
 	protected IRecipeMap<?, TemplateRecipeCache<SolidStack>, SolidStack> getRecipeMap()
 	{
 		return RecipeMaps.SIMPLE_SIFTER;
 	}
 	
+	@Override
 	protected void onRecipeInput()
 	{
 		this.tank.drain(this.cache.<SolidStack> get1(0).amount, true);
 	}
 	
+	@Override
 	protected boolean onRecipeOutput()
 	{
 		if (this.tank.insertSolid(this.cache.get(1), true) && (this.cache.get(2) == null || sendItemStackTo(this.cache.get(2), Direction.D, true, true, true) == this.cache.<ItemStack> get(2).stackSize))
@@ -137,6 +140,7 @@ public class TESifter extends TEInventorySingleSlot
 		return false;
 	}
 	
+	@Override
 	protected void onRecipeRefresh()
 	{
 		this.cache = null;
@@ -163,16 +167,25 @@ public class TESifter extends TEInventorySingleSlot
 		}
 	}
 	
+	@Override
 	public int getRecipeTick()
 	{
 		return this.recipeTick;
 	}
 	
+	@Override
 	public int getMaxRecipeTick()
 	{
 		return this.recipeMaxTick;
 	}
 	
+	@Override
+	protected int getPower()
+	{
+		return 1;
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgressBar(int length)
 	{

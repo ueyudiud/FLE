@@ -20,7 +20,8 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.Materials;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
-import nebula.base.ObjArrayParseHelper;
+import nebula.base.collection.A;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
@@ -30,7 +31,6 @@ import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
@@ -71,7 +71,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		setTickRandomly(true);
 		EnumBlock.fire.set(this);
 		EnumBlock.fire.stateApplier = objs -> {
-			ObjArrayParseHelper helper = ObjArrayParseHelper.create(objs);
+			ObjArrayParseHelper helper = A.create(objs);
 			int level = L.range(0, 15, helper.readOrSkip(15));
 			boolean spread = helper.readOrSkip(true);
 			boolean smolder = helper.readOrSkip(true);
@@ -209,13 +209,13 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	public boolean canBlockStayAt(World world, BlockPos pos)
 	{
-		return Worlds.isAirNearby(world, pos, true) && (canStayFire(world, pos.down(), EnumFacing.UP) || canStayFire(world, pos.up(), EnumFacing.DOWN) || canStayFire(world, pos.north(), EnumFacing.SOUTH) || canStayFire(world, pos.south(), EnumFacing.NORTH)
+		return nebula.common.util.W.isAirNearby(world, pos, true) && (canStayFire(world, pos.down(), EnumFacing.UP) || canStayFire(world, pos.up(), EnumFacing.DOWN) || canStayFire(world, pos.north(), EnumFacing.SOUTH) || canStayFire(world, pos.south(), EnumFacing.NORTH)
 				|| canStayFire(world, pos.east(), EnumFacing.WEST) || canStayFire(world, pos.west(), EnumFacing.EAST));
 	}
 	
 	private boolean canBlockBurnAt(World world, BlockPos pos)
 	{
-		boolean isCatchRain = Worlds.isCatchingRain(world, pos, true);
+		boolean isCatchRain = nebula.common.util.W.isCatchingRain(world, pos, true);
 		return canBurnFire(world, pos.down(), EnumFacing.UP, isCatchRain) || canBurnFire(world, pos.up(), EnumFacing.DOWN, isCatchRain) || canBurnFire(world, pos.north(), EnumFacing.SOUTH, isCatchRain) || canBurnFire(world, pos.south(), EnumFacing.NORTH, isCatchRain)
 				|| canBurnFire(world, pos.east(), EnumFacing.WEST, isCatchRain) || canBurnFire(world, pos.west(), EnumFacing.EAST, isCatchRain);
 	}
@@ -229,7 +229,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	private boolean canStayFire(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return Worlds.isSideSolid(world, pos, side, false);
+		return nebula.common.util.W.isSideSolid(world, pos, side, false);
 	}
 	
 	@Override
@@ -323,7 +323,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			boolean isFireSource = info.isFireSource(0, +1, 0, 0) || info.isFireSource(0, -1, 0, 1) || info.isFireSource(0, 0, +1, 2) || info.isFireSource(0, 0, -1, 3) || info.isFireSource(+1, 0, 0, 4) || info.isFireSource(-1, 0, 0, 5);
 			if (!isFireSource)
 			{
-				if (Worlds.isCatchingRain(worldIn, pos, true))
+				if (nebula.common.util.W.isCatchingRain(worldIn, pos, true))
 				{
 					worldIn.setBlockToAir(pos);
 					worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.2F + (rand.nextFloat() - rand.nextFloat()) * .8F, true);
@@ -429,7 +429,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		int i = info.getFlammability(face.x, face.y, face.z, face.opposite());
 		if (random.nextInt(chance) < i)
 		{
-			if (random.nextInt(age + 10) < 5 && !Worlds.isCatchingRain(worldIn, pos, true))
+			if (random.nextInt(age + 10) < 5 && !nebula.common.util.W.isCatchingRain(worldIn, pos, true))
 			{
 				int j = Math.min(15, age + random.nextInt(5) / 4);
 				info.setBlockState(getDefaultState().withProperty(STATE, j).withProperty(SMOLDER, false), 3);

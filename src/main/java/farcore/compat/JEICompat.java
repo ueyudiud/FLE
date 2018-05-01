@@ -18,7 +18,7 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import nebula.Nebula;
-import nebula.common.util.L;
+import nebula.base.function.F;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -46,7 +46,7 @@ public class JEICompat extends BlankModPlugin
 	{
 		registry.register(
 				SolidStack.class,
-				Collections2.<Solid, SolidStack> transform(Solid.REGISTRY.targets(), L.toFunction(SolidStack::new, 1000)),
+				Collections2.<Solid, SolidStack> transform(Solid.REGISTRY.targets(), F.cast(F.const2f(SolidStack::new, 1000))),
 				new SolidStackHelper(), new SolidStackRender());
 	}
 }

@@ -3,6 +3,7 @@
  */
 package farcore.lib.solid.container;
 
+import farcore.lib.inventory.ISolidHandler;
 import nebula.common.data.Misc;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;

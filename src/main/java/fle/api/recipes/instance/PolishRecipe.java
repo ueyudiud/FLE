@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import fle.api.recipes.instance.interfaces.IPolishRecipeHandler;
-import nebula.base.ArrayIntMap;
+import nebula.base.collection.ArrayIntMap;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.L;

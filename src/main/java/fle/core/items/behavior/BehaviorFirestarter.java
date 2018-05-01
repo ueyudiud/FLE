@@ -8,10 +8,10 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import fle.api.recipes.instance.FlamableRecipes;
-import nebula.base.HashIntMap;
+import nebula.base.collection.HashIntMap;
 import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.item.ITool;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,7 +85,7 @@ public class BehaviorFirestarter extends BehaviorTool
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
 		World world = player.world;
-		RayTraceResult result = Worlds.rayTrace(world, player, false);
+		RayTraceResult result = W.rayTrace(world, player, false);
 		if (result != null)
 		{
 			switch (result.typeOfHit)
@@ -100,12 +100,12 @@ public class BehaviorFirestarter extends BehaviorTool
 						int tick = cache.map.getOrDefault(item, -1);
 						if (FlamableRecipes.isSmoder(item.getEntityItem(), tick))
 						{
-							Worlds.spawnParticleWithRandomOffset(world, EnumParticleTypes.SMOKE_NORMAL, result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord, 0, 0.2F, 0, 0);
+							W.spawnParticleWithRandomOffset(world, EnumParticleTypes.SMOKE_NORMAL, result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord, 0, 0.2F, 0, 0);
 						}
 						if (!world.isRemote && FlamableRecipes.isFlamable(item.getEntityItem(), tick))
 						{
 							BlockPos pos = result.getBlockPos().offset(result.sideHit);
-							//if (Worlds.isAirOrReplacable(world, pos) && ((BlockFire) EnumBlock.fire.block).canBlockStayAt(world, pos))
+							//if (W.isAirOrReplacable(world, pos) && ((BlockFire) EnumBlock.fire.block).canBlockStayAt(world, pos))
 							{
 								world.setBlockState(pos, EnumBlock.fire.block.getDefaultState(), 11);
 							}

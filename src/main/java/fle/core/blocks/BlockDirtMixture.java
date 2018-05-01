@@ -9,7 +9,7 @@ import fle.core.tile.TEDirtMixture;
 import nebula.client.ClientProxy;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -30,8 +30,8 @@ public class BlockDirtMixture extends BlockSingleTE
 {
 	public static boolean checkAndSetBlock(World world, BlockPos pos)
 	{
-		if (Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, false) && Worlds.isSideSolid(world, pos.north(), EnumFacing.SOUTH, false) && Worlds.isSideSolid(world, pos.south(), EnumFacing.NORTH, false) && Worlds.isSideSolid(world, pos.east(), EnumFacing.WEST, false)
-				&& Worlds.isSideSolid(world, pos.west(), EnumFacing.EAST, false))
+		if (W.isSideSolid(world, pos.down(), EnumFacing.UP, false) && W.isSideSolid(world, pos.north(), EnumFacing.SOUTH, false) && W.isSideSolid(world, pos.south(), EnumFacing.NORTH, false) && W.isSideSolid(world, pos.east(), EnumFacing.WEST, false)
+				&& W.isSideSolid(world, pos.west(), EnumFacing.EAST, false))
 		{
 			world.setBlockState(pos, EnumBlock.dirt_mixture.apply());
 			return true;

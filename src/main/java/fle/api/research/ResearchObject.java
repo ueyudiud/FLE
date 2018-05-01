@@ -45,7 +45,7 @@ public class ResearchObject implements IRegisteredNameable
 	
 	public String getLocalizedName()
 	{
-		return LanguageManager.translateToLocal(getTranslationName());
+		return LanguageManager.translateLocal(getTranslationName());
 	}
 	
 	@SideOnly(Side.CLIENT)

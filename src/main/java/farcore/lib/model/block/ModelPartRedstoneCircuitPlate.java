@@ -21,6 +21,7 @@ import farcore.data.SubTags;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import nebula.Log;
+import nebula.base.function.F;
 import nebula.client.model.flexible.INebulaBakedModelPart;
 import nebula.client.model.flexible.INebulaModelPart;
 import nebula.client.model.flexible.ModelModifierByCoordTransformer;
@@ -243,7 +244,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 			String[] split = key.split(",");
 			TextureAtlasSprite icon = textures.get(Mat.material(split[1]));
 			List<BakedQuad> list = this.quads[EnumFacing.valueOf(split[0]).getHorizontalIndex()];
-			return icon == null ? list : Lists.transform(list, L.toFunction(BakedQuadRetex::new, icon));
+			return icon == null ? list : Lists.transform(list, F.cast(F.const2f(BakedQuadRetex::new, icon)));
 		}
 	}
 	

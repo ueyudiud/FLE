@@ -3,7 +3,7 @@
  */
 package farcore.data;
 
-import static nebula.base.IPropertyMap.IProperty.to;
+import static nebula.base.collection.IPropertyMap.IProperty.to;
 
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
@@ -16,7 +16,7 @@ import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
-import nebula.base.IPropertyMap.IProperty;
+import nebula.base.collection.IPropertyMap.IProperty;
 
 /**
  * Material properties.

@@ -17,7 +17,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import nebula.base.A;
-import nebula.base.Judgable;
+import nebula.base.function.F;
 import nebula.common.LanguageManager;
 import nebula.common.util.Strings;
 import net.minecraft.util.ResourceLocation;
@@ -44,7 +44,7 @@ public class ToolDisplayRecipeCategory extends BlankRecipeCategory<ToolDisplayRe
 	@Override
 	public String getTitle()
 	{
-		return LanguageManager.translateToLocal("category.farcore.tool");
+		return LanguageManager.translateLocal("category.farcore.tool");
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class ToolDisplayRecipeCategory extends BlankRecipeCategory<ToolDisplayRe
 		final ToolDisplayRecipe recipe = recipeWrapper.recipe;
 		final IGuiItemStackGroup group = recipeLayout.getItemStacks();
 		
-		if (recipe.chances != null && A.or(recipe.chances, Judgable.NOT_NULL))
+		if (recipe.chances != null && A.or(recipe.chances, F.P_ANY))
 		{
 			group.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 				if (!input)
@@ -69,7 +69,7 @@ public class ToolDisplayRecipeCategory extends BlankRecipeCategory<ToolDisplayRe
 					{
 						for (int chance : recipe.chances[i])
 						{
-							tooltip.add(LanguageManager.translateToLocal("jei.info.chance", Strings.progress(chance / 10000.0)));
+							tooltip.add(LanguageManager.translateLocal("jei.info.chance", Strings.progress(chance / 10000.0)));
 						}
 					}
 				}

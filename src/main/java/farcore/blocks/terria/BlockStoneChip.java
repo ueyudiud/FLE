@@ -6,12 +6,13 @@ package farcore.blocks.terria;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 import farcore.data.MC;
 import farcore.data.Materials;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.base.ObjArrayParseHelper;
 import nebula.client.model.StateMapperExt;
 import nebula.common.util.Maths;
 import nebula.common.util.Properties;
@@ -160,7 +161,7 @@ public class BlockStoneChip extends BlockMaterial<PropertyBlockable>
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.chip_rock));
+		return Lists.newArrayList(ItemMulti.createStack(this.material, MC.chip_rock));
 	}
 	
 	static

@@ -17,8 +17,8 @@ import farcore.lib.block.BlockMaterial;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.base.HashIntMap;
-import nebula.base.ObjArrayParseHelper;
+import nebula.base.collection.HashIntMap;
+import nebula.base.collection.ObjArrayParseHelper;
 import nebula.base.function.Selector;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
@@ -30,7 +30,7 @@ import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.util.OreDict;
 import nebula.common.util.Players;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.IProperty;
@@ -270,7 +270,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		}
 		else
 		{
-			return Worlds.fallBlock(world, source, pos, state);
+			return W.fallBlock(world, source, pos, state);
 		}
 	}
 	

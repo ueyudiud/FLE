@@ -14,9 +14,12 @@ import farcore.lib.material.Mat;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.FuelHandler;
 import fle.api.tile.IBellowsAccepter;
+import nebula.common.inventory.IContainer;
+import nebula.common.inventory.ItemContainerSingle;
+import nebula.common.inventory.ItemContainers;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.IToolableTile;
-import nebula.common.tile.TEInventorySingleSlot;
+import nebula.common.tile.TE05InventorySimple;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Players;
@@ -32,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter, IThermalProvider, IToolableTile, ITB_BlockActived
+public class TEHearth extends TE05InventorySimple implements IBellowsAccepter, IThermalProvider, IToolableTile, ITB_BlockActived
 {
 	private static final byte Burining = 3;
 	private static final Mat material = M.argil;
@@ -49,7 +52,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 	
 	public TEHearth()
 	{
-		
+		this.items = new ItemContainers<>(new ItemContainerSingle(64));
 	}
 	
 	@Override
@@ -94,7 +97,7 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 			if (isServer())
 			{
 				int size;
-				if (stack != null && FuelHandler.isFuel(stack) && (size = incrItem(0, stack, true)) > 0)
+				if (stack != null && FuelHandler.isFuel(stack) && (size = this.items.getContainer(0).incrStack(stack, IContainer.PROCESS)) > 0)
 				{
 					if (stack.stackSize == size)
 						player.setHeldItem(hand, null);
@@ -102,10 +105,9 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 						stack.stackSize -= size;
 					return EnumActionResult.SUCCESS;
 				}
-				else if (this.stack != null && stack == null)
+				else if (this.items.getContainer(0).hasStackInContainer() && stack == null)
 				{
-					Players.giveOrDrop(player, this.stack);
-					this.stack = null;
+					Players.giveOrDrop(player, this.items.getContainer(0).decrStack(Integer.MAX_VALUE, IContainer.PROCESS));
 					return EnumActionResult.SUCCESS;
 				}
 			}
@@ -161,12 +163,12 @@ public class TEHearth extends TEInventorySingleSlot implements IBellowsAccepter,
 	
 	private void tryBuringItem(float temp)
 	{
-		FuelHandler.FuelKey key = FuelHandler.getFuel(this.stack);
+		FuelHandler.FuelKey key = FuelHandler.getFuel(this.items.getStackInContainer(0));
 		if (key != null)
 		{
 			if (temp >= key.flameTemperature)
 			{
-				decrStackSize(0, key.fuel);
+				this.items.getContainer(0).taskDecr(key.fuel, IContainer.PROCESS).invoke();
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
 				this.handler.setLimitTemperature(key.normalTemperature);

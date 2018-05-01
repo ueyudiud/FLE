@@ -49,7 +49,7 @@ public class BehaviorModeSwitching extends BehaviorBase
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean advanced)
 	{
-		list.add("info.mode.type", LanguageManager.translateToLocal("info.mode." + this.key + "." + this.modes[NBTs.getIntOrDefault(ItemStacks.getOrSetupNBT(stack, false), "mode", 0)]));
+		list.add("info.mode.type", LanguageManager.translateLocal("info.mode." + this.key + "." + this.modes[NBTs.getIntOrDefault(ItemStacks.getOrSetupNBT(stack, false), "mode", 0)]));
 		super.addInformation(stack, player, list, advanced);
 	}
 }

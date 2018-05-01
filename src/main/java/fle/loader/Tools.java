@@ -38,7 +38,7 @@ import fle.core.items.tool.ToolSickle;
 import fle.core.items.tool.ToolSpear;
 import fle.core.items.tool.ToolSpinningDisk;
 import fle.core.items.tool.ToolWhetstone;
-import nebula.base.Judgable;
+import nebula.base.function.Judgable;
 import nebula.common.item.IBehavior;
 
 public class Tools

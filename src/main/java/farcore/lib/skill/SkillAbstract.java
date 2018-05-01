@@ -41,7 +41,7 @@ public class SkillAbstract implements ISkill
 	
 	public String getLocalName()
 	{
-		return LanguageManager.translateToLocal("skill." + this.name + ".name");
+		return LanguageManager.translateLocal("skill." + this.name + ".name");
 	}
 	
 	@Override
@@ -80,7 +80,7 @@ public class SkillAbstract implements ISkill
 			{
 				tag.setByte("lv", (byte) (level + 1));
 				tag.setFloat("exp", e - eNeed);
-				player.sendMessage(new TextComponentString(LanguageManager.translateToLocal("skill.upgrade.info", getLocalName(), level, level + 1)));
+				player.sendMessage(new TextComponentString(LanguageManager.translateLocal("skill.upgrade.info", getLocalName(), level, level + 1)));
 			}
 			else
 			{

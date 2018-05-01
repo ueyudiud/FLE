@@ -20,7 +20,7 @@ import nebula.common.data.Misc;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
-import nebula.common.tile.TEAged;
+import nebula.common.tile.TE05Aged;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
@@ -36,7 +36,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TESapling extends TEAged implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects, ITB_AddDestroyEffects
+public class TESapling extends TE05Aged implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects, ITB_AddDestroyEffects
 {
 	private float	age;
 	public TreeInfo	info;

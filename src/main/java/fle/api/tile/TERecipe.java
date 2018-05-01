@@ -9,7 +9,7 @@ import fle.api.recipes.IRecipeMap;
 import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public abstract class TERecipe<H, C> extends TESynchronization implements INetworkedSyncTile
+public abstract class TERecipe<H, C> extends TE04Synchronization implements INetworkedSyncTile
 {
 	public static final byte Working = 1, WaitForOutput = 2;
 	
@@ -31,7 +31,7 @@ public abstract class TERecipe<H, C> extends TESynchronization implements INetwo
 		super.writeToNBT(compound);
 		if (this.cache != null)
 		{
-			getRecipeMap().writeToNBT(this.cache, compound, "cache");
+			getRecipeMap().writeTo(compound, "cache", this.cache);
 			compound.setInteger("recipetick", this.recipeTick);
 			compound.setInteger("recipemaxtick", this.recipeMaxTick);
 		}
@@ -42,7 +42,7 @@ public abstract class TERecipe<H, C> extends TESynchronization implements INetwo
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		if ((this.cache = getRecipeMap().readFromNBT(compound, "cache")) != null)
+		if ((this.cache = getRecipeMap().readFrom(compound, "cache")) != null)
 		{
 			this.recipeTick = compound.getInteger("recipetick");
 			this.recipeMaxTick = compound.getInteger("recipemaxtick");

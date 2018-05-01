@@ -6,7 +6,7 @@ package fle.core.entity.ai;
 import java.util.List;
 
 import farcore.lib.entity.animal.IAnimalAccess;
-import nebula.base.Judgable;
+import nebula.base.function.Judgable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -42,7 +42,12 @@ public class EntityAIAvoidPlayerWhenHitIt<T extends EntityAnimal & IAnimalAccess
 		this.avoidDistance = avoidDistance;
 		this.fastAvoidDistanceSq = fastAvoidDistance * fastAvoidDistance;
 		this.entityPathNavigate = eneity.getNavigator();
-		this.avoidTargetSelector = Judgable.<Entity, EntityPlayer> matchAndCast(player -> player.isEntityAlive() && this.entity.getEntitySenses().canSee(player) && !player.isCreative() && !player.isSpectator(), EntityPlayer.class);
+		this.avoidTargetSelector = player ->
+		player instanceof EntityPlayer &&
+		player.isEntityAlive() &&
+		this.entity.getEntitySenses().canSee(player) &&
+		!((EntityPlayer) player).isCreative() &&
+		!((EntityPlayer) player).isSpectator();
 	}
 	
 	/**
@@ -52,7 +57,7 @@ public class EntityAIAvoidPlayerWhenHitIt<T extends EntityAnimal & IAnimalAccess
 	public boolean shouldExecute()
 	{
 		if (!this.entity.doesAnimalAfraidPlayer()) return false;
-		List<EntityPlayer> list = this.entity.world.getEntitiesWithinAABB(EntityPlayer.class, this.entity.getEntityBoundingBox().expand(this.avoidDistance, 3.0D, this.avoidDistance), this.avoidTargetSelector::isTrue);
+		List<EntityPlayer> list = this.entity.world.getEntitiesWithinAABB(EntityPlayer.class, this.entity.getEntityBoundingBox().expand(this.avoidDistance, 3.0D, this.avoidDistance), this.avoidTargetSelector::test);
 		
 		if (list.isEmpty())
 		{

@@ -14,7 +14,7 @@ import farcore.lib.material.Mat;
 import fle.api.client.CompactModel;
 import fle.core.tile.tanks.TESmallRockyTank;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
-import nebula.common.tile.TEBase;
+import nebula.common.tile.TE00Base;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -39,7 +39,7 @@ public class ModelSmallRockyTank extends CompactModel
 	{
 		if (state instanceof BlockStateTileEntityWapper)
 		{
-			TEBase tank = ((BlockStateTileEntityWapper<? extends TEBase>) state).tile;
+			TE00Base tank = ((BlockStateTileEntityWapper<? extends TE00Base>) state).tile;
 			if (tank instanceof TESmallRockyTank) return genSmallRockyTankQuads(((TESmallRockyTank) tank).getMaterial(), side);
 		}
 		return ImmutableList.of();

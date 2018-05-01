@@ -19,7 +19,7 @@ import fle.api.util.ToolPropertiesModificater;
 import fle.api.util.ToolPropertiesModificater.Property;
 import fle.core.FLE;
 import nebula.Log;
-import nebula.base.Judgable;
+import nebula.base.function.Judgable;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.entity.EntityProjectileItem;
@@ -67,7 +67,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		for (EnumToolType toolType : stat.getAllowedToolTypes())
 		{
 			if (toolType == stat.getToolType()) continue;// Exclude main tool
-															// type.
+			// type.
 			OreDictExt.registerOreFunction(toolType.ore(), this, s -> stat.getToolTypes(s).contains(toolType), ImmutableList.of(stack));
 		}
 		OreDict.registerValid(stat.getToolType().ore(), stack);

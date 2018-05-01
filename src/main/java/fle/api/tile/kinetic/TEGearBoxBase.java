@@ -9,13 +9,13 @@ import farcore.energy.kinetic.IKineticAccess;
 import farcore.energy.kinetic.IKineticHandler;
 import farcore.energy.kinetic.KineticPackage;
 import farcore.handler.FarCoreEnergyHandler;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 
 /**
  * @author ueyudiud
  */
-public class TEGearBoxBase extends TESynchronization implements IKineticHandler
+public class TEGearBoxBase extends TE04Synchronization implements IKineticHandler
 {
 	public static enum RotationType
 	{

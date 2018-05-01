@@ -35,14 +35,14 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.IUpdatableTile;
-import nebula.common.tile.TEStatic;
+import nebula.common.tile.TE01Static;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
 import nebula.common.util.Players;
 import nebula.common.util.Server;
 import nebula.common.util.SubTag;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -59,7 +59,7 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TEOre extends TEStatic
+public class TEOre extends TE01Static
 implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy, ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler, ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest, ITP_Drops, IToolableTile
 {
 	private static enum DropType
@@ -98,7 +98,7 @@ implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_Entit
 	@Override
 	public void sendToNearby(IPacket packet, float range)
 	{
-		if (Worlds.isAirNearby(this.world, this.pos, true))
+		if (W.isAirNearby(this.world, this.pos, true))
 		{
 			super.sendToNearby(packet, range);
 		}
@@ -177,7 +177,7 @@ implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_Entit
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		if (Worlds.isNotOpaqueNearby(this.world, pos))
+		if (W.isNotOpaqueNearby(this.world, pos))
 		{
 			markBlockRenderUpdate();
 		}
@@ -237,7 +237,7 @@ implements IUpdatableTile, ITP_BlockHardness, ITP_ExplosionResistance, ITB_Entit
 	@Override
 	public boolean onBlockHarvest(IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
-		Worlds.spawnDropsInWorld(this, getDrops(Players.getCurrentToolType(player)));
+		W.spawnDropsInWorld(this, getDrops(Players.getCurrentToolType(player)));
 		return true;
 	}
 	

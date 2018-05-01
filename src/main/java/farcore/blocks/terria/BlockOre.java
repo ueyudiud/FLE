@@ -190,7 +190,7 @@ public class BlockOre extends BlockSingleTE
 	@Override
 	public String getLocalizedName()
 	{
-		return LanguageManager.translateToLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
+		return LanguageManager.translateLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
 	}
 	
 	@Override

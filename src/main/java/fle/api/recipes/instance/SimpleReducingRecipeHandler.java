@@ -41,7 +41,7 @@ implements IRecipeMap<SimpleReducingRecipeHandler.Recipe, SimpleReducingRecipeHa
 	}
 	
 	@Override
-	public Cache readFromNBT(NBTTagCompound nbt)
+	public Cache readFrom(NBTTagCompound nbt)
 	{
 		Cache cache = new Cache();
 		cache.duration = nbt.getInteger("duration");
@@ -50,7 +50,7 @@ implements IRecipeMap<SimpleReducingRecipeHandler.Recipe, SimpleReducingRecipeHa
 	}
 	
 	@Override
-	public void writeToNBT(Cache target, NBTTagCompound nbt)
+	public void writeTo(Cache target, NBTTagCompound nbt)
 	{
 		nbt.setInteger("duration", target.duration);
 		NBTTagCompound nbt1 = new NBTTagCompound();

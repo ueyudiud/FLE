@@ -15,47 +15,54 @@ import farcore.energy.thermal.IThermalProvider;
 import farcore.energy.thermal.ThermalNet;
 import farcore.energy.thermal.instance.ThermalHandlerSimple;
 import farcore.handler.FarCoreEnergyHandler;
+import farcore.lib.container.Container04Solid;
 import farcore.lib.material.Mat;
 import farcore.lib.solid.container.SolidContainerHelper;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap;
 import fle.api.recipes.instance.interfaces.IRecipeInput;
-import fle.api.tile.TEITSRecipe;
-import fle.core.client.gui.rocky.GuiCeramicPot;
-import fle.core.common.gui.rocky.ContainerCeramicPot;
+import fle.api.tile.TE08Recipe;
 import nebula.base.Ety;
-import nebula.common.fluid.FluidTankN;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
+import nebula.client.gui.GuiBackground;
+import nebula.client.gui.GuiContainer02TE;
+import nebula.common.fluid.container.FluidContainerHandler;
+import nebula.common.gui.FluidSlot;
+import nebula.common.gui.ISlotInitalizer;
+import nebula.common.gui.ItemSlot;
+import nebula.common.gui.ItemSlotOutput;
+import nebula.common.inventory.FluidContainersArray;
+import nebula.common.inventory.IContainer;
 import nebula.common.inventory.InventoryHelper;
-import nebula.common.tile.IGuiTile;
+import nebula.common.inventory.ItemContainersArray;
+import nebula.common.inventory.task.Task;
+import nebula.common.inventory.task.TaskBuilder;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.util.Direction;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalProvider, IRecipeInput, IGuiTile, ITB_BlockActived
+@GuiBackground("fle:textures/gui/boiling_heater.png")
+public class TECeramicPot extends TE08Recipe<IRecipeInput, TemplateRecipeMap.TemplateRecipeCache<IRecipeInput>> implements IThermalProvider, IRecipeInput, ITB_BlockActived
 {
 	public static final Mat material = M.argil;
 	
-	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
 	private ThermalHandlerSimple handler = new ThermalHandlerSimple(this);
 	
 	{
 		this.handler.material = material;
-	}
-	
-	public TECeramicPot()
-	{
-		super(6);
+		this.items = new ItemContainersArray(6, 64);
+		this.fluids = new FluidContainersArray(1, 4000);
 	}
 	
 	@Override
@@ -88,12 +95,6 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	}
 	
 	@Override
-	public FluidTankN tank()
-	{
-		return this.tank;
-	}
-	
-	@Override
 	public String getName()
 	{
 		return "inventory.ceramic.pot";
@@ -123,11 +124,11 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 		switch (name)
 		{
 		case TAG_CERAMICPOT_BASE_INPUT1:
-			return (T) this.stacks[0];
+			return (T) this.items.getStackInContainer(0);
 		case TAG_CERAMICPOT_BASE_INPUT2:
-			return (T) this.tank.getFluid();
+			return (T) this.fluids.getContainer(0).getStackInContainer();
 		case TAG_CERAMICPOT_BASE_INPUT3:
-			return (T) this.stacks[5];
+			return (T) this.items.getStackInContainer(5);
 		default:
 			return null;
 		}
@@ -144,17 +145,20 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 		return super.onBlockActivated(player, hand, stack, side, hitX, hitY, hitZ);
 	}
 	
+	private final Task.TaskBTB taskFillOrDrain = InventoryHelper.taskFillOrDrain(((ItemContainersArray) this.items).stacks, 2, 3, ((FluidContainersArray) this.fluids).stacks, 0, 4000, true, true, false);
+	
 	@Override
 	protected void updateServer()
 	{
-		if (!InventoryHelper.drainOrFillTank(this, this, 2, 3, InventoryHelper.FD_FILL_ANY_DRAIN))
+		if (!this.taskFillOrDrain.invoke())
 		{
-			TemplateRecipeMap.TemplateRecipeCache<?> cache = CERAMICPOT_ADD_TO_MIX.findRecipe(new Ety(SolidContainerHelper.getSolidFromItemStack(this.stacks[0]), this.tank.getFluid()));
+			TemplateRecipeMap.TemplateRecipeCache<?> cache = CERAMICPOT_ADD_TO_MIX.findRecipe(
+					new Ety(SolidContainerHelper.getSolidFromItemStack(this.items.getStackInContainer(0)), this.fluids.getContainer(0).getStackInContainer()));
 			if (cache != null)
 			{
-				if (SolidContainerHelper.drainFromItem(this, cache.get(0), 2, 3))
+				if (SolidContainerHelper.drainFromItem(this.items.getContainer(2), this.items.getContainer(3), cache.get(0)))
 				{
-					this.tank.setFluid(cache.get(1));
+					this.fluids.getContainer(0).setStackInContainer(cache.get(1));
 				}
 			}
 		}
@@ -165,19 +169,19 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	protected void onRecipeInput()
 	{
 		decrStackSize(0, this.cache.get1(0));
-		this.tank.drain(this.cache.get1(1), true);
+		this.fluids.getContainer(0).decrStack(this.cache.get1(1), IContainer.PROCESS);
 		this.recipeMaxTick = this.cache.get(1);
-		this.stacks[5] = this.cache.<SingleInputMatch> get1(2).getRemain(this.stacks[5]);
+		setInventorySlotContents(4, this.cache.<SingleInputMatch> get1(2).getRemain(getStackInSlot(4)));
 	}
 	
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (instItem(1, this.cache.get(2), false) && instItem(5, this.cache.get(3), true))
-		{
-			return instItem(1, this.cache.get(2), true);//Always true.
-		}
-		return false;
+		ItemStack[] stacks = ((ItemContainersArray) this.items).stacks;
+		return TaskBuilder.builder()
+				.add(InventoryHelper.taskInsertAll(stacks, 0, this.cache.<ItemStack> get(2), true))
+				.add(InventoryHelper.taskInsertAll(stacks, 4, this.cache.<ItemStack> get(3), true))
+				.build().run();
 	}
 	
 	@Override
@@ -187,15 +191,36 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 	}
 	
 	@Override
-	public Container openContainer(int id, EntityPlayer player)
+	public void initalizeContainer(Container04Solid container, ISlotInitalizer initalizer)
 	{
-		return new ContainerCeramicPot(this, player);
+		initalizer.addSlots("fluidin",
+				new ItemSlot(this.items.getContainer(0), this, 0, 76, 32).setPredicate(((Judgable<FluidStack>) F.P_ANY).from(FluidContainerHandler::getContain)))
+		.addLocation("player", false);
+		initalizer.addSlots("fluidout",
+				new ItemSlotOutput(this.items.getContainer(1), this, 1, 94, 32))
+		.addLocation("player", false);
+		initalizer.addSlots("boilin",
+				new ItemSlot(this.items.getContainer(2), this, 2, 38, 19))
+		.addLocation("player", false);
+		initalizer.addSlots("boilout",
+				new ItemSlotOutput(this.items.getContainer(3), this, 3, 38, 44))
+		.addLocation("player", false);
+		initalizer.addSlots("toolin",
+				new ItemSlot(this.items.getContainer(4), this, 4, 177, 19))
+		.addLocation("player", false);
+		initalizer.addSlots("toolout",
+				new ItemSlotOutput(this.items.getContainer(5), this, 5, 177, 44))
+		.addLocation("player", false);
+		initalizer.straegyPlayerBag().addLocation("fluidin", false).addLocation("boilin", false).addLocation("toolin", false).addLocation("hand", false);
+		initalizer.straegyPlayerHand().addLocation("fluidin", false).addLocation("boilin", false).addLocation("toolin", false).addLocation("bag", false);
+		
+		initalizer.addSlot(new FluidSlot(this.fluids.getContainer(0), 66, 28, 8, 20));
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiContainer openGui(int id, EntityPlayer player)
+	public void drawBackgroundFirstLayer(GuiContainer02TE<?> gui, int x, int y, float partialTicks, int mouseX, int mouseY)
 	{
-		return new GuiCeramicPot(this, player);
+		gui.drawTexturedModalRect(x + 66, y + 28, 176, 14, 8, 20);
 	}
 }

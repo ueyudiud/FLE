@@ -1,14 +1,13 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.client.gui;
 
 import java.io.IOException;
 
 import fle.core.FLE;
 import fle.core.common.gui.ContainerWoodworkPortable;
-import nebula.client.gui.GuiContainerBase;
+import nebula.client.gui.GuiContainer01Slots;
 import nebula.client.gui.GuiIconButton;
 import nebula.client.gui.GuiIconButton.ButtonSize;
 import net.minecraft.client.gui.GuiButton;
@@ -23,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class GuiWoodworkPortable extends GuiContainerBase
+public class GuiWoodworkPortable extends GuiContainer01Slots
 {
 	private static final ResourceLocation LOCATION = new ResourceLocation(FLE.MODID, "textures/gui/woodwork1.png");
 	

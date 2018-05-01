@@ -11,7 +11,7 @@ import java.util.function.Function;
 import farcore.lib.material.Mat;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.IRecipeMap;
-import nebula.base.Judgable;
+import nebula.base.function.F;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,13 +30,13 @@ public class MaterialPoolOutputRecipeHandler implements IRecipeMap<Function<Stac
 	}
 	
 	@Override
-	public void writeToNBT(ItemStack target, NBTTagCompound nbt)
+	public void writeTo(ItemStack target, NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public ItemStack readFromNBT(NBTTagCompound nbt)
+	public ItemStack readFrom(NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -73,6 +73,6 @@ public class MaterialPoolOutputRecipeHandler implements IRecipeMap<Function<Stac
 	@Override
 	public void removeRecipeByHandler(StackContainer<Mat> handler)
 	{
-		this.recipes.removeIf(Judgable.NOT_NULL.from(L.funtional(handler)));
+		this.recipes.removeIf(F.P_ANY.from(L.funtional(handler)));
 	}
 }

@@ -23,7 +23,7 @@ import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -169,12 +169,12 @@ public class BlockPlantVine extends BlockBase
 	@Override
 	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
 	{
-		return side.getHorizontalIndex() != -1 && Worlds.isSideSolid(worldIn, pos.offset(side, -1), side, false);
+		return side.getHorizontalIndex() != -1 && W.isSideSolid(worldIn, pos.offset(side, -1), side, false);
 	}
 	
 	private boolean canAttachOn(World world, BlockPos pos, @Nullable IBlockState state, EnumFacing facing)
 	{
-		return Worlds.isSideSolid(world, pos.offset(facing), facing.getOpposite(), false) || (this.growDir < 0 && this.baseBlock != null ? (Worlds.isBlock(world, pos.up().offset(facing), this.baseBlock, -1, false)) : (Worlds.isBlock(world, pos.down(), this.baseBlock, -1, false)));
+		return W.isSideSolid(world, pos.offset(facing), facing.getOpposite(), false) || (this.growDir < 0 && this.baseBlock != null ? (W.isBlock(world, pos.up().offset(facing), this.baseBlock, -1, false)) : (W.isBlock(world, pos.down(), this.baseBlock, -1, false)));
 	}
 	
 	private boolean recheckGrownSides(World worldIn, BlockPos pos, IBlockState state)

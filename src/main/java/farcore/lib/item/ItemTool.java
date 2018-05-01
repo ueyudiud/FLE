@@ -23,7 +23,8 @@ import farcore.lib.material.behavior.MaterialPropertyManager.MaterialHandler;
 import farcore.lib.skill.ISkill;
 import farcore.util.Localization;
 import fle.loader.Configs;
-import nebula.base.Judgable;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.capability.CapabilityProviderItem;
@@ -131,9 +132,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed, IMaterialCap
 		EMPTY_PROP.id = -1;
 		EMPTY_PROP.hasHandle = false;
 		EMPTY_PROP.hasTie = false;
-		EMPTY_PROP.filterHead = Judgable.FALSE;
-		EMPTY_PROP.filterHandle = Judgable.FALSE;
-		EMPTY_PROP.filterTie = Judgable.FALSE;
+		EMPTY_PROP.filterHead = F.P_F;
+		EMPTY_PROP.filterHandle = F.P_F;
+		EMPTY_PROP.filterTie = F.P_F;
 		EMPTY_PROP.customToolInformation = null;
 		EMPTY_PROP.condition = MC.LATTICE;
 	}

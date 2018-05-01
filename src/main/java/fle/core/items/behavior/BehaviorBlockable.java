@@ -1,7 +1,10 @@
+/*
+ * copyright© 2016-2018 ueyudiud
+ */
 package fle.core.items.behavior;
 
 import nebula.common.item.BehaviorBase;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,7 +39,7 @@ public class BehaviorBlockable extends BehaviorBase
 			return EnumActionResult.PASS;
 		else
 		{
-			EnumActionResult result = Worlds.checkAndPlaceBlockAt(world, pos, facing, player, stack, this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, this.meta, player, stack), false);
+			EnumActionResult result = W.checkAndPlaceBlockAt(world, pos, facing, player, stack, this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, this.meta, player, stack), false);
 			if (result == EnumActionResult.SUCCESS)
 			{
 				stack.stackSize -= this.usePerBlock;

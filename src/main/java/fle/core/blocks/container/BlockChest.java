@@ -5,9 +5,9 @@ package fle.core.blocks.container;
 
 import static farcore.FarCoreRegistry.registerBuiltInModelBlock;
 import static farcore.FarCoreRegistry.registerTESR;
-import static nebula.common.util.EnumChatFormatting.GRAY;
-import static nebula.common.util.EnumChatFormatting.GREEN;
-import static nebula.common.util.EnumChatFormatting.WHITE;
+import static nebula.V.CF.GRAY;
+import static nebula.V.CF.GREEN;
+import static nebula.V.CF.WHITE;
 
 import java.util.List;
 

@@ -3,16 +3,16 @@
  */
 package farcore.lib.tile.abstracts;
 
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class TEWiring extends TESynchronization
+public abstract class TEWiring extends TE04Synchronization
 {
 	protected byte		connectFlag;		// 8 direction.
 	protected Integer	lastWorldDim;
@@ -81,17 +81,17 @@ public abstract class TEWiring extends TESynchronization
 		super.initServer();
 		if (this.lastWorldDim != null)
 		{
-			this.lastWorld = Worlds.world(this.lastWorldDim);
+			this.lastWorld = W.world(this.lastWorldDim);
 		}
 		if (this.nextWorldDim != null)
 		{
-			this.nextWorld = Worlds.world(this.nextWorldDim);
+			this.nextWorld = W.world(this.nextWorldDim);
 		}
 	}
 	
 	public void setNextLink(int nextWorld, BlockPos nextPos)
 	{
-		World world = Worlds.world(nextWorld);
+		World world = W.world(nextWorld);
 		if (world != null)
 		{
 			setNextLink(world, nextPos);
@@ -123,7 +123,7 @@ public abstract class TEWiring extends TESynchronization
 	public void setLastLink(int lastWorld, BlockPos lastPos)
 	{
 		World world;
-		if ((world = Worlds.world(lastWorld)) != null)
+		if ((world = W.world(lastWorld)) != null)
 		{
 			setLastLink(world, lastPos);
 		}

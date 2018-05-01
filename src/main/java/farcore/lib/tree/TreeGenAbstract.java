@@ -11,7 +11,8 @@ import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tree.ITree.BlockType;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -116,7 +117,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
-		Worlds.setBlock(world, new BlockPos(x, y, z), this.tree.getBlock(BlockType.LOG), meta, V.generateState ? 2 : 3);
+		W.setBlock(world, new BlockPos(x, y, z), this.tree.getBlock(BlockType.LOG), meta, V.generateState ? 2 : 3);
 	}
 	
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
@@ -165,12 +166,12 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			int flag = V.generateState ? 2 : 3;
 			if (rand.nextDouble() <= generateCoreLeavesChance)
 			{
-				Worlds.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES_CORE), meta, flag);
-				Worlds.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);
+				W.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES_CORE), meta, flag);
+				W.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);
 			}
 			else
 			{
-				Worlds.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES), meta, flag);
+				W.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES), meta, flag);
 			}
 		}
 	}

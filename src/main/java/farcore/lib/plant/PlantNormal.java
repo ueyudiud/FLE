@@ -7,7 +7,7 @@ import java.util.Random;
 
 import farcore.blocks.flora.BlockPlant;
 import farcore.lib.material.Mat;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -61,7 +61,7 @@ public abstract class PlantNormal implements IPlant<BlockPlant>
 			{
 				pos2.move(EnumFacing.DOWN);
 			}
-			if (canBlockStay(block, block.getDefaultState(), world, pos2) && Worlds.isAirOrReplacable(world, pos2))
+			if (canBlockStay(block, block.getDefaultState(), world, pos2) && W.isAirOrReplacable(world, pos2))
 			{
 				world.setBlockState(pos2, randomGrowState(source, random));
 			}

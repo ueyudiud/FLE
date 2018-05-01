@@ -12,17 +12,17 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.RecipeMaps;
-import nebula.base.ArrayListConditional;
 import nebula.base.Stack;
+import nebula.base.collection.A;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.IUpdatableTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -40,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_BlockActived, ITP_BlockHardness, ITP_ExplosionResistance, IUpdatableTile
+public class TEDirtMixture extends TE04Synchronization implements ITP_Drops, ITB_BlockActived, ITP_BlockHardness, ITP_ExplosionResistance, IUpdatableTile
 {
 	//	private long				duration;
 	//	private long				mixture;
@@ -82,7 +82,7 @@ public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_B
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
-		List<ItemStack> result = ArrayListConditional.requireNonnull();
+		List<ItemStack> result = A.nonnull();
 		ItemStack stack = RecipeMaps.DIRT_MIXTURE_OUTPUT.findRecipe(this.stacks);
 		if (stack != null)
 		{
@@ -145,7 +145,7 @@ public class TEDirtMixture extends TESynchronization implements ITP_Drops, ITB_B
 	
 	private boolean checkStay()
 	{
-		if (Worlds.isAir(this.world, this.pos.east()) || Worlds.isAir(this.world, this.pos.west()) || Worlds.isAir(this.world, this.pos.north()) || Worlds.isAir(this.world, this.pos.south()) || !Worlds.isSideSolid(this.world, this.pos, EnumFacing.UP, false))
+		if (W.isAir(this.world, this.pos.east()) || W.isAir(this.world, this.pos.west()) || W.isAir(this.world, this.pos.north()) || W.isAir(this.world, this.pos.south()) || !W.isSideSolid(this.world, this.pos, EnumFacing.UP, false))
 		{
 			removeBlock();
 			return false;

@@ -14,7 +14,6 @@ import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
 import fle.core.items.behavior.BehaviorArgilBall;
 import fle.core.items.behavior.BehaviorBlockableTool;
-import fle.core.items.behavior.BehaviorResearchItems1;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
@@ -68,7 +67,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(2008, "argil_ball", "Argil Ball", new BehaviorArgilBall());
 		addSubItem(2021, "quick_lime_dust", "Quick Lime Dust");
 		
-		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
+		//		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
 		
 		addSubItem(3101, "plant_ash_soap", "Plant Ash Soap");
 		

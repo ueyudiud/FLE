@@ -13,7 +13,6 @@ import static net.minecraftforge.fml.common.registry.GameRegistry.registerTileEn
 import static org.lwjgl.input.Keyboard.KEY_P;
 import static org.lwjgl.input.Keyboard.KEY_R;
 
-import farcore.FarCore;
 import farcore.blocks.BlockCarvedRock;
 import farcore.blocks.BlockFire;
 import farcore.blocks.BlockIce;
@@ -56,18 +55,16 @@ import farcore.lib.fluid.BlockWater;
 import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.solid.SolidStack;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
+import nebula.NebulaRegistry;
 import nebula.common.LanguageManager;
 import nebula.common.NebulaConfig;
-import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.fluid.FluidBase;
-import nebula.common.gui.ContainerDataHandlerManager;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.EnumChatFormatting;
 import net.minecraft.block.material.Material;
@@ -204,12 +201,11 @@ public class CommonLoader
 		registerLocal(EnumPhysicalDamageType.HIT.getTranslation(), EnumChatFormatting.GOLD + "Hit");
 		CommandSkill.addCommandInformations();
 		bar.step("Register Key Binding");
-		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
-		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
+		NebulaRegistry.registerKey(Keys.ROTATE, KEY_R);
+		NebulaRegistry.registerKey(Keys.PLACE, KEY_P);
 		bar.step("Network Registring");
-		ContainerDataHandlerManager.registerSerializer(SolidStack.BS);
 		FarCoreIdSynchHandler.initialize();
-		LanguageManager.registerGitSource("fle", "ueyudiud", "FLE-Localization", "master");
+		LanguageManager.registerGitLocalProvider("ueyudiud", "FLE-Localization", "master");
 		pop(bar);
 	}
 	

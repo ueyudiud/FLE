@@ -17,6 +17,7 @@ import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
+import nebula.common.stack.BaseStack;
 import nebula.common.util.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -75,6 +76,8 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlockRo
 		{
 			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), type.local, MC.stone.getLocal(this.material));
 		}
+		MC.stone.registerOre(this.material, new BaseStack(getDefaultState().withProperty(TYPE, EnumRockType.resource)).instance());
+		MC.cobble.registerOre(this.material, new BaseStack(getDefaultState().withProperty(TYPE, EnumRockType.cobble)).instance());
 	}
 	
 	@Override

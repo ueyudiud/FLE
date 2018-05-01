@@ -3,7 +3,7 @@
  */
 package farcore.lib.bio;
 
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -30,12 +30,12 @@ public class GeneticMaterial
 		return new GeneticMaterial(this.specie, this.generation, this.coders.clone(), this.nativeValues.clone());
 	}
 	
-	public static enum GenticMaterialFactory implements INBTCompoundReaderAndWritter<GeneticMaterial>
+	public static enum GenticMaterialFactory implements INBTCompoundReaderAndWriter<GeneticMaterial>
 	{
 		INSTANCE;
 		
 		@Override
-		public GeneticMaterial readFromNBT(NBTTagCompound nbt)
+		public GeneticMaterial readFrom(NBTTagCompound nbt)
 		{
 			if (nbt.hasKey("specie"))
 			{
@@ -49,7 +49,7 @@ public class GeneticMaterial
 		}
 		
 		@Override
-		public void writeToNBT(GeneticMaterial target, NBTTagCompound nbt)
+		public void writeTo(GeneticMaterial target, NBTTagCompound nbt)
 		{
 			nbt.setString("specie", target.specie);
 			nbt.setInteger("generation", target.generation);

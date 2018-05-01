@@ -46,8 +46,7 @@ public class MaterialTextureLoader implements IIconLoader
 		for (String variant : variants)
 		{
 			NebulaModelLoader.registerTextureSet(
-					new ResourceLocation(FarCore.ID, "material/" + condition.name + "/" + variant),
-					() -> {
+					new ResourceLocation(FarCore.ID, "material/" + condition.name + "/" + variant), () -> {
 						ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 						for (Mat material : Mat.materials())
 						{

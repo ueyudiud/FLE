@@ -28,7 +28,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.IUpdatableTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
@@ -54,7 +54,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class TECircuitBase extends TESynchronization
+public abstract class TECircuitBase extends TE04Synchronization
 implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride, ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile, ITP_Drops, ITP_BoundingBox, ITP_BlockHardness, ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	protected volatile boolean circuitRedsignalMarker = false;

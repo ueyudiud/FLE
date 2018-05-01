@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import nebula.common.data.Misc;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.NBTs;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public abstract class TEScreenLineChart extends TESynchronization implements INetworkedSyncTile
+public abstract class TEScreenLineChart extends TE04Synchronization implements INetworkedSyncTile
 {
 	public class ChartOption
 	{

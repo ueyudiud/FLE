@@ -6,17 +6,14 @@ package fle.core.client.gui;
 import java.io.IOException;
 
 import fle.api.FLEAPI;
-import fle.core.FLE;
 import fle.core.common.gui.ContainerCeramics;
-import nebula.Nebula;
-import nebula.client.gui.GuiContainerBase;
+import nebula.client.gui.GuiBackground;
+import nebula.client.gui.GuiContainer01Slots;
 import nebula.client.gui.GuiIconButton;
 import nebula.client.gui.GuiIconButton.ButtonSize;
 import nebula.common.LanguageManager;
-import nebula.common.network.packet.PacketGuiAction;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,13 +23,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class GuiCeramics extends GuiContainerBase
+@GuiBackground("fle:textures/gui/clay_model.png")
+public class GuiCeramics extends GuiContainer01Slots
 {
-	private static final ResourceLocation LOCATION = new ResourceLocation(FLE.MODID, "textures/gui/clay_model.png");
-	
 	public GuiCeramics(EntityPlayer player, World world, BlockPos pos)
 	{
-		super(new ContainerCeramics(player, world, pos), LOCATION);
+		super(new ContainerCeramics(player, world, pos));
 	}
 	
 	@Override
@@ -53,21 +49,20 @@ public class GuiCeramics extends GuiContainerBase
 	@Override
 	protected void actionPerformed(GuiButton guibutton) throws IOException
 	{
-		Nebula.network.sendTo(new PacketGuiAction((byte) 1, guibutton.id, this.container));
-		((ContainerCeramics) this.container).onRecieveGUIAction((byte) 1, guibutton.id);
 		super.actionPerformed(guibutton);
+		sendGuiData(1, guibutton.id, true);
 	}
 	
 	@Override
 	protected String getTitleName()
 	{
-		return LanguageManager.translateToLocal("inventory.ceramics");
+		return LanguageManager.translateLocal("inventory.ceramics");
 	}
 	
 	@Override
-	protected void drawOther(int mouseX, int mouseY)
+	protected void drawGuiContainerBackgroundLayer1(float partialTicks, int mouseX, int mouseY)
 	{
-		byte[] layers = ((ContainerCeramics) this.container).layers;
+		byte[] layers = ((ContainerCeramics) this.inventorySlots).layers;
 		int i = 0;
 		for (; i < 5; ++i)
 		{

@@ -37,7 +37,7 @@ import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Maths;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -120,7 +120,7 @@ implements IRockLikeBehavior<B>
 	{
 		if (!canBlockStay(world, pos, state))
 		{
-			Worlds.fallBlock(world, pos, state);
+			W.fallBlock(world, pos, state);
 		}
 	}
 	
@@ -198,7 +198,7 @@ implements IRockLikeBehavior<B>
 		}
 		else
 		{
-			Random rand = Worlds.random(world);
+			Random rand = W.random(world);
 			EnumRockType type = state.getValue(TYPE);
 			switch (type)
 			{
@@ -228,7 +228,7 @@ implements IRockLikeBehavior<B>
 	{
 		if (!canBlockStay(world, pos, state))
 		{
-			Worlds.fallBlock(world, pos, state);
+			W.fallBlock(world, pos, state);
 		}
 	}
 	
@@ -237,7 +237,7 @@ implements IRockLikeBehavior<B>
 	{
 		if (!canBlockStay(world, pos, state))
 		{
-			Worlds.fallBlock(world, pos, state);
+			W.fallBlock(world, pos, state);
 		}
 	}
 	
@@ -248,7 +248,7 @@ implements IRockLikeBehavior<B>
 		switch (type)
 		{
 		case resource:
-			boolean flag = Worlds.isBlockNearby(world, pos, EnumBlock.water.block, true);
+			boolean flag = W.isBlockNearby(world, pos, EnumBlock.water.block, true);
 			boolean flag2 = state.getValue(HEATED);
 			if (flag2)
 			{
@@ -359,7 +359,7 @@ implements IRockLikeBehavior<B>
 		{
 			world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble));
 		}
-		if (Worlds.isAirOrReplacable(world, pos.down()) && checkCollapse(world, pos, state, 200, true))
+		if (W.isAirOrReplacable(world, pos.down()) && checkCollapse(world, pos, state, 200, true))
 		{
 			NebulaWorldHandler.schedueTask(new TaskFalling(world, pos, pos, state, 4));
 		}
@@ -382,9 +382,9 @@ implements IRockLikeBehavior<B>
 		{
 		case cobble :
 		case mossy :
-			return Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true);
+			return W.isSideSolid(world, pos.down(), EnumFacing.UP, true);
 		default:
-			return !Worlds.isAir(world, pos.down()) ||
+			return !W.isAir(world, pos.down()) ||
 					world.isSideSolid(pos.north(), EnumFacing.SOUTH, true) ||
 					world.isSideSolid(pos.south(), EnumFacing.NORTH, true) ||
 					world.isSideSolid(pos.east(), EnumFacing.WEST, true) ||
@@ -450,7 +450,7 @@ implements IRockLikeBehavior<B>
 	@Override
 	public void scheduleFalling(B block, World world, BlockPos pos, IBlockState state, int delayMultiplier)
 	{
-		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) &&
+		if (!W.isSideSolid(world, pos.down(), EnumFacing.UP, true) &&
 				checkCollapse(world, pos, state, 500, true))
 		{
 			pos = pos.toImmutable();
@@ -462,9 +462,9 @@ implements IRockLikeBehavior<B>
 	@Override
 	public boolean onCaveInCheck(B block, World world, BlockPos pos, IBlockState state)
 	{
-		if (!Worlds.isSideSolid(world, pos.down(), EnumFacing.UP, true) && checkCollapse(world, pos, state, 100, false))
+		if (!W.isSideSolid(world, pos.down(), EnumFacing.UP, true) && checkCollapse(world, pos, state, 100, false))
 		{
-			Worlds.fallBlock(world, pos, state);
+			W.fallBlock(world, pos, state);
 			
 			int range = 3 + world.rand.nextInt(16);
 			MutableBlockPos pos2 = new MutableBlockPos();

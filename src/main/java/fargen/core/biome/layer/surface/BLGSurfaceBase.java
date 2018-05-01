@@ -15,7 +15,7 @@ import farcore.lib.world.IWorldPropProvider;
 import fargen.core.biome.BiomeBase;
 import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.worldgen.surface.FarSurfaceDataGenerator;
-import nebula.base.IPropertyMap;
+import nebula.base.collection.IPropertyMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;

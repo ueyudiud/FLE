@@ -135,7 +135,7 @@ public class ToolPropertiesModificater
 	{
 		for (ToolPropertyTag tag : this.tags.values())
 		{
-			String formats = LanguageManager.translateToLocal(tag.property.getTranslateName());
+			String formats = LanguageManager.translateLocal(tag.property.getTranslateName());
 			switch (tag.type)
 			{
 			case BASE_ADD:
@@ -155,7 +155,7 @@ public class ToolPropertiesModificater
 	public float applyModification(float value, Property property)
 	{
 		assert (property != Property.SPECIAL);// Special property can not use
-												// this to get modification.
+		// this to get modification.
 		List<ToolPropertyTag>[] tags = this.properties.get(property);
 		if (tags == null) return value;
 		

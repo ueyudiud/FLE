@@ -25,7 +25,7 @@ import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.util.Properties;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -138,7 +138,7 @@ public class BlockSoilLike<P extends PropertyBlockable<? super BlockSoilLike<?>>
 	{
 		BlockPos pos1;
 		IBlockState state1;
-		if (Worlds.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
+		if (W.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
 		return (state1 = world.getBlockState(pos1.down())).getBlock() instanceof BlockSoilLike<?> ? state.getValue(COVER_TYPE).noCover == state1.getValue(COVER_TYPE).noCover : false;
 	}
 	

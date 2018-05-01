@@ -8,6 +8,7 @@ import java.util.Random;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.biome.BiomeBase;
+import nebula.base.R;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -53,8 +54,8 @@ public class RenderWeatherSurface extends IRenderHandler
 		float f = world.getRainStrength(partialTicks);
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
 		EntityRenderer renderer = mc.entityRenderer;
-		int rendererUpdateCount = nebula.common.util.R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
-		Random random = (Random) nebula.common.util.R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
+		int rendererUpdateCount = R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
+		Random random = (Random) R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
 		if (f > 0.0F)
 		{
 			renderer.enableLightmap();

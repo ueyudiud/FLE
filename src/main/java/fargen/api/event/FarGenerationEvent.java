@@ -3,9 +3,6 @@
  */
 package fargen.api.event;
 
-import static nebula.common.util.SubTag.getNewSubTag;
-
-import nebula.common.util.SubTag;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -24,14 +21,18 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class FarGenerationEvent extends Event
 {
-	public static final SubTag TREE = getNewSubTag("TREE_GEN"), WILD_CROP = getNewSubTag("WILD_CROP_GEN");
+	public static enum Type
+	{
+		TREE,
+		WILD_CROP;
+	}
 	
-	public final SubTag				tag;
+	public final Type				tag;
 	public final World				world;
 	public final int				chunkX, chunkZ;
 	public final IChunkGenerator	generator;
 	
-	public FarGenerationEvent(SubTag tag, World world, int chunkX, int chunkZ, IChunkGenerator generator)
+	public FarGenerationEvent(Type tag, World world, int chunkX, int chunkZ, IChunkGenerator generator)
 	{
 		this.tag = tag;
 		this.world = world;

@@ -11,8 +11,8 @@ import java.util.Set;
 
 import nebula.base.Ety;
 import nebula.base.INode;
-import nebula.base.Judgable;
 import nebula.base.Node;
+import nebula.base.function.Judgable;
 
 /**
  * @author ueyudiud

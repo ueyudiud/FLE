@@ -42,7 +42,7 @@ public class StackContainer<E>
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound compound = list.getCompoundTagAt(i);
-			E e = reader.readFromNBT(compound, "e");
+			E e = reader.readFrom(compound, "e");
 			if (e != null)
 			{
 				long size = compound.getLong("s");
@@ -63,7 +63,7 @@ public class StackContainer<E>
 		for (Stack<E> stack : this.stacks.values())
 		{
 			compound = new NBTTagCompound();
-			compound.setTag("e", writer.writeToNBT(stack.element));
+			writer.writeTo(compound, "e", stack.element);
 			compound.setLong("s", stack.size);
 			list.appendTag(compound);
 		}

@@ -14,7 +14,7 @@ import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,25 +113,25 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	{
 		label:
 		{
-			if (!worldIn.isRemote)
+		if (!worldIn.isRemote)
+		{
+			if (worldIn.isSideSolid(pos.down(), EnumFacing.UP))
 			{
-				if (worldIn.isSideSolid(pos.down(), EnumFacing.UP))
-				{
-					break label;
-				}
-				for (int h = -1; h <= 1; h++)
-				{
-					for (int g = -1; g <= 1; g++)
-					{
-						for (int f = -1; f <= 1; f++)
-							if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
-							{
-								break label;
-							}
-					}
-				}
-				worldIn.setBlockToAir(pos);
+				break label;
 			}
+			for (int h = -1; h <= 1; h++)
+			{
+				for (int g = -1; g <= 1; g++)
+				{
+					for (int f = -1; f <= 1; f++)
+						if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
+						{
+							break label;
+						}
+				}
+			}
+			worldIn.setBlockToAir(pos);
+		}
 		}
 	}
 	
@@ -188,7 +188,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	
 	public boolean isLog(World worldIn, BlockPos pos)
 	{
-		return Worlds.isBlock(worldIn, pos, this, -1, false);
+		return W.isBlock(worldIn, pos, this, -1, false);
 	}
 	
 	private void breakTree(World world, BlockPos pos)

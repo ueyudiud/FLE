@@ -13,7 +13,7 @@ import farcore.lib.world.instance.CalendarSurface;
 import fle.loader.IBFS;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -64,7 +64,7 @@ public class TreeApple extends TreeWithFruitLeaves
 				ItemStack stack = IBFS.iCropRelated.getSubItem("apple");
 				if (!player.inventory.addItemStackToInventory(stack))
 				{
-					Worlds.spawnDropInWorld(world, pos, stack);
+					W.spawnDropInWorld(world, pos, stack);
 				}
 				world.setBlockState(pos, state.withProperty(FRUIT_STAGE, 0));
 			}
@@ -76,7 +76,7 @@ public class TreeApple extends TreeWithFruitLeaves
 				ItemStack stack = IBFS.iCropRelated.getSubItem("green_apple");
 				if (!player.inventory.addItemStackToInventory(stack))
 				{
-					Worlds.spawnDropInWorld(world, pos, stack);
+					W.spawnDropInWorld(world, pos, stack);
 				}
 				world.setBlockState(pos, state.withProperty(FRUIT_STAGE, 0));
 			}

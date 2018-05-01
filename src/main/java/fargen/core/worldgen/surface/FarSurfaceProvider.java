@@ -81,7 +81,7 @@ public class FarSurfaceProvider extends WorldProvider
 		// {
 		// if (!byWater)
 		// return true;
-		// boolean flag = Worlds.isBlockNearby(world, pos, Blocks.WATER, true);
+		// boolean flag = W.isBlockNearby(world, pos, Blocks.WATER, true);
 		// if (!flag)
 		// return true;
 		// }

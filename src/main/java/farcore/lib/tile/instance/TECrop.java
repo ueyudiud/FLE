@@ -26,12 +26,12 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_CustomModelData;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import nebula.common.tile.IUpdatableTile;
-import nebula.common.tile.TEAged;
+import nebula.common.tile.TE05Aged;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.Players;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -46,7 +46,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TECrop extends TEAged
+public class TECrop extends TE05Aged
 implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update,
 ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_CustomModelData
 {
@@ -325,7 +325,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	{
 		if (!canBlockStay())
 		{
-			Worlds.spawnDropsInWorld(this, getDrops(state, 0, false));
+			W.spawnDropsInWorld(this, getDrops(state, 0, false));
 			killCrop();
 		}
 	}

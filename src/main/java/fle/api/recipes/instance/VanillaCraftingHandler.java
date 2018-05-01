@@ -22,13 +22,13 @@ import net.minecraft.world.World;
 public class VanillaCraftingHandler implements IRecipeMap<IRecipe, IRecipe, Entry<InventoryCrafting, World>>
 {
 	@Override
-	public IRecipe readFromNBT(NBTTagCompound nbt)
+	public IRecipe readFrom(NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public void writeToNBT(IRecipe target, NBTTagCompound nbt)
+	public void writeTo(IRecipe target, NBTTagCompound nbt)
 	{
 		throw new UnsupportedOperationException();
 	}

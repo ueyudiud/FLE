@@ -5,31 +5,39 @@ package fle.core.tile.wooden;
 
 import java.io.IOException;
 
+import farcore.lib.container.Container04Solid;
+import farcore.lib.inventory.SolidContainerSingle;
+import farcore.lib.inventory.SolidContainers;
+import farcore.lib.solid.SolidSlot;
 import farcore.lib.solid.container.SolidContainerHelper;
-import farcore.lib.solid.container.SolidTank;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import fle.api.recipes.instance.RecipeMaps;
-import fle.api.tile.TEITSRecipe;
-import fle.core.client.gui.wooden.GuiStoneMill;
-import fle.core.common.gui.wooden.ContainerStoneMill;
-import nebula.common.NebulaSynchronizationHandler;
-import nebula.common.fluid.FluidTankN;
-import nebula.common.inventory.InventoryHelper;
+import fle.api.tile.TE08Recipe;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
+import nebula.client.gui.GuiBackground;
+import nebula.client.gui.GuiContainer02TE;
+import nebula.common.gui.FluidSlot;
+import nebula.common.gui.ISlotInitalizer;
+import nebula.common.gui.ItemSlot;
+import nebula.common.gui.ItemSlotOutput;
+import nebula.common.inventory.FluidContainerSingle;
+import nebula.common.inventory.FluidContainers;
+import nebula.common.inventory.IContainer;
+import nebula.common.inventory.ItemContainersArray;
+import nebula.common.inventory.task.Task;
+import nebula.common.inventory.task.TaskBuilder;
 import nebula.common.network.PacketBufferExt;
-import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.Explosion;
@@ -39,33 +47,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>> implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
+@GuiBackground("fle:textures/gui/stone_mill.png")
+public class TEStoneMill extends TE08Recipe<ItemStack, TemplateRecipeCache<ItemStack>>
+implements ITB_BlockActived, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
-	public SolidTank	tank1	= new SolidTank(1000);
-	public FluidTankN	tank2	= new FluidTankN(4000);
 	private int			buffer;
 	@SideOnly(Side.CLIENT)
 	private int			angle;
 	
 	public TEStoneMill()
 	{
-		super(3);
-		this.syncTankState = false;
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound compound)
-	{
-		super.readFromNBT(compound);
-		this.tank1.readFromNBT(compound, "solid");
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound)
-	{
-		super.writeToNBT(compound);
-		this.tank1.writeToNBT(compound, "solid");
-		return compound;
+		this.items = new ItemContainersArray(3, 64);
+		this.fluids = new FluidContainers<>(new FluidContainerSingle(4000));
+		this.solids = new SolidContainers<>(new SolidContainerSingle(1000));
 	}
 	
 	@Override
@@ -86,16 +80,12 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 		return 4.0F;
 	}
 	
-	@Override
-	protected FluidTankN tank()
-	{
-		return this.tank2;
-	}
+	private final Task.TaskBTB taskFillOrDrain = provideSolidFillOrDrainTask(1, 2, 0, 1000, false, true, true);
 	
 	@Override
 	protected void updateServer()
 	{
-		SolidContainerHelper.drainOrFillTank(this, this.tank1, 1, 2, InventoryHelper.FD_DRAIN);
+		this.taskFillOrDrain.invoke();
 		super.updateServer();
 		if (this.buffer > 0)
 		{
@@ -126,7 +116,7 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 			if (side.horizontal)
 			{
 				onRotateMill(player);
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
+				markTileUpdate(0);
 			}
 			else
 			{
@@ -161,7 +151,7 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	@Override
 	protected ItemStack getRecipeInputHandler()
 	{
-		return this.stacks[0];
+		return getStackInSlot(0);
 	}
 	
 	@Override
@@ -180,11 +170,10 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (this.tank1.insertSolid(this.cache.get(1), true) && this.tank2.insertFluid(this.cache.get(2), false))
-		{
-			return this.tank1.insertSolid(this.cache.get(1), false);
-		}
-		return false;
+		return TaskBuilder.builder()
+				.add(this.solids.getContainer(0).taskIncr(this.cache.get(1), IContainer.PROCESS))
+				.add(this.fluids.getContainer(0).taskIncr(this.cache.get(2), IContainer.PROCESS))
+				.build().run();
 	}
 	
 	@Override
@@ -200,15 +189,31 @@ public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<Item
 	}
 	
 	@Override
-	public Container openContainer(int id, EntityPlayer player)
+	public void initalizeContainer(Container04Solid container, ISlotInitalizer initalizer)
 	{
-		return new ContainerStoneMill(this, player);
+		initalizer.addSlot("input", new ItemSlot(this.items.getContainer(0), this, 0, 65, 20).setPredicate(((Judgable<Object>) F.P_ANY).from(RecipeMaps.STONE_MILL::findRecipe)))
+		.addLocation("player", false);
+		initalizer.addSlot("fillin", new ItemSlot(this.items.getContainer(1), this, 1, 55, 52).setPredicate(((Judgable<Object>) F.P_ANY).from(SolidContainerHelper::getSolidFromItemStack)))
+		.addLocation("player", false);
+		initalizer.addSlot("fillout", new ItemSlotOutput(this.items.getContainer(2), this, 2, 91, 52))
+		.addLocation("player", false);
+		initalizer.straegyPlayerBag().addLocation("fillin", false).addLocation("input", false).addLocation("hand", false);
+		initalizer.straegyPlayerHand().addLocation("fillin", false).addLocation("input", false).addLocation("bag", false);
+		initalizer.addSlot(new FluidSlot(this.fluids.getContainer(0), 117, 48, 8, 20).setRenderHorizontal());
+		initalizer.addSlot(new SolidSlot(this.solids.getContainer(0), 73, 52, 16, 16));
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiContainer openGui(int id, EntityPlayer player)
+	public void drawBackgroundSecondLayer(GuiContainer02TE<?> gui, int x, int y, float partialTicks, int mouseX, int mouseY)
 	{
-		return new GuiStoneMill(this, player);
+		if (this.buffer > 0)
+		{
+			gui.drawProgressScaleUTD(x + 82, y + 17, 176, 0, 19, 21, this.buffer, 20);
+		}
+		if (isWorking())
+		{
+			gui.drawProgressScaleLTR(x + 48, y + 39, 0, 166, 66, 9, getRecipeTick(), getMaxRecipeTick());
+		}
 	}
 }

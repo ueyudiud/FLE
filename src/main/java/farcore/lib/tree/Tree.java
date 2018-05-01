@@ -43,7 +43,7 @@ import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -236,7 +236,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	
 	protected boolean canLeaveGrowNearby(World world, BlockPos pos)
 	{
-		return Worlds.isBlockNearby(world, pos, this.blocks[0], false);
+		return W.isBlockNearby(world, pos, this.blocks[0], false);
 	}
 	
 	protected boolean shouldLeavesDency(World world, BlockPos pos)
@@ -352,7 +352,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		if (Config.droppingWhenDecay)
 		{
-			Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
+			W.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
 		}
 		world.setBlockToAir(pos);
 	}
@@ -372,12 +372,12 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	@Override
 	public void beginLeavesDecay(World world, BlockPos pos)
 	{
-		Worlds.switchProp(world, pos, CHECK_DECAY, true, 2);
+		W.switchProp(world, pos, CHECK_DECAY, true, 2);
 	}
 	
 	public void stopLeavesDency(World world, BlockPos pos)
 	{
-		Worlds.switchProp(world, pos, CHECK_DECAY, false, 2);
+		W.switchProp(world, pos, CHECK_DECAY, false, 2);
 	}
 	
 	@Override
@@ -399,13 +399,13 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	}
 	
 	@Override
-	public List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list)
+	public List<ItemStack> getLogOtherDrop(World world, BlockPos pos, List<ItemStack> list)
 	{
 		return list;
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, ArrayList list)
+	public List<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, boolean silkTouching, List<ItemStack> list)
 	{
 		if (L.nextInt(8) == 0)
 		{
@@ -456,12 +456,12 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 		int state = worldGenerationFlag ? 2 : 3;
 		if (world.rand.nextFloat() <= generateCoreLeavesChance)
 		{
-			Worlds.setBlock(world, pos, this.blocks[3], meta, state);
-			Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !worldGenerationFlag);
+			W.setBlock(world, pos, this.blocks[3], meta, state);
+			W.setTileEntity(world, pos, new TECoreLeaves(this, info), !worldGenerationFlag);
 		}
 		else
 		{
-			Worlds.setBlock(world, pos, this.blocks[2], meta, state);
+			W.setBlock(world, pos, this.blocks[2], meta, state);
 		}
 	}
 	

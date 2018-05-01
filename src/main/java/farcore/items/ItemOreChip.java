@@ -11,14 +11,11 @@ import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.LanguageManager;
-import nebula.common.util.ItemStacks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -40,14 +37,6 @@ public class ItemOreChip extends ItemMulti
 			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
 			this.condition.registerOre(material, templete);
 		}
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerRender()
-	{
-		super.registerRender();
-		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), stack -> "material:" + ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
 	}
 	
 	public static ItemStack createOreChip(int size, Mat ore, Mat rock)

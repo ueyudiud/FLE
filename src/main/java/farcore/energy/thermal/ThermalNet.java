@@ -29,7 +29,7 @@ import nebula.Nebula;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import nebula.common.world.ICoord;
 import nebula.common.world.IObjectInWorld;
 import net.minecraft.block.state.IBlockState;
@@ -89,7 +89,7 @@ public class ThermalNet implements IEnergyNet
 		{
 			if (obj instanceof IThermalObjectInWorld)
 			{
-				affected += ((IThermalObjectInWorld) obj).getDetTemp(Worlds.distanceSqTo(obj, pos), base);
+				affected += ((IThermalObjectInWorld) obj).getDetTemp(W.distanceSqTo(obj, pos), base);
 			}
 		}
 		return base + affected;

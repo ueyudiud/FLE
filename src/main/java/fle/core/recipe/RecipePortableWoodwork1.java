@@ -8,8 +8,7 @@ import farcore.data.MP;
 import farcore.items.ItemTreeLog;
 import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
-import nebula.common.inventory.IBasicInventory;
-import nebula.common.util.ItemStacks;
+import nebula.common.inventory.InventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
@@ -19,19 +18,19 @@ import net.minecraft.item.ItemStack;
 public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 {
 	@Override
-	public boolean match(IBasicInventory inventory)
+	public boolean match(ItemStack[] inventory)
 	{
-		if (inventory.hasStackInSlot(2))
+		if (inventory[2] != null)
 		{
-			ItemStack stack = inventory.getStack(2);
+			ItemStack stack = inventory[2];
 			if (stack.getItem() instanceof ItemTreeLog)
 			{
 				int length = ItemTreeLog.getLogSize(stack);
 				if (length <= 1) return false;
-				if (inventory.hasStackInSlot(1)) return false;
-				if (inventory.hasStackInSlot(0))
+				if (inventory[1] != null) return false;
+				if (inventory[0] != null)
 				{
-					stack = inventory.getStack(0);
+					stack = inventory[0];
 					if (EnumToolTypes.AXE.match(stack) || EnumToolTypes.BOW_SAW.match(stack) || EnumToolTypes.ADZ.match(stack))
 					{
 						return true;
@@ -43,16 +42,16 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	}
 	
 	@Override
-	public int[] getIntScaleRange(IBasicInventory inventory)
+	public int[] getIntScaleRange(ItemStack[] inventory)
 	{
-		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
+		int length = ItemTreeLog.getLogSize(inventory[2]);
 		return new int[] { 1, length / 2 };
 	}
 	
 	@Override
-	public ItemStack[] getOutputs(IBasicInventory inventory, int value)
+	public ItemStack[] getOutputs(ItemStack[] inventory, int value)
 	{
-		ItemStack stack = inventory.getStack(2);
+		ItemStack stack = inventory[2];
 		ItemStack[] result = new ItemStack[2];
 		PropertyWood tree = ItemTreeLog.getMaterial(stack).getProperty(MP.property_wood);
 		int length = ItemTreeLog.getLogSize(stack);
@@ -79,20 +78,16 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	}
 	
 	@Override
-	public void onOutput(IBasicInventory inventory, int value)
+	public void onOutput(ItemStack[] inventory, int value)
 	{
-		ItemStacks.damageTool(inventory.getStack(0), 1.0F, null, null);
-		if (inventory.getStack(0).stackSize <= 0)
-		{
-			inventory.removeStackFromSlot(0);
-		}
-		inventory.decrStackSize(2, 1);
+		InventoryHelper.damageTool(inventory, 0, 1.0F, null, null);
+		InventoryHelper.decrSlotStack(inventory, 2, 1, true);
 	}
 	
 	@Override
-	public int[] getDisplayNumbers(IBasicInventory inventory, int value)
+	public int[] getDisplayNumbers(ItemStack[] inventory, int value)
 	{
-		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
+		int length = ItemTreeLog.getLogSize(inventory[2]);
 		return new int[] { value, length - value };
 	}
 }

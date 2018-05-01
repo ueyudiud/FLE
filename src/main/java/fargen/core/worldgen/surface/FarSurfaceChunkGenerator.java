@@ -3,8 +3,8 @@
  */
 package fargen.core.worldgen.surface;
 
-import static fargen.api.event.FarGenerationEvent.TREE;
-import static fargen.api.event.FarGenerationEvent.WILD_CROP;
+import static fargen.api.event.FarGenerationEvent.Type.TREE;
+import static fargen.api.event.FarGenerationEvent.Type.WILD_CROP;
 
 import java.util.List;
 import java.util.Random;
@@ -24,9 +24,9 @@ import fargen.api.event.FarGenerationEvent;
 import fargen.api.event.TreeGenEvent;
 import fargen.api.terrain.Terrain;
 import fargen.core.biome.BiomeBase;
-import nebula.base.HashPropertyMap;
-import nebula.base.IPropertyMap;
-import nebula.base.IPropertyMap.IProperty;
+import nebula.base.collection.HashPropertyMap;
+import nebula.base.collection.IPropertyMap;
+import nebula.base.collection.IPropertyMap.IProperty;
 import nebula.base.function.WeightedRandomSelector;
 import nebula.common.util.L;
 import nebula.common.util.noise.NoiseBase;

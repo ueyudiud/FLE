@@ -11,7 +11,7 @@ import farcore.energy.thermal.instance.ThermalHandlerSimple;
 import farcore.handler.FarCoreEnergyHandler;
 import fle.api.recipes.instance.SimplyKilnRecipe;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
@@ -25,7 +25,7 @@ import net.minecraft.util.EnumHand;
 /**
  * @author ueyudiud
  */
-public class TESimplyKiln extends TESynchronization implements IThermalProvider, ITB_BlockActived
+public class TESimplyKiln extends TE04Synchronization implements IThermalProvider, ITB_BlockActived
 {
 	public ItemStack stack;
 	

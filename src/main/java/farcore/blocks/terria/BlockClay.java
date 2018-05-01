@@ -6,12 +6,13 @@ package farcore.blocks.terria;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import nebula.base.ObjArrayParseHelper;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -65,6 +66,6 @@ public class BlockClay extends BlockSoilLike
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.clayball, 4 + Worlds.random(world).nextInt(5)));
+		return Lists.newArrayList(ItemMulti.createStack(this.material, MC.clayball, 4 + W.random(world).nextInt(5)));
 	}
 }

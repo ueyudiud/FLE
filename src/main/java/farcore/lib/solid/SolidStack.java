@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import nebula.base.register.IRegisterDelegate;
 import nebula.common.data.IBufferSerializer;
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
 import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -34,12 +34,13 @@ public class SolidStack
 		public void write(PacketBuffer buffer, SolidStack value)
 		{
 			if (value == null)
-				buffer.writeBoolean(false);
+			{
+				buffer.writeInt(0);
+			}
 			else
 			{
-				buffer.writeBoolean(true);
-				buffer.writeShort(value.delegate.id());
 				buffer.writeInt(value.amount);
+				buffer.writeShort(value.delegate.id());
 				buffer.writeCompoundTag(value.tag);
 			}
 		}
@@ -47,8 +48,9 @@ public class SolidStack
 		@Override
 		public SolidStack read(PacketBuffer buffer) throws IOException
 		{
-			return buffer.readBoolean() ?
-					new SolidStack(Solid.REGISTRY.getDelegete(buffer.readShort()), buffer.readInt(), buffer.readCompoundTag()) :
+			int amount = buffer.readInt();
+			return amount > 0 ?
+					new SolidStack(Solid.REGISTRY.getDelegete(buffer.readShort()), amount, buffer.readCompoundTag()) :
 						null;
 		}
 		
@@ -62,16 +64,16 @@ public class SolidStack
 	/**
 	 * Solid stack reader and writer.
 	 */
-	public static final INBTCompoundReaderAndWritter<SolidStack> RW = new INBTCompoundReaderAndWritter<SolidStack>()
+	public static final INBTCompoundReaderAndWriter<SolidStack> RW = new INBTCompoundReaderAndWriter<SolidStack>()
 	{
 		@Override
-		public SolidStack readFromNBT(NBTTagCompound nbt)
+		public SolidStack readFrom(NBTTagCompound nbt)
 		{
 			return loadFromNBT(nbt);
 		}
 		
 		@Override
-		public void writeToNBT(SolidStack target, NBTTagCompound nbt)
+		public void writeTo(SolidStack target, NBTTagCompound nbt)
 		{
 			target.writeToNBT(nbt);
 		}
@@ -170,12 +172,21 @@ public class SolidStack
 	}
 	
 	/**
-	 * @param other the other solid stack.
-	 * @return return <tt>true</tt> if solid and NBT of two stack are equal.
+	 * @param other another solid stack.
+	 * @return return <code>true</code> if solid and NBT of two stack are equal.
 	 */
 	public boolean isSoildEqual(SolidStack other)
 	{
 		return other == null ? false : this.delegate.equals(other.delegate) && ItemStacks.areTagEqual(this.tag, other.tag);
+	}
+	
+	/**
+	 * @param other another solid stack.
+	 * @return return <code>true</code> if two stack are equal.
+	 */
+	public boolean isSolidStackEqual(SolidStack other)
+	{
+		return isSoildEqual(other) && this.amount == other.amount;
 	}
 	
 	/**

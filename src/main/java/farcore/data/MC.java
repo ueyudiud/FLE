@@ -4,9 +4,9 @@
 package farcore.data;
 
 import farcore.lib.material.MatCondition;
-import nebula.base.Judgable;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.common.util.ISubTagContainer;
-import nebula.common.util.SubTag;
 
 /**
  * Material condition set.
@@ -19,7 +19,7 @@ public class MC
 	/**
 	 * Only for single unit item mark.
 	 */
-	public static final MatCondition LATTICE = new MatCondition("lattice", "Lattice", "%s Lattice").setSize(1L).setFilter(SubTag.TRUE);
+	public static final MatCondition LATTICE = new MatCondition("lattice", "Lattice", "%s Lattice").setSize(1L).setFilter(F.P_T);
 	
 	public static final Judgable<ISubTagContainer>	METALLIC_TOOL;
 	public static final Judgable<ISubTagContainer>	ROCKY_TOOL;
@@ -46,8 +46,8 @@ public class MC
 	public static final MatCondition	dust				= new MatCondition("dust", "Dust", "% Dust").setSize(576L, 4L).setFilter(SubTags.DUST);
 	public static final MatCondition	dust_small			= new MatCondition("dust_small", "dustSmall", "Small Dust", "Small % Dust").setSize(144L, 4L).setFilter(SubTags.DUST);
 	public static final MatCondition	dust_tiny			= new MatCondition("dust_tiny", "dustTiny", "Tiny Dust", "Tiny % Dust").setSize(64L, 4L).setFilter(SubTags.DUST);
-	public static final MatCondition	pile				= new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
-	public static final MatCondition	pile_purified		= new MatCondition("pile_purified", "Purified Pile", "Purified % Pile").setSize(576L, 12L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
+	public static final MatCondition	pile				= new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(F.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
+	public static final MatCondition	pile_purified		= new MatCondition("pile_purified", "Purified Pile", "Purified % Pile").setSize(576L, 12L).setFilter(F.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
 	public static final MatCondition	clayball			= new MatCondition("clayball", "clay", "Clay", "% Ball").setSize(576L, 8L).setFilter(SubTags.CLAY);
 	public static final MatCondition	block				= new MatCondition("block", "Block", "% Block").setSize(1296L, 1296L, 0.1F).setFilter(SubTags.METAL);
 	public static final MatCondition	ingot				= new MatCondition("ingot", "Ingot", "% Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTags.METAL);
@@ -67,38 +67,37 @@ public class MC
 	public static final MatCondition	rooftile			= new MatCondition("rooftile", "Roof Tile", "% Roof Tile").setSize(144L, 72L).setFilter(SubTags.BRICK);
 	public static final MatCondition	tie					= new MatCondition("tie", "Tie", "% Tie").setSize(36L, 18L, 3.0F).setFilter(SubTags.ROPE);
 	public static final MatCondition	handle				= new MatCondition("handle", "Handle", "% Handle").setSize(72L, 72L, 1.5F).setFilter(SubTags.HANDLE);
-	public static final MatCondition	adz_metal			= new MatCondition("adz_metal", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(Judgable.and(SubTags.METAL, SubTags.TOOL));
-	public static final MatCondition	adz_rock			= new MatCondition("adz_rock", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(Judgable.and(Judgable.or(SubTags.ROCK, SubTags.FLINT), SubTags.TOOL));
+	public static final MatCondition	adz_metal			= new MatCondition("adz_metal", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(F.and(SubTags.METAL, SubTags.TOOL));
+	public static final MatCondition	adz_rock			= new MatCondition("adz_rock", "adz", "Adz", "% Adz").setSize(288L, 288L, 1.2F).setFilter(F.and(F.or(SubTags.ROCK, SubTags.FLINT), SubTags.TOOL));
 	public static final MatCondition	axe_rock			= new MatCondition("axe_rock", "axe", "Axe", "% Axe").setSize(288L);
 	public static final MatCondition	axe_metal			= new MatCondition("axe_metal", "axe", "Axe", "% Axe").setSize(288L);
 	public static final MatCondition	pickaxe_metal		= new MatCondition("pickaxe_metal", "pickaxe", "Pickaxe", "% Pickaxe").setSize(288L);
 	public static final MatCondition	hard_hammer_flint	= new MatCondition("hard_hammer_flint", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L);
-	public static final MatCondition	hard_hammer_rock	= new MatCondition("hard_hammer_rock", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(Judgable.and(SubTags.ROCK, SubTags.FLINT.not(), SubTags.TOOL));
-	public static final MatCondition	hard_hammer_metal	= new MatCondition("hard_hammer_metal", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(Judgable.and(SubTags.ROCK, SubTags.FLINT.not(), SubTags.TOOL));
+	public static final MatCondition	hard_hammer_rock	= new MatCondition("hard_hammer_rock", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(F.and(SubTags.ROCK, SubTags.FLINT.negate(), SubTags.TOOL));
+	public static final MatCondition	hard_hammer_metal	= new MatCondition("hard_hammer_metal", "hardHammer", "Hard Hammer", "% Hammer").setSize(288L).setFilter(F.and(SubTags.ROCK, SubTags.FLINT.negate(), SubTags.TOOL));
 	public static final MatCondition	shovel_rock			= new MatCondition("shovel_rock", "shovel", "Shovel", "% Shovel").setSize(288L, 288L, 1.2F);
-	public static final MatCondition	shovel_metal		= new MatCondition("shovel_metal", "shovel", "Shovel", "% Shovel").setSize(144L, 144L, 1.2F).setFilter(Judgable.and(SubTags.METAL, SubTags.TOOL));
+	public static final MatCondition	shovel_metal		= new MatCondition("shovel_metal", "shovel", "Shovel", "% Shovel").setSize(144L, 144L, 1.2F).setFilter(F.and(SubTags.METAL, SubTags.TOOL));
 	public static final MatCondition	spade_hoe_rock		= new MatCondition("spade_hoe_rock", "spadeHoe", "Spade-Hoe", "% Spade-Hoe").setSize(288L, 288L, 1.3F);
 	public static final MatCondition	spear_rock			= new MatCondition("spear_rock", "spear", "Spear", "% Spear").setSize(288L, 288L, 1.2F);
 	public static final MatCondition	sickle_rock			= new MatCondition("sickle_rock", "sickle", "Sickle", "% Sickle").setSize(288L, 288L, 1.0F);
-	public static final MatCondition	firestarter			= new MatCondition("firestarter", "firestarter", "Firestarter", "% Firestarter").setSize(288L, 288L, 1.0F).setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
+	public static final MatCondition	firestarter			= new MatCondition("firestarter", "firestarter", "Firestarter", "% Firestarter").setSize(288L, 288L, 1.0F).setFilter(F.and(SubTags.WOOD, SubTags.TOOL));
 	public static final MatCondition	decorticating_plate	= new MatCondition("decorticating_plate", "decorticatingPlate", "Decorticating Plate", "% Decorticating Plate");
 	public static final MatCondition	decorticating_stick	= new MatCondition("decorticating_stick", "decorticatingStick", "Decorticating Stick", "% Decorticating Stick");
-	public static final MatCondition	awl					= new MatCondition("awl", "Awl", "% Awl").setFilter(Judgable.and(SubTags.FLINT, SubTags.TOOL));
+	public static final MatCondition	awl					= new MatCondition("awl", "Awl", "% Awl").setFilter(F.and(SubTags.FLINT, SubTags.TOOL));
 	public static final MatCondition	whetstone			= new MatCondition("whetstone", "Whestone", "% Whetstone");
 	public static final MatCondition	biface				= new MatCondition("biface", "Biface", "% Biface");
-	public static final MatCondition	bar_grizzly			= new MatCondition("bar_grizzly", "barGrizzly", "Bar Grizzly", "% Bar Grizzly").setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
+	public static final MatCondition	bar_grizzly			= new MatCondition("bar_grizzly", "barGrizzly", "Bar Grizzly", "% Bar Grizzly").setFilter(F.and(SubTags.WOOD, SubTags.TOOL));
 	public static final MatCondition	spinning_disk		= new MatCondition("spinning_disk", "spinningDisk", "Spinning Disk", "% Spinning Disk");
 	public static final MatCondition	chisel_rock			= new MatCondition("chisel_rock", "chisel", "Chisel", "% Chisel");
 	public static final MatCondition	chisel_metal		= new MatCondition("chisel_metal", "chisel", "Chisel", "% Chisel");
 	public static final MatCondition	bowsaw_metal		= new MatCondition("bowsaw_metal", "bowsaw", "Bowsaw", "% Bowsaw");
 	
-	
 	static
 	{
-		ROCKY_TOOL = Judgable.and(SubTags.ROCK, SubTags.TOOL);
-		FLINTY_TOOL = Judgable.and(SubTags.FLINT, SubTags.TOOL);
-		METALLIC_TOOL = Judgable.and(SubTags.METAL, SubTags.TOOL);
-		ROCK_OR_FLINT_TOOL = Judgable.and(Judgable.or(SubTags.FLINT, SubTags.ROCK), SubTags.TOOL);
+		ROCKY_TOOL = F.and(SubTags.ROCK, SubTags.TOOL);
+		FLINTY_TOOL = F.and(SubTags.FLINT, SubTags.TOOL);
+		METALLIC_TOOL = F.and(SubTags.METAL, SubTags.TOOL);
+		ROCK_OR_FLINT_TOOL = F.and(F.or(SubTags.FLINT, SubTags.ROCK), SubTags.TOOL);
 		shovel_rock.setFilter(ROCK_OR_FLINT_TOOL);
 		shovel_metal.setFilter(METALLIC_TOOL);
 		spade_hoe_rock.setFilter(ROCKY_TOOL);

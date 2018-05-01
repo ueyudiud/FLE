@@ -4,6 +4,7 @@
 package fle.loader;
 
 import fle.api.client.PolishingStateIconLoader;
+import fle.api.recipes.ShapedFleDataRecipe;
 import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
 import fle.loader.recipe.RecipeArgil;
@@ -47,8 +48,9 @@ public class Recipes
 		RecipeFood.init();
 		RecipeSimpleReducing.init();
 		
-		RecipeSorter.register("fle.shaped", ShapedFleRecipe.class, Category.SHAPED, "after:minecraft:shaped before:forge:shapedore before:minecraft:shapeless");
-		RecipeSorter.register("fle.shapeless", ShapelessFleRecipe.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");
+		RecipeSorter.register("fle:shaped", ShapedFleRecipe.class, Category.SHAPED, "after:minecraft:shaped before:forge:shapedore before:minecraft:shapeless");
+		RecipeSorter.register("fle:shaped.data", ShapedFleDataRecipe.class, Category.SHAPED, "after:minecraft:fle:shaped.data before:forge:shapedore before:minecraft:shapeless");
+		RecipeSorter.register("fle:shapeless", ShapelessFleRecipe.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");
 	}
 	
 	@SideOnly(Side.CLIENT)

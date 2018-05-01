@@ -48,15 +48,16 @@ import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
 import nebula.base.A;
-import nebula.base.HashIntMap;
-import nebula.base.HashPropertyMap;
-import nebula.base.IPropertyMap;
-import nebula.base.IPropertyMap.IProperty;
-import nebula.base.Judgable;
+import nebula.base.collection.HashIntMap;
+import nebula.base.collection.HashPropertyMap;
+import nebula.base.collection.IPropertyMap;
+import nebula.base.collection.IPropertyMap.IProperty;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
 import nebula.base.register.IRegister;
 import nebula.base.register.SortedRegister;
 import nebula.common.LanguageManager;
-import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.nbt.INBTReaderAndWriter;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
@@ -117,6 +118,18 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		
 		@Override
+		public String name(Mat arg)
+		{
+			return arg == null || arg.id < 0 ? null : arg.name;
+		}
+		
+		@Override
+		public int id(Mat arg)
+		{
+			return arg == null ? -1 : arg.id;
+		}
+		
+		@Override
 		public boolean contain(int id)
 		{
 			return this.materials[id] != null;
@@ -159,18 +172,24 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 */
 	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void");
 	
-	public static final INBTReaderAndWritter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWritter<Mat, NBTTagString>()
+	public static final INBTReaderAndWriter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWriter<Mat, NBTTagString>()
 	{
 		@Override
-		public Mat readFromNBT(NBTTagString nbt)
+		public Mat readFrom(NBTTagString nbt)
 		{
 			return REGISTER.get(nbt.getString());
 		}
 		
 		@Override
-		public NBTTagString writeToNBT(Mat target)
+		public NBTTagString writeTo(Mat target)
 		{
 			return new NBTTagString(target.name);
+		}
+		
+		@Override
+		public Class<Mat> type()
+		{
+			return Mat.class;
 		}
 	};
 	
@@ -244,7 +263,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		else
 		{
-			return Iterables.transform(MATERIALS_CACHE.get(filter), L.<IPropertyMap.IProperty<V>, V, Mat> toFunction(Mat::getProperty, property));
+			return Iterables.transform(MATERIALS_CACHE.get(filter), F.cast(F.<Mat, IPropertyMap.IProperty<V>, V> const2f(Mat::getProperty, property)));
 		}
 	}
 	
@@ -646,7 +665,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public String getLocalName()
 	{
-		return LanguageManager.translateToLocal("material." + this.name + ".name");
+		return LanguageManager.translateLocal("material." + this.name + ".name");
 	}
 	
 	public <V> V getProperty(IProperty<V> property)

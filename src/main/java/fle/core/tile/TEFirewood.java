@@ -12,10 +12,10 @@ import farcore.energy.thermal.instance.ThermalHandlerLitmited;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.recipes.instance.FlamableRecipes;
-import nebula.common.tile.TESynchronization;
+import nebula.common.tile.TE04Synchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import nebula.common.world.ICoord;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +24,7 @@ import net.minecraft.util.EnumParticleTypes;
 /**
  * @author ueyudiud
  */
-public class TEFirewood extends TESynchronization implements IThermalProvider
+public class TEFirewood extends TE04Synchronization implements IThermalProvider
 {
 	private static final byte	Smoldering	= 3;
 	private static final byte	Burning		= 4;
@@ -106,7 +106,7 @@ public class TEFirewood extends TESynchronization implements IThermalProvider
 				}
 				else
 				{
-					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, ICoord::isAirBlock) > 3)
+					if (W.checkForMinDistance(this.world, this.pos, false, 3, ICoord::isAirBlock) > 3)
 					{
 						disable(Smoldering);
 						syncToNearby();

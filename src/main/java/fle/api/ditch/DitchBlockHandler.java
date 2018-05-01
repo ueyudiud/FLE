@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import farcore.FarCore;
 import farcore.lib.material.Mat;
-import nebula.base.Judgable;
+import nebula.base.function.Judgable;
 
 /**
  * @author ueyudiud

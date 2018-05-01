@@ -10,25 +10,32 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import farcore.data.Capabilities;
 import farcore.data.Keys;
 import farcore.data.M;
-import farcore.lib.capability.IFluidHandlerHelper;
+import farcore.lib.container.Container04Solid;
 import farcore.lib.material.Mat;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
-import fle.api.tile.TEITSRecipe;
-import fle.core.client.gui.wooden.GuiLeverOilMill;
-import fle.core.common.gui.wooden.ContainerLeverOilMill;
+import fle.api.recipes.instance.RecipeMaps;
+import fle.api.tile.TE08Recipe;
+import nebula.NebulaProxy;
 import nebula.base.A;
-import nebula.common.NebulaKeyHandler;
-import nebula.common.NebulaSynchronizationHandler;
-import nebula.common.fluid.FluidTankN;
-import nebula.common.inventory.InventoryWrapFactory;
+import nebula.base.function.F;
+import nebula.base.function.Judgable;
+import nebula.client.gui.GuiBackground;
+import nebula.client.gui.GuiContainer02TE;
+import nebula.common.gui.FluidSlot;
+import nebula.common.gui.ISlotInitalizer;
+import nebula.common.gui.ItemSlot;
+import nebula.common.gui.ItemSlotOutput;
+import nebula.common.inventory.FluidContainerSingle;
+import nebula.common.inventory.FluidContainers;
+import nebula.common.inventory.IContainer;
+import nebula.common.inventory.ItemContainersArray;
+import nebula.common.inventory.task.TaskBuilder;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
-import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
@@ -38,11 +45,9 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,7 +56,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -59,8 +63,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
-implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile, ITP_BlockHardness,
+@GuiBackground("fle:textures/gui/lever_oil_mill.png")
+public class TELeverOilMill extends TE08Recipe<ItemStack, TemplateRecipeCache<ItemStack>>
+implements ITB_BlockActived, ISidedInventory, INetworkedSyncTile, ITP_BlockHardness,
 ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 {
 	private static final int[] IN = A.rangeIntArray(0, 1), OUT = A.rangeIntArray(1, 2);
@@ -68,14 +73,14 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	protected Mat materialFrame = M.oak;
 	protected Mat materialMill = M.stone;
 	
-	public final FluidTankN	tank	= new FluidTankN(4000);
+	protected Direction		facing;
 	protected int			energy;
 	protected int			angle;
 	
 	public TELeverOilMill()
 	{
-		super(2);
-		this.syncTankState = false;
+		this.items = new ItemContainersArray(2, 64);//TODO
+		this.fluids = new FluidContainers<>(new FluidContainerSingle(4000));
 	}
 	
 	@Override
@@ -83,7 +88,8 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		super.readFromNBT(compound);
 		this.materialFrame = Mat.getMaterialByNameOrDefault(compound, "frame", M.oak);
-		this.materialMill = Mat.getMaterialByNameOrDefault(compound, "stone", M.stone);
+		this.materialMill = Mat.getMaterialByNameOrDefault(compound, "mill", M.stone);
+		this.facing = Direction.readFromNBT(compound, "facing", Direction.T_2D, Direction.N);
 	}
 	
 	@Override
@@ -91,6 +97,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		compound.setString("frame", this.materialFrame.name);
 		compound.setString("mill", this.materialMill.name);
+		this.facing.writeToNBT(compound, "facing", Direction.T_2D);
 		return super.writeToNBT(compound);
 	}
 	
@@ -100,6 +107,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 		super.readFromDescription1(nbt);
 		this.materialFrame = Mat.getMaterialByIDOrDefault(nbt, "f", this.materialFrame);
 		this.materialMill = Mat.getMaterialByIDOrDefault(nbt, "m", this.materialMill);
+		this.facing = Direction.readFromNBT(nbt, "d", Direction.T_2D, this.facing);
 	}
 	
 	@Override
@@ -108,6 +116,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 		super.writeToClientInitalization(nbt);
 		nbt.setShort("f", this.materialFrame.id);
 		nbt.setShort("m", this.materialMill.id);
+		this.facing.writeToNBT(nbt, "d", Direction.T_2D);
 	}
 	
 	@Override
@@ -124,6 +133,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		this.materialFrame = Mat.getMaterialFromStack(stack, "frame", M.oak);
 		this.materialMill = Mat.getMaterialFromStack(stack, "mill", M.stone);
+		this.facing = Direction.heading(placer).opposite();
 	}
 	
 	@Override
@@ -163,15 +173,9 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	}
 	
 	@Override
-	protected FluidTankN tank()
-	{
-		return this.tank;
-	}
-	
-	@Override
 	protected ItemStack getRecipeInputHandler()
 	{
-		return this.stacks[0];
+		return this.items.getStackInContainer(0);
 	}
 	
 	@Override
@@ -183,7 +187,7 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	@Override
 	protected void onRecipeInput()
 	{
-		decrStackSize(0, this.cache.<AbstractStack> get1(0));
+		this.items.getContainer(0).taskDecr(this.cache.<AbstractStack> get1(0), IContainer.PROCESS).invoke();
 		this.recipeMaxTick = this.cache.get(0);
 	}
 	
@@ -196,15 +200,10 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	@Override
 	protected boolean onRecipeOutput()
 	{
-		if (instItem(0, this.cache.get(1), false) &&
-				// this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
-				this.tank.insertFluid(this.cache.<FluidStack> get(2), false))
-		{
-			// this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
-			incrItem(1, this.cache.get(1), true);
-			return true;
-		}
-		return false;
+		return TaskBuilder.builder()
+				.add(this.items.getContainer(1).taskIncr(this.cache.<ItemStack> get(1), IContainer.PROCESS))
+				.add(this.fluids.getContainer(0).taskIncr(this.cache.<FluidStack> get(2), IContainer.PROCESS))
+				.build().run();
 	}
 	
 	@Override
@@ -218,7 +217,12 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 		int drain = 1000;
 		for (int i = 0; i < 4 && drain > 0; ++i)
 		{
-			drain -= sendFluidTo(drain, Direction.DIRECTIONS_2D[i], true);
+			int amount = sendFluidStackTo(this.fluids.getContainer(0).decrStack(drain, 0), Direction.DIRECTIONS_2D[i], true);
+			if (amount > 0)
+			{
+				this.fluids.getContainer(0).decrStack(amount, IContainer.PROCESS);
+				drain -= amount;
+			}
 		}
 	}
 	
@@ -242,10 +246,10 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	{
 		if (tileGUICheck(hand))
 		{
-			if (NebulaKeyHandler.get(player, Keys.ROTATE))
+			if (NebulaProxy.isKeyDown(player, Keys.ROTATE))
 			{
 				onRotateMill(player);
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
+				markTileUpdate(0);
 			}
 			else
 			{
@@ -320,16 +324,44 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 	}
 	
 	@Override
-	public Container openContainer(int id, EntityPlayer player)
+	public void initalizeContainer(Container04Solid container, ISlotInitalizer initalizer)
 	{
-		return new ContainerLeverOilMill(this, player);
+		initalizer.addSlot("input", new ItemSlot(this.items.getContainer(0), this, 0, 61, 21).setPredicate(((Judgable<Object>) F.P_ANY).from(RecipeMaps.LEVER_OIL_MILL::findRecipe)))
+		.addLocation("player", false);
+		initalizer.addSlot("output", new ItemSlotOutput(this.items.getContainer(1), this, 1, 98, 21))
+		.addLocation("player", false);
+		initalizer.straegyPlayerBag().addLocation("input", false).addLocation("hand", false);
+		initalizer.straegyPlayerHand().addLocation("input", false).addLocation("bag", false);
+		initalizer.addSlot(new FluidSlot(this.fluids.getContainer(0), 60, 56, 20, 8).setRenderHorizontal());
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiContainer openGui(int id, EntityPlayer player)
+	public void drawBackgroundSecondLayer(GuiContainer02TE<?> gui, int x, int y, float partialTicks, int mouseX, int mouseY)
 	{
-		return new GuiLeverOilMill(this, player);
+		if (this.energy > 0)
+		{
+			gui.drawTexturedModalRect(35, 60, 176, 24, 11, 11);
+			gui.drawProgressScaleDTU(26, 16, 176, 35, 8, 54, this.energy, 100);
+		}
+		if (getMaxProgress() > 0)
+		{
+			gui.drawProgressScaleUTD(63, 38, 176, 0, 10, 16, getProgress(), getMaxProgress());
+		}
+		gui.drawTexturedModalRect(60, 56, 176, 16, 20, 8);
+	}
+	
+	@Override
+	public void onDataRecieve(Container04Solid container, byte type, long value)
+	{
+		switch (type)
+		{
+		case 0:
+			onRotateMill(container.player);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -338,18 +370,18 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 		return -MathHelper.cos((float) (this.angle * Math.PI / 50));
 	}
 	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP || capability == Capabilities.CAPABILITY_ITEM || super.hasCapability(capability, facing);
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ? Capabilities.CAPABILITY_FLUID.cast(new IFluidHandlerHelper.FluidHandlerWrapper(this, facing))
-				: capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(InventoryWrapFactory.wrap(getName(), this)) : super.getCapability(capability, facing);
-	}
+	//	@Override
+	//	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP || capability == Capabilities.CAPABILITY_ITEM || super.hasCapability(capability, facing);
+	//	}
+	//
+	//	@Override
+	//	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	//	{
+	//		return capability == Capabilities.CAPABILITY_FLUID && facing != EnumFacing.UP ? Capabilities.CAPABILITY_FLUID.cast(new IFluidHandlerHelper.FluidHandlerWrapper(this, facing))
+	//				: capability == Capabilities.CAPABILITY_ITEM ? Capabilities.CAPABILITY_ITEM.cast(InventoryWrapFactory.wrap(getName(), this)) : super.getCapability(capability, facing);
+	//	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -361,8 +393,16 @@ ITP_ExplosionResistance, ITP_CustomModelData, ITP_Drops, ITB_BlockPlacedBy
 			return this.materialFrame.name;
 		case "mill" :
 			return this.materialMill.name;
+		case "facing" :
+			return getFacing().getName();
 		default:
 			return null;
 		}
+	}
+	
+	@Override
+	public Direction getFacing()
+	{
+		return this.facing == null ? Direction.N : this.facing;
 	}
 }

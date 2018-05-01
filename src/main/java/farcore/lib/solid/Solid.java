@@ -59,7 +59,7 @@ public abstract class Solid implements IRegisterElement<Solid>
 	
 	public String getLocalizedName()
 	{
-		return LanguageManager.translateToLocal(getUnlocalizedName() + ".name");
+		return LanguageManager.translateLocal(getUnlocalizedName() + ".name");
 	}
 	
 	/**

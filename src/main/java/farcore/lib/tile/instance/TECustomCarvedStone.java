@@ -26,7 +26,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_SideSolid;
 import nebula.common.tile.IToolableTile;
-import nebula.common.tile.TEStatic;
+import nebula.common.tile.TE01Static;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
@@ -49,7 +49,7 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TECustomCarvedStone extends TEStatic implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_BoundingBox, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestCheck, IToolableTile
+public class TECustomCarvedStone extends TE01Static implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_BoundingBox, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestCheck, IToolableTile
 {
 	private static final long				EMPTY			= ~0L;
 	private static final float				BLOCK_SCALE		= 0.25F;

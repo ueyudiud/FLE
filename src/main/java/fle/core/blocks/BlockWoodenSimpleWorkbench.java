@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2018 ueyudiud
  */
-
 package fle.core.blocks;
 
 import farcore.data.Materials;

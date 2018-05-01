@@ -9,7 +9,7 @@ import java.util.Random;
 
 import farcore.data.CT;
 import farcore.lib.tree.Tree;
-import nebula.base.ArrayListConditional;
+import nebula.base.collection.A;
 import nebula.client.util.Client;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
@@ -17,7 +17,7 @@ import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.OreDict;
-import nebula.common.util.Worlds;
+import nebula.common.util.W;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -203,7 +203,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
-		if (Worlds.isCatchingRain(worldIn, pos) && !worldIn.isSideSolid(pos.down(), EnumFacing.UP) && rand.nextInt(15) == 1)
+		if (W.isCatchingRain(worldIn, pos) && !worldIn.isSideSolid(pos.down(), EnumFacing.UP) && rand.nextInt(15) == 1)
 		{
 			double d0 = pos.getX() + rand.nextFloat();
 			double d1 = pos.getY() - 0.05D;
@@ -228,7 +228,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, ArrayListConditional.requireNonnull());
+		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, A.nonnull());
 	}
 	
 	@Override

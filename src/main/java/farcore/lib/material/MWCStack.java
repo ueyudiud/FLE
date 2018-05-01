@@ -4,29 +4,30 @@
 package farcore.lib.material;
 
 import nebula.base.Stack;
-import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWriter;
+import nebula.common.nbt.INBTSelfCompoundReaderAndWriter;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author ueyudiud
  */
-public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter<MWCStack>
+public class MWCStack extends Stack<Mat> implements INBTSelfCompoundReaderAndWriter
 {
 	private static final long serialVersionUID = -116240400653078125L;
 	
-	public static final INBTCompoundReaderAndWritter<MWCStack> HANDLER = new INBTCompoundReaderAndWritter<MWCStack>()
+	public static final INBTCompoundReaderAndWriter<MWCStack> HANDLER = new INBTCompoundReaderAndWriter<MWCStack>()
 	{
 		@Override
-		public MWCStack readFromNBT(NBTTagCompound nbt)
+		public MWCStack readFrom(NBTTagCompound nbt)
 		{
 			return loadFromNBT(nbt);
 		}
 		
 		@Override
-		public void writeToNBT(MWCStack target, NBTTagCompound nbt)
+		public void writeTo(MWCStack target, NBTTagCompound nbt)
 		{
-			target.writeToNBT(nbt);
+			target.writeTo(nbt);
 		}
 	};
 	
@@ -35,7 +36,7 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 	public static MWCStack loadFromNBT(NBTTagCompound nbt)
 	{
 		MWCStack stack = new MWCStack();
-		stack.readFromNBT1(nbt);
+		stack.readFrom(nbt);
 		return stack.element == null ? null : stack;
 	}
 	
@@ -99,14 +100,7 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 		return new MWCStack(this.element, this.condition, this.size);
 	}
 	
-	@Override
-	public final MWCStack readFromNBT(NBTTagCompound nbt)
-	{
-		return loadFromNBT(nbt);
-	}
-	
-	@Override
-	public void readFromNBT1(NBTTagCompound nbt)
+	public void readFrom(NBTTagCompound nbt)
 	{
 		this.element = Mat.getMaterialByNameOrDefault(nbt, "material", null);
 		if (this.element != null)
@@ -124,17 +118,10 @@ public class MWCStack extends Stack<Mat> implements INBTCompoundReaderAndWritter
 	}
 	
 	@Override
-	public final void writeToNBT(MWCStack target, NBTTagCompound nbt)
-	{
-		target.writeToNBT(nbt);
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	public void writeTo(NBTTagCompound nbt)
 	{
 		nbt.setString("material", this.element.name);
 		nbt.setString("condition", this.condition.name);
 		NBTs.setNumber(nbt, "size", this.size);
-		return nbt;
 	}
 }
