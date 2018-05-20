@@ -25,7 +25,7 @@ import farcore.data.SubTags;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.ICustomItemRenderModel;
 import nebula.client.model.INebulaCustomModelLoader;
@@ -337,7 +337,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	{
 		if (texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
 		{
-			Log.warn("The icon {%s, %s} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
+			NebulaLog.warn("The icon {%s, %s} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
 			return ImmutableList.of();
 		}
 		int u = texture.getIconWidth();

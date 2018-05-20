@@ -48,12 +48,18 @@ public class TEChest1 extends TEChest implements ITP_BoundingBox
 		return NBTs.getEnumOrDefault(ItemStacks.getSubOrSetupNBT(stack, "chest", false), "material", TEChest1.ChestType.WOOD);
 	}
 	
-	ChestType type = ChestType.WOOD;
+	ChestType type;
 	
 	public TEChest1()
 	{
 		super(true, false);
-		this.items = new ItemContainersArray(new ItemStack[0], 64);
+		setChestType(ChestType.WOOD);
+	}
+	
+	private void setChestType(ChestType type)
+	{
+		this.type = type;
+		this.items = new ItemContainersArray(new ItemStack[type.size.size], 64);
 	}
 	
 	public ChestType getChestType()
@@ -88,7 +94,11 @@ public class TEChest1 extends TEChest implements ITP_BoundingBox
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		NBTs.getEnumOrDefault(nbt, "ty", this.type);
+		ChestType t1;
+		if (this.type != (t1 = NBTs.getEnumOrDefault(nbt, "ty", this.type)))
+		{
+			setChestType(t1);
+		}
 	}
 	
 	@Override
@@ -113,7 +123,7 @@ public class TEChest1 extends TEChest implements ITP_BoundingBox
 	@Override
 	protected void readFromItemStackNBT(NBTTagCompound compound)
 	{
-		this.type = NBTs.getEnumOrDefault(compound, "material", ChestType.WOOD);
+		setChestType(NBTs.getEnumOrDefault(compound, "material", ChestType.WOOD));
 		super.readFromItemStackNBT(compound);
 	}
 	

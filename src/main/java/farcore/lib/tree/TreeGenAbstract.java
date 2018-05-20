@@ -9,10 +9,11 @@ import farcore.FarCore;
 import farcore.blocks.flora.BlockPlantVine;
 import farcore.data.EnumBlock;
 import farcore.data.V;
+import farcore.lib.bio.BioData;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tree.ITree.BlockType;
 import nebula.common.util.W;
-import nebula.common.util.W;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +23,21 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 {
 	protected float	generateCoreLeavesChance;
 	protected ITree	tree;
+	protected Block log;
+	protected Block leaves1, leaves2;
 	
 	public TreeGenAbstract(ITree tree, float generateCoreLeavesChance)
 	{
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
+		initalizeBlock(tree.getBlock(BlockType.LOG), tree.getBlock(BlockType.LEAVES), tree.getBlock(BlockType.LEAVES_CORE));
+	}
+	
+	public final void initalizeBlock(Block log, Block leaves, Block leavesCore)
+	{
+		this.log = log;
+		this.leaves1 = leaves;
+		this.leaves2 = leavesCore;
 	}
 	
 	/**
@@ -117,15 +128,15 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
-		W.setBlock(world, new BlockPos(x, y, z), this.tree.getBlock(BlockType.LOG), meta, V.generateState ? 2 : 3);
+		W.setBlock(world, new BlockPos(x, y, z), this.log.getStateFromMeta(meta), null, V.generateState ? 2 : 3);
 	}
 	
-	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
+	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, BioData info)
 	{
 		generateTreeLeaves(world, x, y, z, meta, this.generateCoreLeavesChance, rand, info);
 	}
 	
-	protected void generateCloudlyLeaves(World world, int x, int y, int z, int size, int meta, Random rand, TreeInfo info, byte core)
+	protected void generateCloudlyLeaves(World world, int x, int y, int z, int size, int meta, Random rand, BioData info, byte core)
 	{
 		switch (core)
 		{
@@ -156,7 +167,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		}
 	}
 	
-	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, Random rand, TreeInfo info)
+	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, Random rand, BioData data)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState state;
@@ -166,16 +177,20 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			int flag = V.generateState ? 2 : 3;
 			if (rand.nextDouble() <= generateCoreLeavesChance)
 			{
-				W.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES_CORE), meta, flag);
-				W.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);
+				W.setBlock(world, pos, this.leaves2.getStateFromMeta(meta), new TECoreLeaves(data), flag);
 			}
 			else
 			{
-				W.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES), meta, flag);
+				W.setBlock(world, pos, this.leaves1.getStateFromMeta(meta), null, flag);
 			}
 		}
 	}
 	
+	protected BioData checkData(BioData data, Random random)
+	{
+		return data == null ? this.tree.random(random) : data;
+	}
+	
 	@Override
-	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
+	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info);
 }

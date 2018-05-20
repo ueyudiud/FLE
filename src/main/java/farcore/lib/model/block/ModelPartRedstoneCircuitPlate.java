@@ -20,7 +20,7 @@ import farcore.data.MC;
 import farcore.data.SubTags;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.base.function.F;
 import nebula.client.model.flexible.INebulaBakedModelPart;
 import nebula.client.model.flexible.INebulaModelPart;
@@ -121,7 +121,7 @@ public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 	{
 		if (texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
 		{
-			Log.warn("The icon {}, {} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
+			NebulaLog.warn("The icon {}, {} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
 			return ImmutableList.of();
 		}
 		int u = texture.getIconWidth();

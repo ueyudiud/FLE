@@ -12,12 +12,14 @@ import farcore.blocks.flora.BlockLeaves;
 import farcore.blocks.flora.BlockLeavesCore;
 import farcore.blocks.flora.BlockLogArtificial;
 import farcore.blocks.flora.BlockLogNatural;
-import farcore.lib.bio.ISpecie;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.ISpecieSP;
+import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
+import nebula.base.register.IRegisteredNameable;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.IRegisteredNameable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -31,13 +33,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
- * Unused now, use PropertyTree instead.
- * 
  * @author ueyudiud
- * @see farcore.lib.material.prop.PropertyTree
+ * @see farcore.lib.tree.Tree
  */
 @Deprecated
-public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegisteredNameable
+public interface ITree extends ITreeGenerator, ISpecieSP, IRegisteredNameable
 {
 	enum BlockType
 	{
@@ -46,7 +46,9 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	Tree VOID = new TreeVoid();
 	
-	// Mat material();
+	Mat material();
+	
+	BioData random(Random rand);
 	
 	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
 	
@@ -125,6 +127,6 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	default void registerLogExtData(Block block, boolean isArt, IBlockStateRegister register)
 	{
-		register.registerStates(block, BlockLog.LOG_AXIS);
+		register.registerStates(BlockLog.LOG_AXIS);
 	}
 }

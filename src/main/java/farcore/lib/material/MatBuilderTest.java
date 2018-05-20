@@ -17,8 +17,7 @@ import static farcore.data.SubTags.TREE;
 import static farcore.data.SubTags.WOOD;
 
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.crop.ICrop;
-import farcore.lib.material.Mat.Builder;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
@@ -29,11 +28,11 @@ import nebula.common.util.SubTag;
  * 
  * @author ueyudiud
  */
-class MatBuilderTest extends Mat.Builder
+class MatBuilderTest extends Builder
 {
 	MatBuilderTest(Mat material)
 	{
-		material.super();
+		super(material);
 	}
 	
 	@Override
@@ -43,7 +42,7 @@ class MatBuilderTest extends Mat.Builder
 	}
 	
 	@Override
-	public Builder setCrop(ICrop crop)
+	public Builder setCrop(ICropSpecie crop)
 	{
 		return setTag(CROP);
 	}

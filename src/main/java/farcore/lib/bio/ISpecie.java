@@ -3,18 +3,16 @@
  */
 package farcore.lib.bio;
 
-import nebula.common.util.IRegisteredNameable;
+import nebula.base.register.IRegisteredNameable;
 
 /**
  * @author ueyudiud
  */
-public interface ISpecie<B extends IBiology> extends IRegisteredNameable
+public interface ISpecie extends IRegisteredNameable
 {
-	IFamily<B> getFamily();
+	IOrder getOrder();
 	
-	GeneticMaterial createNativeGeneticMaterial();
+	IFamily getFamily();
 	
-	GeneticMaterial createGameteGeneticMaterial(B biology, GeneticMaterial gm);
-	
-	void expressTrait(B biology, GeneticMaterial gm);
+	BioData example();
 }

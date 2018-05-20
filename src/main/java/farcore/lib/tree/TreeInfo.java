@@ -3,8 +3,7 @@
  */
 package farcore.lib.tree;
 
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
+import farcore.lib.bio.BioData;
 import nebula.base.IntEntry;
 import nebula.base.collection.HashIntMap;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,17 +12,17 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class TreeInfo
 {
-	public GeneticMaterial	gm;
-	public int				height;
-	public int				growth;
-	public int				resistance;
-	public int				vitality;
+	public BioData	gm;
+	public int		height;
+	public int		growth;
+	public int		resistance;
+	public int		vitality;
 	
 	public HashIntMap<String> map = new HashIntMap();
 	
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		this.gm = GeneticMaterial.GenticMaterialFactory.INSTANCE.readFrom(nbt, "gm");
+		this.gm = TreeOrder.ORDER.readFrom(nbt, "gm");
 		this.height = nbt.getInteger("hei");
 		this.growth = nbt.getInteger("gro");
 		this.resistance = nbt.getInteger("res");
@@ -38,7 +37,7 @@ public class TreeInfo
 	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		GenticMaterialFactory.INSTANCE.writeTo(nbt, "gm", this.gm);
+		TreeOrder.ORDER.writeTo(nbt, "gm", this.gm);
 		nbt.setInteger("hei", this.height);
 		nbt.setInteger("gro", this.growth);
 		nbt.setInteger("res", this.resistance);

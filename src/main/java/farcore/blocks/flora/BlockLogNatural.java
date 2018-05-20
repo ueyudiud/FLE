@@ -8,7 +8,7 @@ import java.util.Random;
 import farcore.data.Config;
 import farcore.lib.tree.Tree;
 import farcore.util.runnable.BreakTree;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.common.LanguageManager;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IToolableBlock;
@@ -70,8 +70,8 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	
 	protected BlockLogNatural(Tree tree)
 	{
-		super("log.natural." + tree.material.name, tree);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), tree.material.localName + " Log");
+		super("log.natural." + tree.material().name, tree);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), tree.material().localName + " NebulaLog");
 		if (tree.tickLogUpdate())
 		{
 			setTickRandomly(true);
@@ -182,7 +182,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 		}
 		catch (OutOfMemoryError error)
 		{
-			Log.warn("The out of memory prevent this tree destory.");
+			NebulaLog.warn("The out of memory prevent this tree destory.");
 		}
 	}
 	

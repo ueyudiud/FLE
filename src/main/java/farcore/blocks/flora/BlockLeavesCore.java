@@ -54,7 +54,7 @@ public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 	
 	protected BlockLeavesCore(Tree tree, BlockLeaves leaves)
 	{
-		super("leaves.core." + tree.material.name, tree, tree.material.localName + " Leaves");
+		super("leaves.core." + tree.material().name, tree, tree.material().localName + " Leaves");
 		setCreativeTab(null);
 		this.leaves = leaves;
 	}

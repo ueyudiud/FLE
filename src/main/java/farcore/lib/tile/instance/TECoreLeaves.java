@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableList;
 import farcore.blocks.flora.BlockLeavesCore;
 import farcore.data.EnumBlock;
 import farcore.data.V;
+import farcore.lib.bio.BioData;
 import farcore.lib.material.Mat;
-import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import nebula.common.tile.TE01Static;
@@ -27,14 +27,10 @@ public class TECoreLeaves extends TE01Static implements ITB_BreakBlock
 		this.info = new TreeInfo();
 	}
 	
-	public TECoreLeaves(ITree tree, TreeInfo info)
+	public TECoreLeaves(BioData data)
 	{
-		if (info == null)
-		{
-			info = new TreeInfo();
-			info.gm = tree.createNativeGeneticMaterial();
-		}
-		this.info = info;
+		this.info = new TreeInfo();
+		this.info.gm = data;
 	}
 	
 	@Override
@@ -70,7 +66,7 @@ public class TECoreLeaves extends TE01Static implements ITB_BreakBlock
 	{
 		if (!V.generateState)
 		{
-			W.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material)));
+			W.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material())));
 		}
 	}
 }

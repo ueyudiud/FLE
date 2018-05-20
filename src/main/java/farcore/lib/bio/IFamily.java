@@ -5,19 +5,18 @@ package farcore.lib.bio;
 
 import java.util.Collection;
 
-import nebula.common.util.IRegisteredNameable;
+import nebula.base.register.IRegisteredNameable;
 
 /**
  * @author ueyudiud
  */
-public interface IFamily<B extends IBiology> extends IRegisteredNameable
+public interface IFamily<S extends ISpecie> extends IRegisteredNameable
 {
-	Collection<? extends ISpecie<B>> getSpecies();
+	IOrder getOrder();
 	
-	ISpecie<B> getSpecieFromGM(GeneticMaterial gm);
+	S getSpecie(String name);
 	
-	default void expressTrait(B biology, GeneticMaterial gm)
-	{
-		biology.getSpecie().expressTrait(biology, gm);
-	}
+	S getSpecie(byte[][] data);
+	
+	Collection<? extends S> getSpecies();
 }

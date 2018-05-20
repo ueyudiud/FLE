@@ -5,22 +5,27 @@ package farcore.lib.crop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.ISpecie;
-import nebula.common.LanguageManager;
-import nebula.common.util.IRegisteredNameable;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.ISpecieSP;
+import farcore.lib.material.Mat;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 
-public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
+/**
+ * @author ueyudiud
+ */
+public interface ICropSpecie extends ISpecieSP
 {
-	ICrop VOID = new CropVoid();
+	ICropSpecie VOID = new CropVoid();
 	
-	default String getLocalName(GeneticMaterial gm)
-	{
-		return LanguageManager.translateLocal("crop." + getRegisteredName() + ".name");
-	}
+	Mat material();
+	
+	BioData random(Random rand);
+	
+	@Override
+	ICropFamily<?> getFamily();
 	
 	int getMaxStage();
 	
@@ -40,4 +45,6 @@ public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 	{
 		return access.isWild() ? EnumPlantType.Plains : EnumPlantType.Crop;
 	}
+	
+	void expressTraits(CropInfo info, BioData data);
 }

@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import farcore.blocks.flora.BlockCrop;
 import farcore.data.MP;
 import farcore.data.SubTags;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.Mat;
 import nebula.client.model.ModelLocation;
 import nebula.common.util.L;
@@ -31,7 +31,7 @@ public class StateMapperCrop implements IStateMapper
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
 		for (Mat material : Mat.filt(SubTags.CROP))
 		{
-			ICrop crop = material.getProperty(MP.property_crop);
+			ICropSpecie crop = material.getProperty(MP.property_crop);
 			L.consume(1, 1 + crop.getMaxStage(), idx -> builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, material.name + "_" + idx), new ModelLocation(material.modid, "crop/" + material.name, "state=" + idx)));
 		}
 		return builder.build();

@@ -3,10 +3,12 @@
  */
 package farcore.lib.crop;
 
+import java.util.Random;
+
 import farcore.data.EnumBlock;
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IBiology;
-import farcore.lib.bio.IFamily;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.IBio;
+import nebula.common.util.L;
 import nebula.common.world.ICoord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -15,21 +17,19 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
-public interface ICropAccess extends ICoord, IBiology, IPlantable
+public interface ICropAccess extends ICoord, IBio, IPlantable
 {
-	@Override
-	default ICrop getSpecie()
+	default Random rng()
 	{
-		return crop();
+		return L.random();
 	}
 	
-	@Override
-	default IFamily<ICropAccess> getFamily()
-	{
-		return crop().getFamily();
-	}
+	ICropSpecie getSpecie();
 	
-	ICrop crop();
+	default ICropFamily<?> getFamily()
+	{
+		return getSpecie().getFamily();
+	}
 	
 	CropInfo info();
 	
@@ -55,10 +55,9 @@ public interface ICropAccess extends ICoord, IBiology, IPlantable
 	
 	/**
 	 * Pollinating pollen or spore to spread genetic material to this crop.
-	 * 
-	 * @param gm
+	 * @param gm the genetic material of pollen.
 	 */
-	void pollinate(GeneticMaterial gm);
+	void pollinate(boolean self, BioData gm);
 	
 	@Override
 	default IBlockState getPlant(IBlockAccess world, BlockPos pos)
@@ -69,6 +68,6 @@ public interface ICropAccess extends ICoord, IBiology, IPlantable
 	@Override
 	default EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
-		return crop().getPlantType(this);
+		return getSpecie().getPlantType(this);
 	}
 }

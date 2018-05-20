@@ -6,22 +6,23 @@ package farcore.items;
 import java.util.List;
 
 import farcore.FarCore;
-import farcore.blocks.flora.BlockCrop;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.SubTags;
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
+import farcore.lib.bio.BioData;
 import farcore.lib.crop.CropAccessSimulated;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.CropOrder;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyEdible;
+import farcore.lib.tile.instance.TECrop;
 import farcore.util.Localization;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.item.IFoodStat;
+import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,33 +46,30 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 {
 	public static boolean tryPlantSeed(Mat material, ItemStack stack, World worldIn, BlockPos pos)
 	{
-		ICrop crop = material.getProperty(MP.property_crop);
+		ICropSpecie crop = material.getProperty(MP.property_crop);
 		CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
 		if (!crop.canPlantAt(access)) return false;
-		BlockCrop.ITEM_THREAD.set(stack);
-		boolean flag = worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
-		BlockCrop.ITEM_THREAD.set(null);
-		if (!flag) return false;
-		return true;
+		
+		return W.setBlock(worldIn, pos, EnumBlock.crop.block.getDefaultState(), new TECrop(ItemSeed.getDNAFromStack(stack)), 3);
 	}
 	
-	public static ItemStack applySeed(int size, Mat material, GeneticMaterial dna)
+	public static ItemStack applySeed(int size, Mat material, BioData dna)
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		GenticMaterialFactory.INSTANCE.writeTo(nbt, "genetic", dna);
 		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
+		NBTTagCompound nbt = new NBTTagCompound();
+		CropOrder.ORDER.writeTo(nbt, "genetic", dna);
 		stack.setTagCompound(nbt);
 		return stack;
 	}
 	
 	public static ItemStack applyNativeSeed(int size, Mat material)
 	{
-		return applySeed(size, material, material.getProperty(MP.property_crop).createNativeGeneticMaterial());
+		return applySeed(size, material, material.getProperty(MP.property_crop).example());
 	}
 	
-	public static GeneticMaterial getDNAFromStack(ItemStack stack)
+	public static BioData getDNAFromStack(ItemStack stack)
 	{
-		return !stack.hasTagCompound() ? null : GenticMaterialFactory.INSTANCE.readFrom(stack.getTagCompound(), "genetic");
+		return !stack.hasTagCompound() ? null : CropOrder.ORDER.readFrom(stack.getTagCompound(), "genetic");
 	}
 	
 	public ItemSeed()
@@ -106,11 +104,9 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for (Mat material : Mat.filt(this.condition))
+		for (ICropSpecie crop : Mat.filtAndGet(this.condition, MP.property_crop))
 		{
-			ICrop crop = material.getProperty(MP.property_crop);
-			assert (crop != null);
-			ItemStack stack = applySeed(1, material, crop.createNativeGeneticMaterial());
+			ItemStack stack = applySeed(1, crop.material(), crop.example());
 			subItems.add(stack);
 		}
 	}
@@ -119,13 +115,16 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList, boolean advanced)
 	{
-		GeneticMaterial geneticMaterial = getDNAFromStack(stack);
-		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(geneticMaterial));
-		unlocalizedList.add("info.crop.generation", geneticMaterial.generation + 1);
-		super.addInformation(stack, playerIn, unlocalizedList, advanced);
-		if (playerIn.capabilities.isCreativeMode)
+		BioData data = getDNAFromStack(stack);
+		if (data != null)
 		{
-			Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
+			unlocalizedList.add("info.crop.type", "crop." + data.specie.getRegisteredName() + ".name");
+			unlocalizedList.add("info.crop.generation", data.generation + 1);
+			super.addInformation(stack, playerIn, unlocalizedList, advanced);
+			if (playerIn.capabilities.isCreativeMode)
+			{
+				Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
+			}
 		}
 	}
 	

@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 
 import fle.api.item.IIDKeyItem;
 import fle.api.tile.IIDOpenableTile;
-import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.environment.EnviornmentBlockPos;
 import nebula.common.gui.Container03TileEntity;
 import nebula.common.inventory.IItemContainer;
@@ -257,7 +256,7 @@ public abstract class TEChest extends TE06HasGui<Container03TileEntity> implemen
 		{
 			this.numPlayersUsing++;
 			
-			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+			markTileUpdate(1);
 			this.world.notifyBlockOfStateChange(this.pos, getBlockType());
 			this.world.notifyBlockOfStateChange(this.pos.down(), getBlockType());
 		}
@@ -271,7 +270,7 @@ public abstract class TEChest extends TE06HasGui<Container03TileEntity> implemen
 		{
 			this.numPlayersUsing--;
 			
-			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
+			markTileUpdate(1);
 			this.world.notifyBlockOfStateChange(this.pos, getBlockType());
 			this.world.notifyBlockOfStateChange(this.pos.down(), getBlockType());
 		}

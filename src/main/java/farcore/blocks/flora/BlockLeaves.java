@@ -76,7 +76,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	
 	BlockLeaves(Tree tree)
 	{
-		this("leaves." + tree.material.name, tree, tree.material.localName + " Leaves");
+		this("leaves." + tree.material().name, tree, tree.material().localName + " Leaves");
 	}
 	
 	protected BlockLeaves(String name, Tree tree, String localName)

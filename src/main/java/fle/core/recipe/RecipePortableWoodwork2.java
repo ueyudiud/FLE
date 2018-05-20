@@ -66,7 +66,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	{
 		ItemStack stack = inventory[2];
 		Tree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
-		ItemStack[] result = { ItemMulti.createStack(tree.material, MC.plank, 2), ItemMulti.createStack(tree.material, MC.bark) };
+		ItemStack[] result = { ItemMulti.createStack(tree.material(), MC.plank, 2), ItemMulti.createStack(tree.material(), MC.bark) };
 		return result;
 	}
 	

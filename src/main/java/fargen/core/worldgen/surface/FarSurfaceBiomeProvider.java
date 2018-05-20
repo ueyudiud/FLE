@@ -15,7 +15,7 @@ import fargen.core.biome.BiomeBase;
 import fargen.core.instance.Layers;
 import fargen.core.layer.surface.LayerSurfaceTerrain;
 import fargen.core.util.DataCacheCoord;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.common.util.L;
 import nebula.common.world.IBiomeRegetter;
 import net.minecraft.crash.CrashReport;
@@ -60,9 +60,9 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		{
 			defaultBiome = FarGenBiomes.grassland;
 		}
-		if (defaultBiome != null && !(defaultBiome instanceof BiomeBase))
+		else if (defaultBiome != null && !(defaultBiome instanceof BiomeBase))
 		{
-			Log.warn("The biome should be extended BiomeBase.", new IllegalStateException());
+			NebulaLog.warn("The biome should be extended BiomeBase.", new IllegalStateException());
 			defaultBiome = BiomeBase.DEBUG;
 		}
 		return this.biomeCache.getBodyOrDefault(pos.getX(), pos.getZ(), (BiomeBase) defaultBiome);

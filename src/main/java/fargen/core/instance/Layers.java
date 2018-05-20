@@ -31,7 +31,7 @@ import fargen.core.layer.surface.LayerRiverStart;
 import fargen.core.layer.surface.LayerShore;
 import fargen.core.layer.surface.LayerSurfaceTerrain;
 import fargen.core.layer.surface.LayerSurfaceTerrainEdge;
-import nebula.Log;
+import nebula.NebulaLog;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerSmooth;
 import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
@@ -193,7 +193,7 @@ public class Layers
 			BufferedImage outBitmap = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 			graphics.clearRect(0, 0, size, size);
-			Log.info(name + ".png");
+			NebulaLog.info(name + ".png");
 			for (int x = 0; x < size; x++)
 			{
 				for (int z = 0; z < size; z++)

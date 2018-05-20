@@ -4,6 +4,7 @@
 package farcore.data;
 
 import nebula.common.config.ConfigComment;
+import nebula.common.config.ConfigExclusive;
 import nebula.common.config.ConfigProperty;
 
 /**
@@ -24,6 +25,7 @@ public class Config
 	@ConfigComment("(WIP config) Split brightness when caculating brightness.")
 	public static boolean	splitBrightnessOfSmallBlock;
 	@Deprecated
+	@ConfigExclusive
 	// @ConfigProperty(category = "block", defValue = "false")
 	// @ConfigComment("(WIP config) Break natural log block with a new thread to
 	// check range, this is proved will let server out of sych! Do not suggested

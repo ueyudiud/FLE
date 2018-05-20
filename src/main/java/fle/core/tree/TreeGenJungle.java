@@ -5,8 +5,8 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.tree.ITree;
-import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
@@ -28,7 +28,7 @@ public class TreeGenJungle extends TreeGenHuge
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		int l = this.baseHeight + L.nextInt(this.randHeight, random);
 		
@@ -36,6 +36,8 @@ public class TreeGenJungle extends TreeGenHuge
 			return false;
 		else
 		{
+			info = checkData(info, random);
+			
 			growLeaves(world, x, z, y + l, 2, random, info);
 			
 			for (int i1 = y + l - 2 - random.nextInt(4); i1 > y + l / 2; i1 -= 2 + random.nextInt(4))
@@ -140,7 +142,7 @@ public class TreeGenJungle extends TreeGenHuge
 		}
 	}
 	
-	private void growLeaves(World world, int x, int z, int y, int size, Random rand, TreeInfo info)
+	private void growLeaves(World world, int x, int z, int y, int size, Random rand, BioData info)
 	{
 		for (int i1 = y - 2; i1 <= y; ++i1)
 		{

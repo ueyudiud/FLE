@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import farcore.energy.IEnergyNet;
 import farcore.energy.IEnergyNet.LocalEnergyNet;
 import farcore.lib.util.EnumModifyFlag;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.Nebula;
 import nebula.base.collection.IntegerArray;
 import nebula.common.util.Direction;
@@ -164,7 +164,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 			updated = false;
 			if (Nebula.debug)
 			{
-				Log.logger().warn("Catching an error or exception during update kinetic net.", e);
+				NebulaLog.logger().warn("Catching an error or exception during update kinetic net.", e);
 			}
 		}
 		this.cachedPos = BlockPos.ORIGIN;

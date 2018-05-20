@@ -68,7 +68,7 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	
 	protected BlockLogArtificial(Tree tree)
 	{
-		super("log.artifical." + tree.material.name, tree);
+		super("log.artifical." + tree.material().name, tree);
 		setCreativeTab(CT.TREE);
 		if (tree.tickLogUpdate())
 		{
@@ -80,9 +80,9 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), this.tree.material.localName + " Log");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), this.tree.material().localName + " NebulaLog");
 		OreDict.registerValid(MC.log.getOreName(M.wood), this);
-		MC.log.registerOre(this.tree.material, this);
+		MC.log.registerOre(this.tree.material(), this);
 	}
 	
 	@Override

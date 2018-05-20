@@ -14,7 +14,7 @@ import farcore.blocks.terria.EnumCoverType;
 import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.tree.TreeGenAbstract;
@@ -53,13 +53,13 @@ public class FarSurfaceDataGenerator
 		TREE_GEN_PROVIDER.addToSelector(x, z, temp, rain, noise, selector);
 	}
 	
-	static final ICrop WHEAT = Mat.propertyOf("wheat", MP.property_crop);
+	static final ICropSpecie WHEAT = Mat.propertyOf("wheat", MP.property_crop);
 	
-	static final SelectorEntryListProvider<ICrop> CROP_PROVIDER;
+	static final SelectorEntryListProvider<ICropSpecie> CROP_PROVIDER;
 	
-	static void addVanillaCrops(int x, int z, Random rand, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ICrop> selector)
+	static void addVanillaCrops(int x, int z, Random rand, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ICropSpecie> selector)
 	{
-		if (WHEAT != ICrop.VOID && rand.nextInt(31) == 0)
+		if (WHEAT != ICropSpecie.VOID && rand.nextInt(31) == 0)
 		{
 			CROP_PROVIDER.addToSelector(x, z, temp, rain, noise, selector);
 		}

@@ -11,7 +11,7 @@ import farcore.data.MC;
 import farcore.lib.block.ISmartFallableBlockRockLike;
 import farcore.lib.block.behavior.IRockLikeBehavior;
 import farcore.lib.material.Mat;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
@@ -159,7 +159,7 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlockRo
 		}
 		catch (Throwable exception)
 		{
-			Log.catchingIfDebug(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class BlockRock extends BlockSubBehavior implements ISmartFallableBlockRo
 		}
 		catch (Throwable exception)
 		{
-			Log.catchingIfDebug(exception);
+			NebulaLog.catching(exception);
 			return false;
 		}
 	}

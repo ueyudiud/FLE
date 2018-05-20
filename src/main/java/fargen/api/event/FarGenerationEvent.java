@@ -10,10 +10,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * The generation events, post in
- * {@link net.minecraftforge.common.MinecraftForge#TERRAIN_GEN_BUS}.
+ * {@link net.minecraftforge.common.MinecraftForge#TERRAIN_GEN_BUS Terrain Gen Bus}.
  * <p>
  * 
- * This event is cancelable, the generation will be prevent if event is
+ * This event is {@link net.minecraftforge.fml.common.eventhandler.Cancelable Cancelable},
+ * the generation will be prevent if event is
  * canceled.
  * 
  * @author ueyudiud

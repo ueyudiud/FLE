@@ -16,6 +16,5 @@ public class HwylaCompat implements IWailaPlugin
 	@Override
 	public void register(IWailaRegistrar registrar)
 	{
-		
 	}
 }

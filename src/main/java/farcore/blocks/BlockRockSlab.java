@@ -178,7 +178,7 @@ package farcore.blocks;
 // }
 // catch (Exception exception)
 // {
-// Log.warn("The id : {} is invalid for rock, use default id replaced.", meta);
+// NebulaLog.warn("The id : {} is invalid for rock, use default id replaced.", meta);
 // return getDefaultState();
 // }
 // }

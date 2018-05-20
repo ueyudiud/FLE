@@ -7,7 +7,7 @@ import static nebula.base.collection.IPropertyMap.IProperty.to;
 
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.material.prop.PropertyEdible;
@@ -38,11 +38,11 @@ public class MP
 	public static final IProperty<MetalBlockBehavior>	property_metal_block	= to();
 	public static final IProperty<PropertyOre>			property_ore			= to();
 	public static final IProperty<PropertyWood>			property_wood			= to();
-	public static final IProperty<Tree>					property_tree			= () -> Tree.VOID;
+	public static final IProperty<Tree>					property_tree			= to(Tree.VOID);
 	public static final IProperty<PropertyBlockable>	property_soil			= to();
 	public static final IProperty<PropertyBlockable>	property_sand			= to();
 	public static final IProperty<RockBehavior>			property_rock			= to();
-	public static final IProperty<ICrop>				property_crop			= () -> ICrop.VOID;
+	public static final IProperty<ICropSpecie>			property_crop			= to(ICropSpecie.VOID);
 	public static final IProperty<IPlant>				property_plant			= to();
 	public static final IProperty<PropertyEdible>		property_edible			= to();
 	public static final IProperty<PropertyBlockable>	property_brick			= to();

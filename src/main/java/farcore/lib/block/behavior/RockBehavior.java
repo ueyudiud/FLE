@@ -27,7 +27,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.world.TaskFalling;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.stack.AbstractStack;
@@ -455,7 +455,7 @@ implements IRockLikeBehavior<B>
 		{
 			pos = pos.toImmutable();
 			NebulaWorldHandler.schedueTask(new TaskFalling(world, pos, pos, state, 2 * delayMultiplier));
-			Log.logger().info(pos);
+			NebulaLog.logger().info(pos);
 		}
 	}
 	

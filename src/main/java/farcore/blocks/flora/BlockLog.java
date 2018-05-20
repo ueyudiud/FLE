@@ -24,7 +24,7 @@ public abstract class BlockLog extends BlockBase implements IExtendedDataBlock
 	
 	protected BlockLog(String name, Tree tree)
 	{
-		super(tree.material.modid, name, Materials.LOG);
+		super(tree.material().modid, name, Materials.LOG);
 		this.tree = tree;
 	}
 	
@@ -61,13 +61,13 @@ public abstract class BlockLog extends BlockBase implements IExtendedDataBlock
 	@Override
 	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		return this.tree.hardness;
+		return this.tree.property.hardness;
 	}
 	
 	@Override
 	public float getExplosionResistance(Entity exploder)
 	{
-		return this.tree.explosionResistance;
+		return this.tree.property.explosionResistance;
 	}
 	
 	@Override

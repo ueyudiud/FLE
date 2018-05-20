@@ -13,8 +13,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The basic solid type.
+ * @author ueyudiud
+ */
 public abstract class Solid implements IRegisterElement<Solid>
 {
+	/**
+	 * The registry of solid, allocating network id of solids and store registryName-solid pair.
+	 */
 	public static final IdAllocatableRegister<Solid> REGISTRY = new IdAllocatableRegister<>(true);
 	
 	public final IRegisterDelegate<Solid>	delegate;
@@ -27,12 +34,21 @@ public abstract class Solid implements IRegisterElement<Solid>
 		this.delegate = REGISTRY.register(this);
 	}
 	
+	/**
+	 * The class to serialize.
+	 */
 	@Override
 	public final Class<Solid> getTargetClass()
 	{
 		return Solid.class;
 	}
 	
+	/**
+	 * Set the registry name of solid.<p>
+	 * Also take its <tt>path</tt> name as unlocalized name.<p>
+	 * It is already called by constructor, do not call it again.
+	 * @see #setUnlocalizedName(String)
+	 */
 	@Override
 	public final void setRegistryName(String name)
 	{
@@ -54,7 +70,7 @@ public abstract class Solid implements IRegisterElement<Solid>
 	
 	public String getUnlocalizedName()
 	{
-		return "MISSING_UNLOCALIZED_NAME_" + this.unlocalizedName;
+		return this.unlocalizedName == null ? "MISSING_UNLOCALIZED_NAME_" + this.name.getResourcePath() : this.unlocalizedName;
 	}
 	
 	public String getLocalizedName()

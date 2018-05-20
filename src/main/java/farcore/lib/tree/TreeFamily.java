@@ -3,40 +3,39 @@
  */
 package farcore.lib.tree;
 
-import java.util.Collection;
+import java.util.Map;
 
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IFamily;
+import farcore.lib.bio.GeneData;
+import farcore.lib.bio.IOrder;
+import farcore.lib.bio.IntegratedFamily;
+import farcore.lib.bio.IntegratedSpecie;
 
 /**
  * @author ueyudiud
  */
-public class TreeFamily implements IFamily<ISaplingAccess>
+public class TreeFamily extends IntegratedFamily<Tree>
 {
-	public final String name;
-	
-	public TreeFamily(String name)
+	public static Builder builder(String name)
 	{
-		this.name = name;
+		return new Builder(name);
 	}
 	
-	@Override
-	public final String getRegisteredName()
+	public static class Builder extends IntegratedFamily.Builder<TreeFamily, Tree>
 	{
-		return this.name;
+		Builder(String name)
+		{
+			super(TreeOrder.ORDER, 4, name);
+		}
+		
+		@Override
+		protected TreeFamily build(IOrder order, int capcount, int predicate, String name, Map<String, Tree> species, GeneData[] genes, Tree def, IntegratedSpecie[] checkQue)
+		{
+			return new TreeFamily(order, capcount, predicate, name, species, genes, def, checkQue);
+		}
 	}
 	
-	@Override
-	public Collection<? extends ITree> getSpecies()
+	public TreeFamily(IOrder order, int capcount, int predicate, String name, Map<String, Tree> species, GeneData[] genes, Tree def, IntegratedSpecie[] checkQue)
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public ITree getSpecieFromGM(GeneticMaterial gm)
-	{
-		// TODO Auto-generated method stub
-		return null;
+		super(order, capcount, predicate, name, species, genes, def, checkQue);
 	}
 }

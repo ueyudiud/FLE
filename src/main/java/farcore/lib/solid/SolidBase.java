@@ -4,8 +4,9 @@
 package farcore.lib.solid;
 
 import nebula.client.render.IIconRegister;
+import nebula.common.G;
 import nebula.common.LanguageManager;
-import nebula.common.util.Game;
+import nebula.common.annotations.ModSensitive;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,9 +20,10 @@ public class SolidBase extends Solid
 	
 	protected String unlocalized;
 	
+	@ModSensitive
 	public SolidBase(String name, String localizedName)
 	{
-		this(Game.getActiveModID(), name, localizedName);
+		this(G.activeModid(), name, localizedName);
 	}
 	
 	public SolidBase(String modid, String name, String localizedName)

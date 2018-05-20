@@ -10,7 +10,7 @@ import fargen.core.worldgen.FarWorldType;
 import fargen.core.worldgen.end.FarEndProvider;
 import fargen.core.worldgen.nether.FarNetherProvider;
 import fargen.core.worldgen.surface.FarSurfaceProvider;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.client.ClientOverride;
 import nebula.common.config.NebulaConfiguration;
 import net.minecraft.world.DimensionType;
@@ -68,9 +68,9 @@ public class FarGen
 	public void load(FMLInitializationEvent event)
 	{
 		FarGenBiomes.init();
-		Log.info("Far generation start override world type.");
+		NebulaLog.info("Far generation start override world type.");
 		FarWorldType.DEFAULT = new FarWorldType(0, "default", "Far Default");
-		Log.info("Far generation overrided world type.");
+		NebulaLog.info("Far generation overrided world type.");
 		WorldPropHandler.addWorldProperty(0, new WorldPropSurface());
 		proxy.load();
 	}

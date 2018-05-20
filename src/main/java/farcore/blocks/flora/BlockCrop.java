@@ -12,7 +12,7 @@ import farcore.data.MP;
 import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.items.ItemSeed;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.statemap.StateMapperCrop;
 import farcore.lib.tile.instance.TECrop;
@@ -22,6 +22,7 @@ import nebula.common.block.property.PropertyString;
 import nebula.common.util.L;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -40,8 +41,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockCrop extends BlockSingleTE implements IPlantable
 {
-	public static final ThreadLocal<ICrop>		CROP_THREAD	= new ThreadLocal<>();
-	public static final ThreadLocal<ItemStack>	ITEM_THREAD	= new ThreadLocal<>();
 	@Deprecated
 	public static final PropertyString			PROP_CROP_TYPE;
 	
@@ -50,7 +49,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		List<String> list = new ArrayList<>();
 		for (Mat material : Mat.filt(SubTags.CROP))
 		{
-			ICrop crop = material.getProperty(MP.property_crop);
+			ICropSpecie crop = material.getProperty(MP.property_crop);
 			L.consume(1, 1 + crop.getMaxStage(), idx -> list.add(material.name + "_" + idx));
 		}
 		list.add("void");// Empty crop mark.
@@ -94,36 +93,16 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	}
 	
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+	protected TileEntity createTileEntity(World world, BlockPos pos, ItemStack stack, EntityPlayer placer)
 	{
-		if (FarCore.worldGenerationFlag)
-		{
-			if (CROP_THREAD.get() != null)
-			{
-				worldIn.setTileEntity(pos, new TECrop(CROP_THREAD.get()));
-				return;
-			}
-		}
-		if (ITEM_THREAD.get() != null)
-		{
-			ItemStack stack = ITEM_THREAD.get();
-			if (stack.getItem() instanceof ItemSeed)
-			{
-				TECrop crop;
-				worldIn.setTileEntity(pos, crop = new TECrop(ItemSeed.getMaterial(stack).getProperty(MP.property_crop), ItemSeed.getDNAFromStack(stack)));
-				crop.syncToNearby();
-			}
-		}
+		TECrop crop = new TECrop(ItemSeed.getDNAFromStack(stack));
+		crop.syncToNearby();
+		return crop;
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		if (ITEM_THREAD.get() != null)
-		{
-			ItemStack stack = ITEM_THREAD.get();
-			if (stack.getItem() instanceof ItemSeed) return new TECrop(ItemSeed.getMaterial(stack).getProperty(MP.property_crop), ItemSeed.getDNAFromStack(stack));
-		}
 		return new TECrop();
 	}
 	

@@ -18,7 +18,7 @@ import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.api.util.ToolPropertiesModificater;
 import fle.api.util.ToolPropertiesModificater.Property;
 import fle.core.FLE;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.base.function.Judgable;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
@@ -165,7 +165,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	
@@ -182,7 +182,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	
@@ -199,7 +199,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return false;
 	}
@@ -217,7 +217,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return false;
 	}
@@ -235,7 +235,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return -1;
 	}
@@ -253,7 +253,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return base;
 	}
@@ -271,7 +271,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	
@@ -288,7 +288,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return null;
 	}
@@ -307,7 +307,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		catch (Throwable exception)
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 		return null;
 	}

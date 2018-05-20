@@ -12,11 +12,11 @@ import java.util.Random;
 import com.google.common.collect.ImmutableList;
 
 import farcore.FarCore;
-import farcore.blocks.flora.BlockCrop;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.crop.CropAccessSimulated;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
+import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
@@ -29,6 +29,7 @@ import nebula.base.collection.IPropertyMap;
 import nebula.base.collection.IPropertyMap.IProperty;
 import nebula.base.function.WeightedRandomSelector;
 import nebula.common.util.L;
+import nebula.common.util.W;
 import nebula.common.util.noise.NoiseBase;
 import nebula.common.util.noise.NoisePerlin;
 import net.minecraft.block.state.IBlockState;
@@ -303,19 +304,19 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		// Wild Crop generation.
 		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(WILD_CROP, this.world, x, z, this)))
 		{
-			WeightedRandomSelector<ICrop> cropGenerationSelector = new WeightedRandomSelector<>();
+			WeightedRandomSelector<ICropSpecie> cropGenerationSelector = new WeightedRandomSelector<>();
 			FarSurfaceDataGenerator.addVanillaCrops(x, z, this.random, this.noise6, temp, rainfall, cropGenerationSelector);
 			
 			if (cropGenerationSelector.weight() > 0 && biome.cropPerChunkBase > 0)
 			{
 				int count = 1 + biome.cropPerChunkBase + L.nextInt(biome.cropPerChunkRand, this.random) + MathHelper.log2DeBruijn(cropGenerationSelector.weight());
-				ICrop crop;
+				ICropSpecie crop;
 				do
 				{
 					crop = cropGenerationSelector.next(this.random);
 					count--;
 				}
-				while ((crop == null || crop == ICrop.VOID) && count > 0);
+				while ((crop == null || crop == ICropSpecie.VOID) && count > 0);
 				for (int i = 0; i < count; ++i)
 				{
 					int x2 = x1 + this.random.nextInt(16);
@@ -324,8 +325,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					pos.setPos(x2, y2, z2);
 					if (crop.canPlantAt(new CropAccessSimulated(this.world, pos, crop, null, true)))
 					{
-						BlockCrop.CROP_THREAD.set(crop);
-						this.world.setBlockState(pos, CROP);
+						W.setBlock(this.world, pos, CROP, new TECrop(crop.random(this.random)), 2);
 					}
 				}
 			}

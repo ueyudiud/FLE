@@ -3,11 +3,12 @@
  */
 package farcore.lib.crop;
 
-import java.util.Random;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IFamily;
+import farcore.lib.bio.BioData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -22,22 +23,24 @@ public class CropAccessSimulated implements ICropAccess
 {
 	World			world;
 	BlockPos		pos;
-	ICrop			crop;
-	GeneticMaterial	dna;
+	ICropSpecie		crop;
+	BioData			dna;
 	boolean			isWild;
+	Set<String>		traits;
 	
-	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna)
+	public CropAccessSimulated(World world, BlockPos pos, ICropSpecie crop, BioData dna)
 	{
 		this(world, pos, crop, dna, false);
 	}
 	
-	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna, boolean isWild)
+	public CropAccessSimulated(World world, BlockPos pos, ICropSpecie crop, BioData dna, boolean isWild, String...traits)
 	{
 		this.world = world;
 		this.pos = pos;
 		this.crop = crop;
 		this.dna = dna;
 		this.isWild = isWild;
+		this.traits = Sets.newHashSet(traits);
 	}
 	
 	@Override
@@ -53,7 +56,7 @@ public class CropAccessSimulated implements ICropAccess
 	}
 	
 	@Override
-	public ICrop crop()
+	public ICropSpecie getSpecie()
 	{
 		return this.crop;
 	}
@@ -62,20 +65,14 @@ public class CropAccessSimulated implements ICropAccess
 	public CropInfo info()
 	{
 		CropInfo info = new CropInfo();
-		info.geneticMaterial = this.dna;
+		info.data = this.dna;
 		return info;
 	}
 	
 	@Override
-	public GeneticMaterial getGeneticMaterial()
+	public BioData getData()
 	{
 		return this.dna;
-	}
-	
-	@Override
-	public IFamily<ICropAccess> getFamily()
-	{
-		return this.crop.getFamily();
 	}
 	
 	@Override
@@ -100,12 +97,6 @@ public class CropAccessSimulated implements ICropAccess
 	public float stageBuffer()
 	{
 		return 0;
-	}
-	
-	@Override
-	public Random rng()
-	{
-		return new Random();
 	}
 	
 	@Override
@@ -145,7 +136,7 @@ public class CropAccessSimulated implements ICropAccess
 	}
 	
 	@Override
-	public void pollinate(GeneticMaterial gm)
+	public void pollinate(boolean self, BioData gm)
 	{
 		
 	}

@@ -3,7 +3,7 @@
  */
 package farcore;
 
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.Nebula;
 
 /**
@@ -55,7 +55,7 @@ public class FarCore
 		}
 		else
 		{
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 }

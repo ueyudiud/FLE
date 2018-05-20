@@ -12,7 +12,7 @@ import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.world.IWorldGenerateReplacer;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.client.ClientProxy;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.model.ICustomItemModelSelector;
@@ -129,7 +129,7 @@ public class FarCoreRegistry
 			 * I think no one like to register an invalid class, but it
 			 * shouldn't be crash for game still can run without a renderer.
 			 */
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	
@@ -166,7 +166,7 @@ public class FarCoreRegistry
 			 * I think no one like to register an invalid class, but it
 			 * shouldn't be crash for game still can run without a renderer.
 			 */
-			Log.catching(exception);
+			NebulaLog.catching(exception);
 		}
 	}
 	

@@ -5,9 +5,9 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
-import farcore.lib.tree.TreeInfo;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import net.minecraft.block.BlockSapling;
@@ -37,7 +37,7 @@ public class TreeGenAcacia extends TreeGenAbstract
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		int l = L.nextInt(this.randHeightHlf1, random) + L.nextInt(this.randHeightHlf2, random) + this.baseHeight;
 		
@@ -54,6 +54,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 			boolean isSoil = state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, (BlockSapling) Blocks.SAPLING);
 			if (isSoil && y < 256 - l - 1)
 			{
+				info = checkData(info, random);
+				
 				state.getBlock().onPlantGrow(state, world, pos, pos.up());
 				int j3 = random.nextInt(4);
 				j1 = l - random.nextInt(4) - 1;

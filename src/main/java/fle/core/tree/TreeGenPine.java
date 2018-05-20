@@ -5,9 +5,9 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
-import farcore.lib.tree.TreeInfo;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -35,7 +35,7 @@ public class TreeGenPine extends TreeGenAbstract
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		int height = random.nextInt(this.randHeight) + this.minHeight;
@@ -55,6 +55,8 @@ public class TreeGenPine extends TreeGenAbstract
 			
 			if (isSoil && y < 256 - height - 1)
 			{
+				info = checkData(info, random);
+				
 				state.getBlock().onPlantGrow(state, world, down, pos);
 				int k2 = 0;
 				

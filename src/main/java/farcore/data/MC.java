@@ -52,8 +52,8 @@ public class MC
 	public static final MatCondition	block				= new MatCondition("block", "Block", "% Block").setSize(1296L, 1296L, 0.1F).setFilter(SubTags.METAL);
 	public static final MatCondition	ingot				= new MatCondition("ingot", "Ingot", "% Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTags.METAL);
 	public static final MatCondition	nugget				= new MatCondition("nugget", "Nugget", "% Nugget").setSize(16L, 16L, 9.0F).setFilter(SubTags.METAL);
-	public static final MatCondition	log					= new MatCondition("log", "Log", "% Wood").setSize(5184L).setFilter(SubTags.TREE);
-	public static final MatCondition	log_cutted			= new MatCondition("log_cutted", "logCutted", "Cutted Log", "% Log").setUnsizable().setStackLimit(1).setFilter(SubTags.TREE);
+	public static final MatCondition	log					= new MatCondition("log", "NebulaLog", "% Wood").setSize(5184L).setFilter(SubTags.TREE);
+	public static final MatCondition	log_cutted			= new MatCondition("log_cutted", "logCutted", "Cutted NebulaLog", "% NebulaLog").setUnsizable().setStackLimit(1).setFilter(SubTags.TREE);
 	public static final MatCondition	plankBlock			= new MatCondition("plank_block", "plank", "Plank", "% Plank").setSize(1296L).setFilter(SubTags.WOOD);
 	public static final MatCondition	branch				= new MatCondition("branch", "Branch", "% Branch").setSize(864L).setFilter(SubTags.TREE);
 	public static final MatCondition	firewood			= new MatCondition("firewood", "firewood", "Firewood", "% Firewood").setSize(1296L, 324L).setFilter(SubTags.TREE);

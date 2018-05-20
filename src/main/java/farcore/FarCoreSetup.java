@@ -12,7 +12,7 @@ import farcore.lib.oredict.OreDictExt;
 import farcore.lib.solid.Solid;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
-import nebula.Log;
+import nebula.V;
 import nebula.common.config.NebulaConfiguration;
 import nebula.common.util.ModCompator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -76,7 +76,7 @@ public class FarCoreSetup
 		modMetadata.name = "Far Core";
 		modMetadata.credits = "ueyudiud";
 		/** Loading non-resource-file from Minecraft running path. */
-		Log.info("Loading configuration.");
+		V.info("Loading configuration.");
 		NebulaConfiguration.loadStaticConfig(Config.class);
 		FarCoreSetup.proxy.load(event);
 	}

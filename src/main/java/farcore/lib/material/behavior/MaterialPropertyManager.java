@@ -172,7 +172,7 @@ public class MaterialPropertyManager
 	{
 		private final Map<String, Pair> properties;
 		
-		private class Pair
+		class Pair
 		{
 			Mat material;
 			MatCondition condition;

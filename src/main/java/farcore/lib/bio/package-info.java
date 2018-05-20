@@ -1,6 +1,7 @@
 /**
- * Not released yet, it might chanced in the future.
- * 
- * @author ueyudiud
+ * The FarCore Biology related classes.
  */
+@ParametersAreNonnullByDefault
 package farcore.lib.bio;
+
+import javax.annotation.ParametersAreNonnullByDefault;

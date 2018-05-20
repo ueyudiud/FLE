@@ -196,7 +196,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing, ItemStack stack)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}

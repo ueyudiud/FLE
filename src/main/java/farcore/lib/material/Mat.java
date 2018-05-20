@@ -19,35 +19,10 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Iterables;
 
-import farcore.blocks.BlockBrick;
-import farcore.blocks.flora.BlockLeaves;
-import farcore.blocks.flora.BlockLeavesCore;
-import farcore.blocks.flora.BlockLogArtificial;
-import farcore.blocks.flora.BlockLogNatural;
-import farcore.blocks.flora.BlockPlank;
-import farcore.blocks.flora.BlockWoodenFence;
-import farcore.blocks.terria.BlockClay;
-import farcore.blocks.terria.BlockRock;
-import farcore.blocks.terria.BlockSand;
-import farcore.blocks.terria.BlockSoil;
-import farcore.blocks.terria.BlockStoneChip;
 import farcore.data.MP;
-import farcore.data.Materials;
-import farcore.data.SubTags;
-import farcore.lib.block.behavior.MetalBlockBehavior;
-import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.behavior.IMaterialProperty;
-import farcore.lib.material.behavior.MaterialPropertyManager;
-import farcore.lib.material.ore.IOreProperty;
-import farcore.lib.material.prop.PropertyBasic;
-import farcore.lib.material.prop.PropertyBlockable;
-import farcore.lib.material.prop.PropertyOre;
-import farcore.lib.material.prop.PropertyTool;
-import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
-import nebula.base.A;
 import nebula.base.collection.HashIntMap;
 import nebula.base.collection.HashPropertyMap;
 import nebula.base.collection.IPropertyMap;
@@ -55,11 +30,11 @@ import nebula.base.collection.IPropertyMap.IProperty;
 import nebula.base.function.F;
 import nebula.base.function.Judgable;
 import nebula.base.register.IRegister;
+import nebula.base.register.IRegisteredNameable;
 import nebula.base.register.SortedRegister;
+import nebula.common.G;
 import nebula.common.LanguageManager;
 import nebula.common.nbt.INBTReaderAndWriter;
-import nebula.common.util.Game;
-import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
@@ -193,7 +168,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 	};
 	
-	private static void onDataChanged()
+	static void onDataChanged()
 	{
 		MATERIALS_CACHE.clear();
 	}
@@ -202,7 +177,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		if (isRegistered())
 		{
-			VOID.builder().setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).addProperty(MP.property_crop, ICrop.VOID).addProperty(MP.property_wood, Tree.VOID).build();
+			VOID.builder().setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).addProperty(MP.property_crop, ICropSpecie.VOID).addProperty(MP.property_tree, Tree.VOID).build();
 		}
 		/**
 		 * For debugging use, generate model file, export material properties,
@@ -290,7 +265,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public Builder builder()
 	{
-		return isRegistered() ? this.new Builder() : new MatBuilderTest(this);
+		return isRegistered() ? new Builder(this) : new MatBuilderTest(this);
 	}
 	
 	public final String	modid;
@@ -330,312 +305,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public float	toolBrittleness;
 	public float	toolDamageToEntity;
 	
-	private IPropertyMap propertyMap = new HashPropertyMap();
+	IPropertyMap propertyMap = new HashPropertyMap();
 	// Reused now.
-	private HashIntMap<String>	properties	= new HashIntMap<>();
+	HashIntMap<String>	properties	= new HashIntMap<>();
 	private Set<SubTag>			subTags		= new HashSet<>();
-	
-	public class Builder
-	{
-		Builder()
-		{
-		}
-		
-		public Builder setRGBa(int colorIndex)
-		{
-			Mat.this.RGBa[0] = (short) ((colorIndex >> 24));
-			Mat.this.RGBa[1] = (short) ((colorIndex >> 16) & 0xFF);
-			Mat.this.RGBa[2] = (short) ((colorIndex >> 8) & 0xFF);
-			Mat.this.RGBa[3] = (short) ((colorIndex) & 0xFF);
-			Mat.this.RGB = colorIndex >> 8;
-			return this;
-		}
-		
-		public Builder setRGBa(short[] colorIndex)
-		{
-			Mat.this.RGBa = colorIndex;
-			Mat.this.RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
-			return this;
-		}
-		
-		public Builder setUnificationMaterial(Mat material)
-		{
-			Mat.this.unificationMaterial = material;
-			return this;
-		}
-		
-		public Builder setChemicalFormula(String name)
-		{
-			Mat.this.chemicalFormula = name;
-			return this;
-		}
-		
-		public Builder setCustomInformation(String info)
-		{
-			Mat.this.customDisplayInformation = info;
-			return this;
-		}
-		
-		public <V> Builder addProperty(IProperty<V> property, V value)
-		{
-			Mat.this.propertyMap.put(property, value);
-			onDataChanged();
-			return this;
-		}
-		
-		public Builder setGeneralProp(float heatCap, float thermalConduct, float maxSpeed, float maxTorque, float dielectricConstant, float electrialResistance, float redstoneResistance)
-		{
-			PropertyBasic property = new PropertyBasic();
-			Mat.this.heatCapacity = property.heatCap = heatCap;
-			Mat.this.thermalConductivity = property.thermalConduct = thermalConduct;
-			Mat.this.dielectricConstant = property.dielectricConstant = dielectricConstant;
-			Mat.this.maxSpeed = property.maxSpeed = maxSpeed;
-			Mat.this.maxTorque = property.maxTorque = maxTorque;
-			Mat.this.electrialResistance = property.electrialResistance = electrialResistance;
-			Mat.this.redstoneResistance = property.redstoneResistance = redstoneResistance;
-			return addProperty(MP.property_basic, property);
-		}
-		
-		public Builder setToolProp(int maxUses, int harvestLevel, float hardness, float brittleness, float damageToEntity, float attackSpeedMutiple)
-		{
-			add(SubTags.TOOL);
-			Mat.this.toolMaxUse = maxUses;
-			Mat.this.toolHarvestLevel = harvestLevel;
-			Mat.this.toolHardness = hardness;
-			Mat.this.toolBrittleness = brittleness;
-			Mat.this.toolDamageToEntity = damageToEntity;
-			addProperty(MP.tool_attackspeed, attackSpeedMutiple);
-			return this;
-		}
-		
-		public Builder setMetalic(int harvestLevel, float hardness, float resistance)
-		{
-			MetalBlockBehavior behavior = new MetalBlockBehavior<>(Mat.this, harvestLevel, hardness, resistance);
-			behavior.explosionResistance = resistance;
-			behavior.hardness = hardness;
-			behavior.harvestLevel = harvestLevel;
-			behavior.material = Mat.this;
-			add(SubTags.METAL);
-			return this;
-		}
-		
-		public Builder setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)
-		{
-			PropertyTool property = new PropertyTool();
-			Mat.this.toolHarvestLevel = property.harvestLevel = harvestLevel;
-			Mat.this.toolMaxUse = property.maxUse = maxUse;
-			Mat.this.toolHardness = property.hardness = hardness;
-			Mat.this.toolBrittleness = property.brittleness = brittleness;
-			Mat.this.toolDamageToEntity = property.damageToEntity = dVE;
-			property.enchantability = enchantability;
-			property.attackSpeed = attackSpeed;
-			add(SubTags.TOOL);
-			return addProperty(MP.property_tool, property);
-		}
-		
-		@Deprecated
-		public Builder setHandable(float toughness)
-		{
-			// handleToughness = toughness;
-			add(SubTags.HANDLE);
-			return this;
-		}
-		
-		public Builder setOreProperty(int harvestLevel, float hardness, float resistance)
-		{
-			return setOreProperty(harvestLevel, hardness, resistance, SubTags.ORE_SIMPLE);
-		}
-		
-		public Builder setOreProperty(int harvestLevel, float hardness, float resistance, SubTag type)
-		{
-			return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.PROPERTY, type);
-		}
-		
-		public Builder setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty, SubTag type)
-		{
-			PropertyOre property;
-			if (oreProperty == IOreProperty.PROPERTY)
-			{
-				property = new PropertyOre(Mat.this, harvestLevel, hardness, resistance);
-			}
-			else if (oreProperty instanceof PropertyOre)
-			{
-				property = (PropertyOre) oreProperty;
-			}
-			else
-			{
-				property = new PropertyOre.PropertyOreWrapper(Mat.this, harvestLevel, hardness, resistance, oreProperty);
-			}
-			add(SubTags.ORE, type);
-			return addProperty(MP.property_ore, property);
-		}
-		
-		public Builder setWood(float woodHardness, float ashcontent, float woodBurnHeat)
-		{
-			PropertyWood property = new PropertyWood(Mat.this, 1, 1.5F + woodHardness / 4F, 0.4F + woodHardness / 8F, ashcontent, woodBurnHeat);
-			property.plank = new BlockPlank(property);
-			new BlockWoodenFence(property);
-			addProperty(MP.fallen_damage_deduction, (int) (1000 / (woodHardness + 1)));
-			addProperty(MP.flammability, 50);
-			addProperty(MP.fire_encouragement, 4);
-			addProperty(MP.fire_spread_speed, 25);
-			add(SubTags.WOOD);
-			return addProperty(MP.property_wood, property);
-		}
-		
-		public Builder setTree(Tree tree)
-		{
-			return setTree(tree, true);
-		}
-		
-		/**
-		 * Set tree information of material.
-		 * 
-		 * @param tree The tree information.
-		 * @param createBlock False to prevent add log and leaves block, you may
-		 *            have other block to added, this option is only input false
-		 *            in VOID material in FarCore.
-		 * @return
-		 */
-		public Builder setTree(Tree tree, boolean createBlock)
-		{
-			PropertyWood old = getProperty(MP.property_wood);
-			if (old != null)
-			{
-				tree.plank = old.plank;
-				old.burnHeat = tree.burnHeat;
-				old.hardness = tree.hardness;
-				old.ashcontent = tree.ashcontent;
-				old.harvestLevel = tree.harvestLevel;
-			}
-			add(SubTags.TREE, SubTags.WOOD);
-			tree.material = Mat.this;
-			if (createBlock)
-			{
-				BlockLogNatural logNatural = BlockLogNatural.create(tree);
-				BlockLogArtificial logArtificial = BlockLogArtificial.create(tree);
-				BlockLeaves leaves = BlockLeaves.create(tree);
-				BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, tree);
-				tree.block = logArtificial;
-				tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
-			}
-			addProperty(MP.fallen_damage_deduction, (int) (1000 / (tree.hardness * 4 - 5)));
-			addProperty(MP.flammability, 50);
-			addProperty(MP.fire_encouragement, 4);
-			addProperty(MP.fire_spread_speed, 25);
-			addProperty(MP.property_wood, tree);
-			return addProperty(MP.property_tree, tree);
-		}
-		
-		public Builder setBrick(int harvestLevel, float hardness, float resistance)
-		{
-			PropertyBlockable<BlockBrick> property = new PropertyBlockable<>(Mat.this, harvestLevel, hardness, resistance);
-			property.block = new BlockBrick(Mat.this.modid, "brick." + Mat.this.name, Mat.this, property);
-			add(SubTags.BRICK);
-			return addProperty(MP.property_brick, property);
-		}
-		
-		public Builder setSoil(float hardness, float resistance)
-		{
-			// It seems no soil need use tool to harvest.
-			PropertyBlockable property = new PropertyBlockable(Mat.this, -1, hardness, resistance);
-			property.block = new BlockSoil(Mat.this.modid, "soil." + Mat.this.name, Materials.DIRT, Mat.this, property);
-			add(SubTags.DIRT);
-			return addProperty(MP.property_soil, property);
-		}
-		
-		public Builder setClay(float hardness, float resistance)
-		{
-			// It seems no clay need use tool to harvest.
-			PropertyBlockable property = new PropertyBlockable(Mat.this, -1, hardness, resistance);
-			property.block = new BlockClay(Mat.this.modid, "soil." + Mat.this.name, Materials.CLAY, Mat.this, property);
-			add(SubTags.CLAY);
-			return addProperty(MP.property_soil, property);
-		}
-		
-		public Builder setSand(float hardness, float resistance)
-		{
-			PropertyBlockable property = new PropertyBlockable<>(Mat.this, 1, hardness, resistance);
-			property.block = new BlockSand(Mat.this.modid, "sand." + Mat.this.name, Mat.this, property);
-			add(SubTags.SAND);
-			return addProperty(MP.property_sand, property);
-		}
-		
-		public Builder setRock(RockBehavior behavior)
-		{
-			behavior.block = new BlockRock(Mat.this, behavior);
-			behavior.stonechip = new BlockStoneChip(behavior);
-			add(SubTags.ROCK);
-			return addProperty(MP.property_rock, behavior);
-		}
-		
-		public Builder setRock(int harvestLevel, float hardness, float resistance)
-		{
-			return setRock(new RockBehavior(Mat.this, harvestLevel, hardness, resistance));
-		}
-		
-		public Builder setCrop(ICrop crop)
-		{
-			add(SubTags.CROP);
-			return addProperty(MP.property_crop, crop);
-		}
-		
-		public Builder setPlant(IPlant plant)
-		{
-			add(SubTags.PLANT);
-			return addProperty(MP.property_plant, plant);
-		}
-		
-		public Builder setTag(SubTag...tags)
-		{
-			add(tags);
-			return this;
-		}
-		
-		public Builder addProperty(String tag, int value)
-		{
-			Mat.this.properties.put(tag, value);
-			return this;
-		}
-		
-		public Builder addProperty(String tag, float value)
-		{
-			return addProperty(tag, Float.floatToIntBits(value));
-		}
-		
-		public Builder setProperty(IMaterialProperty property)
-		{
-			return setProperty(property, false);
-		}
-		
-		/**
-		 * Set {@link Mat#itemProp}.<p>
-		 * 
-		 * @param property the material property.
-		 * @param register the property will register to {@link MaterialPropertyManager} with material name
-		 *                 if this option is <code>true</code>
-		 * @return the builder.
-		 * @see MaterialPropertyManager#registerMaterialProperty(String, IMaterialProperty)
-		 */
-		public Builder setProperty(IMaterialProperty property, boolean register)
-		{
-			Mat.this.itemProp = property;
-			if (register)
-			{
-				MaterialPropertyManager.registerMaterialProperty(Mat.this.name, property);
-			}
-			return this;
-		}
-		
-		public Mat build()
-		{
-			return Mat.this;
-		}
-	}
 	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
-		this(id, Game.getActiveModID(), name, oreDict, localized);
+		this(id, G.activeModid(), name, oreDict, localized);
 	}
 	
 	public Mat(int id, String modid, String name, String oreDict, String localized)
@@ -697,7 +374,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	@Override
 	public void add(SubTag...tags)
 	{
-		A.executeAll(tags, L.toConsumer(SubTag::addContainerToList, this));
+		for (SubTag tag : tags)
+		{
+			tag.addContainerToList(this);
+		}
 		this.subTags.addAll(Arrays.asList(tags));
 		onDataChanged();
 	}

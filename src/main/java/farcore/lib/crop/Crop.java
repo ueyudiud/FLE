@@ -3,31 +3,26 @@
  */
 package farcore.lib.crop;
 
-import static nebula.common.util.EnumChatFormatting.GOLD;
-import static nebula.common.util.EnumChatFormatting.GREEN;
-import static nebula.common.util.EnumChatFormatting.LIGHT_PURPLE;
+import static nebula.V.CF.GOLD;
+import static nebula.V.CF.GREEN;
+import static nebula.V.CF.LIGHT_PURPLE;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
 
 import farcore.data.EnumBlock;
 import farcore.items.ItemSeed;
-import farcore.lib.bio.FamilyTemplate;
-import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.IntegratedSpecie;
 import farcore.lib.material.Mat;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
-import nebula.base.A;
+import nebula.common.LanguageManager;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
@@ -36,17 +31,31 @@ import net.minecraftforge.common.IPlantable;
 /**
  * @author ueyudiud
  */
-public class Crop implements ICrop, IPlantable
+public class Crop extends IntegratedSpecie<ICropFamily<?>> implements ICropSpecie, IPlantable
 {
-	protected FamilyTemplate<Crop, ICropAccess>	family;
-	protected Mat								material;
-	protected long[]							nativeCropValue	= new long[2];
-	protected int[]								nativeCropData	= new int[5];
-	protected int								maxStage;
-	protected int								floweringStage	= -1;
-	protected int								floweringRange	= 0;
-	protected byte								spreadType		= 0;
-	protected int								growRequire		= 1000;
+	protected final int		maxStage;
+	protected final int		growRequire;
+	protected final int		floweringStage;
+	protected final int		floweringRange;
+	protected final byte	spreadType;
+	protected EnumPlantType type = EnumPlantType.Crop;
+	
+	public Crop(Mat material, String localName, int maxStage, int growRequire, int spreadType, int floweringStage, int floweringRange)
+	{
+		this.material = material;
+		LanguageManager.registerLocal("crop." + getRegisteredName() + ".name", localName);
+		this.maxStage = maxStage;
+		this.growRequire = growRequire;
+		this.spreadType = (byte) spreadType;
+		this.floweringRange = floweringRange;
+		this.floweringStage = floweringStage;
+	}
+	
+	public Crop setType(EnumPlantType type)
+	{
+		this.type = type;
+		return this;
+	}
 	
 	@Override
 	public String getRegisteredName()
@@ -55,65 +64,19 @@ public class Crop implements ICrop, IPlantable
 	}
 	
 	@Override
-	public final FamilyTemplate<Crop, ICropAccess> getFamily()
+	public Mat material()
 	{
-		return this.family;
+		return this.material;
 	}
 	
 	@Override
-	public GeneticMaterial createNativeGeneticMaterial()
+	public void expressTraits(CropInfo info, BioData data)
 	{
-		return new GeneticMaterial(this.family.getRegisteredName(), 0, this.nativeCropValue.clone(), this.nativeCropData.clone());
-	}
-	
-	@Override
-	@Nullable
-	public GeneticMaterial createGameteGeneticMaterial(ICropAccess biology, GeneticMaterial gm)
-	{
-		if ((gm.coders.length & 0x1) != 0) return null;
-		Random random = biology.rng();
-		int chance = MathHelper.ceil(gm.generation * gm.generation * Math.exp(-(float) gm.generation / 10.0F));
-		long[] coders = A.createLongArray(gm.coders.length >> 1, idx -> {
-			long a = gm.coders[idx << 1];
-			long b = gm.coders[idx << 1 | 1];
-			long result = 0;
-			for (int i = 0; i < Long.SIZE; ++i)
-			{
-				long x = 1L << i;
-				if (getGameteResult(idx << 6 | i, random, (a & x) != 0, (b & x) != 0))
-				{
-					result |= x;
-				}
-			}
-			if (random.nextInt(10000) < chance)
-			{
-				result ^= (1L << random.nextInt(64));
-			}
-			return result;
-		});
-		int off = MathHelper.ceil(gm.generation * gm.generation * Math.exp(-(float) gm.generation / 5.0F));
-		int[] datas = A.createIntArray(gm.nativeValues.length, i -> {
-			int val = gm.nativeValues[i];
-			val += L.nextInt(off, random) - L.nextInt(off, random);
-			return L.range(0, 256, val);
-		});
-		return new GeneticMaterial(this.family.getRegisteredName(), gm.generation + 1, coders, datas);
-	}
-	
-	protected boolean getGameteResult(int idx, Random random, boolean a, boolean b)
-	{
-		return random.nextBoolean() ? a : b;
-	}
-	
-	@Override
-	public void expressTrait(ICropAccess biology, GeneticMaterial gm)
-	{
-		CropInfo info = biology.info();
-		info.grain += gm.nativeValues[0];
-		info.growth += gm.nativeValues[1];
-		info.resistance += gm.nativeValues[2];
-		info.vitality += gm.nativeValues[3];
-		info.saving += gm.nativeValues[4];
+		info.grain += data.capabilities[0];
+		info.growth += data.capabilities[1];
+		info.resistance += data.capabilities[2];
+		info.vitality += data.capabilities[3];
+		info.saving += data.capabilities[4];
 	}
 	
 	@Override
@@ -147,7 +110,7 @@ public class Crop implements ICrop, IPlantable
 		{
 			if (access.getTE(facing) instanceof ICropAccess)
 			{
-				++dence;
+				++ dence;
 			}
 		}
 		if (dence - info.resistance > 1)
@@ -201,43 +164,45 @@ public class Crop implements ICrop, IPlantable
 		int stage = access.stage();
 		if (stage == this.floweringStage)
 		{
+			CropInfo info = access.info();
 			int count;
 			switch (this.spreadType)
 			{
 			case 2:
-				if (access.info().gamete == null && access.rng().nextInt(5) == 0)
+				if (info.seed == null && access.rng().nextInt(5) == 0)
 				{
-					access.pollinate(createGameteGeneticMaterial(access, access.info().geneticMaterial));
+					access.pollinate(true, getGamete(info.data, access.rng()));
 				}
 			case 1:
-				if ((count = access.info().map.get("flowered")) < 5)
+				if ((count = info.map.get("flowered")) < 5)
 				{
-					GeneticMaterial material = createGameteGeneticMaterial(access, access.info().geneticMaterial);
-					int l = 8 + (1 + access.info().vitality) / 2;
-					for (int i = 0; i < l; i++)
+					BioData gamete = getGamete(info.data, access.rng());
+					if (gamete != null)
 					{
-						int x = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
-						int y = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
-						int z = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
-						if ((x | y | z) != 0)
+						int l = 8 + (1 + access.info().vitality) / 2;
+						for (int i = 0; i < l; i++)
 						{
-							TileEntity tile = access.getTE(x, y, z);
-							if (tile instanceof ICropAccess)
+							int x = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+							int y = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+							int z = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+							if ((x | y | z) != 0)
 							{
-								((ICropAccess) tile).pollinate(material);
+								TileEntity tile = access.getTE(x, y, z);
+								if (tile instanceof ICropAccess)
+								{
+									((ICropAccess) tile).pollinate(false, gamete);
+								}
 							}
 						}
 					}
-					access.info().map.put("flowered", ++count);
+					info.map.put("flowered", ++ count);
 				}
 				break;
 			case 3:
-				if (access.info().gamete == null)
+				if (info.seed == null)
 				{
-					access.pollinate(createGameteGeneticMaterial(access, access.info().geneticMaterial));
+					access.pollinate(true, getGamete(info.data, access.rng()));
 				}
-				break;
-			default:
 				break;
 			}
 		}
@@ -276,7 +241,7 @@ public class Crop implements ICrop, IPlantable
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
-		return EnumPlantType.Crop;
+		return this.type;
 	}
 	
 	@Override
@@ -287,7 +252,10 @@ public class Crop implements ICrop, IPlantable
 	
 	public ItemStack applyChildSeed(int size, CropInfo info)
 	{
-		ICrop crop = this.family.getSpecieFromGM(info.geneticMaterial);
-		return ItemSeed.applySeed(size, ((Crop) crop).material, info.gamete == null ? info.geneticMaterial : info.gamete);
+		if (info.seed == null)
+		{
+			return null;
+		}
+		return ItemSeed.applySeed(size, this.material, info.seed);
 	}
 }

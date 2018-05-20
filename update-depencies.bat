@@ -1,3 +1,3 @@
 @echo off
-gradlew.bat -i -offline eclipse --refresh-dependencies
+gradlew.bat -i -offline --refresh-dependencies eclipse
 pause

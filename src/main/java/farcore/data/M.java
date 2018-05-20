@@ -21,7 +21,7 @@ import farcore.lib.plant.PlantBristlegrass;
 import farcore.lib.plant.PlantDandelion;
 import farcore.lib.plant.PlantHalogrootBush;
 import farcore.lib.plant.PlantStatic;
-import nebula.Log;
+import nebula.NebulaLog;
 
 /**
  * Material list.
@@ -234,7 +234,7 @@ public class M
 			}
 			catch (Exception exception)
 			{
-				Log.warn("Caught an exception during {} is registering materials, " +
+				NebulaLog.warn("Caught an exception during {} is registering materials, " +
 						"this exception might not cause by Far Core, please report " +
 						"this execpion to creator.", register);
 				throw exception;

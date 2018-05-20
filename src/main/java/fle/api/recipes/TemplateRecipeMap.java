@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.base.function.F;
 import nebula.base.function.Judgable;
 import nebula.common.nbt.INBTReaderAndWriter;
@@ -163,7 +163,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		}
 		catch (Exception exception)
 		{
-			Log.warn("Invalid nbt {} for recipe {}", exception, nbt, this.name);
+			NebulaLog.warn("Invalid nbt {} for recipe {}", exception, nbt, this.name);
 		}
 		return null;
 	}
@@ -180,7 +180,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		}
 		catch (Exception exception)
 		{
-			Log.warn("Invalid recipe data {}", exception, target.storeData);
+			NebulaLog.warn("Invalid recipe data {}", exception, target.storeData);
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	{
 		if (recipe.dataProvider.length != this.handlers.length)
 		{
-			Log.error("Wrong recipe data format, get {}.", new Object[] { recipe.dataProvider });
+			NebulaLog.error("Wrong recipe data format, get {}.", new Object[] { recipe.dataProvider });
 			return false;
 		}
 		this.recipes.add(recipe);

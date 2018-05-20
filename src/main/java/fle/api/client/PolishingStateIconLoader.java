@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableMap;
 
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.client.render.IIconLoader;
 import nebula.client.render.IIconRegister;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ public class PolishingStateIconLoader implements IIconLoader
 	{
 		if (STATE_MAP.containsKey(chr))
 		{
-			Log.warn("The state with character '{}' is already exist.", chr);
+			NebulaLog.warn("The state with character '{}' is already exist.", chr);
 		}
 		else
 		{

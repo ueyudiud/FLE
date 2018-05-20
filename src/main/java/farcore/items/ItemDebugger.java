@@ -12,7 +12,7 @@ import farcore.data.EnumItem;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.tile.IDebugableTile;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.Nebula;
 import nebula.common.LanguageManager;
 import nebula.common.item.ItemBase;
@@ -114,7 +114,7 @@ public class ItemDebugger extends ItemBase
 				player.sendMessage(new TextComponentString("Fail to debug."));
 				if (Nebula.debug)
 				{
-					Log.warn("Fail to get information from coord.", exception);
+					NebulaLog.warn("Fail to get information from coord.", exception);
 				}
 			}
 			return EnumActionResult.SUCCESS;
@@ -135,7 +135,7 @@ public class ItemDebugger extends ItemBase
 			{
 				if (Nebula.debug)
 				{
-					Log.warn("Fail to remove %s from world.", exception, entity);
+					NebulaLog.warn("Fail to remove %s from world.", exception, entity);
 				}
 			}
 			return true;

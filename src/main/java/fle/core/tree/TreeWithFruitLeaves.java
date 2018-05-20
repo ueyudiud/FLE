@@ -48,11 +48,6 @@ public abstract class TreeWithFruitLeaves extends Tree
 		super(material);
 	}
 	
-	public TreeWithFruitLeaves(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent, float burnHeat)
-	{
-		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
-	}
-	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()

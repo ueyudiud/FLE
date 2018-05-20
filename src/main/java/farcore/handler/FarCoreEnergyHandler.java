@@ -8,7 +8,7 @@ import java.util.List;
 
 import farcore.energy.IEnergyNet;
 import farcore.event.EnergyEvent;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.Nebula;
 import nebula.common.world.ICoord;
 import net.minecraftforge.event.world.WorldEvent;
@@ -47,7 +47,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	public static void addNet(IEnergyNet net)
 	{
 		energyNets.add(net);
-		Log.info("The energy net which type is " + net.getClass().toString() + " is registered to energy handler.");
+		NebulaLog.info("The energy net which type is " + net.getClass().toString() + " is registered to energy handler.");
 	}
 	
 	public static void onAddFromWorld(ICoord coord)
@@ -89,7 +89,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to add tile.", throwable);
+						NebulaLog.error("Fail to add tile.", throwable);
 					}
 				}
 			}
@@ -111,7 +111,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to mark for update.", throwable);
+						NebulaLog.error("Fail to mark for update.", throwable);
 					}
 				}
 			}
@@ -133,7 +133,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to reload tile.", throwable);
+						NebulaLog.error("Fail to reload tile.", throwable);
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to remove tile.", throwable);
+						NebulaLog.error("Fail to remove tile.", throwable);
 					}
 				}
 			}
@@ -177,7 +177,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to load energy net.", throwable);
+						NebulaLog.error("Fail to load energy net.", throwable);
 					}
 				}
 			}
@@ -199,7 +199,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to update net.", throwable);
+						NebulaLog.error("Fail to update net.", throwable);
 					}
 				}
 			}
@@ -221,7 +221,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 				{
 					if (Nebula.debug)
 					{
-						Log.error("Fail to unload net.", throwable);
+						NebulaLog.error("Fail to unload net.", throwable);
 					}
 				}
 			}
@@ -231,6 +231,6 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	@Override
 	public void handleException(EventBus bus, Event event, IEventListener[] listeners, int index, Throwable throwable)
 	{
-		Log.logger().catching(throwable);
+		NebulaLog.logger().catching(throwable);
 	}
 }

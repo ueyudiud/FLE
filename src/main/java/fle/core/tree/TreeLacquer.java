@@ -7,10 +7,10 @@ import java.util.Random;
 
 import farcore.FarCore;
 import farcore.data.EnumToolTypes;
+import farcore.lib.bio.BioData;
 import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
-import farcore.lib.tree.TreeInfo;
 import fle.api.tile.ILogProductionCollector;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.loader.IBFS;
@@ -56,6 +56,7 @@ public class TreeLacquer extends Tree
 	public TreeLacquer(Mat material)
 	{
 		super(material);
+		this.generators.add(this.generator1);
 		this.generator1.setTreeLeavesShape(4, 13, 2, 2.5F);
 		this.leavesCheckRange = 6;
 	}
@@ -188,11 +189,11 @@ public class TreeLacquer extends Tree
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		if (info != null)
 		{
-			this.generator1.setTreeLogShape(6 + info.height / 4, 2 + info.height / 3);
+			this.generator1.setTreeLogShape(6 + info.capabilities[0] / 4, 2 + info.capabilities[0] / 3);
 		}
 		else
 		{

@@ -3,8 +3,7 @@
  */
 package farcore.lib.crop;
 
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
+import farcore.lib.bio.BioData;
 import nebula.base.IntEntry;
 import nebula.base.collection.HashIntMap;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +12,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class CropInfo
 {
-	public GeneticMaterial geneticMaterial;
+	public BioData data;
 	
 	public int	grain;
 	public int	growth;
@@ -23,45 +22,53 @@ public class CropInfo
 	
 	public HashIntMap<String> map = new HashIntMap<>();
 	
-	public GeneticMaterial gamete = null;
+	public BioData seed = null;
 	
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		this.geneticMaterial = GenticMaterialFactory.INSTANCE.readFrom(nbt, "gm");
-		this.grain = nbt.getInteger("gra");
-		this.growth = nbt.getInteger("gro");
-		this.resistance = nbt.getInteger("res");
-		this.vitality = nbt.getInteger("vit");
-		this.saving = nbt.getInteger("sav");
-		NBTTagList list = nbt.getTagList("prop", NBT.TAG_COMPOUND);
-		for (int i = 0; i < list.tagCount(); ++i)
+		this.data = CropOrder.ORDER.readFrom(nbt, "data");
+		this.grain = nbt.getShort("gra");
+		this.growth = nbt.getShort("gro");
+		this.resistance = nbt.getShort("res");
+		this.vitality = nbt.getShort("vit");
+		this.saving = nbt.getShort("sav");
+		if (nbt.hasKey("prop", NBT.TAG_LIST))//Old data format
 		{
-			NBTTagCompound compound = list.getCompoundTagAt(i);
-			this.map.put(compound.getString("tag"), compound.getInteger("value"));
+			NBTTagList list = nbt.getTagList("prop", NBT.TAG_COMPOUND);
+			for (int i = 0; i < list.tagCount(); ++i)
+			{
+				NBTTagCompound compound = list.getCompoundTagAt(i);
+				this.map.put(compound.getString("tag"), compound.getInteger("value"));
+			}
 		}
-		this.gamete = GenticMaterialFactory.INSTANCE.readFrom(nbt, "gamete");
+		else
+		{
+			NBTTagCompound list = nbt.getCompoundTag("prop");
+			for (String key : list.getKeySet())
+			{
+				this.map.put(key, list.getShort(key));
+			}
+		}
+		this.seed = CropOrder.ORDER.readFrom(nbt, "gamete");
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		GenticMaterialFactory.INSTANCE.writeTo(nbt, "gm", this.geneticMaterial);
-		nbt.setInteger("gra", this.grain);
-		nbt.setInteger("gro", this.growth);
-		nbt.setInteger("res", this.resistance);
-		nbt.setInteger("vit", this.vitality);
-		nbt.setInteger("sav", this.saving);
-		NBTTagList list = new NBTTagList();
+		CropOrder.ORDER.writeTo(nbt, "data", this.data);
+		nbt.setShort("gra", (short) this.grain);
+		nbt.setShort("gro", (short) this.growth);
+		nbt.setShort("res", (short) this.resistance);
+		nbt.setShort("vit", (short) this.vitality);
+		nbt.setShort("sav", (short) this.saving);
+		NBTTagCompound list = new NBTTagCompound();
 		for (IntEntry<String> prop : this.map)
 		{
-			NBTTagCompound compound = new NBTTagCompound();
-			compound.setString("tag", prop.getKey());
-			compound.setInteger("value", prop.getValue());
-			list.appendTag(compound);
+			list.setShort(prop.getKey(), (short) prop.getValue());
 		}
 		nbt.setTag("prop", list);
-		if (this.gamete != null)
+		if (this.seed != null)
 		{
-			GenticMaterialFactory.INSTANCE.writeTo(nbt, "gamete", this.gamete);
+			CropOrder.ORDER.writeTo(nbt, "gamete", this.seed);
 		}
 	}
 }

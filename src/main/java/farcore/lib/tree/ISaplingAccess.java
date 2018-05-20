@@ -3,8 +3,8 @@
  */
 package farcore.lib.tree;
 
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IBiology;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.IBio;
 import nebula.common.world.IModifiableCoord;
 import net.minecraft.world.biome.Biome;
 
@@ -13,10 +13,10 @@ import net.minecraft.world.biome.Biome;
  * 
  * @author ueyudiud
  */
-public interface ISaplingAccess extends IModifiableCoord, IBiology
+public interface ISaplingAccess extends IModifiableCoord, IBio
 {
 	@Override
-	default GeneticMaterial getGeneticMaterial()
+	default BioData getData()
 	{
 		return info().gm;
 	}

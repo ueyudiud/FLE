@@ -5,9 +5,9 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
-import farcore.lib.tree.TreeInfo;
 import farcore.lib.world.ICalendar;
 import farcore.lib.world.instance.CalendarSurface;
 import fle.loader.IBFS;
@@ -30,15 +30,16 @@ public class TreeApple extends TreeWithFruitLeaves
 	public TreeApple(Mat material)
 	{
 		super(material);
+		this.generators.add(this.generator);
 		this.generator.setTreeLeavesShape(2, 6, 1, 2.0F);
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		if (info != null)
 		{
-			this.generator.setTreeLogShape(4 + info.height / 3, 2 + info.height / 2);
+			this.generator.setTreeLogShape(4 + info.capabilities[0] / 3, 2 + info.capabilities[0] / 2);
 		}
 		else
 		{

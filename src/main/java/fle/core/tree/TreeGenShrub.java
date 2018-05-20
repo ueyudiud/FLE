@@ -5,9 +5,9 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
-import farcore.lib.tree.TreeInfo;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -25,7 +25,7 @@ public class TreeGenShrub extends TreeGenAbstract
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		if (!checkLogGrow(world, x, y, z, 1, 1, 2, false)) return false;
 		BlockPos pos = new BlockPos(x, y, z);
@@ -33,6 +33,8 @@ public class TreeGenShrub extends TreeGenAbstract
 		
 		if (state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, ((net.minecraft.block.BlockSapling) Blocks.SAPLING)))
 		{
+			info = checkData(info, random);
+			
 			state.getBlock().onPlantGrow(state, world, pos, pos.up());
 			
 			generateLog(world, x, ++y, z, 0);

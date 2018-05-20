@@ -21,20 +21,17 @@ import farcore.data.EnumItem;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.data.MP;
-import farcore.lib.bio.FamilyTemplate;
-import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IFamily;
+import farcore.lib.bio.BioData;
+import farcore.lib.bio.IntegratedSpecie;
 import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tile.instance.TECoreLeaves;
-import nebula.base.A;
 import nebula.base.function.Applicable;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
-import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
@@ -60,32 +57,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public abstract class Tree extends PropertyWood implements ITree, IRenderRegister
+public abstract class Tree extends IntegratedSpecie<TreeFamily> implements ITree, IRenderRegister
 {
 	public static final Applicable<ItemStack>	LEAVES_APPLIER1	= Applicable.asCached(() -> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
 	public static final Applicable<ItemStack>	LEAVES_APPLIER2	= Applicable.asCached(() -> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
-	protected FamilyTemplate<Tree, ISaplingAccess>	family;
+	public final PropertyWood	property;
 	/** logNative logArtifical leaves leavesCore */
-	protected Block[]								blocks;
-	protected long[]								nativeTreeValue		= Misc.LONGS_EMPTY;
-	protected int[]									nativeTreeDatas		= Misc.INTS_EMPTY;
-	protected int									leavesCheckRange	= 4;
-	protected boolean								isBroadLeaf			= true;
+	protected Block[]			blocks;
+	protected int				leavesCheckRange	= 4;
+	protected boolean			isBroadLeaf			= true;
+	
+	protected List<TreeGenAbstract> generators = new ArrayList<>(4);
 	
 	public Tree(Mat material)
 	{
-		this(material.getProperty(MP.property_wood));
+		this.material = material;
+		this.property = material.getProperty(MP.property_wood);
 	}
 	
-	private Tree(PropertyWood property)
+	@Override
+	public Mat material()
 	{
-		super(property.material, 1, property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
-	}
-	
-	public Tree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent, float burnHeat)
-	{
-		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
+		return this.material;
 	}
 	
 	@Override
@@ -104,58 +98,10 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 		Game.registerBiomeColorMultiplier(this.blocks[3]);
 	}
 	
-	public Tree setDefFamily()
-	{
-		this.family = new FamilyTemplate<>(this);
-		return this;
-	}
-	
-	public Tree setFamily(FamilyTemplate<Tree, ISaplingAccess> family)
-	{
-		this.family = family;
-		family.addSpecies(this);
-		return this;
-	}
-	
 	@Override
 	public final String getRegisteredName()
 	{
 		return this.material.name;
-	}
-	
-	@Override
-	public IFamily<ISaplingAccess> getFamily()
-	{
-		return this.family;
-	}
-	
-	@Override
-	public GeneticMaterial createNativeGeneticMaterial()
-	{
-		return new GeneticMaterial(this.family.getRegisteredName(), 0, this.nativeTreeValue.clone(), this.nativeTreeDatas.clone());
-	}
-	
-	@Override
-	public GeneticMaterial createGameteGeneticMaterial(ISaplingAccess biology, GeneticMaterial gm)
-	{
-		if ((gm.coders.length & 0x1) != 0) return null;
-		Random random = biology.rng();
-		long[] coders = A.createLongArray(gm.coders.length >> 1, idx -> {
-			long a = gm.coders[idx << 1];
-			long b = gm.coders[idx << 1 | 1];
-			long result = 0;
-			for (int i = 0; i < Long.SIZE; ++i)
-			{
-				long x = 1L << i;
-				if (getGameteResult(idx << 6 | i, random, (a & x) != 0, (b & x) != 0))
-				{
-					result |= x;
-				}
-			}
-			return result;
-		});
-		int[] datas = gm.nativeValues.clone();
-		return new GeneticMaterial(this.family.getRegisteredName(), gm.generation + 1, coders, datas);
 	}
 	
 	protected boolean getGameteResult(int idx, Random random, boolean a, boolean b)
@@ -164,19 +110,13 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	}
 	
 	@Override
-	public void expressTrait(ISaplingAccess biology, GeneticMaterial gm)
-	{
-		TreeInfo info = biology.info();
-		info.height += gm.nativeValues[0];
-		info.growth += gm.nativeValues[1];
-		info.resistance += gm.nativeValues[2];
-		info.vitality += gm.nativeValues[3];
-	}
-	
-	@Override
 	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore)
 	{
 		this.blocks = new Block[] { logNatural, logArtificial, leaves, leavesCore };
+		for (TreeGenAbstract generator : this.generators)
+		{
+			generator.initalizeBlock(logNatural, leaves, leavesCore);
+		}
 	}
 	
 	@Override
@@ -450,14 +390,14 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 		return 80;
 	}
 	
-	protected void generateTreeLeaves(World world, BlockPos pos, int meta, float generateCoreLeavesChance, TreeInfo info)
+	protected void generateTreeLeaves(World world, BlockPos pos, int meta, float generateCoreLeavesChance, BioData data)
 	{
 		meta &= 0x7;
 		int state = worldGenerationFlag ? 2 : 3;
 		if (world.rand.nextFloat() <= generateCoreLeavesChance)
 		{
 			W.setBlock(world, pos, this.blocks[3], meta, state);
-			W.setTileEntity(world, pos, new TECoreLeaves(this, info), !worldGenerationFlag);
+			W.setTileEntity(world, pos, new TECoreLeaves(data), !worldGenerationFlag);
 		}
 		else
 		{
@@ -468,6 +408,10 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	@Override
 	public <T extends Block> T getBlock(BlockType type)
 	{
+		if (this.blocks == null)//When it is not initialized yet.
+		{
+			return null;
+		}
 		switch (type)
 		{
 		case LOG:

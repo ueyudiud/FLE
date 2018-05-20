@@ -4,7 +4,6 @@
 package farcore.lib.tile.instance;
 
 import java.util.List;
-import java.util.Random;
 
 import farcore.data.M;
 import farcore.data.MP;
@@ -22,7 +21,6 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.TE05Aged;
 import nebula.common.util.Direction;
-import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
@@ -46,7 +44,7 @@ public class TESapling extends TE05Aged implements ISaplingAccess, IDebugableBlo
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTs.setString(nbt, "tree", this.tree);
+		nbt.setString("tree", this.tree.material().name);
 		nbt.setFloat("age", this.age);
 		return nbt;
 	}
@@ -55,7 +53,7 @@ public class TESapling extends TE05Aged implements ISaplingAccess, IDebugableBlo
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setShort("t", this.tree.material.id);
+		nbt.setShort("t", this.tree.material().id);
 	}
 	
 	@Override
@@ -124,7 +122,7 @@ public class TESapling extends TE05Aged implements ISaplingAccess, IDebugableBlo
 	{
 		IBlockState state = this.world.getBlockState(this.pos);
 		this.world.setBlockState(this.pos, Misc.AIR, 4);
-		if (this.tree.generateTreeAt(this.world, this.pos, this.random, this.info)) return true;
+		if (this.tree.generateTreeAt(this.world, this.pos, this.random, this.info.gm)) return true;
 		this.world.setBlockState(this.pos, state, 4);
 		return false;
 	}
@@ -150,12 +148,6 @@ public class TESapling extends TE05Aged implements ISaplingAccess, IDebugableBlo
 	public Biome biome()
 	{
 		return this.world.getBiome(this.pos);
-	}
-	
-	@Override
-	public Random rng()
-	{
-		return this.random;
 	}
 	
 	@Override

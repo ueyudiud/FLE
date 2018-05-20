@@ -7,17 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.ObjectArrays;
+
 import farcore.data.EnumToolTypes;
 import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.BioData;
 import farcore.lib.crop.CropInfo;
-import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
+import farcore.lib.crop.ICropSpecie;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
+import nebula.V;
 import nebula.client.util.Client;
-import nebula.common.data.Misc;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Update;
@@ -56,14 +58,14 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	
 	static
 	{
-		NO_DATA_INFO.geneticMaterial = new GeneticMaterial("", -1, Misc.LONGS_EMPTY, Misc.INTS_EMPTY);
+		NO_DATA_INFO.data = new BioData(ICropSpecie.VOID, "wild", -1, new byte[0][], V.INTS_EMPTY);
 	}
 	
 	private int			waterLevel	= 6400;
 	private boolean		isWild		= false;
 	private float		growBuffer;
 	private int			stage		= 1;
-	private ICrop		card		= ICrop.VOID;
+	private ICropSpecie	card		= ICropSpecie.VOID;
 	private CropInfo	info		= NO_DATA_INFO;
 	
 	public TECrop()
@@ -71,20 +73,20 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 		
 	}
 	
-	public TECrop(ICrop crop)
+	public TECrop(BioData data, boolean unused)
 	{
-		this(crop, crop.createNativeGeneticMaterial());
+		this(data);
 		this.isWild = true;
-		this.stage = this.random.nextInt(3) == 0 ? crop.getMaxStage() : L.nextInt(crop.getMaxStage() - 2, this.random) + 1;
-		this.growBuffer = L.nextInt(crop.getGrowReq(this), this.random);
+		this.stage = this.random.nextInt(3) == 0 ? this.card.getMaxStage() : L.nextInt(this.card.getMaxStage() - 2, this.random) + 1;
+		this.growBuffer = L.nextInt(this.card.getGrowReq(this), this.random);
 	}
 	
-	public TECrop(ICrop crop, GeneticMaterial geneticMaterial)
+	public TECrop(BioData data)
 	{
-		this.card = crop;
+		this.card = (ICropSpecie) data.specie;
 		this.info = new CropInfo();
-		this.info.geneticMaterial = geneticMaterial;
-		this.card.expressTrait(this, geneticMaterial);
+		this.info.data = data;
+		this.card.expressTraits(this.info, data);
 	}
 	
 	@Override
@@ -111,7 +113,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 		this.isWild = nbt.getBoolean("isWild");
 		this.growBuffer = nbt.getFloat("growBuf");
 		this.stage = NBTs.getIntOrDefault(nbt, "stage", 1);
-		this.card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICrop.VOID);
+		this.card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICropSpecie.VOID);
 		this.info = new CropInfo();
 		this.info.readFromNBT(nbt);
 	}
@@ -121,7 +123,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	{
 		super.writeToDescription(nbt);
 		nbt.setInteger("s", this.stage);
-		NBTs.setString(nbt, "c", this.card);
+		nbt.setString("c", this.card.material().getRegisteredName());
 		NBTTagCompound nbt1;
 		this.info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
@@ -135,7 +137,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 		Mat material = Mat.getMaterialByNameOrDefault(nbt, "c", null);
 		if (material != null)
 		{
-			this.card = material.getProperty(MP.property_crop, ICrop.VOID);
+			this.card = material.getProperty(MP.property_crop, ICropSpecie.VOID);
 		}
 		if (nbt.hasKey("i"))
 		{
@@ -195,7 +197,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	}
 	
 	@Override
-	public ICrop crop()
+	public ICropSpecie getSpecie()
 	{
 		return this.card;
 	}
@@ -207,9 +209,9 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	}
 	
 	@Override
-	public GeneticMaterial getGeneticMaterial()
+	public BioData getData()
 	{
-		return this.info.geneticMaterial;
+		return this.info.data;
 	}
 	
 	@Override
@@ -304,7 +306,6 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
 		list.add("Tag : " + this.card.getRegisteredName());
-		list.add("Name : " + this.card.getLocalName(this.info.geneticMaterial));
 		
 		this.card.addInformation(this, list);
 	}
@@ -317,7 +318,7 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	@Override
 	public boolean canBlockStay()
 	{
-		return this.world == null || this.card == ICrop.VOID ? true : this.card.canPlantAt(this);
+		return this.world == null || this.card == ICropSpecie.VOID ? true : this.card.canPlantAt(this);
 	}
 	
 	@Override
@@ -356,11 +357,24 @@ ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects, ITB_AddHitEffects, ITP_Custo
 	}
 	
 	@Override
-	public void pollinate(GeneticMaterial gm)
+	public void pollinate(boolean self, BioData gm)
 	{
-		if (this.info.gamete == null && this.card.getRegisteredName().equals(gm.specie))
+		if (gm == null)
+			return;
+		if (this.info.seed == null)
 		{
-			this.info.gamete = this.card.createGameteGeneticMaterial(this, gm);
+			BioData gm2 = this.card.getGamete(gm, this.random);
+			byte[][] gene = ObjectArrays.concat(gm.chromosome, gm2.chromosome, byte[].class);
+			int[] capabilities = new int[gm.capabilities.length];
+			for (int i = 0; i < capabilities.length; ++i)
+			{
+				capabilities[i] = gm.capabilities[i] + gm2.capabilities[i] >> 1;
+			}
+			this.info.seed = new BioData(this.card.getFamily().getSpecie(gene),
+					self ? this.card.getRegisteredName() + "⊗" : "♀" + this.card.getRegisteredName() + " x ♂" + gm.specie.getRegisteredName(),
+							this.info.data.generation + 1,
+							gene,
+							capabilities);
 		}
 	}
 	

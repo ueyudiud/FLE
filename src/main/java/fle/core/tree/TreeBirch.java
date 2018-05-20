@@ -5,9 +5,9 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.bio.BioData;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
-import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
 public class TreeBirch extends Tree
@@ -17,14 +17,15 @@ public class TreeBirch extends Tree
 	public TreeBirch(Mat material)
 	{
 		super(material);
+		this.generators.add(this.generator1);
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
 		if (info != null)
 		{
-			this.generator1.setHeight(info.height / 5 + 5, info.height / 4 + 2);
+			this.generator1.setHeight(info.capabilities[0] / 5 + 5, info.capabilities[0] / 4 + 2);
 		}
 		else
 		{

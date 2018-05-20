@@ -16,10 +16,10 @@ import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT1;
 import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT2;
 import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT3;
 import static fle.api.recipes.instance.RecipeMaps.WASHING_BARGRIZZLY;
-import static nebula.common.data.Misc.anyTo;
+import static nebula.base.function.F.anyf;
+import static nebula.common.stack.IS.copy;
 import static nebula.common.util.FluidStacks.COPY_FLUIDSTACK;
 import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
-import static net.minecraft.item.ItemStack.copyItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,14 +40,12 @@ import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
-import fle.api.recipes.instance.interfaces.ICraftingRecipeHandler;
 import fle.api.recipes.instance.interfaces.IRecipeInput;
-import mezz.jei.api.recipe.IRecipeHandler;
 import nebula.base.collection.A;
 import nebula.base.collection.ObjArrayParseHelper;
-import nebula.base.function.F;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
+import nebula.common.stack.IS;
 import nebula.common.util.FluidStacks;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
@@ -93,7 +91,7 @@ public final class RecipeAdder
 	
 	public static void addWashingBarGrizzlyRecipe(AbstractStack input, int duration, ItemStack[] output, int[][] chances)
 	{
-		WASHING_BARGRIZZLY.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asShapelessChanceOutput(output, chances)).setData(input, duration, ItemStacks.copyStacks(output), chances));
+		WASHING_BARGRIZZLY.addRecipe(new TemplateRecipe<>(input.containCheck(), anyf(duration), asShapelessChanceOutput(output, chances)).setData(input, duration, ItemStacks.copyStacks(output), chances));
 	}
 	
 	public static void addPolishRecipe(AbstractStack input, String map, @Nonnull ItemStack output)
@@ -103,12 +101,12 @@ public final class RecipeAdder
 	
 	public static void addDringRecipe(AbstractStack input, int duration, float rainfall, @Nonnull ItemStack output)
 	{
-		DRYING.addRecipe(new TemplateRecipe<>(input, F.anyf(duration), F.anyf(rainfall), F.anyf(output).andThen(COPY_ITEMSTACK)).setData(input, duration, rainfall, output.copy()));
+		DRYING.addRecipe(new TemplateRecipe<>(input, anyf(duration), anyf(rainfall), anyf(output).andThen(COPY_ITEMSTACK)).setData(input, duration, rainfall, output.copy()));
 	}
 	
 	public static void addStoneMillRecipe(AbstractStack input, int duration, @Nullable SolidStack output1, @Nullable FluidStack output2)
 	{
-		STONE_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), anyTo(output1).andThen(COPY_SOLIDSTACK), anyTo(output2).andThen(COPY_FLUIDSTACK)).setData(input, duration, SolidStack.copyOf(output1), FluidStacks.copy(output2)));
+		STONE_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyf(duration), anyf(output1).andThen(COPY_SOLIDSTACK), anyf(output2).andThen(COPY_FLUIDSTACK)).setData(input, duration, SolidStack.copyOf(output1), FluidStacks.copy(output2)));
 	}
 	
 	public static void addLeverOilMillRecipe(AbstractStack input, int duration, ItemStack output1, int outputChance, @Nonnull Fluid output2, int minOutput, int maxOutput)
@@ -118,7 +116,7 @@ public final class RecipeAdder
 	
 	public static void addLeverOilMillRecipe(AbstractStack input, int duration, @Nullable ItemStack output1, int[] outputChance, @Nullable FluidStack output2, int minOutput, int maxOutput)
 	{
-		LEVER_OIL_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput)).setData(input, duration, copyItemStack(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
+		LEVER_OIL_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyf(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput)).setData(input, duration, copy(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
 	}
 	
 	public static void addDirtMixtureInputRecipe(AbstractStack input, Object...objects)
@@ -141,7 +139,7 @@ public final class RecipeAdder
 			if (stacks.getAmount() < size) return null;
 			for (Range<Mat> range : list)
 				if (!range.inRange(stacks.getContain(range.element))) return null;
-			return ItemStacks.setSizeOf(output, (int) (stacks.getAmount() * output.stackSize / size));
+			return IS.copy(output, (int) (stacks.getAmount() * output.stackSize / size));
 		});
 	}
 	
@@ -150,8 +148,8 @@ public final class RecipeAdder
 		final SingleInputMatch input3i = input3 == null ? SingleInputMatch.EMPTY : input3;
 		CERAMICPOT_BASE.addRecipe(
 				new TemplateRecipe<IRecipeInput>(handler -> input1.contain(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1)) && FluidStacks.containFluid(handler.<FluidStack> getRecipeInput(TAG_CERAMICPOT_BASE_INPUT2), input2) && input3i.match(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT3)),
-						F.anyf(minTemp), F.anyf(duration), F.anyf(output1).andThen(COPY_ITEMSTACK), input3i.toOutputTransferFunction(output2).compose(handler -> handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1))).setData(input1, FluidStacks.copy(input2), input3i, minTemp, duration,
-								copyItemStack(output1), copyItemStack(output2)));
+						anyf(minTemp), anyf(duration), anyf(output1).andThen(COPY_ITEMSTACK), input3i.toOutputTransferFunction(output2).compose(handler -> handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1))).setData(input1, FluidStacks.copy(input2), input3i, minTemp, duration,
+								copy(output1), copy(output2)));
 	}
 	
 	public static void addSolidItemMixToPotRecipe(@Nonnull SolidStack input1, @Nonnull FluidStack input2, @Nonnull FluidStack output)
@@ -170,7 +168,7 @@ public final class RecipeAdder
 			if (value.length == 0 || (value.length == 2 && value[0] > value[1]))
 				throw new IllegalArgumentException("Illegal range: " + Arrays.toString(value));
 		}
-		CERAMIC.addRecipe(new TemplateRecipe<>(L.toPredicate(RecipeAdder::inRange, range), Misc.anyTo(range), Misc.anyTo(output).andThen(COPY_ITEMSTACK)));
+		CERAMIC.addRecipe(new TemplateRecipe<>(L.toPredicate(RecipeAdder::inRange, range), anyf(range), anyf(output).andThen(COPY_ITEMSTACK)));
 	}
 	
 	public static void addSimpleReducingRecipe(Mat input, Mat output)
@@ -226,7 +224,7 @@ public final class RecipeAdder
 						if (chance == 10000 || L.nextInt(10000) < chance) ++j;
 					if (j > 0)
 					{
-						l.add(ItemStacks.setSizeOf(list[i], list[i].stackSize * j));
+						l.add(copy(list[i], list[i].stackSize * j));
 					}
 				}
 				return L.cast(l, ItemStack.class);
@@ -243,7 +241,7 @@ public final class RecipeAdder
 			int size = 0;
 			for (int i : chances)
 				if (L.nextInt(10000) < i) ++size;
-			return size > 0 ? ItemStacks.setSizeOf(s, size * s.stackSize) : null;
+			return size > 0 ? copy(s, size * s.stackSize) : null;
 		};
 	}
 	
@@ -252,7 +250,7 @@ public final class RecipeAdder
 		if (stack == null) return Misc.TO_NULL;
 		final FluidStack s = stack.copy();
 		final int l = max - min;
-		return l == 0 ? anyTo(s) : any -> FluidStacks.sizeOf(s, min + L.nextInt(l));
+		return l == 0 ? anyf(s) : any -> FluidStacks.sizeOf(s, min + L.nextInt(l));
 	}
 	
 	private static class Range<E>

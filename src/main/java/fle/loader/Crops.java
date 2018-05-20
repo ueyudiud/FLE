@@ -4,20 +4,22 @@
 package fle.loader;
 
 import static farcore.data.M.bristlegrass;
-import static farcore.lib.bio.GMPredicate.explicit;
-import static farcore.lib.bio.GMPredicate.implicit;
+import static farcore.data.M.ramie_dry;
+import static farcore.lib.bio.GeneData.m;
+import static farcore.lib.bio.GeneData.v;
 import static fle.loader.IBFS.iCropRelated;
 
-import farcore.data.M;
+import java.util.ArrayList;
+
 import farcore.data.MP;
-import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.crop.Crop;
-import farcore.lib.crop.CropTemplate;
+import farcore.lib.crop.CropFamily;
+import farcore.lib.crop.CropOrder;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyEdible;
 import fle.core.FLE;
-import nebula.base.function.F;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author ueyudiud
@@ -26,34 +28,226 @@ public class Crops
 {
 	public static void init()
 	{
-		CropTemplate crop1;
-		FamilyTemplate<Crop, ICropAccess> family1;
-		wheat.builder().setCrop((crop1 = new CropTemplate(wheat, "Wheat", 7, 800)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(6, 5, 2).setDrop(() -> iCropRelated.getSubItem("wheat"), 2));
-		family1 = new FamilyTemplate<>("millet");
-		bristlegrass.builder().setCrop((crop1 = new CropTemplate(bristlegrass, "Birstlegrass", 7, 600)).setFamily(family1).setMultiplicationProp(4, 6, 2).setDrop(() -> iCropRelated.getSubItem("bristlegrass"), 3));
-		family1.addBaseSpecie(crop1);
-		millet.builder().setCrop((crop1 = new CropTemplate(millet, "Millet", 7, 900)).setFamily(family1).setMultiplicationProp(3, 6, 2).setDrop(() -> iCropRelated.getSubItem("millet"), 2));
-		family1.addSpecie(F.or(explicit(1), explicit(2), explicit(3), explicit(4)), crop1);
-		soybean.builder().setCrop((crop1 = new CropTemplate(soybean, "Soybean", 6, 1600)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("soybean_pod"), 2));
-		rutabaga.builder().setCrop((crop1 = new CropTemplate(rutabaga, "Rutabaga", 5, 1900)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("rutabaga"), 1));
-		potato.builder().setCrop((crop1 = new CropTemplate(potato, "Potato", 6, 1300)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(2));
-		sweet_potato.builder().setCrop((crop1 = new CropTemplate(sweet_potato, "SweetPotato", 5, 1500)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(2));
-		reed.builder().setCrop((crop1 = new CropTemplate(reed, "Reed", 5, 1400)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(3));
-		flax.builder().setCrop((crop1 = new CropTemplate(flax, "Flax", 5, 1500)).setFamily(new FamilyTemplate<>(crop1)));
-		cotton.builder().setCrop((crop1 = new CropTemplate(cotton, "Catton", 5, 1400)).setFamily(new FamilyTemplate<>(crop1)).setDrop(() -> iCropRelated.getSubItem("cotton"), 2));
-		family1 = new FamilyTemplate<>("cabbage");
-		wild_cabbage.builder().setCrop((crop1 = new CropTemplate(wild_cabbage, "Wild Cabbage", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("wild_cabbage_leaf"), 1));
-		family1.addBaseSpecie(crop1);
-		cabbage.builder().setCrop((crop1 = new CropTemplate(cabbage, "Cabbage", 6, 1600)).setFamily(family1).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("cabbage"), 1));
-		family1.addSpecie(F.and(explicit(0), implicit(1), implicit(2), implicit(3)), crop1);
-		brussels_sprouts.builder().setCrop((crop1 = new CropTemplate(brussels_sprouts, "Brussels Sprouts", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("brussels_sprouts"), 2));
-		family1.addSpecie(F.and(explicit(0), explicit(1), implicit(3)), crop1);
-		purple_cabbage.builder().setCrop((crop1 = new CropTemplate(purple_cabbage, "Purple Cabbage", 5, 1600)).setFamily(family1).setMultiplicationProp(4, 5, 2).setDrop(() -> iCropRelated.getSubItem("purple_cabbage"), 1));
-		family1.addSpecie(F.and(explicit(0), implicit(1), explicit(2), implicit(3)), crop1);
-		cauliflower.builder().setCrop((crop1 = new CropTemplate(cauliflower, "Cauliflower", 6, 1600)).setFamily(family1).setMultiplicationProp(5, 5, 2).setDrop(() -> iCropRelated.getSubItem("cauliflower"), 1));
-		family1.addSpecie(explicit(3), crop1);
+		{
+			CropFamily.Builder builder = CropFamily.builder("wheat");
+			Crop _wheat = new Crop(wheat, "Wheat", 7, 800, 2, 6, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("wheat", (15 + access.rng().nextInt(30 + access.info().grain)) / 20));
+				}
+			};
+			wheat.builder().setCrop(_wheat);
+			builder.addDefSpecie(_wheat, v(5, 0, 10, 20, 5), v(5, 40, 10, 10, 10));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("millet");
+			Crop _millet = new Crop(millet, "Millet", 7, 900, 2, 6, 3)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("millet", (15 + access.rng().nextInt(30 + access.info().grain)) / 30));
+				}
+			};
+			Crop _bristlegrass = new Crop(bristlegrass, "Bristlegrass", 7, 600, 2, 6, 4)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(2 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("bristlegrass", (15 + access.rng().nextInt(30 + access.info().grain)) / 20));
+				}
+			};
+			millet.builder().setCrop(_millet);
+			bristlegrass.builder().setCrop(_bristlegrass);
+			builder.addDefSpecie(_bristlegrass, v(0, 0, 10, 5, 5), v(5, 30, 10, 5, 20));
+			builder.addSpecie(_millet, 0b1, 0b0, v(10, 0, 10, 5, 5), v(10, 35, 10, 10, 10));
+			builder.addGene(0, m(v(7000, 1000, 1500, 500), v(0, 10000, 0, 0), v(0, 0, 6000, 4000), v(0, 0, 4000, 6000)));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("soybean");
+			Crop _soybean = new Crop(soybean, "Soybean", 6, 1600, 2, 5, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("soybean_pod", (25 + access.rng().nextInt(20 + access.info().grain)) / 16));
+				}
+			};
+			soybean.builder().setCrop(_soybean);
+			builder.addDefSpecie(_soybean, v(8, 0, 5, 0, 0), v(10, 10, 5, 10, 10));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("rutabaga");
+			Crop _rutabaga = new Crop(rutabaga, "Rutabaga", 5, 1900, 2, 4, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("rutabaga", (35 + access.rng().nextInt(15 + access.info().grain)) / 40));
+				}
+			};
+			rutabaga.builder().setCrop(_rutabaga);
+			builder.addDefSpecie(_rutabaga, v(0, 0, 15, 15, 0), v(15, 15, 10, 10, 5));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("potato");
+			Crop _potato = new Crop(potato, "Potato", 6, 1300, 3, 0, 0)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed((55 + access.rng().nextInt(15 + access.info().grain)) / 20, access.info()));
+				}
+			};
+			potato.builder().setCrop(_potato);
+			builder.addDefSpecie(_potato, v(5, 5, 20, 0, 3), v(15, 15, 5, 5, 10));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("sweet_potato");
+			Crop _sweet_potato = new Crop(sweet_potato, "Sweet Potato", 5, 1500, 3, 0, 0)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed((55 + access.rng().nextInt(15 + access.info().grain)) / 20, access.info()));
+				}
+			};
+			sweet_potato.builder().setCrop(_sweet_potato);
+			builder.addDefSpecie(_sweet_potato, v(5, 10, 16, 0, 3), v(15, 5, 9, 5, 10));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("reed");
+			Crop _reed = new Crop(reed, "Reed", 5, 1400, 3, 0, 0)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed((35 + access.rng().nextInt(15 + access.info().grain)) / 20, access.info()));
+				}
+			};
+			reed.builder().setCrop(_reed);
+			builder.addDefSpecie(_reed, v(20, 0, 0, 0, 0), v(35, 5, 10, 5, 5));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("ramie");
+			Crop _ramie = new Crop(ramie, "Ramie", 7, 900, 2, 6, 4)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("ramie_fiber", (10 + access.rng().nextInt(15 + access.info().grain)) / 15));
+				}
+			};
+			ramie.builder().setCrop(_ramie);
+			builder.addDefSpecie(_ramie, v(15, 5, 0, 5, 0), v(10, 5, 15, 5, 5));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("flax");
+			Crop _flax = new Crop(flax, "Flax", 5, 1500, 3, 0, 0)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					//				TODO list.add(iCropRelated.getSubItem("rutabaga", (35 + access.rng().nextInt(15 + access.info().grain)) / 40));
+				}
+			};
+			flax.builder().setCrop(_flax);
+			builder.addDefSpecie(_flax, v(15, 5, 0, 5, 0), v(10, 5, 15, 5, 5));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("cotton");
+			Crop _cotton = new Crop(cotton, "Cotton", 5, 1400, 2, 4, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("cotton", (35 + access.rng().nextInt(15 + access.info().grain)) / 20));
+				}
+			};
+			cotton.builder().setCrop(_cotton);
+			builder.addDefSpecie(_cotton, v(5, 0, 8, 5, 0), v(10, 15, 12, 5, 5));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
+		{
+			CropFamily.Builder builder = CropFamily.builder("cabbage");
+			Crop _wild_cabbage = new Crop(wild_cabbage, "Wild Cabbage", 5, 1600, 2, 4, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("wild_cabbage_leaf", (35 + access.rng().nextInt(15 + access.info().grain)) / 30));
+				}
+			};
+			Crop _cabbage = new Crop(cabbage, "Cabbage", 6, 1600, 2, 5, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("cabbage", (35 + access.rng().nextInt(15 + access.info().grain)) / 40));
+				}
+			};
+			Crop _brussels_sprouts = new Crop(brussels_sprouts, "Brussels Sprouts", 6, 1600, 2, 5, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("brussels_sprouts", (35 + access.rng().nextInt(15 + access.info().grain)) / 20));
+				}
+			};
+			Crop _purple_cabbage = new Crop(purple_cabbage, "Purple Cabbage", 6, 1600, 2, 5, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("purple_cabbage", (35 + access.rng().nextInt(15 + access.info().grain)) / 40));
+				}
+			};
+			Crop _cauliflower = new Crop(cauliflower, "Cauliflower", 6, 1600, 2, 5, 5)
+			{
+				@Override
+				public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
+				{
+					list.add(applyChildSeed(1 + access.rng().nextInt(5 + access.info().vitality) / 30, access.info()));
+					list.add(iCropRelated.getSubItem("cauliflower", (35 + access.rng().nextInt(15 + access.info().grain)) / 40));
+				}
+			};
+			wild_cabbage.builder().setCrop(_wild_cabbage);
+			cabbage.builder().setCrop(_cabbage);
+			brussels_sprouts.builder().setCrop(_brussels_sprouts);
+			purple_cabbage.builder().setCrop(_purple_cabbage);
+			cauliflower.builder().setCrop(_cauliflower);
+			builder.addSpecie(_cauliflower, 0b0010, 0b0000, v(5, 5, 0, 8, 0), v(5, 10, 5, 8, 10));
+			builder.addSpecie(_brussels_sprouts, 0b1100, 0b0000, v(5, 5, 0, 8, 0), v(5, 10, 5, 8, 10));
+			builder.addSpecie(_purple_cabbage, 0b1001, 0b0000, v(5, 5, 0, 8, 0), v(5, 10, 5, 8, 10));
+			builder.addSpecie(_cabbage, 0b1000, 0b0000, v(5, 5, 0, 8, 0), v(5, 10, 5, 8, 10));
+			builder.addDefSpecie(_wild_cabbage, v(4, 0, 5, 5, 0), v(5, 10, 5, 8, 15));
+			CropOrder.ORDER.addFamily(builder.build());
+		}
 		
-		M.ramie_dry.builder().setUnificationMaterial(ramie);
+		ramie_dry.builder().setUnificationMaterial(ramie);
 		
 		potato.builder().addProperty(MP.property_edible, new PropertyEdible(2.0F, 0.5F, 0.0F, new float[] { 3.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F }));
 		sweet_potato.builder().addProperty(MP.property_edible, new PropertyEdible(2.0F, 0.5F, 0.0F, new float[] { 3.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F }));

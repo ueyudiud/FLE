@@ -36,7 +36,7 @@ public class BreakTree implements Runnable
 		scanLog(this.world, new boolean[2 * V.treeScanRange + 1][256][2 * V.treeScanRange + 1], (byte) 0, (byte) 0, (byte) 0);
 		if (this.cacheDrop > 0)
 		{
-			ItemStack stack = new ItemStack(EnumItem.log.item, 1, this.block.tree.material.id);
+			ItemStack stack = new ItemStack(EnumItem.log.item, 1, this.block.tree.material().id);
 			ItemTreeLog.setLogSize(stack, this.cacheDrop);
 			W.spawnDropInWorld(this.world, this.pos, stack);
 		}

@@ -10,11 +10,11 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
+import farcore.lib.bio.BioData;
 import farcore.lib.compat.jei.ToolDisplayRecipeMap;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
-import farcore.lib.tree.TreeInfo;
 import fle.loader.IBFS;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
@@ -34,6 +34,8 @@ public class TreeOak extends Tree
 	public TreeOak(Mat material)
 	{
 		super(material);
+		this.generators.add(this.generator1);
+		this.generators.add(this.generator2);
 	}
 	
 	@Override
@@ -70,18 +72,18 @@ public class TreeOak extends Tree
 	}
 	
 	@Override
-	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, BioData info)
 	{
-		if (info != null && info.map.get("huge") > 0)
+		if (info != null && info.properties.get("huge") > 0)
 		{
-			this.generator2.setScale(1.0 + info.height * 0.03125, 1.0, 1.0);
+			this.generator2.setScale(1.0 + info.capabilities[0] * 0.03125, 1.0, 1.0);
 			return this.generator2.generateTreeAt(world, x, y, z, random, info);
 		}
 		else
 		{
 			if (info != null)
 			{
-				this.generator1.setHeight(info.height / 4 + 4, info.height / 3 + 3);
+				this.generator1.setHeight(info.capabilities[0] / 4 + 4, info.capabilities[0] / 3 + 3);
 			}
 			else
 			{

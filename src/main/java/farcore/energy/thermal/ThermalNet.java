@@ -24,7 +24,7 @@ import farcore.energy.IEnergyNet;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.world.WorldPropHandler;
-import nebula.Log;
+import nebula.NebulaLog;
 import nebula.Nebula;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.util.Direction;
@@ -487,7 +487,7 @@ public class ThermalNet implements IEnergyNet
 			{
 				if (Nebula.debug)
 				{
-					Log.warn("The net update is out of memory, " + "this error will prevent update.", error);
+					NebulaLog.warn("The net update is out of memory, " + "this error will prevent update.", error);
 				}
 				updated = false;
 			}
@@ -623,7 +623,7 @@ public class ThermalNet implements IEnergyNet
 					{
 						if (Nebula.debug)
 						{
-							Log.logger().error("Catching an exception during emmit thermal energy.", e);
+							NebulaLog.logger().error("Catching an exception during emmit thermal energy.", e);
 						}
 					}
 				}
