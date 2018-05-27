@@ -1,5 +1,5 @@
 /*
- * copyright© 2016-2018 ueyudiud
+ * copyright 2016-2018 ueyudiud
  */
 package fle.core.common.gui;
 

@@ -1,5 +1,5 @@
 /*
- * copyright© 2016-2018 ueyudiud
+ * copyright 2016-2018 ueyudiud
  */
 package farcore.lib.crop;
 
@@ -10,6 +10,12 @@ class CropVoid extends Crop
 	CropVoid()
 	{
 		super(Mat.VOID, "Void", 1, -1, 0, 0, 0);
+	}
+	
+	@Override
+	public CropOrder getOrder()
+	{
+		return CropOrder.ORDER;
 	}
 	
 	@Override

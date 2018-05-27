@@ -1,5 +1,5 @@
 /*
- * copyright© 2016-2018 ueyudiud
+ * copyright 2016-2018 ueyudiud
  */
 package farcore.lib.bio;
 
@@ -24,7 +24,7 @@ public abstract class IntegratedSpecie<F extends IFamily<?>> implements ISpecieS
 	}
 	
 	@Override
-	public final IOrder getOrder()
+	public IOrder getOrder()
 	{
 		return this.family.order;
 	}
