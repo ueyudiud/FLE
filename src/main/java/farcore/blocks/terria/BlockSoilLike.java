@@ -3,11 +3,11 @@
  */
 package farcore.blocks.terria;
 
-import static nebula.common.data.Misc.PROP_EAST;
-import static nebula.common.data.Misc.PROP_NORTH;
-import static nebula.common.data.Misc.PROP_SOUTH;
-import static nebula.common.data.Misc.PROP_UP;
-import static nebula.common.data.Misc.PROP_WEST;
+import static nebula.common.util.Properties.PROP_EAST;
+import static nebula.common.util.Properties.PROP_NORTH;
+import static nebula.common.util.Properties.PROP_SOUTH;
+import static nebula.common.util.Properties.PROP_UP;
+import static nebula.common.util.Properties.PROP_WEST;
 
 import java.util.List;
 import java.util.Random;

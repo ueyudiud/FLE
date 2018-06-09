@@ -4,9 +4,8 @@
 package farcore.lib.solid.container;
 
 import farcore.lib.inventory.ISolidHandler;
-import nebula.common.data.Misc;
+import nebula.common.capability.CapabilityFactory;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
@@ -20,7 +19,6 @@ public class CapabilitySolidHandler
 	
 	static
 	{
-		CapabilityManager.INSTANCE.register(ISolidHandler.class,
-				(IStorage<ISolidHandler>) Misc.STORAGE, () -> new SolidTank(1000));
+		CapabilityManager.INSTANCE.register(ISolidHandler.class, CapabilityFactory.storage(), () -> new SolidTank(1000));
 	}
 }

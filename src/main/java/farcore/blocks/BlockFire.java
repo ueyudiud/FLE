@@ -27,7 +27,6 @@ import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
-import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Properties;
@@ -57,11 +56,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockFire extends BlockBase implements IExtendedDataBlock
 {
 	public static final IProperty<Integer>	STATE			= Properties.create("state", 0, 15);
-	public static final PropertyBool		NORTH			= Misc.PROP_NORTH;
-	public static final PropertyBool		EAST			= Misc.PROP_EAST;
-	public static final PropertyBool		SOUTH			= Misc.PROP_SOUTH;
-	public static final PropertyBool		WEST			= Misc.PROP_WEST;
-	public static final PropertyBool		UPPER			= Misc.PROP_UP;
+	public static final PropertyBool		NORTH			= Properties.PROP_NORTH;
+	public static final PropertyBool		EAST			= Properties.PROP_EAST;
+	public static final PropertyBool		SOUTH			= Properties.PROP_SOUTH;
+	public static final PropertyBool		WEST			= Properties.PROP_WEST;
+	public static final PropertyBool		UPPER			= Properties.PROP_UP;
 	public static final PropertyBool		SPREAD_CHECK	= Properties.create("spread_check");
 	public static final PropertyBool		SMOLDER			= Properties.create("smoldering");
 	

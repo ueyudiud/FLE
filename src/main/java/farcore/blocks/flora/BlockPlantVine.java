@@ -3,6 +3,12 @@
  */
 package farcore.blocks.flora;
 
+import static nebula.common.util.Properties.PROPS_SIDE_HORIZONTALS;
+import static nebula.common.util.Properties.PROP_EAST;
+import static nebula.common.util.Properties.PROP_NORTH;
+import static nebula.common.util.Properties.PROP_SOUTH;
+import static nebula.common.util.Properties.PROP_WEST;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +25,6 @@ import farcore.lib.material.Mat;
 import nebula.base.function.Applicable;
 import nebula.client.model.StateMapperExt;
 import nebula.common.block.BlockBase;
-import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
@@ -63,13 +68,13 @@ public class BlockPlantVine extends BlockBase
 	{
 		assert facing.getHorizontalIndex() >= 0;
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock() == EnumBlock.vine.block && !state.getValue(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]))
+		if (state.getBlock() == EnumBlock.vine.block && !state.getValue(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]))
 		{
-			world.setBlockState(pos, state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
+			world.setBlockState(pos, state.withProperty(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
 		}
 		else if (state.getBlock().isAir(state, world, pos))
 		{
-			world.setBlockState(pos, EnumBlock.vine.apply().withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
+			world.setBlockState(pos, EnumBlock.vine.apply().withProperty(PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
 		}
 	}
 	
@@ -104,13 +109,13 @@ public class BlockPlantVine extends BlockBase
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, Misc.PROPS_SIDE_HORIZONTALS);
+		return new BlockStateContainer(this, PROPS_SIDE_HORIZONTALS);
 	}
 	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[0], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[1], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[2], false).withProperty(Misc.PROPS_SIDE_HORIZONTALS[3], false);
+		return state.withProperty(PROPS_SIDE_HORIZONTALS[0], false).withProperty(PROPS_SIDE_HORIZONTALS[1], false).withProperty(PROPS_SIDE_HORIZONTALS[2], false).withProperty(PROPS_SIDE_HORIZONTALS[3], false);
 	}
 	
 	@Override
@@ -144,7 +149,7 @@ public class BlockPlantVine extends BlockBase
 	@Override
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return facing.getHorizontalIndex() < 0 ? getDefaultState() : getDefaultState().withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getOpposite().getHorizontalIndex()], true);
+		return facing.getHorizontalIndex() < 0 ? getDefaultState() : getDefaultState().withProperty(PROPS_SIDE_HORIZONTALS[facing.getOpposite().getHorizontalIndex()], true);
 	}
 	
 	/**
@@ -183,7 +188,7 @@ public class BlockPlantVine extends BlockBase
 		
 		for (EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
-			PropertyBool property = Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()];
+			PropertyBool property = PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()];
 			
 			if (state.getValue(property) && !canAttachOn(worldIn, pos, state, facing))
 			{
@@ -220,7 +225,7 @@ public class BlockPlantVine extends BlockBase
 	protected int getVineCount(IBlockState state)
 	{
 		int i = 0;
-		for (IProperty<Boolean> property : Misc.PROPS_SIDE_HORIZONTALS)
+		for (IProperty<Boolean> property : PROPS_SIDE_HORIZONTALS)
 			if (state.getValue(property))
 				++i;
 		return i;
@@ -256,20 +261,20 @@ public class BlockPlantVine extends BlockBase
 					Direction dir = L.random(Direction.DIRECTIONS_2D, random);
 					BlockPos pos2;
 					IBlockState state2 = worldIn.getBlockState(pos2 = pos.up(this.growDir));
-					if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal]) && canAttachOn(worldIn, pos2, state2, dir.of()))
+					if (state.getValue(PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal]) && canAttachOn(worldIn, pos2, state2, dir.of()))
 					{
 						if (state2.getBlock().isAir(state2, worldIn, pos2))
 						{
 							if (random.nextInt(j) >= 5)
 							{
-								worldIn.setBlockState(pos2, getDefaultState().withProperty(Misc.PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal], true));
+								worldIn.setBlockState(pos2, getDefaultState().withProperty(PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal], true));
 							}
 						}
-						else if (state2.getBlock() == this && !state2.getValue(Misc.PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal]))
+						else if (state2.getBlock() == this && !state2.getValue(PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal]))
 						{
 							if (random.nextInt(j) >= 5 + getVineCount(state2))
 							{
-								worldIn.setBlockState(pos2, state2.withProperty(Misc.PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal], true), 2);
+								worldIn.setBlockState(pos2, state2.withProperty(PROPS_SIDE_HORIZONTALS[dir.horizontalOrdinal], true), 2);
 							}
 						}
 					}
@@ -286,7 +291,7 @@ public class BlockPlantVine extends BlockBase
 		{
 			if ((meta & direction.flag1) != 0)
 			{
-				state = state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
+				state = state.withProperty(PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal], true);
 			}
 		}
 		return state;
@@ -298,7 +303,7 @@ public class BlockPlantVine extends BlockBase
 		int meta = 0;
 		for (Direction direction : Direction.DIRECTIONS_2D)
 		{
-			if (state.getValue(Misc.PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal]))
+			if (state.getValue(PROPS_SIDE_HORIZONTALS[direction.horizontalOrdinal]))
 			{
 				meta |= direction.flag1;
 			}
@@ -352,9 +357,9 @@ public class BlockPlantVine extends BlockBase
 		switch (mirrorIn)
 		{
 		case LEFT_RIGHT:
-			return state.withProperty(Misc.PROP_NORTH, state.getValue(Misc.PROP_SOUTH)).withProperty(Misc.PROP_SOUTH, state.getValue(Misc.PROP_NORTH));
+			return state.withProperty(PROP_NORTH, state.getValue(PROP_SOUTH)).withProperty(PROP_SOUTH, state.getValue(PROP_NORTH));
 		case FRONT_BACK:
-			return state.withProperty(Misc.PROP_EAST, state.getValue(Misc.PROP_WEST)).withProperty(Misc.PROP_WEST, state.getValue(Misc.PROP_EAST));
+			return state.withProperty(PROP_EAST, state.getValue(PROP_WEST)).withProperty(PROP_WEST, state.getValue(PROP_EAST));
 		default:
 			return state;
 		}

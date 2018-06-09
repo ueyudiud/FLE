@@ -8,11 +8,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import farcore.lib.solid.SolidStack;
+import nebula.common.nbt.INBTSelfCompoundReaderAndWriter;
 
 /**
  * @author ueyudiud
  */
-public interface ISolidHandler
+public interface ISolidHandler extends INBTSelfCompoundReaderAndWriter
 {
 	/**
 	 * Get solid handler property.

@@ -3,11 +3,10 @@
  */
 package farcore.energy;
 
-import java.util.HashMap;
-
 import javax.annotation.Nullable;
 
 import farcore.energy.EnergyHandler.Energy;
+import io.netty.util.collection.IntObjectHashMap;
 import net.minecraft.world.World;
 
 /**
@@ -90,14 +89,14 @@ public interface IEnergyNet
 	final class Impl implements IEnergyNet
 	{
 		final LocalEnergyNetProvider			provider;
-		final HashMap<Integer, LocalEnergyNet>	nets	= new HashMap<>();
+		final IntObjectHashMap<LocalEnergyNet>	nets	= new IntObjectHashMap<>();
 		
 		public Impl(LocalEnergyNetProvider provider)
 		{
 			this.provider = provider;
 		}
 		
-		public HashMap<Integer, LocalEnergyNet> getLocalNets()
+		public IntObjectHashMap<LocalEnergyNet> getLocalNets()
 		{
 			return nets;
 		}
@@ -196,10 +195,9 @@ public interface IEnergyNet
 		 * belong this tile or it is invalid.
 		 * 
 		 * @param tile
-		 * @return
+		 * @return <code>null</code> if tile is invalid for energy net.
 		 */
-		@Nullable
-		World getWorldFromTile(Object tile);
+		@Nullable World getWorldFromTile(Object tile);
 	}
 	
 	abstract class LocalEnergyNet<E>
