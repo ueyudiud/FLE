@@ -67,6 +67,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public BlockFire()
 	{
 		super("fire", Materials.FIRE);
+		setToolNotRequired();
 		setTickRandomly(true);
 		EnumBlock.fire.set(this);
 		EnumBlock.fire.stateApplier = objs -> {

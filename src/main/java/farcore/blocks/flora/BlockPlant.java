@@ -73,6 +73,7 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 		super(name, Materials.PLANT);
 		setCreativeTab(CT.CROP_AND_WILD_PLANTS);
 		setTickRandomly(true);
+		setToolNotRequired();
 		this.plant = plant;
 	}
 	

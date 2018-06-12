@@ -17,6 +17,8 @@ import nebula.common.util.W;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class TECoreLeaves extends TE01Static implements ITB_BreakBlock
 {
@@ -68,5 +70,11 @@ public class TECoreLeaves extends TE01Static implements ITB_BreakBlock
 		{
 			W.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material())));
 		}
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		return oldState.getBlock() == newSate.getBlock();
 	}
 }

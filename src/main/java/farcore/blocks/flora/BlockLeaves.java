@@ -83,6 +83,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	{
 		super(name, Material.LEAVES);
 		this.tree = tree;
+		setToolNotRequired();
 		setTickRandomly(true);
 		setHardness(0.5F);
 		setResistance(0.02F);

@@ -43,6 +43,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	{
 		super(FarCore.ID, "sapling", Material.PLANTS);
 		setHardness(.4F);
+		setToolNotRequired();
 		EnumBlock.sapling.set(this);
 	}
 	

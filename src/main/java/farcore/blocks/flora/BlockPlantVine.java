@@ -87,6 +87,7 @@ public class BlockPlantVine extends BlockBase
 		super(material.modid, "plant.vine." + material.name, Materials.VINE);
 		this.material = material;
 		setTickRandomly(true);
+		setToolNotRequired();
 	}
 	
 	public BlockPlantVine setBaseBlock(Block baseBlock)

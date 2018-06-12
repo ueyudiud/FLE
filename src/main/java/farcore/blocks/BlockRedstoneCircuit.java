@@ -110,6 +110,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		super(FarCore.ID, "red.circuit", Material.CIRCUITS);
 		EnumBlock.circuit.set(this);
+		setToolNotRequired();
 	}
 	
 	@Override
